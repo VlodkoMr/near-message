@@ -9,11 +9,7 @@ export const MyPrivateChat = () => {
 
   return (
     <>
-      <Header/>
-
       MyPrivateChat
-
-      <Footer/>
     </>
   );
 };

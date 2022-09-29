@@ -1,35 +1,60 @@
 type _Schema_
 @fulltext(
-  name: "messageSearch"
-  language: en
-  algorithm: rank
-  include: [{
-    entity: "Message",
-    fields: [
-      { name: "fromAddress" },
-      { name: "toAddress" },
-    ]
-  }]
+    name: "privateMessageSearch"
+    language: en
+    algorithm: rank
+    include: [{
+        entity: "PrivateMessage",
+        fields: [
+            { name: "fromAddress" },
+            { name: "toAddress" },
+        ]
+    }]
 )
 
-type Message @entity {
-  id: String!
-  fromUser: User!
-  toUser: User!
-  fromAddress: String!
-  toAddress: String!
-  text: String!
-  roomId: Int
-  createdAt: Int!
-  txHash: String!
-  isSpam: Boolean!
-  isImportant: Boolean!
-  isRemoved: Boolean!
+@fulltext(
+    name: "roomMessageSearch"
+    language: en
+    algorithm: rank
+    include: [{
+        entity: "RoomMessage",
+        fields: [
+            { name: "toRoom" },
+        ]
+    }]
+)
 
+type PrivateMessage @entity {
+    id: String!
+    fromUser: User!
+    toUser: User!
+    fromAddress: String!
+    toAddress: String!
+    text: String!
+    createdAt: Int!
+    txHash: String!
+    isSpam: Boolean!
+    isRemoved: Boolean!
+    isProtected: Boolean!
+}
+
+type RoomMessage @entity {
+    id: String!
+    fromUser: User!
+    fromAddress: String!
+    replyForAddress: String!
+    toRoom: Int!
+    text: String!
+    createdAt: Int!
+    txHash: String!
+    isSpam: Boolean!
+    isRemoved: Boolean!
+    isProtected: Boolean!
 }
 
 type User @entity {
-  id: ID!
-  incomeMessages: [Message!]! @derivedFrom(field: "toUser")
-  outcomeMessages: [Message!]! @derivedFrom(field: "fromUser")
+    id: String!
+    incomePrivate: [PrivateMessage!]! @derivedFrom(field: "toUser")
+    outcomePrivate: [PrivateMessage!]! @derivedFrom(field: "fromUser")
+    outcomeRoom: [RoomMessage!]! @derivedFrom(field: "fromUser")
 }

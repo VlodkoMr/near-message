@@ -1,8 +1,7 @@
 import { useContext, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from "./Layout";
 import { NearContext } from "../context/NearContext";
-import Button from "@mui/material/Button";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -15,7 +14,8 @@ export const Home = () => {
   return (
     <Layout>
 
-      home
+      <div>HOME</div>
+      <Link to={"/my"}>My Messages</Link>
 
     </Layout>
   );

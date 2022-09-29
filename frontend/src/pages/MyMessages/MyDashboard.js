@@ -9,11 +9,7 @@ export const MyDashboard = () => {
 
   return (
     <>
-      <Header/>
-
       MyDashboard
-
-      <Footer/>
     </>
   );
 };

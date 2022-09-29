@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Message extends Entity {
+export class PrivateMessage extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -19,18 +19,18 @@ export class Message extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Message entity without an ID");
+    assert(id != null, "Cannot save PrivateMessage entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Message must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PrivateMessage must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Message", id.toString(), this);
+      store.set("PrivateMessage", id.toString(), this);
     }
   }
 
-  static load(id: string): Message | null {
-    return changetype<Message | null>(store.get("Message", id));
+  static load(id: string): PrivateMessage | null {
+    return changetype<PrivateMessage | null>(store.get("PrivateMessage", id));
   }
 
   get id(): string {
@@ -87,13 +87,126 @@ export class Message extends Entity {
     this.set("text", Value.fromString(value));
   }
 
-  get roomId(): i32 {
-    let value = this.get("roomId");
+  get createdAt(): i32 {
+    let value = this.get("createdAt");
     return value!.toI32();
   }
 
-  set roomId(value: i32) {
-    this.set("roomId", Value.fromI32(value));
+  set createdAt(value: i32) {
+    this.set("createdAt", Value.fromI32(value));
+  }
+
+  get txHash(): string {
+    let value = this.get("txHash");
+    return value!.toString();
+  }
+
+  set txHash(value: string) {
+    this.set("txHash", Value.fromString(value));
+  }
+
+  get isSpam(): boolean {
+    let value = this.get("isSpam");
+    return value!.toBoolean();
+  }
+
+  set isSpam(value: boolean) {
+    this.set("isSpam", Value.fromBoolean(value));
+  }
+
+  get isRemoved(): boolean {
+    let value = this.get("isRemoved");
+    return value!.toBoolean();
+  }
+
+  set isRemoved(value: boolean) {
+    this.set("isRemoved", Value.fromBoolean(value));
+  }
+
+  get isProtected(): boolean {
+    let value = this.get("isProtected");
+    return value!.toBoolean();
+  }
+
+  set isProtected(value: boolean) {
+    this.set("isProtected", Value.fromBoolean(value));
+  }
+}
+
+export class RoomMessage extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RoomMessage entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RoomMessage must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RoomMessage", id.toString(), this);
+    }
+  }
+
+  static load(id: string): RoomMessage | null {
+    return changetype<RoomMessage | null>(store.get("RoomMessage", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get fromUser(): string {
+    let value = this.get("fromUser");
+    return value!.toString();
+  }
+
+  set fromUser(value: string) {
+    this.set("fromUser", Value.fromString(value));
+  }
+
+  get fromAddress(): string {
+    let value = this.get("fromAddress");
+    return value!.toString();
+  }
+
+  set fromAddress(value: string) {
+    this.set("fromAddress", Value.fromString(value));
+  }
+
+  get replyForAddress(): string {
+    let value = this.get("replyForAddress");
+    return value!.toString();
+  }
+
+  set replyForAddress(value: string) {
+    this.set("replyForAddress", Value.fromString(value));
+  }
+
+  get toRoom(): i32 {
+    let value = this.get("toRoom");
+    return value!.toI32();
+  }
+
+  set toRoom(value: i32) {
+    this.set("toRoom", Value.fromI32(value));
+  }
+
+  get text(): string {
+    let value = this.get("text");
+    return value!.toString();
+  }
+
+  set text(value: string) {
+    this.set("text", Value.fromString(value));
   }
 
   get createdAt(): i32 {
@@ -123,15 +236,6 @@ export class Message extends Entity {
     this.set("isSpam", Value.fromBoolean(value));
   }
 
-  get isImportant(): boolean {
-    let value = this.get("isImportant");
-    return value!.toBoolean();
-  }
-
-  set isImportant(value: boolean) {
-    this.set("isImportant", Value.fromBoolean(value));
-  }
-
   get isRemoved(): boolean {
     let value = this.get("isRemoved");
     return value!.toBoolean();
@@ -139,6 +243,15 @@ export class Message extends Entity {
 
   set isRemoved(value: boolean) {
     this.set("isRemoved", Value.fromBoolean(value));
+  }
+
+  get isProtected(): boolean {
+    let value = this.get("isProtected");
+    return value!.toBoolean();
+  }
+
+  set isProtected(value: boolean) {
+    this.set("isProtected", Value.fromBoolean(value));
   }
 }
 
@@ -173,21 +286,30 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get incomeMessages(): Array<string> {
-    let value = this.get("incomeMessages");
+  get incomePrivate(): Array<string> {
+    let value = this.get("incomePrivate");
     return value!.toStringArray();
   }
 
-  set incomeMessages(value: Array<string>) {
-    this.set("incomeMessages", Value.fromStringArray(value));
+  set incomePrivate(value: Array<string>) {
+    this.set("incomePrivate", Value.fromStringArray(value));
   }
 
-  get outcomeMessages(): Array<string> {
-    let value = this.get("outcomeMessages");
+  get outcomePrivate(): Array<string> {
+    let value = this.get("outcomePrivate");
     return value!.toStringArray();
   }
 
-  set outcomeMessages(value: Array<string>) {
-    this.set("outcomeMessages", Value.fromStringArray(value));
+  set outcomePrivate(value: Array<string>) {
+    this.set("outcomePrivate", Value.fromStringArray(value));
+  }
+
+  get outcomeRoom(): Array<string> {
+    let value = this.get("outcomeRoom");
+    return value!.toStringArray();
+  }
+
+  set outcomeRoom(value: Array<string>) {
+    this.set("outcomeRoom", Value.fromStringArray(value));
   }
 }

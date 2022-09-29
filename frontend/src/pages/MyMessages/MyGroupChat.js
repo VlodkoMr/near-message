@@ -56,11 +56,7 @@ export const MyGroupChat = () => {
 
   return (
     <>
-      <Header/>
-
       MyGroupChat
-
-      <Footer/>
     </>
   );
 };

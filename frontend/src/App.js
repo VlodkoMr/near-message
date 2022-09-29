@@ -13,13 +13,11 @@ export const App = () => {
         <Routes>
           <Route exact path="/" element={<Home/>}/>
 
-          {near.isSignedIn && (
-            <Route exact path="/my" element={<MyMessagesLayout/>}>
-              <Route exact path="" element={<MyDashboard/>}/>
-              <Route exact path="/account/:id" element={<MyPrivateChat/>}/>
-              <Route exact path="/group/:id" element={<MyGroupChat/>}/>
-            </Route>
-          )}
+          <Route exact path="/my" element={<MyMessagesLayout/>}>
+            <Route exact path="" element={<MyDashboard/>}/>
+            <Route exact path="account/:id" element={<MyPrivateChat/>}/>
+            <Route exact path="group/:id" element={<MyGroupChat/>}/>
+          </Route>
 
           <Route exact path="/docs" element={<Docs/>}/>
           <Route path='*' element={<Error404/>}/>

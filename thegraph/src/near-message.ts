@@ -1,5 +1,5 @@
-import {near, JSONValue, json, BigInt, log} from "@graphprotocol/graph-ts"
-import {Message, User} from "../generated/schema"
+import {near, json, log} from "@graphprotocol/graph-ts"
+import {PrivateMessage, RoomMessage, User} from "../generated/schema"
 
 export function handleReceipt(
   receipt: near.ReceiptWithOutcome
@@ -17,87 +17,114 @@ function handleAction(
   if (action.kind != near.ActionKind.FUNCTION_CALL) {
     return;
   }
-  const outcome = receiptWithOutcome.outcome;
+
   const functionCall = action.toFunctionCall();
 
-  if (functionCall.methodName == 'send_message') {
+  if (functionCall.methodName == 'private_message') {
+    savePrivateMessage(receiptWithOutcome);
+  } else if (functionCall.methodName == 'room_message') {
+    saveRoomMessage(receiptWithOutcome);
+  }
+}
 
-    for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
-      const outcomeLog = outcome.logs[logIndex].toString();
+/**
+ * Private Message
+ */
+function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
+  const outcome = receiptWithOutcome.outcome;
 
-      log.info('outcomeLog {}', [outcomeLog])
+  for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
+    const outcomeLog = outcome.logs[logIndex].toString();
 
-      // const parsed = outcomeLog.replace('EVENT_JSON:', '')
-      const jsonData = json.try_fromString(outcomeLog)
-      const data = jsonData.value.toObject()
-      const messageText = data.get('messageText')
+    log.info('savePrivateMessage {}', [outcomeLog])
 
-      if (messageText) {
-        const messageId = data.get('messageId')
-        const fromUser = data.get('fromUser')
-        const toUser = data.get('toUser')
-        if (!messageId || !fromUser || !toUser) return;
+    // const parsed = outcomeLog.replace('EVENT_JSON:', '')
+    const jsonData = json.try_fromString(outcomeLog)
+    const data = jsonData.value.toObject()
+    const messageText = data.get('messageText')
 
-        let message = Message.load(messageId.toString())
+    if (messageText) {
+      const messageId = data.get('messageId')
+      const fromUser = data.get('fromUser')
+      const toUser = data.get('toUser')
+      if (!messageId || !fromUser || !toUser) return;
 
-        if (!message) {
-          message = new Message(messageId.toString())
-          message.fromUser = fromUser.toString()
-          message.fromAddress = fromUser.toString()
-          message.toUser = toUser.toString()
-          message.toAddress = toUser.toString()
-          message.text = messageText.toString()
-          message.createdAt = receiptWithOutcome.block.header.timestampNanosec as i32;
-          message.txHash = outcome.blockHash.toHexString()
-          message.isSpam = false
-          message.isImportant = false
-          message.isRemoved = false
+      let message = PrivateMessage.load(messageId.toString())
 
-          let userFrom = User.load(fromUser.toString())
-          if (!userFrom) {
-            userFrom = new User(fromUser.toString())
-            userFrom.save()
-          }
+      if (!message) {
+        message = new PrivateMessage(messageId.toString())
+        message.fromUser = fromUser.toString()
+        message.fromAddress = fromUser.toString()
+        message.toUser = toUser.toString()
+        message.toAddress = toUser.toString()
+        message.text = messageText.toString()
+        message.isSpam = false
+        message.isProtected = false
+        message.isRemoved = false
+        message.txHash = outcome.blockHash.toHexString()
+        message.createdAt = receiptWithOutcome.block.header.timestampNanosec as i32;
 
-          let userTo = User.load(toUser.toString())
-          if (!userTo) {
-            userTo = new User(toUser.toString())
-            userTo.save()
-          }
-
-          message.save()
-
-          //
-          //       token.image = ipfsHash + '/' + tokenId + '.png'
-          //       const metadata = ipfsHash + '/' + tokenId + '.json'
-          //       token.metadata = metadata
-          //
-          //       const metadataResult = ipfs.cat(metadata)
-          //       if (metadataResult) {
-          //         const value = json.fromBytes(metadataResult).toObject()
-          //         if (value) {
-          //           const kind = value.get('kind')
-          //           if (kind) {
-          //             token.kind = kind.toString()
-          //           }
-          //           const seed = value.get('seed')
-          //           if (seed) {
-          //             token.seed = seed.toI64() as i32
-          //           }
-          //         }
-          //       }
+        let userFrom = User.load(fromUser.toString())
+        if (!userFrom) {
+          userFrom = new User(fromUser.toString())
+          userFrom.save()
         }
-        //
-        //     token.ownerId = owner_id.toString()
-        //     token.owner = owner_id.toString()
-        //
-        //     let user = User.load(owner_id.toString())
-        //     if (!user) {
-        //       user = new User(owner_id.toString())
-        //     }
-        //
-        //     token.save()
-        //     user.save()
+
+        let userTo = User.load(toUser.toString())
+        if (!userTo) {
+          userTo = new User(toUser.toString())
+          userTo.save()
+        }
+
+        message.save()
+      }
+    }
+  }
+}
+
+/**
+ * Room Message
+ */
+function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
+  const outcome = receiptWithOutcome.outcome;
+
+  for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
+    const outcomeLog = outcome.logs[logIndex].toString();
+
+    log.info('saveRoomMessage {}', [outcomeLog])
+
+    // const parsed = outcomeLog.replace('EVENT_JSON:', '')
+    const jsonData = json.try_fromString(outcomeLog)
+    const data = jsonData.value.toObject()
+    const messageText = data.get('messageText')
+    const toRoom = data.get('toRoom')
+
+    if (messageText && toRoom) {
+      const messageId = data.get('messageId')
+      const fromUser = data.get('fromUser')
+
+      if (!messageId || !fromUser) return;
+
+      let message = RoomMessage.load(messageId.toString())
+
+      if (!message) {
+        message = new RoomMessage(messageId.toString())
+        message.fromUser = fromUser.toString()
+        message.fromAddress = fromUser.toString()
+        message.toRoom = toRoom.toBigInt().toI32();
+        message.text = messageText.toString()
+        message.isSpam = false
+        message.isRemoved = false
+        message.txHash = outcome.blockHash.toHexString()
+        message.createdAt = receiptWithOutcome.block.header.timestampNanosec as i32;
+
+        let userFrom = User.load(fromUser.toString())
+        if (!userFrom) {
+          userFrom = new User(fromUser.toString())
+          userFrom.save()
+        }
+
+        message.save()
       }
     }
   }
