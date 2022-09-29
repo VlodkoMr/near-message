@@ -1,0 +1,35 @@
+type _Schema_
+@fulltext(
+  name: "messageSearch"
+  language: en
+  algorithm: rank
+  include: [{
+    entity: "Message",
+    fields: [
+      { name: "fromAddress" },
+      { name: "toAddress" },
+    ]
+  }]
+)
+
+type Message @entity {
+  id: String!
+  fromUser: User!
+  toUser: User!
+  fromAddress: String!
+  toAddress: String!
+  text: String!
+  roomId: Int
+  createdAt: Int!
+  txHash: String!
+  isSpam: Boolean!
+  isImportant: Boolean!
+  isRemoved: Boolean!
+
+}
+
+type User @entity {
+  id: ID!
+  incomeMessages: [Message!]! @derivedFrom(field: "toUser")
+  outcomeMessages: [Message!]! @derivedFrom(field: "fromUser")
+}

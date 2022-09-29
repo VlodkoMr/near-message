@@ -1,0 +1,21 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+features:
+  - fullTextSearch
+dataSources:
+  - kind: near
+    name: NearMessage
+    network: near-testnet
+    source:
+      account: "dev-1664451675763-39777161611804"
+      startBlock: 101339033
+    mapping:
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Message
+        - User
+      receiptHandlers:
+        - handler: handleReceipt
+      file: ./src/near-message.ts
