@@ -42,7 +42,9 @@
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.4.1",
     "regenerator-runtime": "^0.13.9",
-    "urql": "^3.0.3"
+    "urql": "^3.0.3",
+    "@react-buddy/ide-toolbox": "^2.2.1",
+    "@react-buddy/palette-mui": "^1.2.2"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
