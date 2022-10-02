@@ -155,7 +155,24 @@ impl Contract {
             env::panic_str("Please provide members for removal");
         }
 
-        self.remove_room_member_internal(members, room);
+        self.remove_room_member_internal(members, room_id, true);
+    }
+
+    /**
+     * Remove room
+     * only room owner
+     */
+    pub fn owner_remove_room(&mut self, room_id: u32, approve_title: String) {
+        let room = self.rooms.get(&room_id).unwrap();
+        if room.owner != env::predecessor_account_id() {
+            env::panic_str("No access to room modification");
+        }
+        if approve_title != room.title {
+            env::panic_str("Wrong approval for remove");
+        }
+
+        self.remove_room_member_internal(room.members, room_id, false);
+        self.rooms.remove(&room_id);
     }
 
     /**
