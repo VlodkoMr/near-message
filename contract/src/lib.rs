@@ -1,7 +1,13 @@
+extern crate core;
+
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{AccountId, log, env, near_bindgen, Timestamp, BorshStorageKey};
+use near_sdk::{AccountId, log, env, Balance, Gas, near_bindgen, Timestamp, BorshStorageKey};
 use near_sdk::collections::LookupMap;
+
+mod utils;
+
+const MAX_USERS_IN_ROOM: u32 = 1000;
 
 #[near_bindgen]
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -70,22 +76,43 @@ impl Contract {
     }
 
     pub fn new_room(&mut self, title: String, media: String, is_public: bool, is_read_only: bool, users: Vec<AccountId>) {
+        let owner = env::predecessor_account_id();
+        if env::attached_deposit() < Contract::convert_to_yocto("0.1") {
+            env::panic_str("Wrong payment amount");
+        }
+        if users.len() > MAX_USERS_IN_ROOM as usize {
+            env::panic_str("You can't add so much room members");
+        }
+
+        let mut owner_rooms = self.owner_rooms.get(&owner).unwrap();
+
         self.rooms_count += 1;
+        let room_id = self.rooms_count;
+
         let room = Room {
-            id: self.rooms_count,
-            owner: env::predecessor_account_id(),
+            id: room_id,
+            owner: owner.clone(),
             title,
             media,
             is_public,
             is_read_only,
             created_at: env::block_timestamp(),
-            users,
+            users: users.clone(),
         };
-        self.rooms.insert(&self.rooms_count, &room);
+        self.rooms.insert(&room_id, &room);
 
         // add to owner
+        owner_rooms.push(room_id);
+        self.owner_rooms.insert(&owner, &owner_rooms);
 
         // add to user rooms
+        if users.len() > 0 {
+            for user_address in users.into_iter() {
+                let mut user_rooms = self.user_rooms.get(&user_address).unwrap();
+                user_rooms.push(room_id);
+                self.user_rooms.insert(&user_address, &user_rooms).unwrap();
+            }
+        }
     }
 }
 
