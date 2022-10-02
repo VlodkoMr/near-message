@@ -7,7 +7,9 @@ use near_sdk::collections::LookupMap;
 
 mod utils;
 
-const MAX_USERS_IN_ROOM: u32 = 1000;
+const MAX_MEMBERS_IN_ROOM: u32 = 1000;
+const MAX_USER_ROOMS: u32 = 10;
+const NEW_ROOM_PRICE: &str = "0.1";
 
 #[near_bindgen]
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -20,7 +22,7 @@ pub struct Room {
     is_public: bool,
     is_read_only: bool,
     created_at: Timestamp,
-    users: Vec<AccountId>,
+    members: Vec<AccountId>,
 }
 
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -75,16 +77,22 @@ impl Contract {
         self.rooms.get(&id).unwrap()
     }
 
-    pub fn new_room(&mut self, title: String, media: String, is_public: bool, is_read_only: bool, users: Vec<AccountId>) {
+    /**
+     * Create new room
+     */
+    pub fn new_room(&mut self, title: String, media: String, is_public: bool, is_read_only: bool, members: Vec<AccountId>) {
         let owner = env::predecessor_account_id();
-        if env::attached_deposit() < Contract::convert_to_yocto("0.1") {
+        let mut owner_rooms = self.owner_rooms.get(&owner).unwrap();
+
+        if env::attached_deposit() < Contract::convert_to_yocto(NEW_ROOM_PRICE) {
             env::panic_str("Wrong payment amount");
         }
-        if users.len() > MAX_USERS_IN_ROOM as usize {
+        if members.len() > MAX_MEMBERS_IN_ROOM as usize {
             env::panic_str("You can't add so much room members");
         }
-
-        let mut owner_rooms = self.owner_rooms.get(&owner).unwrap();
+        if owner_rooms.len() >= MAX_USER_ROOMS as usize {
+            env::panic_str("You can't create more rooms");
+        }
 
         self.rooms_count += 1;
         let room_id = self.rooms_count;
@@ -97,7 +105,7 @@ impl Contract {
             is_public,
             is_read_only,
             created_at: env::block_timestamp(),
-            users: users.clone(),
+            members: members.clone(),
         };
         self.rooms.insert(&room_id, &room);
 
@@ -106,14 +114,36 @@ impl Contract {
         self.owner_rooms.insert(&owner, &owner_rooms);
 
         // add to user rooms
-        if users.len() > 0 {
-            for user_address in users.into_iter() {
+        if members.len() > 0 {
+            for user_address in members.into_iter() {
                 let mut user_rooms = self.user_rooms.get(&user_address).unwrap();
                 user_rooms.push(room_id);
                 self.user_rooms.insert(&user_address, &user_rooms).unwrap();
             }
         }
     }
+
+    /**
+     * Add room members
+     * only room owner
+     */
+    pub fn add_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
+        // if members.len() > MAX_MEMBERS_IN_ROOM as usize {
+        //     env::panic_str("You can't add so much room members");
+        // }
+    }
+
+    /**
+     * Join public room
+     */
+    pub fn join_public_room(&mut self, room_id: u32) {}
+
+    /**
+     * Leave room
+     */
+    pub fn leave_room(&mut self, room_id: u32) {}
+
+
 }
 
 // /*
