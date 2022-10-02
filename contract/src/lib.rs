@@ -6,6 +6,7 @@ use near_sdk::{AccountId, log, env, Balance, Gas, near_bindgen, Timestamp, Borsh
 use near_sdk::collections::LookupMap;
 
 mod utils;
+mod members;
 
 const MAX_MEMBERS_IN_ROOM: u32 = 1000;
 const MAX_USER_ROOMS: u32 = 10;
@@ -93,6 +94,9 @@ impl Contract {
         if owner_rooms.len() >= MAX_USER_ROOMS as usize {
             env::panic_str("You can't create more rooms");
         }
+        if title.len() < 3 as usize || title.len() >= 160 as usize {
+            env::panic_str("Wrong room title length");
+        }
 
         self.rooms_count += 1;
         let room_id = self.rooms_count;
@@ -115,11 +119,7 @@ impl Contract {
 
         // add to user rooms
         if members.len() > 0 {
-            for user_address in members.into_iter() {
-                let mut user_rooms = self.user_rooms.get(&user_address).unwrap();
-                user_rooms.push(room_id);
-                self.user_rooms.insert(&user_address, &user_rooms).unwrap();
-            }
+            self.add_room_member_internal(members, room, false);
         }
     }
 
@@ -127,10 +127,35 @@ impl Contract {
      * Add room members
      * only room owner
      */
-    pub fn add_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
-        // if members.len() > MAX_MEMBERS_IN_ROOM as usize {
-        //     env::panic_str("You can't add so much room members");
-        // }
+    pub fn owner_add_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
+        let room = self.rooms.get(&room_id).unwrap();
+        if room.owner != env::predecessor_account_id() {
+            env::panic_str("No access to room modification");
+        }
+        if room.members.len() + members.len() > MAX_MEMBERS_IN_ROOM as usize {
+            env::panic_str("Room members limit reached");
+        }
+        if members.len() == 0 {
+            env::panic_str("Please add members");
+        }
+
+        self.add_room_member_internal(members, room, true);
+    }
+
+    /**
+     * Remove room members
+     * only room owner
+     */
+    pub fn owner_remove_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
+        let room = self.rooms.get(&room_id).unwrap();
+        if room.owner != env::predecessor_account_id() {
+            env::panic_str("No access to room modification");
+        }
+        if members.len() == 0 {
+            env::panic_str("Please provide members for removal");
+        }
+
+        self.remove_room_member_internal(members, room);
     }
 
     /**
@@ -142,8 +167,6 @@ impl Contract {
      * Leave room
      */
     pub fn leave_room(&mut self, room_id: u32) {}
-
-
 }
 
 // /*
