@@ -183,7 +183,15 @@ impl Contract {
     /**
      * Leave room
      */
-    pub fn leave_room(&mut self, room_id: u32) {}
+    pub fn leave_room(&mut self, room_id: u32) {
+        let room = self.rooms.get(&room_id).unwrap();
+        let member = env::predecessor_account_id();
+        if !room.members.contains(&member) {
+            env::panic_str("You don't participate in this room");
+        }
+
+        self.remove_room_member_internal(vec![member], room_id, true);
+    }
 }
 
 // /*
