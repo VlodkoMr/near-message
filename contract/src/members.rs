@@ -9,6 +9,7 @@ impl Contract {
             self.user_rooms.insert(&member_address, &user_rooms);
 
             if change_room && !room.members.contains(&member_address) {
+                // TODO: check if exists
                 room.members.push(member_address.clone());
             }
         }
