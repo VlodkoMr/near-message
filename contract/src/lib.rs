@@ -78,10 +78,20 @@ impl Contract {
         self.rooms.get(&id).unwrap()
     }
 
+    pub fn get_owner_rooms(&self, account: AccountId) -> Vec<Room> {
+        let id_list = self.owner_rooms.get(&account).unwrap();
+        id_list.iter().map(| room_id | self.rooms.get(&room_id).unwrap()).collect()
+    }
+
+    pub fn get_user_rooms(&self, account: AccountId) -> Vec<Room> {
+        let id_list = self.user_rooms.get(&account).unwrap();
+        id_list.iter().map(| room_id | self.rooms.get(&room_id).unwrap()).collect()
+    }
+
     /**
      * Create new room
      */
-    pub fn new_room(&mut self, title: String, media: String, is_public: bool, is_read_only: bool, members: Vec<AccountId>) {
+    pub fn create_new_room(&mut self, title: String, media: String, is_public: bool, is_read_only: bool, members: Vec<AccountId>) {
         let owner = env::predecessor_account_id();
         let mut owner_rooms = self.owner_rooms.get(&owner).unwrap();
 
@@ -191,6 +201,14 @@ impl Contract {
         }
 
         self.remove_room_member_internal(vec![member], room_id, true);
+    }
+
+    pub fn send_private_message(&mut self, text: String, to_user: AccountId) {
+
+    }
+
+    pub fn send_room_message(&mut self, text: String, to_room: u32) {
+
     }
 }
 
