@@ -1,7 +1,8 @@
 use crate::*;
 
 impl Contract {
-    pub(crate) fn add_room_member_internal(&mut self, members: Vec<AccountId>, mut room: Room, change_room: bool) {
+    pub(crate) fn add_room_member_internal(&mut self, members: Vec<AccountId>, room_id: u32, change_room: bool) {
+        let mut room = self.rooms.get(&room_id).unwrap();
         for member_address in members.into_iter() {
             let mut user_rooms = self.user_rooms.get(&member_address).unwrap();
             user_rooms.push(room.id);

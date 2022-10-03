@@ -1,6 +1,36 @@
 use crate::*;
 
 impl Contract {
+    // Convert f64 to yocto NEAR Balance
+    pub(crate) fn convert_to_yocto(value: &str) -> Balance {
+        let values: Vec<_> = value.split('.').collect();
+        let part1 = values[0].parse::<u128>().unwrap() * 10u128.pow(24);
+        if values.len() > 1 {
+            let power = values[1].len() as u32;
+            let part2 = values[1].parse::<u128>().unwrap() * 10u128.pow(24 - power);
+            part1 + part2
+        } else {
+            part1
+        }
+    }
+
+    pub(crate) fn get_reply_message_id(reply_message_id: Option<U128>) -> String {
+        if reply_message_id.is_some() {
+            return reply_message_id.unwrap().0.to_string();
+        }
+        String::from("")
+    }
+
+    /*
+     * First 10 rooms = 0.1 NEAR, all next = 0.5 NEAR
+     */
+    pub(crate) fn room_create_price(existing_rooms: u32) -> Balance {
+        if existing_rooms < 10 {
+            return Contract::convert_to_yocto("0.1");
+        }
+        return Contract::convert_to_yocto("0.5");
+    }
+
     // Generate random u8 number (0-254)
     // pub(crate) fn random_u8(&self, index: usize) -> u8 {
     //     *env::random_seed().get(index).unwrap()
@@ -15,19 +45,6 @@ impl Contract {
     //     }
     //     0 as u32
     // }
-
-    // Convert f64 to yocto NEAR Balance
-    pub(crate) fn convert_to_yocto(value: &str) -> Balance {
-        let values: Vec<_> = value.split('.').collect();
-        let part1 = values[0].parse::<u128>().unwrap() * 10u128.pow(24);
-        if values.len() > 1 {
-            let power = values[1].len() as u32;
-            let part2 = values[1].parse::<u128>().unwrap() * 10u128.pow(24 - power);
-            part1 + part2
-        } else {
-            part1
-        }
-    }
 
     // Convert u64 to yocto NEAR Gas
     // pub(crate) fn convert_to_tera(tokens: u64) -> Gas {

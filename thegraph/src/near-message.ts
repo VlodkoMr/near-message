@@ -20,9 +20,9 @@ function handleAction(
 
   const functionCall = action.toFunctionCall();
 
-  if (functionCall.methodName == 'private_message') {
+  if (functionCall.methodName == 'send_private_message') {
     savePrivateMessage(receiptWithOutcome);
-  } else if (functionCall.methodName == 'room_message') {
+  } else if (functionCall.methodName == 'send_room_message') {
     saveRoomMessage(receiptWithOutcome);
   }
 }
@@ -38,31 +38,38 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
     log.info('savePrivateMessage {}', [outcomeLog])
 
-    // const parsed = outcomeLog.replace('EVENT_JSON:', '')
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
-    const messageText = data.get('messageText')
+    const messageText = data.get('text')
 
     if (messageText) {
-      const messageId = data.get('messageId')
-      const fromUser = data.get('fromUser')
-      const toUser = data.get('toUser')
+      const messageId = data.get('id')
+      const fromUser = data.get('from_user')
+      const toUser = data.get('to_user')
+      const replyToMessage = data.get('reply_to_message')
+
+      let replyMessageId = ""
+      if (replyToMessage) {
+        replyMessageId = replyToMessage.toString()
+      }
+
       if (!messageId || !fromUser || !toUser) return;
 
       let message = PrivateMessage.load(messageId.toString())
 
       if (!message) {
         message = new PrivateMessage(messageId.toString())
-        message.fromUser = fromUser.toString()
-        message.fromAddress = fromUser.toString()
-        message.toUser = toUser.toString()
-        message.toAddress = toUser.toString()
+        message.from_user = fromUser.toString()
+        message.from_address = fromUser.toString()
+        message.to_user = toUser.toString()
+        message.to_address = toUser.toString()
         message.text = messageText.toString()
-        message.isSpam = false
-        message.isProtected = false
-        message.isRemoved = false
-        message.txHash = outcome.blockHash.toHexString()
-        message.createdAt = receiptWithOutcome.block.header.timestampNanosec as i32;
+        message.reply_to_message = replyMessageId
+        message.is_spam = false
+        message.is_protected = false
+        message.is_removed = false
+        message.tx_hash = outcome.blockHash.toHexString()
+        message.created_at = receiptWithOutcome.block.header.timestampNanosec as i32;
 
         let userFrom = User.load(fromUser.toString())
         if (!userFrom) {
@@ -93,15 +100,19 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
     log.info('saveRoomMessage {}', [outcomeLog])
 
-    // const parsed = outcomeLog.replace('EVENT_JSON:', '')
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
-    const messageText = data.get('messageText')
-    const toRoom = data.get('toRoom')
+    const messageText = data.get('text')
+    const toRoom = data.get('to_room')
+    const replyToMessage = data.get('reply_to_message')
 
     if (messageText && toRoom) {
-      const messageId = data.get('messageId')
-      const fromUser = data.get('fromUser')
+      const messageId = data.get('id')
+      const fromUser = data.get('from_user')
+      let replyMessageId = ""
+      if (replyToMessage) {
+        replyMessageId = replyToMessage.toString()
+      }
 
       if (!messageId || !fromUser) return;
 
@@ -109,14 +120,15 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
       if (!message) {
         message = new RoomMessage(messageId.toString())
-        message.fromUser = fromUser.toString()
-        message.fromAddress = fromUser.toString()
-        message.toRoom = toRoom.toBigInt().toI32();
+        message.from_user = fromUser.toString()
+        message.from_address = fromUser.toString()
+        message.to_room = toRoom.toBigInt().toI32();
         message.text = messageText.toString()
-        message.isSpam = false
-        message.isRemoved = false
-        message.txHash = outcome.blockHash.toHexString()
-        message.createdAt = receiptWithOutcome.block.header.timestampNanosec as i32;
+        message.reply_to_message = replyMessageId
+        message.is_spam = false
+        message.is_removed = false
+        message.tx_hash = outcome.blockHash.toHexString()
+        message.created_at = receiptWithOutcome.block.header.timestampNanosec as i32;
 
         let userFrom = User.load(fromUser.toString())
         if (!userFrom) {

@@ -42,40 +42,57 @@ export class PrivateMessage extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get fromUser(): string {
-    let value = this.get("fromUser");
+  get from_user(): string {
+    let value = this.get("from_user");
     return value!.toString();
   }
 
-  set fromUser(value: string) {
-    this.set("fromUser", Value.fromString(value));
+  set from_user(value: string) {
+    this.set("from_user", Value.fromString(value));
   }
 
-  get toUser(): string {
-    let value = this.get("toUser");
+  get to_user(): string {
+    let value = this.get("to_user");
     return value!.toString();
   }
 
-  set toUser(value: string) {
-    this.set("toUser", Value.fromString(value));
+  set to_user(value: string) {
+    this.set("to_user", Value.fromString(value));
   }
 
-  get fromAddress(): string {
-    let value = this.get("fromAddress");
+  get from_address(): string {
+    let value = this.get("from_address");
     return value!.toString();
   }
 
-  set fromAddress(value: string) {
-    this.set("fromAddress", Value.fromString(value));
+  set from_address(value: string) {
+    this.set("from_address", Value.fromString(value));
   }
 
-  get toAddress(): string {
-    let value = this.get("toAddress");
+  get to_address(): string {
+    let value = this.get("to_address");
     return value!.toString();
   }
 
-  set toAddress(value: string) {
-    this.set("toAddress", Value.fromString(value));
+  set to_address(value: string) {
+    this.set("to_address", Value.fromString(value));
+  }
+
+  get reply_to_message(): string | null {
+    let value = this.get("reply_to_message");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set reply_to_message(value: string | null) {
+    if (!value) {
+      this.unset("reply_to_message");
+    } else {
+      this.set("reply_to_message", Value.fromString(<string>value));
+    }
   }
 
   get text(): string {
@@ -87,49 +104,49 @@ export class PrivateMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
-  get createdAt(): i32 {
-    let value = this.get("createdAt");
+  get created_at(): i32 {
+    let value = this.get("created_at");
     return value!.toI32();
   }
 
-  set createdAt(value: i32) {
-    this.set("createdAt", Value.fromI32(value));
+  set created_at(value: i32) {
+    this.set("created_at", Value.fromI32(value));
   }
 
-  get txHash(): string {
-    let value = this.get("txHash");
+  get tx_hash(): string {
+    let value = this.get("tx_hash");
     return value!.toString();
   }
 
-  set txHash(value: string) {
-    this.set("txHash", Value.fromString(value));
+  set tx_hash(value: string) {
+    this.set("tx_hash", Value.fromString(value));
   }
 
-  get isSpam(): boolean {
-    let value = this.get("isSpam");
+  get is_spam(): boolean {
+    let value = this.get("is_spam");
     return value!.toBoolean();
   }
 
-  set isSpam(value: boolean) {
-    this.set("isSpam", Value.fromBoolean(value));
+  set is_spam(value: boolean) {
+    this.set("is_spam", Value.fromBoolean(value));
   }
 
-  get isRemoved(): boolean {
-    let value = this.get("isRemoved");
+  get is_removed(): boolean {
+    let value = this.get("is_removed");
     return value!.toBoolean();
   }
 
-  set isRemoved(value: boolean) {
-    this.set("isRemoved", Value.fromBoolean(value));
+  set is_removed(value: boolean) {
+    this.set("is_removed", Value.fromBoolean(value));
   }
 
-  get isProtected(): boolean {
-    let value = this.get("isProtected");
+  get is_protected(): boolean {
+    let value = this.get("is_protected");
     return value!.toBoolean();
   }
 
-  set isProtected(value: boolean) {
-    this.set("isProtected", Value.fromBoolean(value));
+  set is_protected(value: boolean) {
+    this.set("is_protected", Value.fromBoolean(value));
   }
 }
 
@@ -164,40 +181,48 @@ export class RoomMessage extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get fromUser(): string {
-    let value = this.get("fromUser");
+  get from_user(): string {
+    let value = this.get("from_user");
     return value!.toString();
   }
 
-  set fromUser(value: string) {
-    this.set("fromUser", Value.fromString(value));
+  set from_user(value: string) {
+    this.set("from_user", Value.fromString(value));
   }
 
-  get fromAddress(): string {
-    let value = this.get("fromAddress");
+  get from_address(): string {
+    let value = this.get("from_address");
     return value!.toString();
   }
 
-  set fromAddress(value: string) {
-    this.set("fromAddress", Value.fromString(value));
+  set from_address(value: string) {
+    this.set("from_address", Value.fromString(value));
   }
 
-  get replyForAddress(): string {
-    let value = this.get("replyForAddress");
-    return value!.toString();
+  get reply_to_message(): string | null {
+    let value = this.get("reply_to_message");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set replyForAddress(value: string) {
-    this.set("replyForAddress", Value.fromString(value));
+  set reply_to_message(value: string | null) {
+    if (!value) {
+      this.unset("reply_to_message");
+    } else {
+      this.set("reply_to_message", Value.fromString(<string>value));
+    }
   }
 
-  get toRoom(): i32 {
-    let value = this.get("toRoom");
+  get to_room(): i32 {
+    let value = this.get("to_room");
     return value!.toI32();
   }
 
-  set toRoom(value: i32) {
-    this.set("toRoom", Value.fromI32(value));
+  set to_room(value: i32) {
+    this.set("to_room", Value.fromI32(value));
   }
 
   get text(): string {
@@ -209,49 +234,49 @@ export class RoomMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
-  get createdAt(): i32 {
-    let value = this.get("createdAt");
+  get created_at(): i32 {
+    let value = this.get("created_at");
     return value!.toI32();
   }
 
-  set createdAt(value: i32) {
-    this.set("createdAt", Value.fromI32(value));
+  set created_at(value: i32) {
+    this.set("created_at", Value.fromI32(value));
   }
 
-  get txHash(): string {
-    let value = this.get("txHash");
+  get tx_hash(): string {
+    let value = this.get("tx_hash");
     return value!.toString();
   }
 
-  set txHash(value: string) {
-    this.set("txHash", Value.fromString(value));
+  set tx_hash(value: string) {
+    this.set("tx_hash", Value.fromString(value));
   }
 
-  get isSpam(): boolean {
-    let value = this.get("isSpam");
+  get is_spam(): boolean {
+    let value = this.get("is_spam");
     return value!.toBoolean();
   }
 
-  set isSpam(value: boolean) {
-    this.set("isSpam", Value.fromBoolean(value));
+  set is_spam(value: boolean) {
+    this.set("is_spam", Value.fromBoolean(value));
   }
 
-  get isRemoved(): boolean {
-    let value = this.get("isRemoved");
+  get is_removed(): boolean {
+    let value = this.get("is_removed");
     return value!.toBoolean();
   }
 
-  set isRemoved(value: boolean) {
-    this.set("isRemoved", Value.fromBoolean(value));
+  set is_removed(value: boolean) {
+    this.set("is_removed", Value.fromBoolean(value));
   }
 
-  get isProtected(): boolean {
-    let value = this.get("isProtected");
+  get is_protected(): boolean {
+    let value = this.get("is_protected");
     return value!.toBoolean();
   }
 
-  set isProtected(value: boolean) {
-    this.set("isProtected", Value.fromBoolean(value));
+  set is_protected(value: boolean) {
+    this.set("is_protected", Value.fromBoolean(value));
   }
 }
 
@@ -286,30 +311,30 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get incomePrivate(): Array<string> {
-    let value = this.get("incomePrivate");
+  get income_private(): Array<string> {
+    let value = this.get("income_private");
     return value!.toStringArray();
   }
 
-  set incomePrivate(value: Array<string>) {
-    this.set("incomePrivate", Value.fromStringArray(value));
+  set income_private(value: Array<string>) {
+    this.set("income_private", Value.fromStringArray(value));
   }
 
-  get outcomePrivate(): Array<string> {
-    let value = this.get("outcomePrivate");
+  get outcome_private(): Array<string> {
+    let value = this.get("outcome_private");
     return value!.toStringArray();
   }
 
-  set outcomePrivate(value: Array<string>) {
-    this.set("outcomePrivate", Value.fromStringArray(value));
+  set outcome_private(value: Array<string>) {
+    this.set("outcome_private", Value.fromStringArray(value));
   }
 
-  get outcomeRoom(): Array<string> {
-    let value = this.get("outcomeRoom");
+  get outcome_room(): Array<string> {
+    let value = this.get("outcome_room");
     return value!.toStringArray();
   }
 
-  set outcomeRoom(value: Array<string>) {
-    this.set("outcomeRoom", Value.fromStringArray(value));
+  set outcome_room(value: Array<string>) {
+    this.set("outcome_room", Value.fromStringArray(value));
   }
 }

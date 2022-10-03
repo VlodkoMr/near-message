@@ -6,8 +6,8 @@ type _Schema_
     include: [{
         entity: "PrivateMessage",
         fields: [
-            { name: "fromAddress" },
-            { name: "toAddress" },
+            { name: "from_address" },
+            { name: "to_address" },
         ]
     }]
 )
@@ -19,42 +19,43 @@ type _Schema_
     include: [{
         entity: "RoomMessage",
         fields: [
-            { name: "toRoom" },
+            { name: "to_room" },
         ]
     }]
 )
 
 type PrivateMessage @entity {
     id: String!
-    fromUser: User!
-    toUser: User!
-    fromAddress: String!
-    toAddress: String!
+    from_user: User!
+    to_user: User!
+    from_address: String!
+    to_address: String!
+    reply_to_message: String
     text: String!
-    createdAt: Int!
-    txHash: String!
-    isSpam: Boolean!
-    isRemoved: Boolean!
-    isProtected: Boolean!
+    created_at: Int!
+    tx_hash: String!
+    is_spam: Boolean!
+    is_removed: Boolean!
+    is_protected: Boolean!
 }
 
 type RoomMessage @entity {
     id: String!
-    fromUser: User!
-    fromAddress: String!
-    replyForAddress: String!
-    toRoom: Int!
+    from_user: User!
+    from_address: String!
+    reply_to_message: String
+    to_room: Int!
     text: String!
-    createdAt: Int!
-    txHash: String!
-    isSpam: Boolean!
-    isRemoved: Boolean!
-    isProtected: Boolean!
+    created_at: Int!
+    tx_hash: String!
+    is_spam: Boolean!
+    is_removed: Boolean!
+    is_protected: Boolean!
 }
 
 type User @entity {
     id: String!
-    incomePrivate: [PrivateMessage!]! @derivedFrom(field: "toUser")
-    outcomePrivate: [PrivateMessage!]! @derivedFrom(field: "fromUser")
-    outcomeRoom: [RoomMessage!]! @derivedFrom(field: "fromUser")
+    income_private: [PrivateMessage!]! @derivedFrom(field: "to_user")
+    outcome_private: [PrivateMessage!]! @derivedFrom(field: "from_user")
+    outcome_room: [RoomMessage!]! @derivedFrom(field: "from_user")
 }
