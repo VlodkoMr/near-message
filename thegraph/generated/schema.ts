@@ -216,13 +216,13 @@ export class RoomMessage extends Entity {
     }
   }
 
-  get to_room(): i32 {
+  get to_room(): string {
     let value = this.get("to_room");
-    return value!.toI32();
+    return value!.toString();
   }
 
-  set to_room(value: i32) {
-    this.set("to_room", Value.fromI32(value));
+  set to_room(value: string) {
+    this.set("to_room", Value.fromString(value));
   }
 
   get text(): string {

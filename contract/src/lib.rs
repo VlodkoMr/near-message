@@ -4,7 +4,6 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
 use near_sdk::collections::LookupMap;
-use near_sdk::json_types::U128;
 
 mod utils;
 mod members;
@@ -81,18 +80,18 @@ impl Contract {
     }
 
     pub fn get_owner_rooms(&self, account: AccountId) -> Vec<Room> {
-        let id_list = self.owner_rooms.get(&account).unwrap();
+        let id_list = self.owner_rooms.get(&account).unwrap_or(vec![]);
         id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
     }
 
     pub fn get_user_rooms(&self, account: AccountId) -> Vec<Room> {
-        let id_list = self.user_rooms.get(&account).unwrap();
+        let id_list = self.user_rooms.get(&account).unwrap_or(vec![]);
         id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
     }
 
     /**
-    * Get price for creation next room
-    */
+     * Get price for creation next room
+     */
     pub fn get_next_room_price(&self, account: AccountId) -> Balance {
         let owner_rooms = self.owner_rooms.get(&account).unwrap_or(vec![]).len() as u32;
         Contract::room_create_price(owner_rooms)
@@ -101,6 +100,7 @@ impl Contract {
     /**
      * Create new room
      */
+    #[payable]
     pub fn create_new_room(&mut self, title: String, media: String, is_private: bool, is_read_only: bool, members: Vec<AccountId>) {
         let owner = env::predecessor_account_id();
         let mut owner_rooms = self.owner_rooms.get(&owner).unwrap_or(vec![]);
@@ -113,6 +113,10 @@ impl Contract {
         }
         if title.len() < 3 as usize || title.len() >= 160 as usize {
             env::panic_str("Wrong room title length");
+        }
+        let spam_count = self.user_spam_counts.get(&owner).unwrap_or(0);
+        if spam_count > 10 {
+            env::panic_str("You can't create rooms, spam detected");
         }
 
         self.rooms_count += 1;
@@ -213,6 +217,7 @@ impl Contract {
      * Join public room
      * (each member pay 0.1N to avoid spam)
      */
+    #[payable]
     pub fn join_public_room(&mut self, room_id: u32) {
         let room = self.rooms.get(&room_id).unwrap();
         let member = env::predecessor_account_id();
@@ -252,20 +257,26 @@ impl Contract {
     /**
      * Private Message
      */
-    pub fn send_private_message(&mut self, text: String, to_user: AccountId, reply_message_id: Option<U128>) {
+    pub fn send_private_message(&mut self, text: String, to_user: AccountId, reply_message_id: Option<String>) {
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
         if spam_count > 10 {
             env::panic_str("You can't send messages, spam detected");
         }
+        if to_user == account {
+            env::panic_str("Can't send message to yourself");
+        }
+        if text.len() > 5000 {
+            env::panic_str("One message is limited by 5000 characters");
+        }
 
         // send message
         self.messages_count += 1;
         let message = json!({
-            "id": self.messages_count,
+            "id": self.messages_count.to_string(),
             "from_user": account.to_string(),
             "to_user": to_user.to_string(),
-            "reply_id": Contract::get_reply_message_id(reply_message_id),
+            "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text
         }).to_string();
 
@@ -275,7 +286,7 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_room_message(&mut self, text: String, to_room: u32, reply_message_id: Option<U128>) {
+    pub fn send_room_message(&mut self, text: String, to_room: u32, reply_message_id: Option<String>) {
         let room = self.rooms.get(&to_room).unwrap();
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
@@ -294,10 +305,10 @@ impl Contract {
         // send message
         self.messages_count += 1;
         let message = json!({
-            "id": self.messages_count,
+            "id": self.messages_count.to_string(),
             "from_user": env::predecessor_account_id().to_string(),
             "to_room": to_room,
-            "reply_id": Contract::get_reply_message_id(reply_message_id),
+            "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text
         }).to_string();
 

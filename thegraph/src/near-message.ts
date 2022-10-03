@@ -122,7 +122,7 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message = new RoomMessage(messageId.toString())
         message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
-        message.to_room = toRoom.toBigInt().toI32();
+        message.to_room = toRoom.toBigInt().toString()
         message.text = messageText.toString()
         message.reply_to_message = replyMessageId
         message.is_spam = false

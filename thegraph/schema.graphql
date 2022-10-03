@@ -30,7 +30,7 @@ type PrivateMessage @entity {
     to_user: User!
     from_address: String!
     to_address: String!
-    reply_to_message: String
+    reply_to_message: PrivateMessage
     text: String!
     created_at: Int!
     tx_hash: String!
@@ -43,8 +43,8 @@ type RoomMessage @entity {
     id: String!
     from_user: User!
     from_address: String!
-    reply_to_message: String
-    to_room: Int!
+    reply_to_message: RoomMessage
+    to_room: String!
     text: String!
     created_at: Int!
     tx_hash: String!

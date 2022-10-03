@@ -14,13 +14,6 @@ impl Contract {
         }
     }
 
-    pub(crate) fn get_reply_message_id(reply_message_id: Option<U128>) -> String {
-        if reply_message_id.is_some() {
-            return reply_message_id.unwrap().0.to_string();
-        }
-        String::from("")
-    }
-
     /*
      * First 10 rooms = 0.1 NEAR, all next = 0.5 NEAR
      */
