@@ -10,6 +10,7 @@ mod utils;
 mod members;
 
 const MAX_MEMBERS_IN_ROOM: u32 = 1000;
+const CREATE_ROOM_PRICE: &str = "0.25";
 const JOIN_PUBLIC_PRICE: &str = "0.1";
 
 #[near_bindgen]
@@ -121,7 +122,7 @@ impl Contract {
         let owner = env::predecessor_account_id();
         let mut owner_rooms = self.owner_rooms.get(&owner).unwrap_or(vec![]);
 
-        if env::attached_deposit() < Contract::convert_to_yocto("0.25") {
+        if env::attached_deposit() < Contract::convert_to_yocto(CREATE_ROOM_PRICE) {
             env::panic_str("Wrong payment amount");
         }
         if members.len() > MAX_MEMBERS_IN_ROOM as usize {
@@ -355,7 +356,7 @@ mod tests {
     }
 
     fn create_room_internal(contract: &mut Contract, title: String, is_private: bool, is_readonly: bool, members: Vec<AccountId>) {
-        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
+        set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_ROOM_PRICE));
         contract.create_new_room(
             title, "".to_string(), is_private, is_readonly, members,
         );
@@ -436,6 +437,34 @@ mod tests {
         assert_eq!(no_rooms.len(), 0);
 
         let is_rooms = contract.get_user_rooms("m2.testnet".parse().unwrap());
+        assert_eq!(is_rooms.len(), 1);
+    }
+
+    #[test]
+    fn join_public_room() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
+
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 0);
+
+        // Join public room
+        set_context("new.testnet", Contract::convert_to_yocto(JOIN_PUBLIC_PRICE));
+        contract.join_public_room(1);
+
+        // Check user rooms
+        let is_rooms = contract.get_user_rooms("new.testnet".parse().unwrap());
+        assert_eq!(is_rooms.len(), 1);
+
+        // Owner add new member
+        set_context(NEAR_ID, 0);
+        contract.owner_add_room_members(1, vec!["m1.testnet".parse().unwrap()]);
+
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 2);
+
+        // Check user rooms
+        let is_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
         assert_eq!(is_rooms.len(), 1);
     }
 
