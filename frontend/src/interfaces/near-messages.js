@@ -106,6 +106,12 @@ export class NearMessages {
     })
   }
 
+  /**
+   * Add room members
+   * @param room_id
+   * @param members
+   * @returns {Promise<*>}
+   */
   async ownerAddRoomMembers(room_id, members) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -117,6 +123,12 @@ export class NearMessages {
     })
   }
 
+  /**
+   * Remove room members
+   * @param room_id
+   * @param members
+   * @returns {Promise<*>}
+   */
   async ownerRemoveRoomMembers(room_id, members) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -128,6 +140,12 @@ export class NearMessages {
     })
   }
 
+  /**
+   * Remove room
+   * @param room_id
+   * @param confirm_title
+   * @returns {Promise<*>}
+   */
   async ownerRemoveRoom(room_id, confirm_title) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -139,7 +157,11 @@ export class NearMessages {
     })
   }
 
-
+  /**
+   * Join Public room
+   * @param room_id
+   * @returns {Promise<*>}
+   */
   async join_public_room(room_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -150,6 +172,11 @@ export class NearMessages {
     })
   }
 
+  /**
+   * Leave room
+   * @param room_id
+   * @returns {Promise<*>}
+   */
   async leave_room(room_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -160,6 +187,13 @@ export class NearMessages {
     })
   }
 
+  /**
+   * Send message to Account
+   * @param text
+   * @param to_user
+   * @param reply_message_id
+   * @returns {Promise<*>}
+   */
   async sendPrivateMessage(text, to_user, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -172,7 +206,14 @@ export class NearMessages {
     })
   }
 
-  async send_room_message(text, to_room, reply_message_id) {
+  /**
+   * Send message to the room
+   * @param text
+   * @param to_room
+   * @param reply_message_id
+   * @returns {Promise<*>}
+   */
+  async sendRoomMessage(text, to_room, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_room_message',
