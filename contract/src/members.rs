@@ -5,8 +5,10 @@ impl Contract {
         let mut room = self.rooms.get(&room_id).unwrap();
         for member_address in members.into_iter() {
             let mut user_rooms = self.user_rooms.get(&member_address).unwrap_or(vec![]);
-            user_rooms.push(room.id);
-            self.user_rooms.insert(&member_address, &user_rooms);
+            if !user_rooms.contains(&room.id) {
+                user_rooms.push(room.id);
+                self.user_rooms.insert(&member_address, &user_rooms);
+            }
 
             if change_room && !room.members.contains(&member_address) {
                 if !room.members.contains(&member_address) {
