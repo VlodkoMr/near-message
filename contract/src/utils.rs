@@ -14,16 +14,6 @@ impl Contract {
         }
     }
 
-    /*
-     * First 10 rooms = 0.1 NEAR, all next = 0.5 NEAR
-     */
-    pub(crate) fn room_create_price(existing_rooms: u32) -> Balance {
-        if existing_rooms < 10 {
-            return Contract::convert_to_yocto("0.1");
-        }
-        return Contract::convert_to_yocto("0.5");
-    }
-
     // Generate random u8 number (0-254)
     // pub(crate) fn random_u8(&self, index: usize) -> u8 {
     //     *env::random_seed().get(index).unwrap()

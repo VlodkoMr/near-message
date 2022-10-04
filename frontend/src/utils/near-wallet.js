@@ -1,7 +1,4 @@
-/* A helper file that simplifies using the wallet selector */
-
-// near api js
-import { providers } from 'near-api-js';
+import { providers, utils } from 'near-api-js';
 
 // wallet selector UI
 import '@near-wallet-selector/modal-ui/styles.css';

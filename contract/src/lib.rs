@@ -90,14 +90,6 @@ impl Contract {
     }
 
     /**
-     * Get price for creation next room
-     */
-    pub fn get_next_room_price(&self, account: AccountId) -> Balance {
-        let owner_rooms = self.owner_rooms.get(&account).unwrap_or(vec![]).len() as u32;
-        Contract::room_create_price(owner_rooms)
-    }
-
-    /**
      * Create new room
      */
     #[payable]
@@ -105,7 +97,7 @@ impl Contract {
         let owner = env::predecessor_account_id();
         let mut owner_rooms = self.owner_rooms.get(&owner).unwrap_or(vec![]);
 
-        if env::attached_deposit() < Contract::room_create_price(owner_rooms.len() as u32) {
+        if env::attached_deposit() < Contract::convert_to_yocto("0.25") {
             env::panic_str("Wrong payment amount");
         }
         if members.len() > MAX_MEMBERS_IN_ROOM as usize {
@@ -200,12 +192,12 @@ impl Contract {
      * Remove room
      * (only room owner)
      */
-    pub fn owner_remove_room(&mut self, room_id: u32, approve_title: String) {
+    pub fn owner_remove_room(&mut self, room_id: u32, confirm_title: String) {
         let room = self.rooms.get(&room_id).unwrap();
         if room.owner != env::predecessor_account_id() {
             env::panic_str("No access to room modification");
         }
-        if approve_title != room.title {
+        if confirm_title != room.title {
             env::panic_str("Wrong approval for remove");
         }
 
