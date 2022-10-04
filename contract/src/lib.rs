@@ -303,7 +303,7 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_room_message(&mut self, text: String, to_room: u32, reply_message_id: Option<String>) {
+    pub fn send_room_message(&mut self, text: String, to_room: u32, reply_message_id: Option<String>) -> U128 {
         let room = self.rooms.get(&to_room).unwrap();
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
@@ -330,6 +330,8 @@ impl Contract {
         }).to_string();
 
         env::log_str(&message[..]);
+
+        self.messages_count.into()
     }
 }
 
@@ -352,6 +354,13 @@ mod tests {
         testing_env!(builder.build());
     }
 
+    fn create_room_internal(contract: &mut Contract, title: String, is_private: bool, is_readonly: bool, members: Vec<AccountId>) {
+        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
+        contract.create_new_room(
+            title, "".to_string(), is_private, is_readonly, members,
+        );
+    }
+
     #[test]
     fn send_private_message() {
         let mut contract = Contract::default();
@@ -363,45 +372,135 @@ mod tests {
     #[test]
     fn create_private_room() {
         let mut contract = Contract::default();
-
-        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
-        let members = vec!["test1".parse().unwrap(), "test2".parse().unwrap()];
-        contract.create_new_room(
-            "Room 1".to_string(), "https://someurl.com/image.png".to_string(), true, false, members,
-        );
+        create_room_internal(&mut contract, "Room 1".to_string(), true, false, vec![
+            "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
+        ]);
 
         assert_eq!(contract.get_rooms_count(), 1);
 
-        let room1 = contract.get_room_by_id(1);
-        assert_eq!(room1.title, "Room 1".to_string());
-        assert_eq!(room1.is_private, true);
-        assert_eq!(room1.is_read_only, false);
-        assert_eq!(room1.members.len(), 2);
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.title, "Room 1".to_string());
+        assert_eq!(room.is_private, true);
+        assert_eq!(room.is_read_only, false);
+        assert_eq!(room.members.len(), 2);
+
+        // Check owner rooms
+        let rooms = contract.get_owner_rooms(NEAR_ID.parse().unwrap());
+        assert_eq!(rooms.len(), 1);
+    }
+
+    #[test]
+    fn edit_room() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Room 1".to_string(), true, false, vec![]);
+
+        contract.edit_room(
+            1, "Room updated".to_string(), "".to_string(), false, false,
+        );
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.title, "Room updated".to_string());
+        assert_eq!(room.is_private, false);
     }
 
     #[test]
     fn create_public_room() {
         let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
 
-        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
-        contract.create_new_room(
-            "Room 2".to_string(), "".to_string(), false, false, vec![],
-        );
         assert_eq!(contract.get_rooms_count(), 1);
 
-        let room2 = contract.get_room_by_id(1);
-        assert_eq!(room2.title, "Room 2".to_string());
-        assert_eq!(room2.is_private, false);
-        assert_eq!(room2.is_read_only, false);
-        assert_eq!(room2.members.len(), 0);
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.title, "Room".to_string());
+        assert_eq!(room.is_private, false);
+        assert_eq!(room.is_read_only, false);
+        assert_eq!(room.members.len(), 0);
 
         // Add members
         contract.owner_add_room_members(1, vec![
-            "m1".parse().unwrap(),
-            "m1".parse().unwrap(), // duplicate test
-            "m2".parse().unwrap(),
+            "m1.testnet".parse().unwrap(),
+            "m1.testnet".parse().unwrap(), // duplicate test
+            "m2.testnet".parse().unwrap(),
         ]);
-        let room2 = contract.get_room_by_id(1);
-        assert_eq!(room2.members.len(), 2);
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 2);
+
+        // Remove member
+        contract.owner_remove_room_members(1, vec![
+            "m1.testnet".parse().unwrap()
+        ]);
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 1);
+
+        // Check user rooms
+        let no_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
+        assert_eq!(no_rooms.len(), 0);
+
+        let is_rooms = contract.get_user_rooms("m2.testnet".parse().unwrap());
+        assert_eq!(is_rooms.len(), 1);
+    }
+
+    #[test]
+    fn send_room_message() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+            "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
+        ]);
+
+        // Test owner message
+        set_context(NEAR_ID, 0);
+        let message_id = contract.send_room_message("Test message 1".to_string(), 1, None);
+        assert_eq!(message_id, U128::from(1));
+
+        // Test member message
+        set_context("m1.testnet", 0);
+        let message_id = contract.send_room_message("Test message 2".to_string(), 1, None);
+        assert_eq!(message_id, U128::from(2));
+    }
+
+    #[test]
+    fn leave_room() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+            "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
+        ]);
+
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 2);
+
+        set_context("m1.testnet", 0);
+        contract.leave_room(1);
+
+        let room = contract.get_room_by_id(1);
+        assert_eq!(room.members.len(), 1);
+
+        let no_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
+        assert_eq!(no_rooms.len(), 0);
+
+        let is_rooms = contract.get_user_rooms("m2.testnet".parse().unwrap());
+        assert_eq!(is_rooms.len(), 1);
+    }
+
+    #[test]
+    #[should_panic(expected = "No access to this room")]
+    fn private_room_message_no_access() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+            "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
+        ]);
+
+        // Test guest message - error expected
+        set_context("guest.testnet", 0);
+        contract.send_room_message("Test message 1".to_string(), 1, None);
+    }
+
+    #[test]
+    #[should_panic(expected = "No access to this room")]
+    fn readonly_room_message_no_access() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Readonly room".to_string(), false, true, vec![]);
+
+        // Test guest message - error expected
+        set_context("guest.testnet", 0);
+        contract.send_room_message("Test message 1".to_string(), 1, None);
     }
 }
