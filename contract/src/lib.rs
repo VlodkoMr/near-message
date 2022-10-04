@@ -532,4 +532,40 @@ mod tests {
         set_context("guest.testnet", 0);
         contract.send_room_message("Test message 1".to_string(), 1, None);
     }
+
+    #[test]
+    #[should_panic(expected = "No access to room modification")]
+    fn remove_room_no_access() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
+
+        // Test guest message - error expected
+        set_context("guest.testnet", 0);
+        contract.owner_remove_room(1, "Room".to_string());
+    }
+
+    #[test]
+    #[should_panic(expected = "No access to room modification")]
+    fn edit_room_no_access() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "My Room".to_string(), false, false, vec![]);
+
+        set_context("guest.testnet", 0);
+        contract.edit_room(
+            1, "Room updated".to_string(), "".to_string(), false, false,
+        );
+    }
+
+
+    #[test]
+    #[should_panic(expected = "No access to room modification")]
+    fn room_add_members_no_access() {
+        let mut contract = Contract::default();
+        create_room_internal(&mut contract, "My Room".to_string(), false, false, vec![]);
+
+        set_context("guest.testnet", 0);
+        contract.owner_add_room_members(
+            1, vec!["some.testnet".parse().unwrap()]
+        );
+    }
 }
