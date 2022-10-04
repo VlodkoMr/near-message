@@ -4,6 +4,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
 use near_sdk::collections::LookupMap;
+use near_sdk::json_types::U128;
 
 mod utils;
 mod members;
@@ -249,7 +250,7 @@ impl Contract {
     /**
      * Private Message
      */
-    pub fn send_private_message(&mut self, text: String, to_user: AccountId, reply_message_id: Option<String>) {
+    pub fn send_private_message(&mut self, text: String, to_user: AccountId, reply_message_id: Option<String>) -> U128 {
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
         if spam_count > 10 {
@@ -273,6 +274,7 @@ impl Contract {
         }).to_string();
 
         env::log_str(&message[..]);
+        self.messages_count.into()
     }
 
     /**
@@ -308,31 +310,28 @@ impl Contract {
     }
 }
 
-// /*
-//  * The rest of this file holds the inline tests for the code above
-//  * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
-//  */
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn get_default_greeting() {
-//         let contract = Contract::default();
-//         // this test did not call set_greeting so should return the default "Hello" greeting
-//         assert_eq!(
-//             contract.get_greeting(),
-//             "Hello".to_string()
-//         );
-//     }
-//
-//     #[test]
-//     fn set_then_get_greeting() {
-//         let mut contract = Contract::default();
-//         contract.set_greeting("howdy".to_string());
-//         assert_eq!(
-//             contract.get_greeting(),
-//             "howdy".to_string()
-//         );
-//     }
-// }
+/*
+ * Tests
+ */
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn send_private_message() {
+        let mut contract = Contract::default();
+
+        let message_id = contract.send_private_message(String::from("Test message 1"), "test.testnet".parse().unwrap(), None);
+        assert_eq!(message_id, U128::from(1));
+    }
+
+    // #[test]
+    // fn set_then_get_greeting() {
+    // let mut contract = Contract::default();
+    // contract.set_greeting("howdy".to_string());
+    // assert_eq!(
+    //     contract.get_greeting(),
+    //     "howdy".to_string()
+    // );
+    // }
+}
