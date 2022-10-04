@@ -76,15 +76,38 @@ impl Default for Contract {
 
 #[near_bindgen]
 impl Contract {
+    /**
+     * Get count rooms
+     */
+    pub fn get_rooms_count(&self) -> u32 {
+        self.rooms_count
+    }
+
+    /**
+     * Get count messages
+     */
+    pub fn get_messages_count(&self) -> U128 {
+        self.messages_count.into()
+    }
+
+    /**
+     * Get Room by ID
+     */
     pub fn get_room_by_id(&self, id: u32) -> Room {
         self.rooms.get(&id).unwrap()
     }
 
+    /**
+     * Get owner rooms
+     */
     pub fn get_owner_rooms(&self, account: AccountId) -> Vec<Room> {
         let id_list = self.owner_rooms.get(&account).unwrap_or(vec![]);
         id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
     }
 
+    /**
+     * Get user rooms
+     */
     pub fn get_user_rooms(&self, account: AccountId) -> Vec<Room> {
         let id_list = self.user_rooms.get(&account).unwrap_or(vec![]);
         id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
@@ -316,22 +339,69 @@ impl Contract {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use near_sdk::testing_env;
+    use near_sdk::test_utils::VMContextBuilder;
+    use near_sdk::Balance;
+
+    const NEAR_ID: &str = "tester.testnet";
+
+    fn set_context(predecessor: &str, amount: Balance) {
+        let mut builder = VMContextBuilder::new();
+        builder.predecessor_account_id(predecessor.parse().unwrap());
+        builder.attached_deposit(amount);
+        testing_env!(builder.build());
+    }
 
     #[test]
     fn send_private_message() {
         let mut contract = Contract::default();
 
-        let message_id = contract.send_private_message(String::from("Test message 1"), "test.testnet".parse().unwrap(), None);
+        let message_id = contract.send_private_message("Test message".to_string(), "test.testnet".parse().unwrap(), None);
         assert_eq!(message_id, U128::from(1));
     }
 
-    // #[test]
-    // fn set_then_get_greeting() {
-    // let mut contract = Contract::default();
-    // contract.set_greeting("howdy".to_string());
-    // assert_eq!(
-    //     contract.get_greeting(),
-    //     "howdy".to_string()
-    // );
-    // }
+    #[test]
+    fn create_private_room() {
+        let mut contract = Contract::default();
+
+        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
+        let members = vec!["test1".parse().unwrap(), "test2".parse().unwrap()];
+        contract.create_new_room(
+            "Room 1".to_string(), "https://someurl.com/image.png".to_string(), true, false, members,
+        );
+
+        assert_eq!(contract.get_rooms_count(), 1);
+
+        let room1 = contract.get_room_by_id(1);
+        assert_eq!(room1.title, "Room 1".to_string());
+        assert_eq!(room1.is_private, true);
+        assert_eq!(room1.is_read_only, false);
+        assert_eq!(room1.members.len(), 2);
+    }
+
+    #[test]
+    fn create_public_room() {
+        let mut contract = Contract::default();
+
+        set_context(NEAR_ID, Contract::convert_to_yocto("0.25"));
+        contract.create_new_room(
+            "Room 2".to_string(), "".to_string(), false, false, vec![],
+        );
+        assert_eq!(contract.get_rooms_count(), 1);
+
+        let room2 = contract.get_room_by_id(1);
+        assert_eq!(room2.title, "Room 2".to_string());
+        assert_eq!(room2.is_private, false);
+        assert_eq!(room2.is_read_only, false);
+        assert_eq!(room2.members.len(), 0);
+
+        // Add members
+        contract.owner_add_room_members(1, vec![
+            "m1".parse().unwrap(),
+            "m1".parse().unwrap(), // duplicate test
+            "m2".parse().unwrap(),
+        ]);
+        let room2 = contract.get_room_by_id(1);
+        assert_eq!(room2.members.len(), 2);
+    }
 }
