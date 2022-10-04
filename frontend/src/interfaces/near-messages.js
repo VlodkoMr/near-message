@@ -29,9 +29,7 @@ export class NearMessages {
    * Get owned rooms
    * @returns {Promise<any>}
    */
-  async getOwnerRooms() {
-    const account = "...";
-
+  async getOwnerRooms(account) {
     return await this.wallet.viewMethod({
       contractId: this.contractId,
       method: 'get_owner_rooms',
@@ -45,9 +43,7 @@ export class NearMessages {
    * Get rooms that user joined
    * @returns {Promise<any>}
    */
-  async getUserRooms() {
-    const account = "...";
-
+  async getUserRooms(account) {
     return await this.wallet.viewMethod({
       contractId: this.contractId,
       method: 'get_user_rooms',

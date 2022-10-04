@@ -1,8 +1,43 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
+import { createClient } from "urql";
+import { API_URL } from "../../settings/config";
+import { NearContext } from "../../context/NearContext";
 
 export const MessagesLeftPanel = () => {
+  const near = useContext(NearContext);
+  const [ isReady, setIsReady ] = useState(false);
+  const [ chatList, setChatList ] = useState([]);
+
+  const loadPrivateChatList = async () => {
+    const chatListQuery = `{
+        privateChatSearch(text:"${near.wallet.accountId}"){
+           id,
+           last_message{
+            id, 
+            text, 
+            from_user{id, media},
+            to_user{id, media},
+           },
+           updated_at,
+           is_removed
+        }
+      }`;
+    const client = new createClient({ url: API_URL })
+    const result = await client.query(chatListQuery).toPromise();
+    const chatList = result.data.privateChatSearch.filter(chat => !chat.is_removed).sort((a, b) => a.updated_at - b.updated_at);
+
+    console.log(`chatList`, chatList);
+    setChatList(chatList);
+  }
+
+
+  useEffect(() => {
+    loadPrivateChatList().then(() => {
+      setIsReady(true);
+    });
+  }, []);
 
   const handleSearch = () => {
 
@@ -48,23 +83,29 @@ export const MessagesLeftPanel = () => {
 
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
-        <div className="flex justify-between items-center p-3 hover:bg-gray-800 rounded-lg relative">
-          <div className="w-16 h-16 relative flex flex-shrink-0">
-            <img className="shadow-md rounded-full w-full h-full object-cover"
-                 src="https://randomuser.me/api/portraits/women/61.jpg"
-                 alt=""
-            />
-          </div>
-          <div className="flex-auto min-w-0 ml-4 mr-6 hidden md:block group-hover:block">
-            <p>Angelina Jolie</p>
-            <div className="flex items-center text-sm text-gray-600">
-              <div className="min-w-0">
-                <p className="truncate">Ok, see you at the subway in a bit.</p>
+        {isReady && (
+          chatList.map(chat => (
+            <div key={chat.id} className="flex justify-between items-center p-3 hover:bg-gray-800 rounded-lg relative">
+              <div className="w-16 h-16 relative flex flex-shrink-0">
+                <img className="shadow-md rounded-full w-full h-full object-cover"
+                     src="https://randomuser.me/api/portraits/women/61.jpg"
+                     alt=""
+                />
               </div>
-              <p className="ml-2 whitespace-no-wrap">Just now</p>
+              <div className="flex-auto min-w-0 ml-4 mr-6 hidden md:block group-hover:block">
+                <p>Angelina Jolie</p>
+                <div className="flex items-center text-sm text-gray-600">
+                  <div className="min-w-0">
+                    <p className="truncate">Ok, see you at the subway in a bit.</p>
+                  </div>
+                  <p className="ml-2 whitespace-no-wrap">Just now</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ))
+        )}
+
+
         {/*<div className="flex justify-between items-center p-3 hover:bg-gray-800 rounded-lg relative">*/}
         {/*  <div className="w-16 h-16 relative flex flex-shrink-0">*/}
         {/*    <img className="shadow-md rounded-full w-full h-full object-cover"*/}
