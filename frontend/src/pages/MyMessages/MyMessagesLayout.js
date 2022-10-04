@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Outlet, useNavigate } from 'react-router-dom';
 import { MessagesLeftPanel } from "../../components/MyMessages/MessagesLeftPanel";
 import { MessagesChat } from "../../components/MyMessages/MessagesChat";
@@ -8,6 +8,8 @@ import { NearContext } from "../../context/NearContext";
 
 export const MyMessagesLayout = () => {
   const near = useContext(NearContext);
+  const [ ownerRooms, setOwnerRooms ] = useState([]);
+  const [ memberRooms, setMemberRooms ] = useState([]);
 
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center bg-[#edf2f7]">

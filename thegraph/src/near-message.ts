@@ -1,5 +1,5 @@
 import {near, json, log} from "@graphprotocol/graph-ts"
-import {PrivateMessage, RoomMessage, User} from "../generated/schema"
+import {PrivateMessage, RoomMessage, User, PrivateChat} from "../generated/schema"
 
 export function handleReceipt(
   receipt: near.ReceiptWithOutcome
@@ -56,9 +56,13 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       if (!messageId || !fromUser || !toUser) return;
 
       let message = PrivateMessage.load(messageId.toString())
+      let timestampSeconds = receiptWithOutcome.block.header.timestampNanosec / 1000000000;
 
       if (!message) {
+        let chatId = getPrivateChatId(fromUser.toString(), toUser.toString());
+
         message = new PrivateMessage(messageId.toString())
+        message.chat_id = chatId.toString()
         message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
         message.to_user = toUser.toString()
@@ -69,7 +73,16 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.is_protected = false
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
-        message.created_at = receiptWithOutcome.block.header.timestampNanosec as i32;
+        message.created_at = timestampSeconds as i32;
+
+        let chat = PrivateChat.load(chatId.toString())
+        if (!chat) {
+          chat = new PrivateChat(chatId.toString())
+        }
+        chat.last_message = messageId.toString()
+        chat.is_removed = false
+        chat.updated_at = message.created_at
+        chat.save()
 
         let userFrom = User.load(fromUser.toString())
         if (!userFrom) {
@@ -103,10 +116,10 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
     const messageText = data.get('text')
-    const toRoom = data.get('to_room')
+    const roomId = data.get('room_id')
     const replyToMessage = data.get('reply_to_message')
 
-    if (messageText && toRoom) {
+    if (messageText && roomId) {
       const messageId = data.get('id')
       const fromUser = data.get('from_user')
       let replyMessageId = ""
@@ -117,18 +130,19 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       if (!messageId || !fromUser) return;
 
       let message = RoomMessage.load(messageId.toString())
+      let timestampSeconds = receiptWithOutcome.block.header.timestampNanosec / 1000000000;
 
       if (!message) {
         message = new RoomMessage(messageId.toString())
         message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
-        message.to_room = toRoom.toBigInt().toString()
+        message.room_id = roomId.toString()
         message.text = messageText.toString()
         message.reply_to_message = replyMessageId
         message.is_spam = false
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
-        message.created_at = receiptWithOutcome.block.header.timestampNanosec as i32;
+        message.created_at = timestampSeconds as i32;
 
         let userFrom = User.load(fromUser.toString())
         if (!userFrom) {
@@ -140,4 +154,11 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       }
     }
   }
+}
+
+function getPrivateChatId(user1: String, user2: String): String {
+  if (user1 > user2) {
+    return user1.concat("|").concat(user2.toString());
+  }
+  return user2.concat("|").concat(user1.toString());
 }

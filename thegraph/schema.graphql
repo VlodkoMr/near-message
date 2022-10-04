@@ -1,31 +1,53 @@
+#type _Schema_
+#@fulltext(
+#    name: "privateMessageSearch"
+#    language: en
+#    algorithm: rank
+#    include: [{
+#        entity: "PrivateMessage",
+#        fields: [
+#            { name: "text" },
+#            { name: "from_address" },
+#        ]
+#    }]
+#)
+#
+#@fulltext(
+#    name: "roomMessageSearch"
+#    language: en
+#    algorithm: rank
+#    include: [{
+#        entity: "RoomMessage",
+#        fields: [
+#            { name: "text" },
+#            { name: "room_id" },
+#        ]
+#    }]
+#)
+
 type _Schema_
 @fulltext(
-    name: "privateMessageSearch"
+    name: "privateChatSearch"
     language: en
     algorithm: rank
     include: [{
-        entity: "PrivateMessage",
+        entity: "PrivateChat",
         fields: [
-            { name: "from_address" },
-            { name: "to_address" },
+            { name: "id" },
         ]
     }]
 )
 
-@fulltext(
-    name: "roomMessageSearch"
-    language: en
-    algorithm: rank
-    include: [{
-        entity: "RoomMessage",
-        fields: [
-            { name: "to_room" },
-        ]
-    }]
-)
+type PrivateChat @entity {
+    id: ID!
+    last_message: PrivateMessage!
+    is_removed: Boolean!,
+    updated_at: Int!
+}
 
 type PrivateMessage @entity {
-    id: String!
+    id: ID!
+    chat_id: PrivateChat!,
     from_user: User!
     to_user: User!
     from_address: String!
@@ -40,22 +62,19 @@ type PrivateMessage @entity {
 }
 
 type RoomMessage @entity {
-    id: String!
+    id: ID!
     from_user: User!
     from_address: String!
     reply_to_message: RoomMessage
-    to_room: String!
+    room_id: String!
     text: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!
     is_removed: Boolean!
-    is_protected: Boolean!
 }
 
 type User @entity {
-    id: String!
-    income_private: [PrivateMessage!]! @derivedFrom(field: "to_user")
-    outcome_private: [PrivateMessage!]! @derivedFrom(field: "from_user")
-    outcome_room: [RoomMessage!]! @derivedFrom(field: "from_user")
+    id: ID!
+    media: String
 }

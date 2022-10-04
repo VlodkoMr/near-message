@@ -8,13 +8,14 @@ dataSources:
     name: NearMessage
     network: near-testnet
     source:
-      account: "dev-1664812336825-30156385662559"
-      startBlock: 101769693
+      account: "dev-1664893780246-90040408074648"
+      startBlock: 101853321
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - PrivateMessage
+        - PrivateChat
         - RoomMessage
         - User
       receiptHandlers:

@@ -11,6 +11,65 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class PrivateChat extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PrivateChat entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type PrivateChat must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("PrivateChat", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PrivateChat | null {
+    return changetype<PrivateChat | null>(store.get("PrivateChat", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get last_message(): string {
+    let value = this.get("last_message");
+    return value!.toString();
+  }
+
+  set last_message(value: string) {
+    this.set("last_message", Value.fromString(value));
+  }
+
+  get is_removed(): boolean {
+    let value = this.get("is_removed");
+    return value!.toBoolean();
+  }
+
+  set is_removed(value: boolean) {
+    this.set("is_removed", Value.fromBoolean(value));
+  }
+
+  get updated_at(): i32 {
+    let value = this.get("updated_at");
+    return value!.toI32();
+  }
+
+  set updated_at(value: i32) {
+    this.set("updated_at", Value.fromI32(value));
+  }
+}
+
 export class PrivateMessage extends Entity {
   constructor(id: string) {
     super();
@@ -40,6 +99,15 @@ export class PrivateMessage extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get chat_id(): string {
+    let value = this.get("chat_id");
+    return value!.toString();
+  }
+
+  set chat_id(value: string) {
+    this.set("chat_id", Value.fromString(value));
   }
 
   get from_user(): string {
@@ -216,13 +284,13 @@ export class RoomMessage extends Entity {
     }
   }
 
-  get to_room(): string {
-    let value = this.get("to_room");
+  get room_id(): string {
+    let value = this.get("room_id");
     return value!.toString();
   }
 
-  set to_room(value: string) {
-    this.set("to_room", Value.fromString(value));
+  set room_id(value: string) {
+    this.set("room_id", Value.fromString(value));
   }
 
   get text(): string {
@@ -269,15 +337,6 @@ export class RoomMessage extends Entity {
   set is_removed(value: boolean) {
     this.set("is_removed", Value.fromBoolean(value));
   }
-
-  get is_protected(): boolean {
-    let value = this.get("is_protected");
-    return value!.toBoolean();
-  }
-
-  set is_protected(value: boolean) {
-    this.set("is_protected", Value.fromBoolean(value));
-  }
 }
 
 export class User extends Entity {
@@ -311,30 +370,20 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get income_private(): Array<string> {
-    let value = this.get("income_private");
-    return value!.toStringArray();
+  get media(): string | null {
+    let value = this.get("media");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set income_private(value: Array<string>) {
-    this.set("income_private", Value.fromStringArray(value));
-  }
-
-  get outcome_private(): Array<string> {
-    let value = this.get("outcome_private");
-    return value!.toStringArray();
-  }
-
-  set outcome_private(value: Array<string>) {
-    this.set("outcome_private", Value.fromStringArray(value));
-  }
-
-  get outcome_room(): Array<string> {
-    let value = this.get("outcome_room");
-    return value!.toStringArray();
-  }
-
-  set outcome_room(value: Array<string>) {
-    this.set("outcome_room", Value.fromStringArray(value));
+  set media(value: string | null) {
+    if (!value) {
+      this.unset("media");
+    } else {
+      this.set("media", Value.fromString(<string>value));
+    }
   }
 }

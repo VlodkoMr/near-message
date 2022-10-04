@@ -118,7 +118,7 @@ impl Contract {
      * Create new room
      */
     #[payable]
-    pub fn create_new_room(&mut self, title: String, media: String, is_private: bool, is_read_only: bool, members: Vec<AccountId>) {
+    pub fn create_new_room(&mut self, title: String, media: String, is_private: bool, is_read_only: bool, members: Vec<AccountId>) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_rooms = self.owner_rooms.get(&owner).unwrap_or(vec![]);
 
@@ -159,6 +159,7 @@ impl Contract {
         if members.len() > 0 {
             self.add_room_member_internal(members, room_id, false);
         }
+        room_id
     }
 
     /**
@@ -304,8 +305,8 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_room_message(&mut self, text: String, to_room: u32, reply_message_id: Option<String>) -> U128 {
-        let room = self.rooms.get(&to_room).unwrap();
+    pub fn send_room_message(&mut self, text: String, room_id: u32, reply_message_id: Option<String>) -> U128 {
+        let room = self.rooms.get(&room_id).unwrap();
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
         if spam_count > 10 {
@@ -325,7 +326,7 @@ impl Contract {
         let message = json!({
             "id": self.messages_count.to_string(),
             "from_user": env::predecessor_account_id().to_string(),
-            "to_room": to_room,
+            "room_id": room_id.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text
         }).to_string();
@@ -565,7 +566,7 @@ mod tests {
 
         set_context("guest.testnet", 0);
         contract.owner_add_room_members(
-            1, vec!["some.testnet".parse().unwrap()]
+            1, vec!["some.testnet".parse().unwrap()],
         );
     }
 }
