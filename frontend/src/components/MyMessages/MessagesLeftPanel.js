@@ -5,6 +5,7 @@ import { NearContext } from "../../context/NearContext";
 import { loadPrivateChatsPromise, loadRoomChatsPromise } from "../../utils/requests";
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/format";
+import { UserGroupAvatar } from "./UserGroupAvatar";
 
 export const MessagesLeftPanel = () => {
   const near = useContext(NearContext);
@@ -44,6 +45,7 @@ export const MessagesLeftPanel = () => {
     rooms.map(room => {
       roomsById[room.id] = room;
     });
+    console.log(`roomsById`, roomsById);
     setRoomsById(roomsById);
   }
 
@@ -57,13 +59,11 @@ export const MessagesLeftPanel = () => {
   const LastRoomMessage = ({ chat }) => (
     <>
       <div className="w-16 h-16 relative flex flex-shrink-0">
-        <img className="shadow-md rounded-full w-full h-full object-cover"
-             src="https://randomuser.me/api/portraits/men/45.jpg"
-             alt="User2"
-        />
-        <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0">
-          <img className="rounded-full w-full h-full object-cover" alt="user2"
-               src="https://randomuser.me/api/portraits/men/45.jpg"/>
+        <UserGroupAvatar media={roomsById[chat.id].media} title={roomsById[chat.id].title} textSize={"text-4xl"}/>
+        <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0 border border-gray-500 rounded-full">
+          <UserGroupAvatar media={chat.last_message.from_user.media}
+                           title={chat.last_message.from_user.id}
+                           textSize={"text-sm"}/>
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
@@ -82,18 +82,15 @@ export const MessagesLeftPanel = () => {
   )
 
   const LastPrivateMessage = ({ chat }) => {
-    const opponentName = chat.last_message.from_user.id === near.wallet.accountId ? chat.last_message.to_user.id : chat.last_message.from_user.id;
+    const opponent = chat.last_message.from_user.id === near.wallet.accountId ? chat.last_message.to_user : chat.last_message.from_user;
 
     return (
       <>
         <div className="w-16 h-16 relative flex flex-shrink-0">
-          <img className="shadow-md rounded-full w-full h-full object-cover"
-               src="https://randomuser.me/api/portraits/women/61.jpg"
-               alt=""
-          />
+          <UserGroupAvatar media={opponent.media} title={opponent.id} textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium"}>{opponentName}</p>
+          <p className={"font-medium"}>{opponent.id}</p>
           <div className="flex items-center text-sm text-gray-600">
             <div className="min-w-0 flex-1">
               <p className="truncate">{chat.last_message.text}</p>

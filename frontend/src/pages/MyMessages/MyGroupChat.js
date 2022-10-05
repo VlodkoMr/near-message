@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useNavigate } from 'react-router-dom';
@@ -7,16 +7,34 @@ import { createClient } from "urql";
 import { API_URL } from "../../settings/config";
 import { MyMessagesHeader } from "../../components/MyMessages/Header";
 import { loadRoomMessages } from "../../utils/requests";
+import { Loader } from "../../components/Loader";
+import { OneMessage } from "../../components/MyMessages/OneMessage";
+import { WriteMessage } from "../../components/MyMessages/WriteMessage";
+import { NearContext } from "../../context/NearContext";
 
 export const MyGroupChat = () => {
   const navigate = useNavigate();
+  const near = useContext(NearContext);
   const [ toAddress, setToAddress ] = useState("");
   const [ messageText, setMessageText ] = useState("");
   const [ messages, setMessages ] = useState([]);
+  const [ isReady, setIsReady ] = useState(false);
 
 
   useEffect(() => {
     loadRoomMessages().then(messages => {
+      let lastMessageUser;
+      messages.map((message, index) => {
+        message.isFirst = lastMessageUser !== message.from_user.id;
+        message.isMy = message.from_user.id !== near.wallet.accountId;
+        message.isLast = !messages[index + 1] || messages[index + 1].from_user.id !== message.from_user.id;
+
+        lastMessageUser = message.from_user.id;
+        return message;
+      });
+
+      setMessages(messages);
+      setIsReady(true);
       console.log(`messages`, messages);
     });
   }, []);
@@ -40,9 +58,19 @@ export const MyGroupChat = () => {
   return (
     <>
       <MyMessagesHeader/>
-      <div>
-        MyGroupChat
+
+      <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
+        {isReady ? messages.map(message => (
+            <OneMessage message={message} key={message.id}/>
+          )
+        ) : (
+          <div className={"mx-auto w-8 pt-2"}>
+            <Loader/>
+          </div>
+        )}
       </div>
+
+      <WriteMessage/>
     </>
   );
 };

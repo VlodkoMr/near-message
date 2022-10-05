@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 export const MyMessagesHeader = () => {
   const near = useContext(NearContext);
   return (
-    <div className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-800">
+    <div className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/60">
       <div className="flex">
         <div className="w-12 h-12 mr-4 relative flex flex-shrink-0">
           <img className="shadow-md rounded-full w-full h-full object-cover"

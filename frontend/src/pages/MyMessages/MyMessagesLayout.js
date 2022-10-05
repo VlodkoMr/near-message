@@ -14,9 +14,9 @@ export const MyMessagesLayout = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden flex items-center justify-center bg-[#edf2f7]">
+    <div className="h-screen overflow-hidden flex items-center justify-center bg-gray-700">
 
-      <div className="h-screen w-full flex antialiased text-gray-200 bg-gray-900 overflow-hidden">
+      <div className="h-screen w-full flex antialiased text-gray-200 bg-gray-900/80 overflow-hidden">
         <div className="flex-1 flex flex-col">
           <main className="flex-grow flex flex-row min-h-0">
             <section
@@ -24,7 +24,7 @@ export const MyMessagesLayout = () => {
               <MessagesLeftPanel/>
             </section>
 
-            <section className="flex flex-col flex-auto border-l border-gray-800">
+            <section className="flex flex-col flex-auto border-l border-gray-700/60">
 
               <Outlet/>
 
