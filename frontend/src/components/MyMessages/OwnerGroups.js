@@ -17,7 +17,7 @@ export const OwnerGroups = () => {
   }, []);
 
   return (
-    <div className="active-users flex flex-row px-4 overflow-auto w-0 min-w-full">
+    <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">
       <div className="text-sm text-center mr-2">
         <button className="flex flex-shrink-0 focus:outline-none block bg-gray-800 text-gray-600 rounded-full w-16 h-16"
                 type="button">
@@ -29,7 +29,7 @@ export const OwnerGroups = () => {
       </div>
 
       {ownerGroup.length > 0 && ownerGroup.map(room => (
-        <div className="text-sm text-center mr-2">
+        <div className="text-sm text-center mr-2" key={room.id}>
           <div className="border-blue-600 rounded-full">
             <div className="w-16 h-16 relative">
               <img className="shadow-md rounded-full w-full h-full object-cover"

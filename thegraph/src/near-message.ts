@@ -1,5 +1,5 @@
 import {near, json, log} from "@graphprotocol/graph-ts"
-import {PrivateMessage, RoomMessage, User, PrivateChat} from "../generated/schema"
+import {PrivateMessage, RoomMessage, User, PrivateChat, RoomChat} from "../generated/schema"
 
 export function handleReceipt(
   receipt: near.ReceiptWithOutcome
@@ -143,6 +143,15 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;
+
+        let chat = RoomChat.load(roomId.toString())
+        if (!chat) {
+          chat = new RoomChat(roomId.toString())
+        }
+        chat.last_message = messageId.toString()
+        chat.is_removed = false
+        chat.updated_at = message.created_at
+        chat.save()
 
         let userFrom = User.load(fromUser.toString())
         if (!userFrom) {

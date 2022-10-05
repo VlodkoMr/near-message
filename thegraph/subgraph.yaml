@@ -17,6 +17,7 @@ dataSources:
         - PrivateMessage
         - PrivateChat
         - RoomMessage
+        - RoomChat
         - User
       receiptHandlers:
         - handler: handleReceipt

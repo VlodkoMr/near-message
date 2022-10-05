@@ -218,6 +218,65 @@ export class PrivateMessage extends Entity {
   }
 }
 
+export class RoomChat extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RoomChat entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RoomChat must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RoomChat", id.toString(), this);
+    }
+  }
+
+  static load(id: string): RoomChat | null {
+    return changetype<RoomChat | null>(store.get("RoomChat", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get last_message(): string {
+    let value = this.get("last_message");
+    return value!.toString();
+  }
+
+  set last_message(value: string) {
+    this.set("last_message", Value.fromString(value));
+  }
+
+  get is_removed(): boolean {
+    let value = this.get("is_removed");
+    return value!.toBoolean();
+  }
+
+  set is_removed(value: boolean) {
+    this.set("is_removed", Value.fromBoolean(value));
+  }
+
+  get updated_at(): i32 {
+    let value = this.get("updated_at");
+    return value!.toI32();
+  }
+
+  set updated_at(value: i32) {
+    this.set("updated_at", Value.fromI32(value));
+  }
+}
+
 export class RoomMessage extends Entity {
   constructor(id: string) {
     super();

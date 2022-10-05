@@ -61,6 +61,13 @@ type PrivateMessage @entity {
     is_protected: Boolean!
 }
 
+type RoomChat @entity {
+    id: ID!
+    last_message: RoomMessage!
+    is_removed: Boolean!,
+    updated_at: Int!
+}
+
 type RoomMessage @entity {
     id: ID!
     from_user: User!
