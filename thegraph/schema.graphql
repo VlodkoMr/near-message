@@ -43,6 +43,7 @@ type PrivateChat @entity {
     last_message: PrivateMessage!
     is_removed: Boolean!,
     updated_at: Int!
+    total_messages: Int!
 }
 
 type PrivateMessage @entity {
@@ -66,6 +67,7 @@ type RoomChat @entity {
     last_message: RoomMessage!
     is_removed: Boolean!,
     updated_at: Int!
+    total_messages: Int!
 }
 
 type RoomMessage @entity {

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { NearContext } from "../../context/NearContext";
 import { UserGroupAvatar } from "./UserGroupAvatar";
+import { timestampToDate, timestampToTime } from "../../utils/format";
 
 export const OneMessage = ({ message }) => {
   const near = useContext(NearContext);
@@ -8,13 +9,15 @@ export const OneMessage = ({ message }) => {
   return (
     <>
       {message.isFirst && (
-        <p class="p-4 text-center text-sm text-gray-500">12:40 PM</p>
+        <p class="p-4 text-center text-sm text-gray-500">
+          {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
+        </p>
       )}
 
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div class="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
-            <UserGroupAvatar media={message.from_user.media} title={message.from_user.id} />
+            <UserGroupAvatar media={message.from_user.media} title={message.from_user.id}/>
           )}
         </div>
 

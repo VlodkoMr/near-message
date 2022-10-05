@@ -26,6 +26,21 @@ export class NearMessages {
   }
 
   /**
+   * User additional Info
+   * @param address
+   * @returns {Promise<any>}
+   */
+  async getUserInfo(address) {
+    return await this.wallet.viewMethod({
+      contractId: this.contractId,
+      method: 'get_user_info',
+      args: {
+        address
+      }
+    });
+  }
+
+  /**
    * Get owned rooms
    * @returns {Promise<any>}
    */
@@ -158,7 +173,7 @@ export class NearMessages {
    * @param room_id
    * @returns {Promise<*>}
    */
-  async join_public_room(room_id) {
+  async joinPublicRoom(room_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'join_public_room',
@@ -173,7 +188,7 @@ export class NearMessages {
    * @param room_id
    * @returns {Promise<*>}
    */
-  async leave_room(room_id) {
+  async leaveRoom(room_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'leave_room',

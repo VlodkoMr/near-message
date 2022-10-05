@@ -10,7 +10,7 @@ export const MyDashboard = () => {
 
   return (
     <>
-      <MyMessagesHeader/>
+      <MyMessagesHeader title={"xxx"} media={""}/>
       <div>
         MyDashboard
       </div>

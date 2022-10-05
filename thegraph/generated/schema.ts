@@ -68,6 +68,15 @@ export class PrivateChat extends Entity {
   set updated_at(value: i32) {
     this.set("updated_at", Value.fromI32(value));
   }
+
+  get total_messages(): i32 {
+    let value = this.get("total_messages");
+    return value!.toI32();
+  }
+
+  set total_messages(value: i32) {
+    this.set("total_messages", Value.fromI32(value));
+  }
 }
 
 export class PrivateMessage extends Entity {
@@ -274,6 +283,15 @@ export class RoomChat extends Entity {
 
   set updated_at(value: i32) {
     this.set("updated_at", Value.fromI32(value));
+  }
+
+  get total_messages(): i32 {
+    let value = this.get("total_messages");
+    return value!.toI32();
+  }
+
+  set total_messages(value: i32) {
+    this.set("total_messages", Value.fromI32(value));
   }
 }
 

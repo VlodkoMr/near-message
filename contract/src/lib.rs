@@ -99,6 +99,13 @@ impl Contract {
     }
 
     /**
+     * Get User Info
+     */
+    pub fn get_user_info(&self, address: AccountId) -> Option<User> {
+        self.users.get(&address)
+    }
+
+    /**
      * Get owner rooms
      */
     pub fn get_owner_rooms(&self, account: AccountId) -> Vec<Room> {

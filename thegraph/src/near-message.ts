@@ -78,9 +78,11 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         let chat = PrivateChat.load(chatId.toString())
         if (!chat) {
           chat = new PrivateChat(chatId.toString())
+          chat.total_messages = 0
         }
         chat.last_message = messageId.toString()
         chat.is_removed = false
+        chat.total_messages += 1
         chat.updated_at = message.created_at
         chat.save()
 
@@ -147,8 +149,10 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         let chat = RoomChat.load(roomId.toString())
         if (!chat) {
           chat = new RoomChat(roomId.toString())
+          chat.total_messages = 0
         }
         chat.last_message = messageId.toString()
+        chat.total_messages += 1
         chat.is_removed = false
         chat.updated_at = message.created_at
         chat.save()

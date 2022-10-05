@@ -72,10 +72,10 @@ export const MessagesLeftPanel = () => {
           <div className="min-w-0 flex-1">
             <p className="truncate">{chat.last_message.text}</p>
           </div>
-          <p className="ml-2 whitespace-nowrap text-right -mt-5">
-            <div>{timestampToDate(chat.updated_at)}</div>
-            <div>{timestampToTime(chat.updated_at)}</div>
-          </p>
+          <div className="ml-2 whitespace-nowrap text-right -mt-5">
+            <p>{timestampToDate(chat.updated_at)}</p>
+            <p>{timestampToTime(chat.updated_at)}</p>
+          </div>
         </div>
       </div>
     </>
@@ -95,10 +95,10 @@ export const MessagesLeftPanel = () => {
             <div className="min-w-0 flex-1">
               <p className="truncate">{chat.last_message.text}</p>
             </div>
-            <p className="ml-2 whitespace-nowrap text-right -mt-5">
-              <div>{timestampToDate(chat.updated_at)}</div>
-              <div>{timestampToTime(chat.updated_at)}</div>
-            </p>
+            <div className="ml-2 whitespace-nowrap text-right -mt-5">
+              <p>{timestampToDate(chat.updated_at)}</p>
+              <p>{timestampToTime(chat.updated_at)}</p>
+            </div>
           </div>
         </div>
       </>
@@ -110,9 +110,12 @@ export const MessagesLeftPanel = () => {
       <div className="header p-4 flex flex-row justify-between items-center flex-none">
         <Link to={"/"}
               className="w-12 h-12 relative flex flex-shrink-0 hover:bg-gray-700 bg-gray-800 rounded-full justify-center transition">
-          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6 mt-3 opacity-90"}/>
+          &laquo;
         </Link>
-        <p className="text-md font-bold hidden md:block group-hover:block">NEAR Messenger</p>
+        <p className="text-md font-bold hidden md:block group-hover:block">
+          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-4 mt-1 opacity-90"}/>
+        </p>
+        {/*ChatLog*/}
         <a href="#"
            className="block rounded-full hover:bg-gray-700 bg-gray-800 w-12 h-12 p-3 hidden md:block group-hover:block ">
           <svg viewBox="0 0 24 24" className="w-full h-full fill-current">

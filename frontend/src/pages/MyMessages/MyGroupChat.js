@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Header } from "../../components/Header";
-import { Footer } from "../../components/Footer";
-import { useNavigate } from 'react-router-dom';
-import { createClient } from "urql";
-
-import { API_URL } from "../../settings/config";
+import { useNavigate, useParams } from 'react-router-dom';
 import { MyMessagesHeader } from "../../components/MyMessages/Header";
 import { loadRoomMessages } from "../../utils/requests";
 import { Loader } from "../../components/Loader";
@@ -14,14 +9,22 @@ import { NearContext } from "../../context/NearContext";
 
 export const MyGroupChat = () => {
   const navigate = useNavigate();
+  let { id } = useParams();
   const near = useContext(NearContext);
-  const [ toAddress, setToAddress ] = useState("");
-  const [ messageText, setMessageText ] = useState("");
   const [ messages, setMessages ] = useState([]);
   const [ isReady, setIsReady ] = useState(false);
+  const [ room, setRoom ] = useState();
 
+  const loadRoomInfo = async () => {
+    return await near.mainContract.getRoomById(parseInt(id));
+  }
 
   useEffect(() => {
+    loadRoomInfo().then(room => {
+      console.log(`room`, room);
+      setRoom(room);
+    })
+
     loadRoomMessages().then(messages => {
       let lastMessageUser;
       messages.map((message, index) => {
@@ -57,7 +60,13 @@ export const MyGroupChat = () => {
 
   return (
     <>
-      <MyMessagesHeader/>
+      {room && (
+        <MyMessagesHeader room={room}
+                          title={room.title}
+                          media={room.media}
+        />
+      )}
+
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
         {isReady ? messages.map(message => (
