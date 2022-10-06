@@ -2,7 +2,8 @@ import React from "react";
 
 export const Avatar = ({ media, title, textSize }) => (
   <div
-    className="shadow-md rounded-full w-full h-full bg-gray-600 text-center flex items-center justify-center border border-gray-500/80 rounded-full">
+    className="shadow-md rounded-full w-full h-full bg-gray-600 text-center flex items-center justify-center border
+    border-gray-500/80 rounded-full text-white">
     {media ? (
       <img src={media} alt="" className={"object-cover w-full h-full"}/>
     ) : (

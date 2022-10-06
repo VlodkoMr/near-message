@@ -2,7 +2,7 @@ import { utils } from 'near-api-js';
 
 const THIRTY_TGAS = '30000000000000';
 
-export class NearMessages {
+export class MainContract {
   constructor({ contractId, walletToUse }) {
     this.contractId = contractId;
     this.wallet = walletToUse;
@@ -232,6 +232,29 @@ export class NearMessages {
         text,
         to_room,
         reply_message_id
+      }
+    })
+  }
+
+  /**
+   * Create user account
+   * @param media
+   * @param instagram
+   * @param telegram
+   * @param twitter
+   * @param website
+   * @returns {Promise<*>}
+   */
+  async createUserAccount(media, instagram, telegram, twitter, website) {
+    return await this.wallet.callMethod({
+      contractId: this.contractId,
+      method: 'create_user_account',
+      args: {
+        media,
+        instagram,
+        telegram,
+        twitter,
+        website,
       }
     })
   }

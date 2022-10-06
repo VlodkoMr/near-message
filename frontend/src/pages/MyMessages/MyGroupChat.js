@@ -6,6 +6,7 @@ import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
+import { transformMessages } from "../../utils/transform";
 
 export const MyGroupChat = () => {
   const navigate = useNavigate();
@@ -20,27 +21,17 @@ export const MyGroupChat = () => {
   }
 
   useEffect(() => {
+    setIsReady(false);
     loadRoomInfo().then(room => {
       console.log(`room`, room);
       setRoom(room);
     })
 
-    loadRoomMessages().then(messages => {
-      let lastMessageUser;
-      messages.map((message, index) => {
-        message.isFirst = lastMessageUser !== message.from_user.id;
-        message.isMy = message.from_user.id !== near.wallet.accountId;
-        message.isLast = !messages[index + 1] || messages[index + 1].from_user.id !== message.from_user.id;
-
-        lastMessageUser = message.from_user.id;
-        return message;
-      });
-
-      setMessages(messages);
+    loadRoomMessages(id).then(messages => {
+      setMessages(transformMessages(messages, near.wallet.accountId));
       setIsReady(true);
-      console.log(`messages`, messages);
     });
-  }, []);
+  }, [ id ]);
 
   // const handleSend = (e) => {
   //   e.preventDefault();
@@ -66,7 +57,6 @@ export const MyGroupChat = () => {
                           media={room.media}
         />
       )}
-
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
         {isReady ? messages.map(message => (

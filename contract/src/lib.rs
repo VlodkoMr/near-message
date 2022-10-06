@@ -352,7 +352,7 @@ impl Contract {
      * Register user account
      */
     #[payable]
-    pub fn create_account(
+    pub fn create_user_account(
         &mut self, media: String, instagram: Option<String>, telegram: Option<String>, twitter: Option<String>, website: Option<String>,
     ) {
         let account = env::predecessor_account_id();

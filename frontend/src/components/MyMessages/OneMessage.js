@@ -9,13 +9,13 @@ export const OneMessage = ({ message }) => {
   return (
     <>
       {message.isFirst && (
-        <p class="p-4 text-center text-sm text-gray-500">
+        <p className="p-4 text-center text-sm text-gray-500">
           {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
         </p>
       )}
 
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
-        <div class="w-8 h-8 relative flex flex-shrink-0 mr-4">
+        <div className="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
             <Avatar media={message.from_user.media} title={message.from_user.id}/>
           )}
@@ -26,7 +26,7 @@ export const OneMessage = ({ message }) => {
             <p className={`px-6 py-3 max-w-xs lg:max-w-md
             ${message.isFirst && "rounded-t-full"}
             ${message.isLast && "rounded-b-full"}
-            ${message.isMy ? "bg-blue-700 rounded-l-full" : "bg-gray-700/60 rounded-r-full text-gray-200"}`}>
+            ${message.isMy ? "bg-blue-500/40 rounded-l-full" : "bg-gray-700/60 rounded-r-full text-gray-200"}`}>
               {message.text}
             </p>
 

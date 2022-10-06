@@ -5,42 +5,57 @@ import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
+import { loadPrivateMessages } from "../../utils/requests";
+import { transformMessages } from "../../utils/transform";
 
 export const MyPrivateChat = () => {
-  const navigate = useNavigate();
+  let { id } = useParams();
   const near = useContext(NearContext);
   const [ isReady, setIsReady ] = useState(false);
   const [ messages, setMessages ] = useState([]);
-  const [ opponentAddress, setOpponentAddress ] = useState();
-  const [ opponentMedia, setOpponentMedia ] = useState("");
-  let { id } = useParams();
+  const [ opponent, setOpponent ] = useState({
+    address: "",
+    media: "",
+    level: "",
+    instagram: "",
+    telegram: "",
+    twitter: "",
+    website: "",
+  });
 
   useEffect(() => {
+    setIsReady(false);
+
     const address = id.split("|");
-    if (address[0] === near.wallet.accountId) {
-      setOpponentAddress(address[1]);
-    } else {
-      setOpponentAddress(address[0]);
-    }
+    const opponent = (address[0] === near.wallet.accountId) ? address[1] : address[0];
+    loadUserInfo(opponent).then(result => {
+      setOpponent(result);
+    });
+
+    loadChatMessages().then(messages => {
+      console.log(`messages`, messages);
+    });
   }, [ id ]);
 
-  useEffect(() => {
-    if (opponentAddress) {
-      loadUserInfo();
-    }
-  }, [ opponentAddress ]);
-
-  const loadUserInfo = async () => {
+  const loadUserInfo = async (opponentAddress) => {
     const user = await near.mainContract.getUserInfo(opponentAddress);
     if (user) {
-      setOpponentMedia(user.media);
+      return user;
     }
+    return { address: opponentAddress };
+  }
+
+  const loadChatMessages = async () => {
+    loadPrivateMessages(id).then(messages => {
+      setMessages(transformMessages(messages, near.wallet.accountId));
+      setIsReady(true);
+    });
   }
 
   return (
     <>
-      {opponentAddress && (
-        <MyMessagesHeader title={opponentAddress} media={opponentMedia}/>
+      {opponent.address && (
+        <MyMessagesHeader title={opponent.address} media={opponent.media}/>
       )}
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>

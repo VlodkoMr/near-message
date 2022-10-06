@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { NearContext } from "../../context/NearContext";
 import { loadPrivateChatsPromise, loadRoomChatsPromise } from "../../utils/requests";
@@ -10,13 +10,22 @@ import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
+  let { id } = useParams();
   const [ isReady, setIsReady ] = useState(false);
   const [ roomsById, setRoomsById ] = useState({});
   const [ chatList, setChatList ] = useState([]);
+  const [ activeType, setActiveType ] = useState("");
 
   const loadRoomsIdList = async () => {
     return await near.mainContract.getUserRooms(near.wallet.accountId);
   }
+
+  useEffect(() => {
+    setActiveType("");
+    if (id) {
+      setActiveType(id.indexOf("|") !== -1 ? "private" : "room");
+    }
+  }, [ id ]);
 
   useEffect(() => {
     loadRoomsIdList().then(rooms => {
@@ -53,8 +62,13 @@ export const LeftPanel = () => {
   const handleSearch = () => {
 
   }
+
   const isRoomChat = (chat) => {
     return chat["__typename"] === "RoomChat";
+  }
+
+  const isSelected = (chat) => {
+    return activeType.length > 0 && chat.id === id;
   }
 
   const LastRoomMessage = ({ chat }) => (
@@ -68,12 +82,12 @@ export const LeftPanel = () => {
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-        <p className={"font-medium"}>{roomsById[chat.id].title}</p>
-        <div className="flex items-center text-sm text-gray-600">
+        <p className={"font-medium text-gray-50"}>{roomsById[chat.id].title}</p>
+        <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
-            <p className="truncate">{chat.last_message.text}</p>
+            <p className="truncate opacity-60">{chat.last_message.text}</p>
           </div>
-          <div className="ml-2 whitespace-nowrap text-right -mt-5">
+          <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
             <p>{timestampToDate(chat.updated_at)}</p>
             <p>{timestampToTime(chat.updated_at)}</p>
           </div>
@@ -91,12 +105,12 @@ export const LeftPanel = () => {
           <Avatar media={opponent.media} title={opponent.id} textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium"}>{opponent.id}</p>
-          <div className="flex items-center text-sm text-gray-600">
+          <p className={"font-medium text-gray-50"}>{opponent.id}</p>
+          <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
-              <p className="truncate">{chat.last_message.text}</p>
+              <p className="truncate opacity-60">{chat.last_message.text}</p>
             </div>
-            <div className="ml-2 whitespace-nowrap text-right -mt-5">
+            <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
               <p>{timestampToDate(chat.updated_at)}</p>
               <p>{timestampToTime(chat.updated_at)}</p>
             </div>
@@ -113,9 +127,9 @@ export const LeftPanel = () => {
           className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block cursor-pointer transition">
           <AiOutlineUsergroupAdd size={26}/>
         </span>
-        <p className="text-md font-bold hidden md:block group-hover:block">
-          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6 opacity-70"}/>
-        </p>
+        <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-70 hover:opacity-100 transition">
+          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
+        </Link>
         <span
           className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2.5 hidden md:block group-hover:block cursor-pointer transition">
           <BsPencilSquare size={20}/>
@@ -147,7 +161,8 @@ export const LeftPanel = () => {
           chatList.map(chat => (
             <Link to={`/my/${isRoomChat(chat) ? "group" : "account"}/${chat.id}`}
                   key={chat.id}
-                  className="flex justify-between items-center p-2 hover:bg-gray-800 rounded-lg relative">
+                  className={`flex justify-between items-center p-2 rounded-lg relative mb-1
+                  ${isSelected(chat) ? "bg-blue-500/40 text-gray-200" : "hover:bg-gray-800/60 text-gray-400"}`}>
               {(isRoomChat(chat)) ? (
                 <LastRoomMessage chat={chat}/>
               ) : (

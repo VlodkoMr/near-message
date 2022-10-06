@@ -53,7 +53,7 @@ export const loadRoomChatsPromise = (idList) => {
   });
 }
 
-export const loadRoomMessages = async () => {
+export const loadRoomMessages = async (roomId) => {
   return new Promise(async (resolve) => {
     const messagesQuery = `{
     roomMessages(
@@ -61,7 +61,7 @@ export const loadRoomMessages = async () => {
       orderBy: created_at, 
       orderDirection: desc,
       where: {
-        room_id: "2",
+        room_id: "${roomId}",
       }) {
         id
         text
@@ -72,5 +72,28 @@ export const loadRoomMessages = async () => {
     const result = await client.query(messagesQuery).toPromise();
 
     resolve(result.data.roomMessages);
+  });
+}
+
+export const loadPrivateMessages = async (chatId) => {
+  return new Promise(async (resolve) => {
+    const messagesQuery = `{
+    privateMessages(
+      last: 50, 
+      orderBy: created_at, 
+      orderDirection: desc,
+      where: {
+        chat_id: "${chatId}",
+      }) {
+        id
+        text
+        from_user{id, media},
+        to_user{id, media},
+        created_at
+      }
+    }`;
+    const result = await client.query(messagesQuery).toPromise();
+
+    resolve(result.data.privateMessages);
   });
 }
