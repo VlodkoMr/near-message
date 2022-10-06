@@ -10,7 +10,10 @@
   filter: invert(100%);
 }
 
-/* NO NEED THIS CSS - just for custom scrollbar which can also be configured in tailwind.config.js*/
+textarea {
+  resize: none !important;
+}
+
 ::-webkit-scrollbar {
   width: 2px;
   height: 2px;

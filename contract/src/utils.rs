@@ -22,7 +22,7 @@ impl Contract {
         } else if deposit >= Contract::convert_to_yocto("1") {
             return 1;
         }
-        panic_str("Wrong payment deposit");
+        env::panic_str("Wrong payment deposit");
     }
 
     // Generate random u8 number (0-254)

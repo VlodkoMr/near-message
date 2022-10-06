@@ -23,7 +23,6 @@ export const MyGroupChat = () => {
   useEffect(() => {
     setIsReady(false);
     loadRoomInfo().then(room => {
-      console.log(`room`, room);
       setRoom(room);
     })
 
@@ -33,29 +32,10 @@ export const MyGroupChat = () => {
     });
   }, [ id ]);
 
-  // const handleSend = (e) => {
-  //   e.preventDefault();
-  //   if (!toAddress.length || !messageText.length) {
-  //     alert('Fill all fields');
-  //     return;
-  //   }
-  //   mainContract.sendMessage(toAddress, messageText)
-  //     .then(async () => {
-  //       console.log(`OK!`);
-  //     })
-  //     .finally(() => {
-  //       console.log(`finally`);
-  //       loadMessages();
-  //     });
-  // }
-
   return (
     <>
       {room && (
-        <MyMessagesHeader room={room}
-                          title={room.title}
-                          media={room.media}
-        />
+        <MyMessagesHeader room={room} title={room.title} media={room.media}/>
       )}
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
@@ -69,7 +49,9 @@ export const MyGroupChat = () => {
         )}
       </div>
 
-      <WriteMessage/>
+      {room && (
+        <WriteMessage toRoom={room}/>
+      )}
     </>
   );
 };

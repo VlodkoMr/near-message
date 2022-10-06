@@ -55,6 +55,7 @@ type PrivateMessage @entity {
     to_address: String!
     reply_to_message: PrivateMessage
     text: String!
+    media: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!
@@ -77,6 +78,7 @@ type RoomMessage @entity {
     reply_to_message: RoomMessage
     room_id: String!
     text: String!
+    media: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!

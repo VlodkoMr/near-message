@@ -59,7 +59,6 @@ export const loadRoomMessages = async (roomId) => {
     roomMessages(
       last: 50, 
       orderBy: created_at, 
-      orderDirection: desc,
       where: {
         room_id: "${roomId}",
       }) {
@@ -81,7 +80,6 @@ export const loadPrivateMessages = async (chatId) => {
     privateMessages(
       last: 50, 
       orderBy: created_at, 
-      orderDirection: desc,
       where: {
         chat_id: "${chatId}",
       }) {

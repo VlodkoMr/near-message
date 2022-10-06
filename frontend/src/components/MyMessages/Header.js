@@ -16,7 +16,7 @@ export const MyMessagesHeader = ({ room, title, media }) => {
             </div>
             <div className="text-sm">
               <p className="font-bold text-base mt-0.5">{title}</p>
-              <p className={"text-gray-400"}>
+              <p className={"text-gray-400/60"}>
                 {room ? (
                   `${room.members.length} members`
                 ) : (

@@ -136,7 +136,7 @@ export const LeftPanel = () => {
         </span>
       </div>
 
-      <div className="search-box p-4 flex-none">
+      <div className="search-box px-4 py-3 flex-none">
         <form onSubmit={handleSearch}>
           <div className="relative">
             <label>

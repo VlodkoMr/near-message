@@ -69,7 +69,9 @@ export const MyPrivateChat = () => {
         )}
       </div>
 
-      <WriteMessage/>
+      {opponent.address && (
+        <WriteMessage toAddress={opponent.address}/>
+      )}
     </>
   );
 };

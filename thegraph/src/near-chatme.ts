@@ -46,6 +46,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       const messageId = data.get('id')
       const fromUser = data.get('from_user')
       const toUser = data.get('to_user')
+      const media = data.get('media')
       const replyToMessage = data.get('reply_to_message')
 
       let replyMessageId = ""
@@ -68,6 +69,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.to_user = toUser.toString()
         message.to_address = toUser.toString()
         message.text = messageText.toString()
+        message.media = media ? media.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
         message.is_protected = false
@@ -119,6 +121,7 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
     const data = jsonData.value.toObject()
     const messageText = data.get('text')
     const roomId = data.get('room_id')
+    const media = data.get('media')
     const replyToMessage = data.get('reply_to_message')
 
     if (messageText && roomId) {
@@ -140,6 +143,7 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.from_address = fromUser.toString()
         message.room_id = roomId.toString()
         message.text = messageText.toString()
+        message.media = media ? media.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
         message.is_removed = false

@@ -1,17 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Outlet, useNavigate } from 'react-router-dom';
+import React from "react";
+import { Outlet } from 'react-router-dom';
 import { LeftPanel } from "../../components/MyMessages/LeftPanel";
 
 import "../../assets/css/my-messages.css"
-import { NearContext } from "../../context/NearContext";
 
 export const MyMessagesLayout = () => {
-  const near = useContext(NearContext);
-
-  useEffect(() => {
-
-  }, []);
-
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center bg-gray-700">
 

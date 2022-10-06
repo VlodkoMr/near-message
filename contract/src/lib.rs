@@ -1,7 +1,5 @@
 extern crate core;
-extern crate core;
 
-use core::panicking::panic_str;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
@@ -287,13 +285,13 @@ impl Contract {
     /**
      * Private Message
      */
-    pub fn send_private_message(&mut self, text: String, to_user: AccountId, reply_message_id: Option<String>) -> U128 {
+    pub fn send_private_message(&mut self, text: String, media: String, to_address: AccountId, reply_message_id: Option<String>) -> U128 {
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
         if spam_count > 10 {
             env::panic_str("You can't send messages, spam detected");
         }
-        if to_user == account {
+        if to_address == account {
             env::panic_str("Can't send message to yourself");
         }
         if text.len() > 5000 {
@@ -305,9 +303,10 @@ impl Contract {
         let message = json!({
             "id": self.messages_count.to_string(),
             "from_user": account.to_string(),
-            "to_user": to_user.to_string(),
+            "to_user": to_address.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
-            "text": text
+            "text": text,
+            "media": media.to_string(),
         }).to_string();
 
         env::log_str(&message[..]);
@@ -317,7 +316,7 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_room_message(&mut self, text: String, room_id: u32, reply_message_id: Option<String>) -> U128 {
+    pub fn send_room_message(&mut self, text: String, media: String, room_id: u32, reply_message_id: Option<String>) -> U128 {
         let room = self.rooms.get(&room_id).unwrap();
         let account = env::predecessor_account_id();
         let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
@@ -340,7 +339,8 @@ impl Contract {
             "from_user": env::predecessor_account_id().to_string(),
             "room_id": room_id.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
-            "text": text
+            "text": text,
+            "media": media.to_string(),
         }).to_string();
 
         env::log_str(&message[..]);
@@ -357,10 +357,10 @@ impl Contract {
     ) {
         let account = env::predecessor_account_id();
         if self.users.get(&account).is_some() {
-            panic_str("Account already exists!");
+            env::panic_str("Account already exists!");
         }
 
-        let level = self.get_level_by_deposit();
+        let level = Contract::get_level_by_deposit();
         let user_account = User {
             address: account.clone(),
             level,

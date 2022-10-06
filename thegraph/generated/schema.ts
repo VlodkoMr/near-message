@@ -181,6 +181,15 @@ export class PrivateMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
+  get media(): string {
+    let value = this.get("media");
+    return value!.toString();
+  }
+
+  set media(value: string) {
+    this.set("media", Value.fromString(value));
+  }
+
   get created_at(): i32 {
     let value = this.get("created_at");
     return value!.toI32();
@@ -377,6 +386,15 @@ export class RoomMessage extends Entity {
 
   set text(value: string) {
     this.set("text", Value.fromString(value));
+  }
+
+  get media(): string {
+    let value = this.get("media");
+    return value!.toString();
+  }
+
+  set media(value: string) {
+    this.set("media", Value.fromString(value));
   }
 
   get created_at(): i32 {
