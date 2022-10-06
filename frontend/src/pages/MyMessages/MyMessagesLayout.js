@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from 'react-router-dom';
-import { MessagesLeftPanel } from "../../components/MyMessages/MessagesLeftPanel";
+import { LeftPanel } from "../../components/MyMessages/LeftPanel";
 
 import "../../assets/css/my-messages.css"
 import { NearContext } from "../../context/NearContext";
-import Button from "@mui/material/Button";
 
 export const MyMessagesLayout = () => {
   const near = useContext(NearContext);
@@ -21,7 +20,7 @@ export const MyMessagesLayout = () => {
           <main className="flex-grow flex flex-row min-h-0">
             <section
               className="flex flex-col flex-none overflow-auto w-24 group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out">
-              <MessagesLeftPanel/>
+              <LeftPanel/>
             </section>
 
             <section className="flex flex-col flex-auto border-l border-gray-700/60">

@@ -1,5 +1,5 @@
 [package]
-name = "near_message"
+name = "near_chatme"
 version = "1.0.0"
 authors = ["Vlodkow <vlodkow@gmail.com>"]
 edition = "2021"

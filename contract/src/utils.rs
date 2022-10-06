@@ -14,6 +14,17 @@ impl Contract {
         }
     }
 
+    // Get user account level by deposit
+    pub(crate) fn get_level_by_deposit() -> u8 {
+        let deposit = env::attached_deposit();
+        if deposit >= Contract::convert_to_yocto("10") {
+            return 2;
+        } else if deposit >= Contract::convert_to_yocto("1") {
+            return 1;
+        }
+        panic_str("Wrong payment deposit");
+    }
+
     // Generate random u8 number (0-254)
     // pub(crate) fn random_u8(&self, index: usize) -> u8 {
     //     *env::random_seed().get(index).unwrap()

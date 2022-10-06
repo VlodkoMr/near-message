@@ -1,5 +1,7 @@
 extern crate core;
+extern crate core;
 
+use core::panicking::panic_str;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
@@ -31,11 +33,14 @@ pub struct Room {
 #[serde(crate = "near_sdk::serde")]
 pub struct User {
     address: AccountId,
+    level: u8,
     media: String,
-    instagram: String,
-    telegram: String,
-    twitter: String,
-    website: String,
+    instagram: Option<String>,
+    telegram: Option<String>,
+    twitter: Option<String>,
+    website: Option<String>,
+    last_spam_report: Timestamp,
+    spam_counts: u32,
 }
 
 #[derive(BorshStorageKey, BorshSerialize)]
@@ -341,6 +346,33 @@ impl Contract {
         env::log_str(&message[..]);
 
         self.messages_count.into()
+    }
+
+    /**
+     * Register user account
+     */
+    #[payable]
+    pub fn create_account(
+        &mut self, media: String, instagram: Option<String>, telegram: Option<String>, twitter: Option<String>, website: Option<String>,
+    ) {
+        let account = env::predecessor_account_id();
+        if self.users.get(&account).is_some() {
+            panic_str("Account already exists!");
+        }
+
+        let level = self.get_level_by_deposit();
+        let user_account = User {
+            address: account.clone(),
+            level,
+            media,
+            instagram: if level > 1 { instagram } else { None },
+            telegram: if level > 1 { telegram } else { None },
+            twitter: if level > 1 { twitter } else { None },
+            website: if level > 1 { website } else { None },
+            last_spam_report: 0,
+            spam_counts: 0,
+        };
+        self.users.insert(&account, &user_account);
     }
 }
 

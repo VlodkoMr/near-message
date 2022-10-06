@@ -677,7 +677,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "near_message"
+name = "near_chatme"
 version = "1.0.0"
 dependencies = [
  "near-sdk",
@@ -1033,9 +1033,9 @@ checksum = "deb766570a2825fa972bceff0d195727876a9cdf2460ab2e52d455dc2de47fd9"
 
 [[package]]
 name = "smallvec"
-version = "1.9.0"
+version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fd0db749597d91ff862fd1d55ea87f7855a744a8425a64695b6fca237d1dad1"
+checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 
 [[package]]
 name = "smart-default"

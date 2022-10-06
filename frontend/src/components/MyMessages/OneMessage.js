@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { NearContext } from "../../context/NearContext";
-import { UserGroupAvatar } from "./UserGroupAvatar";
+import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/format";
 
 export const OneMessage = ({ message }) => {
@@ -17,7 +17,7 @@ export const OneMessage = ({ message }) => {
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div class="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
-            <UserGroupAvatar media={message.from_user.media} title={message.from_user.id}/>
+            <Avatar media={message.from_user.media} title={message.from_user.id}/>
           )}
         </div>
 

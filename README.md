@@ -1,7 +1,7 @@
-near-blank-project
+NEAR ChatMe
 ==================
 
-This app was initialized with [create-near-app]
+Chat & Messages on NEAR Blockchain.
 
 
 Quick Start

@@ -21,4 +21,4 @@ dataSources:
         - User
       receiptHandlers:
         - handler: handleReceipt
-      file: ./src/near-message.ts
+      file: ./src/near-chatme.ts

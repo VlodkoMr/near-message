@@ -5,9 +5,10 @@ import { NearContext } from "../../context/NearContext";
 import { loadPrivateChatsPromise, loadRoomChatsPromise } from "../../utils/requests";
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/format";
-import { UserGroupAvatar } from "./UserGroupAvatar";
+import { Avatar } from "./Avatar";
+import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 
-export const MessagesLeftPanel = () => {
+export const LeftPanel = () => {
   const near = useContext(NearContext);
   const [ isReady, setIsReady ] = useState(false);
   const [ roomsById, setRoomsById ] = useState({});
@@ -59,11 +60,11 @@ export const MessagesLeftPanel = () => {
   const LastRoomMessage = ({ chat }) => (
     <>
       <div className="w-16 h-16 relative flex flex-shrink-0">
-        <UserGroupAvatar media={roomsById[chat.id].media} title={roomsById[chat.id].title} textSize={"text-4xl"}/>
-        <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0 border border-gray-500 rounded-full">
-          <UserGroupAvatar media={chat.last_message.from_user.media}
-                           title={chat.last_message.from_user.id}
-                           textSize={"text-sm"}/>
+        <Avatar media={roomsById[chat.id].media} title={roomsById[chat.id].title} textSize={"text-4xl"}/>
+        <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0">
+          <Avatar media={chat.last_message.from_user.media}
+                  title={chat.last_message.from_user.id}
+                  textSize={"text-sm"}/>
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
@@ -87,7 +88,7 @@ export const MessagesLeftPanel = () => {
     return (
       <>
         <div className="w-16 h-16 relative flex flex-shrink-0">
-          <UserGroupAvatar media={opponent.media} title={opponent.id} textSize={"text-4xl"}/>
+          <Avatar media={opponent.media} title={opponent.id} textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
           <p className={"font-medium"}>{opponent.id}</p>
@@ -108,21 +109,17 @@ export const MessagesLeftPanel = () => {
   return (
     <>
       <div className="header p-4 flex flex-row justify-between items-center flex-none">
-        <Link to={"/"}
-              className="w-12 h-12 relative flex flex-shrink-0 hover:bg-gray-700 bg-gray-800 rounded-full justify-center transition">
-          &laquo;
-        </Link>
+        <span
+          className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block cursor-pointer transition">
+          <AiOutlineUsergroupAdd size={26}/>
+        </span>
         <p className="text-md font-bold hidden md:block group-hover:block">
-          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-4 mt-1 opacity-90"}/>
+          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6 opacity-70"}/>
         </p>
-        {/*ChatLog*/}
-        <a href="#"
-           className="block rounded-full hover:bg-gray-700 bg-gray-800 w-12 h-12 p-3 hidden md:block group-hover:block ">
-          <svg viewBox="0 0 24 24" className="w-full h-full fill-current">
-            <path
-              d="M6.3 12.3l10-10a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-10 10a1 1 0 0 1-.7.3H7a1 1 0 0 1-1-1v-4a1 1 0 0 1 .3-.7zM8 16h2.59l9-9L17 4.41l-9 9V16zm10-2a1 1 0 0 1 2 0v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2h6a1 1 0 0 1 0 2H4v14h14v-6z"/>
-          </svg>
-        </a>
+        <span
+          className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2.5 hidden md:block group-hover:block cursor-pointer transition">
+          <BsPencilSquare size={20}/>
+        </span>
       </div>
 
       <div className="search-box p-4 flex-none">

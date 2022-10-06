@@ -1,5 +1,5 @@
 {
-  "name": "my-near-app",
+  "name": "near-chatme",
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
@@ -37,14 +37,15 @@
     "@near-wallet-selector/nightly-connect": "^7.0.0",
     "@near-wallet-selector/sender": "^7.0.0",
     "@near-wallet-selector/wallet-connect": "^7.0.0",
+    "@react-buddy/ide-toolbox": "^2.2.1",
+    "@react-buddy/palette-mui": "^1.2.2",
     "near-api-js": "^0.44.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-icons": "^4.4.0",
     "react-router-dom": "^6.4.1",
     "regenerator-runtime": "^0.13.9",
-    "urql": "^3.0.3",
-    "@react-buddy/ide-toolbox": "^2.2.1",
-    "@react-buddy/palette-mui": "^1.2.2"
+    "urql": "^3.0.3"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
