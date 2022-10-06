@@ -1,10 +1,9 @@
 import { createClient } from "urql";
 import { API_URL } from "../settings/config";
 
-const client = new createClient({ url: API_URL });
-
 export const loadPrivateChatsPromise = (accountId) => {
   return new Promise(async (resolve) => {
+    const client = new createClient({ url: API_URL });
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
            id,
@@ -27,6 +26,7 @@ export const loadPrivateChatsPromise = (accountId) => {
 
 export const loadRoomChatsPromise = (idList) => {
   return new Promise(async (resolve) => {
+    const client = new createClient({ url: API_URL });
     const roomChatListQuery = `{
         roomChats(
            last: 50, 
@@ -55,6 +55,7 @@ export const loadRoomChatsPromise = (idList) => {
 
 export const loadRoomMessages = async (roomId) => {
   return new Promise(async (resolve) => {
+    const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     roomMessages(
       last: 50, 
@@ -74,8 +75,33 @@ export const loadRoomMessages = async (roomId) => {
   });
 }
 
+export const loadNewRoomMessages = async (roomId, lastMessage) => {
+  return new Promise(async (resolve) => {
+    console.log(`lastMessage`, lastMessage);
+    const client = new createClient({ url: API_URL });
+    const messagesQuery = `{
+    roomMessages(
+      last: 50, 
+      orderBy: created_at, 
+      where: {
+        room_id: "${roomId}",
+        id_gt: ${lastMessage.id}
+      }) {
+        id
+        text
+        from_user{id, media},
+        created_at
+      }
+    }`;
+    const result = await client.query(messagesQuery).toPromise();
+
+    resolve(result.data.roomMessages);
+  });
+}
+
 export const loadPrivateMessages = async (chatId) => {
   return new Promise(async (resolve) => {
+    const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     privateMessages(
       last: 50, 

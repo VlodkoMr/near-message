@@ -201,16 +201,18 @@ export class MainContract {
   /**
    * Send message to Account
    * @param text
+   * @param media
    * @param to_address
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendPrivateMessage(text, to_address, reply_message_id) {
+  async sendPrivateMessage(text, media, to_address, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',
       args: {
         text,
+        media,
         to_address,
         reply_message_id
       }
@@ -220,16 +222,18 @@ export class MainContract {
   /**
    * Send message to the room
    * @param text
+   * @param media
    * @param room_id
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendRoomMessage(text, room_id, reply_message_id) {
+  async sendRoomMessage(text, media, room_id, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_room_message',
       args: {
         text,
+        media,
         room_id,
         reply_message_id
       }

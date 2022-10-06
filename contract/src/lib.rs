@@ -30,7 +30,7 @@ pub struct Room {
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct User {
-    address: AccountId,
+    id: AccountId,
     level: u8,
     media: String,
     instagram: Option<String>,
@@ -53,7 +53,6 @@ pub enum StorageKeys {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-    owner_id: AccountId,
     user_spam_counts: LookupMap<AccountId, u32>,
     users: LookupMap<AccountId, User>,
     rooms: LookupMap<u32, Room>,
@@ -66,7 +65,6 @@ pub struct Contract {
 impl Default for Contract {
     fn default() -> Self {
         Self {
-            owner_id: env::predecessor_account_id(),
             user_spam_counts: LookupMap::new(StorageKeys::UserSpamCounts),
             users: LookupMap::new(StorageKeys::Users),
             rooms: LookupMap::new(StorageKeys::Rooms),
@@ -362,7 +360,7 @@ impl Contract {
 
         let level = Contract::get_level_by_deposit();
         let user_account = User {
-            address: account.clone(),
+            id: account.clone(),
             level,
             media,
             instagram: if level > 1 { instagram } else { None },

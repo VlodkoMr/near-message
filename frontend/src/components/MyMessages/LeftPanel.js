@@ -38,12 +38,11 @@ export const LeftPanel = () => {
       }
 
       Promise.all(promiseList).then(result => {
-        let allChats = result[0].concat(result[1]);
+        const privateChats = result[0] || [];
+        const roomChats = result[1] || [];
+
+        let allChats = privateChats.concat(roomChats);
         allChats.sort((a, b) => b.updated_at - a.updated_at);
-
-        console.log(`allChats`, allChats);
-        console.log(`allChats`, allChats.map(c => c["__typename"]));
-
         setChatList(allChats);
         setIsReady(true);
       })
@@ -158,18 +157,24 @@ export const LeftPanel = () => {
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
         {isReady ? (
-          chatList.map(chat => (
-            <Link to={`/my/${isRoomChat(chat) ? "group" : "account"}/${chat.id}`}
-                  key={chat.id}
-                  className={`flex justify-between items-center p-2 rounded-lg relative mb-1
+          <>
+            {chatList.length > 0 ? chatList.map(chat => (
+              <Link to={`/my/${isRoomChat(chat) ? "group" : "account"}/${chat.id}`}
+                    key={chat.id}
+                    className={`flex justify-between items-center p-2 rounded-lg relative mb-1
                   ${isSelected(chat) ? "bg-blue-500/40 text-gray-200" : "hover:bg-gray-800/60 text-gray-400"}`}>
-              {(isRoomChat(chat)) ? (
-                <LastRoomMessage chat={chat}/>
-              ) : (
-                <LastPrivateMessage chat={chat}/>
-              )}
-            </Link>
-          ))
+                {(isRoomChat(chat)) ? (
+                  <LastRoomMessage chat={chat}/>
+                ) : (
+                  <LastPrivateMessage chat={chat}/>
+                )}
+              </Link>
+            )) : (
+              <div className={"text-center text-gray-500"}>
+                *no messages
+              </div>
+            )}
+          </>
         ) : (
           <div className={`mx-auto w-8`}>
             <Loader/>

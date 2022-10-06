@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { MyMessagesHeader } from "../../components/MyMessages/Header";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
-import { loadPrivateMessages } from "../../utils/requests";
-import { transformMessages } from "../../utils/transform";
+import { loadNewRoomMessages, loadPrivateMessages, loadRoomMessages } from "../../utils/requests";
+import { generateTemporaryMessage, transformMessages } from "../../utils/transform";
+
+const fetchSecondsInterval = 10;
 
 export const MyPrivateChat = () => {
   let { id } = useParams();
@@ -14,7 +16,7 @@ export const MyPrivateChat = () => {
   const [ isReady, setIsReady ] = useState(false);
   const [ messages, setMessages ] = useState([]);
   const [ opponent, setOpponent ] = useState({
-    address: "",
+    id: "",
     media: "",
     level: "",
     instagram: "",
@@ -25,37 +27,70 @@ export const MyPrivateChat = () => {
 
   useEffect(() => {
     setIsReady(false);
-
-    const address = id.split("|");
-    const opponent = (address[0] === near.wallet.accountId) ? address[1] : address[0];
-    loadUserInfo(opponent).then(result => {
+    loadUserInfo().then(result => {
       setOpponent(result);
     });
 
-    loadChatMessages().then(messages => {
-      console.log(`messages`, messages);
+    // Load last messages
+    loadChatMessages().then(() => {
+      setIsReady(true);
     });
+
+    // Update to get new messages
+    const fetchInterval = setInterval(() => {
+      if (messages.length > 0) {
+        //   const lastMessageId = messages[messages.length - 1]
+        //   loadNewRoomMessages(id, lastMessageId).then(newMessages => {
+        //     if (newMessages.length) {
+        //       newMessages = transformMessages(newMessages, near.wallet.accountId);
+        //
+        //       console.log(`newMessages`, newMessages);
+        //
+        //
+        //       // setMessages();
+        //     }
+        //   });
+        // } else {
+        //   loadRoomMessages(id).then(messages => {
+        //     setMessages(transformMessages(messages, near.wallet.accountId));
+        //   });
+      } else {
+        loadChatMessages();
+      }
+    }, 1000 * fetchSecondsInterval);
+
+    return () => {
+      clearInterval(fetchInterval);
+    };
   }, [ id ]);
 
-  const loadUserInfo = async (opponentAddress) => {
+  const loadUserInfo = async () => {
+    const address = id.split("|");
+    const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
     const user = await near.mainContract.getUserInfo(opponentAddress);
     if (user) {
       return user;
     }
-    return { address: opponentAddress };
+    return { id: opponentAddress };
   }
 
   const loadChatMessages = async () => {
     loadPrivateMessages(id).then(messages => {
       setMessages(transformMessages(messages, near.wallet.accountId));
-      setIsReady(true);
     });
+  }
+
+  const updateMessagesList = (messageId, messageText, messageMedia) => {
+    // add temporary message
+    const tmpMessage = generateTemporaryMessage(messageId, messageText, messageMedia, near.wallet.accountId, opponent);
+    messages.push(tmpMessage);
+    setMessages(messages);
   }
 
   return (
     <>
-      {opponent.address && (
-        <MyMessagesHeader title={opponent.address} media={opponent.media}/>
+      {opponent.id && (
+        <MyMessagesHeader title={opponent.id} media={opponent.media}/>
       )}
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
@@ -69,8 +104,8 @@ export const MyPrivateChat = () => {
         )}
       </div>
 
-      {opponent.address && (
-        <WriteMessage toAddress={opponent.address}/>
+      {opponent.id && (
+        <WriteMessage toAddress={opponent.id} onSuccess={updateMessagesList}/>
       )}
     </>
   );

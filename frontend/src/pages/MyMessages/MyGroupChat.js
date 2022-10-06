@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { MyMessagesHeader } from "../../components/MyMessages/Header";
-import { loadRoomMessages } from "../../utils/requests";
+import { loadNewRoomMessages, loadRoomMessages } from "../../utils/requests";
 import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
-import { transformMessages } from "../../utils/transform";
+import { generateTemporaryMessage, transformMessages } from "../../utils/transform";
 
 export const MyGroupChat = () => {
   const navigate = useNavigate();
@@ -32,6 +32,24 @@ export const MyGroupChat = () => {
     });
   }, [ id ]);
 
+  const updateMessagesList = async (messageId, messageText, messageMedia) => {
+    // if (messages.length > 0) {
+    //   const lastMessageId = messages[messages.length - 1]
+    //   loadNewRoomMessages(id, lastMessageId).then(messages => {
+    //     setMessages(transformMessages(messages, near.wallet.accountId));
+    //   });
+    // } else {
+    //   loadRoomMessages(id).then(messages => {
+    //     setMessages(transformMessages(messages, near.wallet.accountId));
+    //   });
+    // }
+
+    // add temporary message
+    const tmpMessage = generateTemporaryMessage(messageId, messageText, messageMedia, near.wallet.accountId);
+    messages.push(tmpMessage);
+    setMessages(messages);
+  }
+
   return (
     <>
       {room && (
@@ -50,7 +68,7 @@ export const MyGroupChat = () => {
       </div>
 
       {room && (
-        <WriteMessage toRoom={room}/>
+        <WriteMessage toRoom={room} onSuccess={updateMessagesList}/>
       )}
     </>
   );

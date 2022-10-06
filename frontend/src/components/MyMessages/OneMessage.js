@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NearContext } from "../../context/NearContext";
 import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/format";
+import { BsClockHistory } from "react-icons/all";
 
 export const OneMessage = ({ message }) => {
   const near = useContext(NearContext);
@@ -10,7 +11,11 @@ export const OneMessage = ({ message }) => {
     <>
       {message.isFirst && (
         <p className="p-4 text-center text-sm text-gray-500">
-          {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
+          {message.isTemporary ? ("Pending") : (
+            <>
+              {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
+            </>
+          )}
         </p>
       )}
 
@@ -30,6 +35,11 @@ export const OneMessage = ({ message }) => {
               {message.text}
             </p>
 
+            {message.isTemporary && (
+              <div className={"mr-2 text-gray-400 opacity-60"}>
+                <BsClockHistory size={16}/>
+              </div>
+            )}
             {/*        <button type="button"*/}
             {/*                className="hidden group-hover:block flex flex-shrink-0 focus:outline-none mx-2 block rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">*/}
             {/*          <svg viewBox="0 0 20 20" className="w-full h-full fill-current">*/}
