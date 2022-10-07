@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { NearContext } from "../../context/NearContext";
 import { Avatar } from "./Avatar";
-import { timestampToDate, timestampToTime } from "../../utils/format";
+import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { BsClockHistory } from "react-icons/all";
 
 export const OneMessage = ({ message }) => {
@@ -9,13 +9,9 @@ export const OneMessage = ({ message }) => {
 
   return (
     <>
-      {message.isFirst && (
+      {message.isFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm text-gray-500">
-          {message.isTemporary ? ("Pending") : (
-            <>
-              {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
-            </>
-          )}
+          {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
         </p>
       )}
 
@@ -28,10 +24,10 @@ export const OneMessage = ({ message }) => {
 
         <div className="messages text-sm text-white grid grid-flow-row gap-2">
           <div className="flex items-center flex-row-reverse group">
-            <p className={`px-6 py-3 max-w-xs lg:max-w-md
-            ${message.isFirst && "rounded-t-full"}
-            ${message.isLast && "rounded-b-full"}
-            ${message.isMy ? "bg-blue-500/40 rounded-l-full" : "bg-gray-700/60 rounded-r-full text-gray-200"}`}>
+            <p className={`px-5 py-3 max-w-xs lg:max-w-md whitespace-pre-wrap
+            ${message.isFirst && "rounded-t-3xl"}
+            ${message.isLast && "rounded-b-3xl"}
+            ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-200"}`}>
               {message.text}
             </p>
 

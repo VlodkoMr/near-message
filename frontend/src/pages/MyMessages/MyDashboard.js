@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { MyMessagesHeader } from "../../components/MyMessages/Header";
+import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
 
 export const MyDashboard = () => {
   const navigate = useNavigate();
 
   return (
     <>
-      <MyMessagesHeader title={""} media={""}/>
+      <MessagesHeader title={""} media={""}/>
       <div>
         MyDashboard
       </div>

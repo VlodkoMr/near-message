@@ -1,4 +1,4 @@
-import {near, json, log} from "@graphprotocol/graph-ts"
+import {near, json, log, Bytes, BigInt} from "@graphprotocol/graph-ts"
 import {PrivateMessage, RoomMessage, User, PrivateChat, RoomChat} from "../generated/schema"
 
 export function handleReceipt(
@@ -57,12 +57,13 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       if (!messageId || !fromUser || !toUser) return;
 
       let message = PrivateMessage.load(messageId.toString())
-      let timestampSeconds = receiptWithOutcome.block.header.timestampNanosec / 1000000000;
+      let timestampSeconds = receiptWithOutcome.block.header.timestampNanosec / 1000000000
 
       if (!message) {
-        let chatId = getPrivateChatId(fromUser.toString(), toUser.toString());
+        let chatId = getPrivateChatId(fromUser.toString(), toUser.toString())
 
         message = new PrivateMessage(messageId.toString())
+        message.id_num = BigInt.fromString(messageId.toString()).toI32()
         message.chat_id = chatId.toString()
         message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
@@ -139,6 +140,7 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
       if (!message) {
         message = new RoomMessage(messageId.toString())
+        message.id_num = BigInt.fromString(messageId.toString()).toI32()
         message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
         message.room_id = roomId.toString()

@@ -7,14 +7,15 @@ export const loadPrivateChatsPromise = (accountId) => {
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
            id,
-           last_message{
-            id, 
-            text, 
-            from_user{id, media},
-            to_user{id, media},
+           last_message {
+             id, 
+             text, 
+             from_user {id, media},
+             to_user {id, media},
            },
            updated_at,
-           is_removed
+           is_removed,
+           total_messages
         }
       }`;
     const result = await client.query(chatListQuery).toPromise();
@@ -33,17 +34,17 @@ export const loadRoomChatsPromise = (idList) => {
            orderBy: updated_at, 
            orderDirection: desc,
            where: {
-          id_in: [${idList.join(',')}],
-        }
-        ) {
+           id_in: [${idList.join(',')}],
+        }) {
           id,
-          last_message{
+          last_message {
              id, 
              text, 
-             from_user{id, media},
+             from_user {id, media},
           },
          updated_at,
-         is_removed
+         is_removed,
+         total_messages
         }
       }`;
     const result = await client.query(roomChatListQuery).toPromise();
@@ -53,7 +54,7 @@ export const loadRoomChatsPromise = (idList) => {
   });
 }
 
-export const loadRoomMessages = async (roomId) => {
+export const loadRoomMessages = (roomId) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
@@ -70,22 +71,19 @@ export const loadRoomMessages = async (roomId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-
     resolve(result.data.roomMessages);
   });
 }
 
-export const loadNewRoomMessages = async (roomId, lastMessage) => {
+export const loadNewRoomMessages = (roomId, lastMessage) => {
   return new Promise(async (resolve) => {
-    console.log(`lastMessage`, lastMessage);
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     roomMessages(
-      last: 50, 
       orderBy: created_at, 
       where: {
         room_id: "${roomId}",
-        id_gt: ${lastMessage.id}
+        id_num_gt: ${lastMessage.id}
       }) {
         id
         text
@@ -94,12 +92,11 @@ export const loadNewRoomMessages = async (roomId, lastMessage) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-
     resolve(result.data.roomMessages);
   });
 }
 
-export const loadPrivateMessages = async (chatId) => {
+export const loadPrivateMessages = (chatId) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
@@ -117,7 +114,30 @@ export const loadPrivateMessages = async (chatId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
+    resolve(result.data.privateMessages);
+  });
+}
 
+export const loadNewPrivateMessages = (chatId, lastMessageId) => {
+  return new Promise(async (resolve) => {
+    console.log(`loadNewPrivateMessages`);
+    console.log(`lastMessageId`, lastMessageId);
+    const client = new createClient({ url: API_URL });
+    const messagesQuery = `{
+    privateMessages(
+      orderBy: created_at, 
+      where: {
+        chat_id: "${chatId}",
+        id_num_gt: ${lastMessageId}
+      }) {
+        id
+        text
+        from_user{id, media},
+        to_user{id, media},
+        created_at
+      }
+    }`;
+    const result = await client.query(messagesQuery).toPromise();
     resolve(result.data.privateMessages);
   });
 }

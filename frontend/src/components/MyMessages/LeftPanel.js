@@ -4,7 +4,7 @@ import { OwnerGroups } from "./OwnerGroups";
 import { NearContext } from "../../context/NearContext";
 import { loadPrivateChatsPromise, loadRoomChatsPromise } from "../../utils/requests";
 import { Loader } from "../Loader";
-import { timestampToDate, timestampToTime } from "../../utils/format";
+import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
 import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 

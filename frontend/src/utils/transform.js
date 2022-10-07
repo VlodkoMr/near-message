@@ -1,3 +1,62 @@
+export const mediaURL = (ipfsHash) => {
+  return `https://ipfs.io/ipfs/${ipfsHash}`;
+}
+
+export const formatAddress = (address) => {
+  if (address.length > 18) {
+    return address.slice(0, 16);
+  }
+  return address;
+}
+
+export const loadSocialProfile = async (address, near) => {
+  const profileData = await near.socialDBContract.get([ `${address}/profile/**` ]);
+  return transformProfile(address, profileData[address]);
+}
+
+export const loadSocialProfiles = async (addressList, near) => {
+  let userList = [];
+  let result = {};
+  addressList.map(address => {
+    userList.push(`${address}/profile/**`);
+  });
+
+  const profiles = await near.socialDBContract.get(userList);
+  Object.keys(profiles).forEach(address => {
+    result[address] = transformProfile(address, profiles[address] || {});
+    console.log(`result[address]`, result[address]);
+  });
+  return result;
+}
+
+export const transformProfile = (address, socialProfile) => {
+  let resultProfile = { id: address };
+  if (socialProfile && Object.keys(socialProfile).length > 0) {
+    const profile = socialProfile.profile;
+    if (profile.name) {
+      resultProfile['name'] = profile.name;
+    }
+    if (profile.image) {
+      resultProfile['image'] = profile.image.ipfs_cid;
+    }
+    if (profile.linktree) {
+      if (profile.linktree.github) {
+        resultProfile['github'] = profile.github;
+      }
+      if (profile.linktree.telegram) {
+        resultProfile['telegram'] = profile.telegram;
+      }
+      if (profile.linktree.twitter) {
+        resultProfile['twitter'] = profile.twitter;
+      }
+      if (profile.linktree.website) {
+        resultProfile['website'] = profile.website;
+      }
+    }
+  }
+  return resultProfile;
+}
+
 export const transformMessages = (messages, accountId) => {
   let lastMessageUser;
 
@@ -8,7 +67,6 @@ export const transformMessages = (messages, accountId) => {
     message.isTemporary = false;
 
     lastMessageUser = message.from_user.id;
-    console.log(`message`, message);
     return message;
   });
 }
@@ -27,7 +85,6 @@ export const generateTemporaryMessage = (id, text, media, accountId, toUser) => 
   };
 
   if (toUser) {
-    console.log(`toUser`, toUser);
     tmpMessage['to_user'] = toUser;
   }
 

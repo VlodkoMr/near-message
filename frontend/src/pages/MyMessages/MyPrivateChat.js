@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { MyMessagesHeader } from "../../components/MyMessages/Header";
+import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
-import { loadNewRoomMessages, loadPrivateMessages, loadRoomMessages } from "../../utils/requests";
-import { generateTemporaryMessage, transformMessages } from "../../utils/transform";
+import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
+import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
+// import useLoadMessages from "../../utils/updateMessageHook";
 
 const fetchSecondsInterval = 10;
 
@@ -15,88 +16,175 @@ export const MyPrivateChat = () => {
   const near = useContext(NearContext);
   const [ isReady, setIsReady ] = useState(false);
   const [ messages, setMessages ] = useState([]);
-  const [ opponent, setOpponent ] = useState({
-    id: "",
-    media: "",
-    level: "",
-    instagram: "",
-    telegram: "",
-    twitter: "",
-    website: "",
-  });
+  const [ tmp, setTmp ] = useState([]);
+  const [ tmpMessages, setTmpMessages ] = useState([]);
+  // const [ newMessages, setNewTmpMessages ] = useLoadMessages();
+  const [ opponent, setOpponent ] = useState();
+  // const [ reloadCounter, setReloadCounter ] = useState(0);
+  // const lastInterval = useRef();
+
+  // const source = interval(3000);
+  // const subscribe = source.subscribe(val => {
+  //   console.log(val);
+  //   if (messages.length > 0) {
+  //     const lastId = messages[messages.length - 1].id;
+  //     console.log(`lastId`, lastId);
+  //
+  //   } else {
+  //     console.log(`load all!!!!!!`);
+  //     loadChatMessages();
+  //   }
+  // });
+
+  const funccc = () => {
+    console.log(`tmp`, tmp);
+    tmp.push('+');
+    setTmp(tmp);
+
+    console.log(`-----------`);
+    if (messages.length > 0) {
+      const lastId = messages[messages.length - 1].id;
+      console.log(`lastId`, lastId);
+      loadNewPrivateMessages(id, lastId).then(newMessages => {
+        if (newMessages.length) {
+          setMessages(transformMessages(newMessages, near.wallet.accountId));
+        }
+      });
+    } else {
+      console.log(`noooo messaaagesssss`);
+      loadPrivateMessages(id).then(messages => {
+        setMessages(transformMessages(messages, near.wallet.accountId));
+      });
+    }
+  }
+
 
   useEffect(() => {
     setIsReady(false);
-    loadUserInfo().then(result => {
+    const address = id.split("|");
+    const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
+
+    loadSocialProfile(opponentAddress, near).then(result => {
       setOpponent(result);
     });
 
     // Load last messages
-    loadChatMessages().then(() => {
-      setIsReady(true);
-    });
+    loadChatMessages();
 
+    setInterval(() => {
+      funccc()
+    }, 3000);
     // Update to get new messages
-    const fetchInterval = setInterval(() => {
-      if (messages.length > 0) {
-        //   const lastMessageId = messages[messages.length - 1]
-        //   loadNewRoomMessages(id, lastMessageId).then(newMessages => {
-        //     if (newMessages.length) {
-        //       newMessages = transformMessages(newMessages, near.wallet.accountId);
-        //
-        //       console.log(`newMessages`, newMessages);
-        //
-        //
-        //       // setMessages();
-        //     }
-        //   });
-        // } else {
-        //   loadRoomMessages(id).then(messages => {
-        //     setMessages(transformMessages(messages, near.wallet.accountId));
-        //   });
-      } else {
-        loadChatMessages();
-      }
-    }, 1000 * fetchSecondsInterval);
+    // if (lastInterval.current) clearInterval(lastInterval.current);
+    // lastInterval.current = setInterval(() => {
+    //   console.log(`loadNewMessages...`);
+    //   loadNewMessages();
+    // }, 1000 * fetchSecondsInterval);
 
-    return () => {
-      clearInterval(fetchInterval);
-    };
+    // return () => {
+    //   clearInterval(fetchInterval);
+    // };
   }, [ id ]);
 
-  const loadUserInfo = async () => {
-    const address = id.split("|");
-    const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
-    const user = await near.mainContract.getUserInfo(opponentAddress);
-    if (user) {
-      return user;
-    }
-    return { id: opponentAddress };
-  }
+  // useEffect(() => {
+  //   if (reloadCounter) {
+  //     console.log(`reloadCounter`, reloadCounter);
+  //     console.log(`messages`, messages);
+  //
+  //     const timeout = setTimeout(() => {
+  //       setReloadCounter(prev => prev + 1);
+  //
+  //       if (messages.length > 0) {
+  //         const lastId = messages[messages.length - 1].id;
+  //         console.log(`lastId`, lastId);
+  //         loadNewPrivateMessages(id, lastId).then(newMessages => {
+  //           if (newMessages.length) {
+  //             setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
+  //           }
+  //         });
+  //       } else {
+  //         console.log(`load all`);
+  //         loadPrivateMessages(id).then(messages => {
+  //           setMessages(prev => prev.concat(transformMessages(messages, near.wallet.accountId)));
+  //         });
+  //       }
+  //
+  //     }, 1000 * fetchSecondsInterval);
+  //
+  //     return () => {
+  //       clearTimeout(timeout);
+  //     };
+  //   }
+  // }, [ reloadCounter ]);
 
-  const loadChatMessages = async () => {
+  // Get last messages - on init
+  const loadChatMessages = () => {
     loadPrivateMessages(id).then(messages => {
+      console.log(`messages`, messages);
       setMessages(transformMessages(messages, near.wallet.accountId));
+      setIsReady(true);
     });
   }
 
-  const updateMessagesList = (messageId, messageText, messageMedia) => {
-    // add temporary message
-    const tmpMessage = generateTemporaryMessage(messageId, messageText, messageMedia, near.wallet.accountId, opponent);
-    messages.push(tmpMessage);
-    setMessages(messages);
+  // Get new messages - each few seconds
+  const loadNewMessages = async () => {
+    // if (messages.length > 0) {
+    // console.log(`messages`, messages);
+    // const lastId = messages[messages.length - 1].id;
+    // loadNewPrivateMessages(id, lastId).then(newMessages => {
+    //   console.log(`newMessages`, newMessages);
+    //   if (newMessages.length) {
+    //     // remove if found in temporary
+    //     const newMessageIds = newMessages.map(msg => msg.id);
+    //     const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
+    //
+    //     console.log(`----------- newTmp -----------`, newTmp);
+    //
+    //     setTmpMessages([ ...newTmp ]);
+    //
+    //     // add to all messages
+    //     setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
+    //   }
+    // });
+    // } else {
+    //   console.log(`loadChatMessages`);
+    //   // loadChatMessages();
+    // }
+  }
+
+  // add temporary message
+  const appendTemporaryMessage = (id, text, media) => {
+    const newMessage = generateTemporaryMessage(id, text, media, near.wallet.accountId, opponent);
+    tmpMessages.push(newMessage);
+    setTmpMessages([ ...tmpMessages ]);
   }
 
   return (
     <>
-      {opponent.id && (
-        <MyMessagesHeader title={opponent.id} media={opponent.media}/>
+      {opponent && (
+        <MessagesHeader account={opponent}/>
       )}
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
-        {isReady ? messages.map(message => (
-            <OneMessage message={message} key={message.id}/>
-          )
+        {isReady ? (
+          <>
+            {messages.map(message => (
+                <OneMessage message={message} key={message.id}/>
+              )
+            )}
+
+            {tmpMessages.length > 0 && (
+              <>
+                <p className="p-4 text-center text-sm text-gray-500">
+                  pending...
+                </p>
+                {tmpMessages.map(tmpMessage => (
+                    <OneMessage message={tmpMessage} key={tmpMessage.id}/>
+                  )
+                )}
+              </>
+            )}
+          </>
         ) : (
           <div className={"mx-auto w-8 pt-2"}>
             <Loader/>
@@ -104,8 +192,8 @@ export const MyPrivateChat = () => {
         )}
       </div>
 
-      {opponent.id && (
-        <WriteMessage toAddress={opponent.id} onSuccess={updateMessagesList}/>
+      {opponent && (
+        <WriteMessage toAddress={opponent.id} onSuccess={appendTemporaryMessage}/>
       )}
     </>
   );

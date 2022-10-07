@@ -1,8 +1,6 @@
-extern crate core;
-
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{AccountId, env, log, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
+use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
 use near_sdk::collections::LookupMap;
 use near_sdk::json_types::U128;
 
@@ -32,11 +30,6 @@ pub struct Room {
 pub struct User {
     id: AccountId,
     level: u8,
-    media: String,
-    instagram: Option<String>,
-    telegram: Option<String>,
-    twitter: Option<String>,
-    website: Option<String>,
     last_spam_report: Timestamp,
     spam_counts: u32,
 }
@@ -78,7 +71,6 @@ impl Default for Contract {
 
 #[near_bindgen]
 impl Contract {
-
     /**
      * Get count rooms
      */
@@ -351,9 +343,7 @@ impl Contract {
      * Register user account
      */
     #[payable]
-    pub fn create_user_account(
-        &mut self, media: String, instagram: Option<String>, telegram: Option<String>, twitter: Option<String>, website: Option<String>,
-    ) {
+    pub fn create_user_account(&mut self) {
         let account = env::predecessor_account_id();
         if self.users.get(&account).is_some() {
             env::panic_str("Account already exists!");
@@ -363,14 +353,23 @@ impl Contract {
         let user_account = User {
             id: account.clone(),
             level,
-            media,
-            instagram: if level > 1 { instagram } else { None },
-            telegram: if level > 1 { telegram } else { None },
-            twitter: if level > 1 { twitter } else { None },
-            website: if level > 1 { website } else { None },
             last_spam_report: 0,
             spam_counts: 0,
         };
+        self.users.insert(&account, &user_account);
+    }
+
+    #[payable]
+    pub fn user_account_level_up(&mut self) {
+        let account = env::predecessor_account_id();
+        let mut user_account = self.users.get(&account).expect("User account not found!");
+        let level = Contract::get_level_by_deposit();
+
+        if user_account.level >= level {
+            env::panic_str("Not enough deposit to increase account level");
+        }
+
+        user_account.level = level;
         self.users.insert(&account, &user_account);
     }
 }

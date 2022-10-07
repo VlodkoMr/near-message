@@ -110,6 +110,15 @@ export class PrivateMessage extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get id_num(): i32 {
+    let value = this.get("id_num");
+    return value!.toI32();
+  }
+
+  set id_num(value: i32) {
+    this.set("id_num", Value.fromI32(value));
+  }
+
   get chat_id(): string {
     let value = this.get("chat_id");
     return value!.toString();
@@ -333,6 +342,15 @@ export class RoomMessage extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get id_num(): i32 {
+    let value = this.get("id_num");
+    return value!.toI32();
+  }
+
+  set id_num(value: i32) {
+    this.set("id_num", Value.fromI32(value));
   }
 
   get from_user(): string {

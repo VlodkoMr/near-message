@@ -48,6 +48,7 @@ type PrivateChat @entity {
 
 type PrivateMessage @entity {
     id: ID!
+    id_num: Int!
     chat_id: PrivateChat!,
     from_user: User!
     to_user: User!
@@ -73,6 +74,7 @@ type RoomChat @entity {
 
 type RoomMessage @entity {
     id: ID!
+    id_num: Int!
     from_user: User!
     from_address: String!
     reply_to_message: RoomMessage

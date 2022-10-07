@@ -1,10 +1,21 @@
-import React from "react";
-import { Outlet } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
 import { LeftPanel } from "../../components/MyMessages/LeftPanel";
+import { NearContext } from "../../context/NearContext";
+import { loadSocialProfile } from "../../utils/transform";
+import { Outlet } from 'react-router-dom';
 
 import "../../assets/css/my-messages.css"
 
 export const MyMessagesLayout = () => {
+  const near = useContext(NearContext);
+  const [ myProfile, setMyProfile ] = useState({});
+
+  useEffect(() => {
+    loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
+      setMyProfile(myProfile);
+    });
+  }, []);
+
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center bg-gray-700">
 
@@ -18,7 +29,7 @@ export const MyMessagesLayout = () => {
 
             <section className="flex flex-col flex-auto border-l border-gray-700/60">
 
-              <Outlet/>
+              <Outlet context={[ myProfile ]}/>
 
             </section>
           </main>

@@ -3,6 +3,9 @@ NEAR ChatMe
 
 Chat & Messages on NEAR Blockchain.
 
+Protect messages:
+https://github.com/NEARFoundation/near-js-encryption-box
+
 
 Quick Start
 ===========

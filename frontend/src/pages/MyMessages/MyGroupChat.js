@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { MyMessagesHeader } from "../../components/MyMessages/Header";
+import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
 import { loadNewRoomMessages, loadRoomMessages } from "../../utils/requests";
 import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
@@ -53,7 +53,7 @@ export const MyGroupChat = () => {
   return (
     <>
       {room && (
-        <MyMessagesHeader room={room} title={room.title} media={room.media}/>
+        <MessagesHeader room={room} title={room.title} media={room.media}/>
       )}
 
       <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
