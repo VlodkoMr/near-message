@@ -2,7 +2,7 @@ extern crate core;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
+use near_sdk::{AccountId, env, log, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
 use near_sdk::collections::LookupMap;
 use near_sdk::json_types::U128;
 
@@ -78,6 +78,7 @@ impl Default for Contract {
 
 #[near_bindgen]
 impl Contract {
+
     /**
      * Get count rooms
      */
