@@ -9,6 +9,7 @@ import { Avatar } from "./Avatar";
 import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
+import { NewRoomPopup } from "./NewRoomPopup";
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
@@ -17,7 +18,7 @@ export const LeftPanel = () => {
   const [ roomsById, setRoomsById ] = useState({});
   const [ chatList, setChatList ] = useState([]);
   const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
-  const [ newChatPopupVisible, setNewChatPopupVisible ] = useState(false);
+  const [ newRoomPopupVisible, setNewRoomPopupVisible ] = useState(false);
 
   const loadRoomsIdList = async () => {
     return await near.mainContract.getUserRooms(near.wallet.accountId);
@@ -118,7 +119,7 @@ export const LeftPanel = () => {
   return (
     <>
       <div className="header p-4 flex flex-row justify-between items-center flex-none">
-        <CircleButton className={"p-2"}>
+        <CircleButton className={"p-2"} onClick={() => setNewRoomPopupVisible(true)}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-70 hover:opacity-100 transition">
@@ -179,6 +180,10 @@ export const LeftPanel = () => {
       <NewPrivateMessagePopup
         isOpen={newMessagePopupVisible}
         setIsOpen={setNewMessagePopupVisible}
+      />
+      <NewRoomPopup
+        isOpen={newRoomPopupVisible}
+        setIsOpen={setNewRoomPopupVisible}
       />
 
     </>

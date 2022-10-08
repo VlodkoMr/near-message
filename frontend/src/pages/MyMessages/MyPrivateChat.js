@@ -44,8 +44,7 @@ export const MyPrivateChat = () => {
   useEffect(() => {
     if (reloadCounter) {
       if (messages.length > 0) {
-        const lastId = messages[messages.length - 1].id;
-        appendNewChatMessages(lastId);
+        appendNewChatMessages();
       } else {
         loadPrivateMessages(id).then(messages => {
           setMessages(transformMessages(messages, near.wallet.accountId));
@@ -71,16 +70,18 @@ export const MyPrivateChat = () => {
   }
 
   // Get new messages - each few seconds
-  const appendNewChatMessages = (lastId) => {
-    loadNewPrivateMessages(id, lastId).then(newMessages => {
-      if (newMessages.length) {
+  const appendNewChatMessages = () => {
+    const lastMessage = messages[messages.length - 1];
+    loadNewPrivateMessages(id, lastMessage.id).then(messages => {
+      if (messages.length) {
         // remove if found in temporary
-        const newMessageIds = newMessages.map(msg => msg.id);
+        const newMessageIds = messages.map(msg => msg.id);
         const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
         setTmpMessages([ ...newTmp ]);
 
         // append new messages
-        setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_user.id);
+        setMessages(prev => prev.concat(newMessages));
       }
     });
   }

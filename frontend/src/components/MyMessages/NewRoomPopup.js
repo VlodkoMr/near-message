@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 
-export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
+export const NewRoomPopup = ({ isOpen, setIsOpen }) => {
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -17,7 +17,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle align={"center"} className={"border-b"}>
-        <span>New Message</span>
+        <span>New Group</span>
         <div className={"absolute right-4 top-4 opacity-70 hover:opacity-90 cursor-pointer transition"} onClick={handleClose}>
           <IoClose size={26}/>
         </div>
