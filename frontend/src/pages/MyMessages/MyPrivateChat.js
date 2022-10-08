@@ -7,7 +7,6 @@ import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
-// import useLoadMessages from "../../utils/updateMessageHook";
 
 const fetchSecondsInterval = 10;
 
@@ -16,51 +15,11 @@ export const MyPrivateChat = () => {
   const near = useContext(NearContext);
   const [ isReady, setIsReady ] = useState(false);
   const [ messages, setMessages ] = useState([]);
-  const [ tmp, setTmp ] = useState([]);
   const [ tmpMessages, setTmpMessages ] = useState([]);
-  // const [ newMessages, setNewTmpMessages ] = useLoadMessages();
   const [ opponent, setOpponent ] = useState();
-  // const [ reloadCounter, setReloadCounter ] = useState(0);
-  // const lastInterval = useRef();
-
-  // const source = interval(3000);
-  // const subscribe = source.subscribe(val => {
-  //   console.log(val);
-  //   if (messages.length > 0) {
-  //     const lastId = messages[messages.length - 1].id;
-  //     console.log(`lastId`, lastId);
-  //
-  //   } else {
-  //     console.log(`load all!!!!!!`);
-  //     loadChatMessages();
-  //   }
-  // });
-
-  const funccc = () => {
-    console.log(`tmp`, tmp);
-    tmp.push('+');
-    setTmp(tmp);
-
-    console.log(`-----------`);
-    if (messages.length > 0) {
-      const lastId = messages[messages.length - 1].id;
-      console.log(`lastId`, lastId);
-      loadNewPrivateMessages(id, lastId).then(newMessages => {
-        if (newMessages.length) {
-          setMessages(transformMessages(newMessages, near.wallet.accountId));
-        }
-      });
-    } else {
-      console.log(`noooo messaaagesssss`);
-      loadPrivateMessages(id).then(messages => {
-        setMessages(transformMessages(messages, near.wallet.accountId));
-      });
-    }
-  }
-
+  const [ reloadCounter, setReloadCounter ] = useState(0);
 
   useEffect(() => {
-    setIsReady(false);
     const address = id.split("|");
     const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
 
@@ -71,53 +30,31 @@ export const MyPrivateChat = () => {
     // Load last messages
     loadChatMessages();
 
-    setInterval(() => {
-      funccc()
-    }, 3000);
-    // Update to get new messages
-    // if (lastInterval.current) clearInterval(lastInterval.current);
-    // lastInterval.current = setInterval(() => {
-    //   console.log(`loadNewMessages...`);
-    //   loadNewMessages();
-    // }, 1000 * fetchSecondsInterval);
+    // Fetch new messages each few seconds
+    const updateInterval = setInterval(() => {
+      setReloadCounter(prev => prev + 1);
+    }, 1000 * fetchSecondsInterval);
 
-    // return () => {
-    //   clearInterval(fetchInterval);
-    // };
+    return () => {
+      clearInterval(updateInterval);
+    }
   }, [ id ]);
 
-  // useEffect(() => {
-  //   if (reloadCounter) {
-  //     console.log(`reloadCounter`, reloadCounter);
-  //     console.log(`messages`, messages);
-  //
-  //     const timeout = setTimeout(() => {
-  //       setReloadCounter(prev => prev + 1);
-  //
-  //       if (messages.length > 0) {
-  //         const lastId = messages[messages.length - 1].id;
-  //         console.log(`lastId`, lastId);
-  //         loadNewPrivateMessages(id, lastId).then(newMessages => {
-  //           if (newMessages.length) {
-  //             setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
-  //           }
-  //         });
-  //       } else {
-  //         console.log(`load all`);
-  //         loadPrivateMessages(id).then(messages => {
-  //           setMessages(prev => prev.concat(transformMessages(messages, near.wallet.accountId)));
-  //         });
-  //       }
-  //
-  //     }, 1000 * fetchSecondsInterval);
-  //
-  //     return () => {
-  //       clearTimeout(timeout);
-  //     };
-  //   }
-  // }, [ reloadCounter ]);
+  useEffect(() => {
+    if (reloadCounter) {
+      if (messages.length > 0) {
+        const lastId = messages[messages.length - 1].id;
+        console.log(`lastId`, lastId);
+        appendNewChatMessages(lastId);
+      } else {
+        loadPrivateMessages(id).then(messages => {
+          setMessages(transformMessages(messages, near.wallet.accountId));
+        });
+      }
+    }
+  }, [ reloadCounter ]);
 
-  // Get last messages - on init
+  // Get latest messages - on init
   const loadChatMessages = () => {
     loadPrivateMessages(id).then(messages => {
       console.log(`messages`, messages);
@@ -127,29 +64,18 @@ export const MyPrivateChat = () => {
   }
 
   // Get new messages - each few seconds
-  const loadNewMessages = async () => {
-    // if (messages.length > 0) {
-    // console.log(`messages`, messages);
-    // const lastId = messages[messages.length - 1].id;
-    // loadNewPrivateMessages(id, lastId).then(newMessages => {
-    //   console.log(`newMessages`, newMessages);
-    //   if (newMessages.length) {
-    //     // remove if found in temporary
-    //     const newMessageIds = newMessages.map(msg => msg.id);
-    //     const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
-    //
-    //     console.log(`----------- newTmp -----------`, newTmp);
-    //
-    //     setTmpMessages([ ...newTmp ]);
-    //
-    //     // add to all messages
-    //     setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
-    //   }
-    // });
-    // } else {
-    //   console.log(`loadChatMessages`);
-    //   // loadChatMessages();
-    // }
+  const appendNewChatMessages = (lastId) => {
+    loadNewPrivateMessages(id, lastId).then(newMessages => {
+      if (newMessages.length) {
+        // remove if found in temporary
+        const newMessageIds = newMessages.map(msg => msg.id);
+        const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
+        setTmpMessages([ ...newTmp ]);
+
+        // append new messages
+        setMessages(prev => prev.concat(transformMessages(newMessages, near.wallet.accountId)));
+      }
+    });
   }
 
   // add temporary message
