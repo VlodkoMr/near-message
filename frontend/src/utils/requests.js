@@ -2,7 +2,7 @@ import { createClient } from "urql";
 import { API_URL } from "../settings/config";
 
 export const loadPrivateChatsPromise = (accountId) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     const client = new createClient({ url: API_URL });
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
@@ -19,14 +19,16 @@ export const loadPrivateChatsPromise = (accountId) => {
         }
       }`;
     const result = await client.query(chatListQuery).toPromise();
-    const chatList = result.data.privateChatSearch.filter(chat => !chat.is_removed);
-
-    resolve(chatList);
+    if (result.data) {
+      resolve(result.data.privateChatSearch.filter(chat => !chat.is_removed));
+    } else {
+      reject();
+    }
   });
 }
 
 export const loadRoomChatsPromise = (idList) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     const client = new createClient({ url: API_URL });
     const roomChatListQuery = `{
         roomChats(
@@ -48,9 +50,11 @@ export const loadRoomChatsPromise = (idList) => {
         }
       }`;
     const result = await client.query(roomChatListQuery).toPromise();
-    const chatList = result.data.roomChats.filter(chat => !chat.is_removed);
-
-    resolve(chatList);
+    if (result.data) {
+      resolve(result.data.roomChats.filter(chat => !chat.is_removed));
+    } else {
+      reject();
+    }
   });
 }
 
@@ -71,7 +75,7 @@ export const loadRoomMessages = (roomId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data.roomMessages);
+    resolve(result.data?.roomMessages);
   });
 }
 
@@ -92,7 +96,7 @@ export const loadNewRoomMessages = (roomId, lastMessage) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data.roomMessages);
+    resolve(result.data?.roomMessages);
   });
 }
 
@@ -114,7 +118,7 @@ export const loadPrivateMessages = (chatId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data.privateMessages);
+    resolve(result.data?.privateMessages);
   });
 }
 
@@ -138,6 +142,6 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data.privateMessages);
+    resolve(result.data?.privateMessages);
   });
 }

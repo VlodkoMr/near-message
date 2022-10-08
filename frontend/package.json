@@ -45,6 +45,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.4.1",
     "regenerator-runtime": "^0.13.9",
+    "styled-components": "^5.3.6",
     "urql": "^3.0.3"
   },
   "resolutions": {

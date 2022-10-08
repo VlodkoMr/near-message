@@ -7,6 +7,8 @@ import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
 import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
+import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
+import { CircleButton } from "../../assets/css/components";
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
@@ -14,18 +16,12 @@ export const LeftPanel = () => {
   const [ isReady, setIsReady ] = useState(false);
   const [ roomsById, setRoomsById ] = useState({});
   const [ chatList, setChatList ] = useState([]);
-  const [ activeType, setActiveType ] = useState("");
+  const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
+  const [ newChatPopupVisible, setNewChatPopupVisible ] = useState(false);
 
   const loadRoomsIdList = async () => {
     return await near.mainContract.getUserRooms(near.wallet.accountId);
   }
-
-  useEffect(() => {
-    setActiveType("");
-    if (id) {
-      setActiveType(id.indexOf("|") !== -1 ? "private" : "room");
-    }
-  }, [ id ]);
 
   useEffect(() => {
     loadRoomsIdList().then(rooms => {
@@ -67,7 +63,7 @@ export const LeftPanel = () => {
   }
 
   const isSelected = (chat) => {
-    return activeType.length > 0 && chat.id === id;
+    return chat.id === id;
   }
 
   const LastRoomMessage = ({ chat }) => (
@@ -122,17 +118,15 @@ export const LeftPanel = () => {
   return (
     <>
       <div className="header p-4 flex flex-row justify-between items-center flex-none">
-        <span
-          className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2 hidden md:block group-hover:block cursor-pointer transition">
+        <CircleButton className={"p-2"}>
           <AiOutlineUsergroupAdd size={26}/>
-        </span>
+        </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-70 hover:opacity-100 transition">
           <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
-        <span
-          className="block rounded-full hover:bg-gray-700 bg-gray-800 w-10 h-10 p-2.5 hidden md:block group-hover:block cursor-pointer transition">
+        <CircleButton className={"p-2.5"} onClick={() => setNewMessagePopupVisible(true)}>
           <BsPencilSquare size={20}/>
-        </span>
+        </CircleButton>
       </div>
 
       <div className="search-box px-4 py-3 flex-none">
@@ -181,6 +175,12 @@ export const LeftPanel = () => {
           </div>
         )}
       </div>
+
+      <NewPrivateMessagePopup
+        isOpen={newMessagePopupVisible}
+        setIsOpen={setNewMessagePopupVisible}
+      />
+
     </>
   );
 };
