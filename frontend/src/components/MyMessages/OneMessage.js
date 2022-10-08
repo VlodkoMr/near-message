@@ -24,7 +24,7 @@ export const OneMessage = ({ message }) => {
 
         <div className="messages text-sm text-white grid grid-flow-row gap-2">
           <div className="flex items-center flex-row-reverse group">
-            <p className={`px-5 py-3 max-w-xs lg:max-w-md whitespace-pre-wrap
+            <p className={`px-5 py-3 max-w-md lg:max-w-lg 2xl:max-w-xl whitespace-pre-wrap
             ${message.isFirst && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}
             ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-200"}`}>

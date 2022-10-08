@@ -66,7 +66,6 @@ export const MyPrivateChat = () => {
   const loadChatMessages = () => {
     loadPrivateMessages(id).then(messages => {
       setMessages(transformMessages(messages, near.wallet.accountId));
-      bottomRef.current?.scrollIntoView();
       setIsReady(true);
     });
   }

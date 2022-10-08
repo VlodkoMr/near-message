@@ -71,11 +71,13 @@ export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
     <div className="chat-footer flex-none">
       <div className="flex flex-row items-end p-4 relative">
         <button type="button"
+                title={"Start private conversation"}
                 className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
           <RiChatPrivateFill size={28}/>
         </button>
 
         <button type="button"
+                title={"Send Image"}
                 className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mb-4">
           <BsImage size={28}/>
         </button>
