@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
-import { AiFillLike, BiSend, BsImage, FaSmile } from "react-icons/all";
+import { AiFillLike, BiSend, BsImage, FaSmile, RiChatPrivateFill } from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
 
@@ -38,7 +38,6 @@ export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
       .then((result) => {
         localStorage.setItem(localKey, "");
         setMessageText("");
-        console.log(`result`, result);
 
         let messageId = "";
         result.receipts_outcome.map(tx => {
@@ -72,15 +71,22 @@ export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
     <div className="chat-footer flex-none">
       <div className="flex flex-row items-end p-4 relative">
         <button type="button"
-                className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mr-4 mb-4">
+                className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
+          <RiChatPrivateFill size={28}/>
+        </button>
+
+        <button type="button"
+                className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mb-4">
           <BsImage size={28}/>
         </button>
+
+
         {/*<button type="button"*/}
         {/*        className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mr-4 mb-4">*/}
         {/*  <FaSmile size={28}/>*/}
         {/*</button>*/}
 
-        <div className="relative flex-grow">
+        <div className="relative flex-grow ml-4">
           <label>
             <TextareaAutosize placeholder="Aa"
                               maxRows={10}

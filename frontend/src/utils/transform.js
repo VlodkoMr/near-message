@@ -57,9 +57,7 @@ export const transformProfile = (address, socialProfile) => {
   return resultProfile;
 }
 
-export const transformMessages = (messages, accountId) => {
-  let lastMessageUser;
-
+export const transformMessages = (messages, accountId, lastMessageUser) => {
   return messages.map((message, index) => {
     message.isFirst = lastMessageUser !== message.from_user.id;
     message.isMy = message.from_user.id === accountId;

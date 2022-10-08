@@ -13,6 +13,7 @@ const fetchSecondsInterval = 10;
 export const MyPrivateChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
+  const bottomRef = useRef(null);
   const [ isReady, setIsReady ] = useState(false);
   const [ messages, setMessages ] = useState([]);
   const [ tmpMessages, setTmpMessages ] = useState([]);
@@ -44,7 +45,6 @@ export const MyPrivateChat = () => {
     if (reloadCounter) {
       if (messages.length > 0) {
         const lastId = messages[messages.length - 1].id;
-        console.log(`lastId`, lastId);
         appendNewChatMessages(lastId);
       } else {
         loadPrivateMessages(id).then(messages => {
@@ -54,11 +54,19 @@ export const MyPrivateChat = () => {
     }
   }, [ reloadCounter ]);
 
+  useEffect(() => {
+    let behavior = { behavior: 'auto' };
+    if (reloadCounter > 0) {
+      behavior = { behavior: 'smooth' };
+    }
+    bottomRef.current?.scrollIntoView(behavior);
+  }, [ messages, tmpMessages ]);
+
   // Get latest messages - on init
   const loadChatMessages = () => {
     loadPrivateMessages(id).then(messages => {
-      console.log(`messages`, messages);
       setMessages(transformMessages(messages, near.wallet.accountId));
+      bottomRef.current?.scrollIntoView();
       setIsReady(true);
     });
   }
@@ -91,7 +99,7 @@ export const MyPrivateChat = () => {
         <MessagesHeader account={opponent}/>
       )}
 
-      <div className={"chat-body p-4 flex-1 overflow-y-scroll"}>
+      <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
         {isReady ? (
           <>
             {messages.map(message => (
@@ -116,6 +124,7 @@ export const MyPrivateChat = () => {
             <Loader/>
           </div>
         )}
+        <div ref={bottomRef}/>
       </div>
 
       {opponent && (
