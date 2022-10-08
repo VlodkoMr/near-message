@@ -20,13 +20,13 @@ textarea {
 }
 
 ::-webkit-scrollbar-button {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #2d3748;
-  border: 0px none #ffffff;
+  border: 0 none #ffffff;
   border-radius: 50px;
 }
 
@@ -40,7 +40,7 @@ textarea {
 
 ::-webkit-scrollbar-track {
   background: #1a202c;
-  border: 0px none #ffffff;
+  border: 0 none #ffffff;
   border-radius: 50px;
 }
 
@@ -54,4 +54,14 @@ textarea {
 
 ::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+/* MUI Material override */
+.MuiDialog-paper {
+  border-radius: 15px !important;
+  background: #F9F9F9 !important;
+}
+
+.MuiDialogTitle-root {
+  line-height: initial !important;
 }

@@ -1,10 +1,8 @@
 import React from "react";
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { IoClose } from "react-icons/all";
 
 export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const handleClose = () => {
@@ -18,21 +16,18 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"Use Google's location service?"}
+      <DialogTitle align={"center"} className={"border-b"}>
+        <span>New Message</span>
+        <div className={"absolute right-4 top-4 opacity-80 hover:opacity-100 cursor-pointer"} onClick={handleClose}>
+          <IoClose size={26}/>
+        </div>
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+      <DialogContent className={"mx-2 mt-6 mb-2"}>
+        <p>
           Let Google help apps determine location. This means sending anonymous
           location data to Google, even when no apps are running.
-        </DialogContentText>
+        </p>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Disagree</Button>
-        <Button onClick={handleClose} autoFocus>
-          Agree
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }
