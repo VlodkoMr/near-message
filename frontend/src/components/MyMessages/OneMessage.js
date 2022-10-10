@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NearContext } from "../../context/NearContext";
 import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
-import { BsClockHistory } from "react-icons/all";
+import { AiFillLike, BsClockHistory } from "react-icons/all";
 
 export const OneMessage = ({ message }) => {
   const near = useContext(NearContext);
@@ -28,7 +28,9 @@ export const OneMessage = ({ message }) => {
             ${message.isFirst && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}
             ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-200"}`}>
-              {message.text}
+              {message.text === '(like)'? (
+                <AiFillLike size={30}/>
+              ) : message.text}
             </p>
 
             {message.isTemporary && (

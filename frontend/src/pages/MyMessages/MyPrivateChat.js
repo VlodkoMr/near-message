@@ -8,7 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
 
-const fetchSecondsInterval = 10;
+const fetchSecondsInterval = 7;
 
 export const MyPrivateChat = () => {
   let { id } = useParams();
@@ -29,7 +29,10 @@ export const MyPrivateChat = () => {
     });
 
     // Load last messages
-    loadChatMessages();
+    loadPrivateMessages(id).then(messages => {
+      setMessages(transformMessages(messages, near.wallet.accountId));
+      setIsReady(true);
+    });
 
     // Fetch new messages each few seconds
     const updateInterval = setInterval(() => {
@@ -60,14 +63,6 @@ export const MyPrivateChat = () => {
     }
     bottomRef.current?.scrollIntoView(behavior);
   }, [ messages, tmpMessages ]);
-
-  // Get latest messages - on init
-  const loadChatMessages = () => {
-    loadPrivateMessages(id).then(messages => {
-      setMessages(transformMessages(messages, near.wallet.accountId));
-      setIsReady(true);
-    });
-  }
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {

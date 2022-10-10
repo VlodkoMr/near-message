@@ -82,9 +82,9 @@ export const generateTemporaryMessage = (id, text, media, accountId, toUser) => 
     media,
   };
 
-  if (toUser) {
-    tmpMessage['to_user'] = toUser;
-  }
+  // if (toUser) {
+  //   tmpMessage['to_user'] = toUser;
+  // }
 
   return tmpMessage;
 }

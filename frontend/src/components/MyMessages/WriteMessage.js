@@ -115,7 +115,7 @@ export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
               )}
             </>
           ) : (
-            <AiFillLike size={30}/>
+            <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
           )}
         </button>
       </div>
