@@ -75,7 +75,7 @@ export const MyPrivateChat = () => {
         setTmpMessages([ ...newTmp ]);
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_user.id);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });

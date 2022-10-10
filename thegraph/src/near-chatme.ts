@@ -1,5 +1,5 @@
-import {near, json, log, Bytes, BigInt} from "@graphprotocol/graph-ts"
-import {PrivateMessage, RoomMessage, User, PrivateChat, RoomChat} from "../generated/schema"
+import {near, json, log, BigInt} from "@graphprotocol/graph-ts"
+import {PrivateMessage, GroupMessage, PrivateChat, GroupChat} from "../generated/schema"
 
 export function handleReceipt(
   receipt: near.ReceiptWithOutcome
@@ -22,8 +22,8 @@ function handleAction(
 
   if (functionCall.methodName == 'send_private_message') {
     savePrivateMessage(receiptWithOutcome);
-  } else if (functionCall.methodName == 'send_room_message') {
-    saveRoomMessage(receiptWithOutcome);
+  } else if (functionCall.methodName == 'send_group_message') {
+    saveGroupMessage(receiptWithOutcome);
   }
 }
 
@@ -65,9 +65,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message = new PrivateMessage(messageId.toString())
         message.id_num = BigInt.fromString(messageId.toString()).toI32()
         message.chat_id = chatId.toString()
-        message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
-        message.to_user = toUser.toString()
         message.to_address = toUser.toString()
         message.text = messageText.toString()
         message.media = media ? media.toString() : ""
@@ -89,18 +87,6 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         chat.updated_at = message.created_at
         chat.save()
 
-        let userFrom = User.load(fromUser.toString())
-        if (!userFrom) {
-          userFrom = new User(fromUser.toString())
-          userFrom.save()
-        }
-
-        let userTo = User.load(toUser.toString())
-        if (!userTo) {
-          userTo = new User(toUser.toString())
-          userTo.save()
-        }
-
         message.save()
       }
     }
@@ -108,24 +94,24 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 }
 
 /**
- * Room Message
+ * Group Message
  */
-function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
+function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
   const outcome = receiptWithOutcome.outcome;
 
   for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
     const outcomeLog = outcome.logs[logIndex].toString();
 
-    log.info('saveRoomMessage {}', [outcomeLog])
+    log.info('saveGroupMessage {}', [outcomeLog])
 
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
     const messageText = data.get('text')
-    const roomId = data.get('room_id')
+    const groupId = data.get('group_id')
     const media = data.get('media')
     const replyToMessage = data.get('reply_to_message')
 
-    if (messageText && roomId) {
+    if (messageText && groupId) {
       const messageId = data.get('id')
       const fromUser = data.get('from_user')
       let replyMessageId = ""
@@ -135,15 +121,14 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
       if (!messageId || !fromUser) return;
 
-      let message = RoomMessage.load(messageId.toString())
+      let message = GroupMessage.load(messageId.toString())
       let timestampSeconds = receiptWithOutcome.block.header.timestampNanosec / 1000000000;
 
       if (!message) {
-        message = new RoomMessage(messageId.toString())
+        message = new GroupMessage(messageId.toString())
         message.id_num = BigInt.fromString(messageId.toString()).toI32()
-        message.from_user = fromUser.toString()
         message.from_address = fromUser.toString()
-        message.room_id = roomId.toString()
+        message.group_id = groupId.toString()
         message.text = messageText.toString()
         message.media = media ? media.toString() : ""
         message.reply_to_message = replyMessageId
@@ -152,9 +137,9 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;
 
-        let chat = RoomChat.load(roomId.toString())
+        let chat = GroupChat.load(groupId.toString())
         if (!chat) {
-          chat = new RoomChat(roomId.toString())
+          chat = new GroupChat(groupId.toString())
           chat.total_messages = 0
         }
         chat.last_message = messageId.toString()
@@ -162,12 +147,6 @@ function saveRoomMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         chat.is_removed = false
         chat.updated_at = message.created_at
         chat.save()
-
-        let userFrom = User.load(fromUser.toString())
-        if (!userFrom) {
-          userFrom = new User(fromUser.toString())
-          userFrom.save()
-        }
 
         message.save()
       }

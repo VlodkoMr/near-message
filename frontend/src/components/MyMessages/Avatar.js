@@ -9,7 +9,7 @@ export const Avatar = ({ media, title, textSize }) => (
       <img src={mediaURL(media)} alt="" className={"object-cover w-full h-full"}/>
     ) : (
       <span className={`font-medium inline-block opacity-50 ${textSize ? textSize : "text-xl"}`}>
-        {title[0].toUpperCase()}
+        {title[0].toUpperCase() || ""}
       </span>
     )}
   </div>

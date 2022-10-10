@@ -8,17 +8,16 @@ dataSources:
     name: NearMessage
     network: near-testnet
     source:
-      account: "dev-1665063415018-63376300630145"
-      startBlock: 102019416
+      account: "dev-1665433692047-12217493041983"
+      startBlock: 102388166
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - PrivateMessage
         - PrivateChat
-        - RoomMessage
-        - RoomChat
-        - User
+        - GroupMessage
+        - GroupChat
       receiptHandlers:
         - handler: handleReceipt
       file: ./src/near-chatme.ts

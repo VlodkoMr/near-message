@@ -17,6 +17,6 @@
     "graph:deploy": "cd thegraph && npm run deploy"
   },
   "devDependencies": {
-    "near-cli": "^3.3.0"
+    "near-cli": "^3.0.0"
   }
 }

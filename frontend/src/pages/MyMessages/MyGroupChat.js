@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
-import { loadNewRoomMessages, loadRoomMessages } from "../../utils/requests";
 import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, transformMessages } from "../../utils/transform";
+import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 
 const fetchSecondsInterval = 7;
 
@@ -16,21 +16,21 @@ export const MyGroupChat = () => {
   const bottomRef = useRef(null);
   const [ messages, setMessages ] = useState([]);
   const [ isReady, setIsReady ] = useState(false);
-  const [ room, setRoom ] = useState();
+  const [ group, setGroup ] = useState();
   const [ reloadCounter, setReloadCounter ] = useState(0);
   const [ tmpMessages, setTmpMessages ] = useState([]);
 
-  const loadRoomInfo = async () => {
-    return await near.mainContract.getRoomById(parseInt(id));
+  const loadGroupInfo = async () => {
+    return await near.mainContract.getGroupById(parseInt(id));
   }
 
   useEffect(() => {
     setIsReady(false);
-    loadRoomInfo().then(room => {
-      setRoom(room);
+    loadGroupInfo().then(group => {
+      setGroup(group);
     })
 
-    loadRoomMessages(id).then(messages => {
+    loadGroupMessages(id).then(messages => {
       setMessages(transformMessages(messages, near.wallet.accountId));
       setIsReady(true);
     });
@@ -50,7 +50,7 @@ export const MyGroupChat = () => {
       if (messages.length > 0) {
         appendNewChatMessages();
       } else {
-        loadRoomMessages(id).then(messages => {
+        loadGroupMessages(id).then(messages => {
           setMessages(transformMessages(messages, near.wallet.accountId));
         });
       }
@@ -68,7 +68,7 @@ export const MyGroupChat = () => {
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
     const lastMessage = messages[messages.length - 1];
-    loadNewRoomMessages(id, lastMessage.id).then(messages => {
+    loadNewGroupMessages(id, lastMessage.id).then(messages => {
       if (messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);
@@ -76,7 +76,7 @@ export const MyGroupChat = () => {
         setTmpMessages([ ...newTmp ]);
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_user.id);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });
@@ -91,8 +91,8 @@ export const MyGroupChat = () => {
 
   return (
     <>
-      {room && (
-        <MessagesHeader room={room}/>
+      {group && (
+        <MessagesHeader group={group}/>
       )}
 
       <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
@@ -123,8 +123,8 @@ export const MyGroupChat = () => {
         <div ref={bottomRef}/>
       </div>
 
-      {room && (
-        <WriteMessage toRoom={room} onSuccess={appendTemporaryMessage}/>
+      {group && (
+        <WriteMessage toGroupm={group} onSuccess={appendTemporaryMessage}/>
       )}
     </>
   );

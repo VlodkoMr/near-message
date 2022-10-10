@@ -1,30 +1,3 @@
-#type _Schema_
-#@fulltext(
-#    name: "privateMessageSearch"
-#    language: en
-#    algorithm: rank
-#    include: [{
-#        entity: "PrivateMessage",
-#        fields: [
-#            { name: "text" },
-#            { name: "from_address" },
-#        ]
-#    }]
-#)
-#
-#@fulltext(
-#    name: "roomMessageSearch"
-#    language: en
-#    algorithm: rank
-#    include: [{
-#        entity: "RoomMessage",
-#        fields: [
-#            { name: "text" },
-#            { name: "room_id" },
-#        ]
-#    }]
-#)
-
 type _Schema_
 @fulltext(
     name: "privateChatSearch"
@@ -50,8 +23,6 @@ type PrivateMessage @entity {
     id: ID!
     id_num: Int!
     chat_id: PrivateChat!,
-    from_user: User!
-    to_user: User!
     from_address: String!
     to_address: String!
     reply_to_message: PrivateMessage
@@ -64,30 +35,24 @@ type PrivateMessage @entity {
     is_protected: Boolean!
 }
 
-type RoomChat @entity {
+type GroupChat @entity {
     id: ID!
-    last_message: RoomMessage!
+    last_message: GroupMessage!
     is_removed: Boolean!,
     updated_at: Int!
     total_messages: Int!
 }
 
-type RoomMessage @entity {
+type GroupMessage @entity {
     id: ID!
     id_num: Int!
-    from_user: User!
     from_address: String!
-    reply_to_message: RoomMessage
-    room_id: String!
+    reply_to_message: GroupMessage
+    group_id: String!
     text: String!
     media: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!
     is_removed: Boolean!
-}
-
-type User @entity {
-    id: ID!
-    media: String
 }

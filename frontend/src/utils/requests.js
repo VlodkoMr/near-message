@@ -10,8 +10,8 @@ export const loadPrivateChatsPromise = (accountId) => {
            last_message {
              id, 
              text, 
-             from_user {id, media},
-             to_user {id, media},
+             from_address
+             to_address
            },
            updated_at,
            is_removed,
@@ -27,11 +27,11 @@ export const loadPrivateChatsPromise = (accountId) => {
   });
 }
 
-export const loadRoomChatsPromise = (idList) => {
+export const loadGroupChatsPromise = (idList) => {
   return new Promise(async (resolve, reject) => {
     const client = new createClient({ url: API_URL });
-    const roomChatListQuery = `{
-        roomChats(
+    const groupChatListQuery = `{
+        groupChats(
            last: 50, 
            orderBy: updated_at, 
            orderDirection: desc,
@@ -42,61 +42,61 @@ export const loadRoomChatsPromise = (idList) => {
           last_message {
              id, 
              text, 
-             from_user {id, media},
+             from_address
           },
          updated_at,
          is_removed,
          total_messages
         }
       }`;
-    const result = await client.query(roomChatListQuery).toPromise();
+    const result = await client.query(groupChatListQuery).toPromise();
     if (result.data) {
-      resolve(result.data.roomChats.filter(chat => !chat.is_removed));
+      resolve(result.data.groupChats.filter(chat => !chat.is_removed));
     } else {
       reject();
     }
   });
 }
 
-export const loadRoomMessages = (roomId) => {
+export const loadGroupMessages = (groupId) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
-    roomMessages(
+    groupMessages(
       last: 50, 
       orderBy: created_at, 
       where: {
-        room_id: "${roomId}",
+        group_id: "${groupId}",
       }) {
         id
         text
-        from_user{id, media},
+        from_address
         created_at
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.roomMessages);
+    resolve(result.data?.groupMessages);
   });
 }
 
-export const loadNewRoomMessages = (roomId, lastMessage) => {
+export const loadNewGroupMessages = (groupId, lastMessage) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
-    roomMessages(
+    groupMessages(
       orderBy: created_at, 
       where: {
-        room_id: "${roomId}",
+        group_id: "${groupId}",
         id_num_gt: ${lastMessage.id}
       }) {
         id
         text
-        from_user{id, media},
+        from_address
         created_at
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.roomMessages);
+    resolve(result.data?.groupMessages);
   });
 }
 
@@ -112,8 +112,8 @@ export const loadPrivateMessages = (chatId) => {
       }) {
         id
         text
-        from_user{id, media},
-        to_user{id, media},
+        from_address
+        to_address
         created_at
       }
     }`;
@@ -136,8 +136,8 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
       }) {
         id
         text
-        from_user{id, media},
-        to_user{id, media},
+        from_address
+        to_address
         created_at
       }
     }`;

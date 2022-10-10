@@ -17,17 +17,17 @@ for ID in {1..2}; do
   near call $CONTRACT_ID send_private_message '{"text":"vlodkow -> vlodkow3 | '$ID' - 7. Hello | Привіт | 歡迎 | أهلا وسهلا", "media":"", "to_address":"vlodkow3.testnet"}' --accountId $NEAR_ID_1
 done
 
-#----------- Room Messages
+#----------- Goom Messages
 
-for ROOM_ID in {1..2}; do
-  near call $CONTRACT_ID create_new_room '{"title":"RoomX", "media":"", "is_private": false, "is_read_only": false, "members":["'$NEAR_ID_2'","'$NEAR_ID_3'"]}' --accountId $NEAR_ID_1 --deposit 0.25
-  near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "text":"My first room message in '$ROOM_ID'", "media":""}' --accountId $NEAR_ID_2
-  near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "text":"My second room message in '$ROOM_ID'", "media":""}' --accountId $NEAR_ID_2
-  near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "text":"Some reply room message in '$ROOM_ID'", "media":""}' --accountId $NEAR_ID_3
-  near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "text":"Last room message in '$ROOM_ID'", "media":""}' --accountId $NEAR_ID_2
-  near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "text":"Also last room message in '$ROOM_ID'", "media":""}' --accountId $NEAR_ID_3
+for GROUP_ID in {1..2}; do
+  near call $CONTRACT_ID create_new_group '{"title":"GroupX", "media":"", "group_type": "Private", "members":["'$NEAR_ID_2'","'$NEAR_ID_3'"]}' --accountId $NEAR_ID_1 --deposit 0.25
+  near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "text":"My first group message in '$GROUP_ID'", "media":""}' --accountId $NEAR_ID_2
+  near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "text":"My second group message in '$GROUP_ID'", "media":""}' --accountId $NEAR_ID_2
+  near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "text":"Some reply group message in '$GROUP_ID'", "media":""}' --accountId $NEAR_ID_3
+  near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "text":"Last group message in '$GROUP_ID'", "media":""}' --accountId $NEAR_ID_2
+  near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "text":"Also last group message in '$GROUP_ID'", "media":""}' --accountId $NEAR_ID_3
 done
 
 ### test errors
-#near call $CONTRACT_ID send_room_message '{"room_id":'$ROOM_ID', "texts":"is error"}' --accountId $NEAR_ID_3
+#near call $CONTRACT_ID send_group_message '{"group_id":'$GROUP_ID', "texts":"is error"}' --accountId $NEAR_ID_3
 #near call $CONTRACT_ID send_private_message '{"texts":"is error", "to_address":"vlodkow3.testnet"}' --accountId $NEAR_ID_1

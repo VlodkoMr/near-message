@@ -11,14 +11,14 @@ export class MainContract {
   }
 
   /**
-   * Room by ID
+   * Group by ID
    * @param id
    * @returns {Promise<any>}
    */
-  async getRoomById(id) {
+  async getGroupById(id) {
     return await this.wallet.viewMethod({
       contractId: this.contractId,
-      method: 'get_room_by_id',
+      method: 'get_group_by_id',
       args: {
         id
       }
@@ -41,13 +41,13 @@ export class MainContract {
   }
 
   /**
-   * Get owned rooms
+   * Get owned groups
    * @returns {Promise<any>}
    */
-  async getOwnerRooms(account) {
+  async getOwnerGroups(account) {
     return await this.wallet.viewMethod({
       contractId: this.contractId,
-      method: 'get_owner_rooms',
+      method: 'get_owner_groups',
       args: {
         account
       }
@@ -55,13 +55,13 @@ export class MainContract {
   }
 
   /**
-   * Get rooms that user joined
+   * Get groups that user joined
    * @returns {Promise<any>}
    */
-  async getUserRooms(account) {
+  async getUserGroups(account) {
     return await this.wallet.viewMethod({
       contractId: this.contractId,
-      method: 'get_user_rooms',
+      method: 'get_user_groups',
       args: {
         account
       }
@@ -69,24 +69,22 @@ export class MainContract {
   }
 
   /**
-   * Create room
+   * Create group
    * @param title
    * @param media
-   * @param is_private
-   * @param is_read_only
+   * @param group_type
    * @param members
    * @returns {Promise<*>}
    */
-  async createNewRoom(title, media, is_private, is_read_only, members) {
+  async createNewGroup(title, media, group_type, members) {
     const deposit = utils.format.parseNearAmount("0.25");
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'create_new_room',
+      method: 'create_new_group',
       args: {
         title,
         media,
-        is_private,
-        is_read_only,
+        group_type,
         members
       },
       THIRTY_TGAS,
@@ -95,105 +93,101 @@ export class MainContract {
   }
 
   /**
-   * Edit Room
-   * @param room_id
+   * Edit Group
+   * @param id
    * @param title
    * @param media
-   * @param is_private
-   * @param is_read_only
    * @returns {Promise<*>}
    */
-  async editRoom(room_id, title, media, is_private, is_read_only) {
+  async editGroup(id, title, media) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'edit_room',
+      method: 'edit_group',
       args: {
-        room_id,
+        id,
         title,
         media,
-        is_private,
-        is_read_only,
       }
     })
   }
 
   /**
-   * Add room members
-   * @param room_id
+   * Add group members
+   * @param id
    * @param members
    * @returns {Promise<*>}
    */
-  async ownerAddRoomMembers(room_id, members) {
+  async ownerAddGroupMembers(id, members) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'owner_add_room_members',
+      method: 'owner_add_group_members',
       args: {
-        room_id,
+        id,
         members
       }
     })
   }
 
   /**
-   * Remove room members
-   * @param room_id
+   * Remove group members
+   * @param id
    * @param members
    * @returns {Promise<*>}
    */
-  async ownerRemoveRoomMembers(room_id, members) {
+  async ownerRemoveGroupMembers(id, members) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'owner_remove_room_members',
+      method: 'owner_remove_group_members',
       args: {
-        room_id,
+        id,
         members
       }
     })
   }
 
   /**
-   * Remove room
-   * @param room_id
+   * Remove group
+   * @param group_id
    * @param confirm_title
    * @returns {Promise<*>}
    */
-  async ownerRemoveRoom(room_id, confirm_title) {
+  async ownerRemoveGroup(group_id, confirm_title) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'owner_remove_room',
+      method: 'owner_remove_group',
       args: {
-        room_id,
+        group_id,
         confirm_title
       }
     })
   }
 
   /**
-   * Join Public room
-   * @param room_id
+   * Join Public group
+   * @param id
    * @returns {Promise<*>}
    */
-  async joinPublicRoom(room_id) {
+  async joinPublicGroup(id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'join_public_room',
+      method: 'join_public_group',
       args: {
-        room_id,
+        id,
       }
     })
   }
 
   /**
-   * Leave room
-   * @param room_id
+   * Leave group
+   * @param id
    * @returns {Promise<*>}
    */
-  async leaveRoom(room_id) {
+  async leaveGroup(id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'leave_room',
+      method: 'leave_group',
       args: {
-        room_id,
+        id,
       }
     })
   }
@@ -220,21 +214,21 @@ export class MainContract {
   }
 
   /**
-   * Send message to the room
+   * Send message to the group
    * @param text
    * @param media
-   * @param room_id
+   * @param group_id
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendRoomMessage(text, media, room_id, reply_message_id) {
+  async sendGroupMessage(text, media, group_id, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
-      method: 'send_room_message',
+      method: 'send_group_message',
       args: {
         text,
         media,
-        room_id,
+        group_id,
         reply_message_id
       }
     })

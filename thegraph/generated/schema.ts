@@ -128,24 +128,6 @@ export class PrivateMessage extends Entity {
     this.set("chat_id", Value.fromString(value));
   }
 
-  get from_user(): string {
-    let value = this.get("from_user");
-    return value!.toString();
-  }
-
-  set from_user(value: string) {
-    this.set("from_user", Value.fromString(value));
-  }
-
-  get to_user(): string {
-    let value = this.get("to_user");
-    return value!.toString();
-  }
-
-  set to_user(value: string) {
-    this.set("to_user", Value.fromString(value));
-  }
-
   get from_address(): string {
     let value = this.get("from_address");
     return value!.toString();
@@ -245,7 +227,7 @@ export class PrivateMessage extends Entity {
   }
 }
 
-export class RoomChat extends Entity {
+export class GroupChat extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -253,18 +235,18 @@ export class RoomChat extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save RoomChat entity without an ID");
+    assert(id != null, "Cannot save GroupChat entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type RoomChat must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type GroupChat must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("RoomChat", id.toString(), this);
+      store.set("GroupChat", id.toString(), this);
     }
   }
 
-  static load(id: string): RoomChat | null {
-    return changetype<RoomChat | null>(store.get("RoomChat", id));
+  static load(id: string): GroupChat | null {
+    return changetype<GroupChat | null>(store.get("GroupChat", id));
   }
 
   get id(): string {
@@ -313,7 +295,7 @@ export class RoomChat extends Entity {
   }
 }
 
-export class RoomMessage extends Entity {
+export class GroupMessage extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -321,18 +303,18 @@ export class RoomMessage extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save RoomMessage entity without an ID");
+    assert(id != null, "Cannot save GroupMessage entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type RoomMessage must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type GroupMessage must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("RoomMessage", id.toString(), this);
+      store.set("GroupMessage", id.toString(), this);
     }
   }
 
-  static load(id: string): RoomMessage | null {
-    return changetype<RoomMessage | null>(store.get("RoomMessage", id));
+  static load(id: string): GroupMessage | null {
+    return changetype<GroupMessage | null>(store.get("GroupMessage", id));
   }
 
   get id(): string {
@@ -351,15 +333,6 @@ export class RoomMessage extends Entity {
 
   set id_num(value: i32) {
     this.set("id_num", Value.fromI32(value));
-  }
-
-  get from_user(): string {
-    let value = this.get("from_user");
-    return value!.toString();
-  }
-
-  set from_user(value: string) {
-    this.set("from_user", Value.fromString(value));
   }
 
   get from_address(): string {
@@ -388,13 +361,13 @@ export class RoomMessage extends Entity {
     }
   }
 
-  get room_id(): string {
-    let value = this.get("room_id");
+  get group_id(): string {
+    let value = this.get("group_id");
     return value!.toString();
   }
 
-  set room_id(value: string) {
-    this.set("room_id", Value.fromString(value));
+  set group_id(value: string) {
+    this.set("group_id", Value.fromString(value));
   }
 
   get text(): string {
@@ -449,54 +422,5 @@ export class RoomMessage extends Entity {
 
   set is_removed(value: boolean) {
     this.set("is_removed", Value.fromBoolean(value));
-  }
-}
-
-export class User extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save User entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type User must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("User", id.toString(), this);
-    }
-  }
-
-  static load(id: string): User | null {
-    return changetype<User | null>(store.get("User", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get media(): string | null {
-    let value = this.get("media");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set media(value: string | null) {
-    if (!value) {
-      this.unset("media");
-    } else {
-      this.set("media", Value.fromString(<string>value));
-    }
   }
 }

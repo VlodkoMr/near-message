@@ -4,9 +4,9 @@ import { AiFillLike, BiSend, BsImage, FaSmile, RiChatPrivateFill } from "react-i
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
 
-export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
+export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
   const near = useContext(NearContext);
-  const localKey = toAddress ? `acc-${toAddress}` : `room-${toRoom.id}`;
+  const localKey = toAddress ? `acc-${toAddress}` : `group-${toGroup.id}`;
   const [ messageText, setMessageText ] = useState("");
   const [ messageMedia, setMessageMedia ] = useState("");
   const [ isLoading, setIsLoading ] = useState(false);
@@ -24,8 +24,8 @@ export const WriteMessage = ({ toAddress, toRoom, onSuccess }) => {
   }, [ messageText ]);
 
   const sendMessage = (value) => {
-    const sendFunction = toAddress ? "sendPrivateMessage" : "sendRoomMessage";
-    const sendTo = toAddress || toRoom.id;
+    const sendFunction = toAddress ? "sendPrivateMessage" : "sendGroupMessage";
+    const sendTo = toAddress || toGroup.id;
 
     value = value.trim();
     if (value.length === 0) {

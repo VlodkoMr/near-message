@@ -7,6 +7,12 @@ Protect messages:
 https://github.com/NEARFoundation/near-js-encryption-box
 
 
+Requirements
+===========
+- nodeJS
+- npm
+- The Graph: @graphprotocol/graph-cli package
+
 Quick Start
 ===========
 
@@ -61,7 +67,7 @@ graph init
 ? Subgraph name › vlodkomr/nearmessage
 ? Directory to create the subgraph in › thegraph
 ? NEAR network › near-testnet
-? Contract account › dev-1664451675763-39777161611804
+? Contract account › .... contract address....
 ? Contract Name · NearMessage
 
 ##### Build

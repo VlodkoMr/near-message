@@ -6,32 +6,30 @@ export const OwnerGroups = () => {
   const near = useContext(NearContext);
   const [ ownerGroup, setOwnerGroups ] = useState([]);
 
-  const loadOwnerRooms = async () => {
-    const rooms = await near.mainContract.getOwnerRooms(near.wallet.accountId);
-    setOwnerGroups(rooms);
-    console.log(`rooms`, rooms);
+  const loadOwnerGroups = async () => {
+    const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
+    setOwnerGroups(groups);
+    console.log(`Groups`, groups);
   }
 
   useEffect(() => {
-    loadOwnerRooms();
+    loadOwnerGroups();
   }, []);
 
   return ownerGroup.length > 0 && (
     <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">
-      {ownerGroup.map(room => (
-        <div className="text-sm text-center mr-2" key={room.id}>
+      {ownerGroup.map(group => (
+        <div className="text-sm text-center mr-2" key={group.id}>
           <div className="border-blue-600 rounded-full">
             <div className="w-16 h-16 relative">
               <img className="shadow-md rounded-full w-full h-full object-cover"
-                   src={room.media || logoImage}
-                   alt={room.id}
+                   src={group.media || logoImage}
+                   alt={group.id}
               />
             </div>
           </div>
           <small className={"font-semibold w-16 overflow-hidden text-ellipsis block whitespace-nowrap"}>
-            {room.title}
-            {/*{room.is_private}*/}
-            {/*{room.is_read_only}*/}
+            {group.title}
           </small>
         </div>
       ))}

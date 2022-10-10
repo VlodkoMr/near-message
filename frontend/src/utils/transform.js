@@ -59,12 +59,12 @@ export const transformProfile = (address, socialProfile) => {
 
 export const transformMessages = (messages, accountId, lastMessageUser) => {
   return messages.map((message, index) => {
-    message.isFirst = lastMessageUser !== message.from_user.id;
-    message.isMy = message.from_user.id === accountId;
-    message.isLast = !messages[index + 1] || messages[index + 1].from_user.id !== message.from_user.id;
+    message.isFirst = lastMessageUser !== message.from_address;
+    message.isMy = message.from_address === accountId;
+    message.isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
     message.isTemporary = false;
 
-    lastMessageUser = message.from_user.id;
+    lastMessageUser = message.from_address;
     return message;
   });
 }
@@ -72,7 +72,7 @@ export const transformMessages = (messages, accountId, lastMessageUser) => {
 export const generateTemporaryMessage = (id, text, media, accountId) => {
   return {
     created_at: new Date() / 1000,
-    from_user: { id: accountId, media: null },
+    from_address: accountId,
     id: id,
     isFirst: true,
     isLast: true,

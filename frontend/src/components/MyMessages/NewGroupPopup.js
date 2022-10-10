@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 
-export const NewRoomPopup = ({ isOpen, setIsOpen }) => {
+export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   const handleClose = () => {
     setIsOpen(false);
   };

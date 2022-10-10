@@ -18,7 +18,7 @@ export const OneMessage = ({ message }) => {
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div className="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
-            <Avatar media={message.from_user.media} title={message.from_user.id}/>
+            <Avatar media={"____from_user.media____"} title={message.from_address}/>
           )}
         </div>
 

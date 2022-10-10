@@ -2,43 +2,44 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { NearContext } from "../../context/NearContext";
-import { loadPrivateChatsPromise, loadRoomChatsPromise } from "../../utils/requests";
+import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requests";
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
 import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
-import { NewRoomPopup } from "./NewRoomPopup";
+import { NewGroupPopup } from "./NewGroupPopup";
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
   let { id } = useParams();
   const [ isReady, setIsReady ] = useState(false);
-  const [ roomsById, setRoomsById ] = useState({});
+  const [ groupsById, setGroupsById ] = useState({});
   const [ chatList, setChatList ] = useState([]);
   const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
-  const [ newRoomPopupVisible, setNewRoomPopupVisible ] = useState(false);
+  const [ newGroupPopupVisible, setNewGroupPopupVisible ] = useState(false);
 
-  const loadRoomsIdList = async () => {
-    return await near.mainContract.getUserRooms(near.wallet.accountId);
+  const loadGroupsIdList = async () => {
+    return await near.mainContract.getUserGroups(near.wallet.accountId);
   }
 
   useEffect(() => {
-    loadRoomsIdList().then(rooms => {
+    loadGroupsIdList().then(groups => {
       let promiseList = [ loadPrivateChatsPromise(near.wallet.accountId) ];
-      if (rooms.length) {
-        setRoomListById(rooms);
+      if (groups.length) {
+        setGroupListById(groups);
         promiseList.push(
-          loadRoomChatsPromise(rooms.map(room => room.id))
+          loadGroupChatsPromise(groups.map(group => group.id))
         )
       }
 
       Promise.all(promiseList).then(result => {
+        console.log(`result`, result);
         const privateChats = result[0] || [];
-        const roomChats = result[1] || [];
+        const groupChats = result[1] || [];
 
-        let allChats = privateChats.concat(roomChats);
+        let allChats = privateChats.concat(groupChats);
         allChats.sort((a, b) => b.updated_at - a.updated_at);
         setChatList(allChats);
         setIsReady(true);
@@ -46,39 +47,39 @@ export const LeftPanel = () => {
     });
   }, []);
 
-  const setRoomListById = (rooms) => {
-    let roomsById = {};
-    rooms.map(room => {
-      roomsById[room.id] = room;
+  const setGroupListById = (groups) => {
+    let groupsById = {};
+    groups.map(group => {
+      groupsById[group.id] = group;
     });
-    console.log(`roomsById`, roomsById);
-    setRoomsById(roomsById);
+    console.log(`groupsById`, groupsById);
+    setGroupsById(groupsById);
   }
 
   const handleSearch = () => {
 
   }
 
-  const isRoomChat = (chat) => {
-    return chat["__typename"] === "RoomChat";
+  const isGroupChat = (chat) => {
+    return chat["__typename"] === "GroupChat";
   }
 
   const isSelected = (chat) => {
     return chat.id === id;
   }
 
-  const LastRoomMessage = ({ chat }) => (
+  const LastGroupMessage = ({ chat }) => (
     <>
       <div className="w-16 h-16 relative flex flex-shrink-0">
-        <Avatar media={roomsById[chat.id].media} title={roomsById[chat.id].title} textSize={"text-4xl"}/>
+        <Avatar media={groupsById[chat.id].media} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
         <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0">
-          <Avatar media={chat.last_message.from_user.media}
-                  title={chat.last_message.from_user.id}
+          <Avatar media={"____from_user.media____"}
+                  title={chat.last_message.from_address}
                   textSize={"text-sm"}/>
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-        <p className={"font-medium text-gray-50"}>{roomsById[chat.id].title}</p>
+        <p className={"font-medium text-gray-50"}>{groupsById[chat.id].title}</p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60">{chat.last_message.text}</p>
@@ -93,15 +94,15 @@ export const LeftPanel = () => {
   )
 
   const LastPrivateMessage = ({ chat }) => {
-    const opponent = chat.last_message.from_user.id === near.wallet.accountId ? chat.last_message.to_user : chat.last_message.from_user;
+    const opponent = chat.last_message.from_address === near.wallet.accountId ? chat.last_message.to_address : chat.last_message.from_address;
 
     return (
       <>
         <div className="w-16 h-16 relative flex flex-shrink-0">
-          <Avatar media={opponent.media} title={opponent.id} textSize={"text-4xl"}/>
+          <Avatar media={"____opponent.media____"} title={opponent} textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium text-gray-50"}>{opponent.id}</p>
+          <p className={"font-medium text-gray-50"}>{opponent}</p>
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
               <p className="truncate opacity-60">{chat.last_message.text}</p>
@@ -119,7 +120,7 @@ export const LeftPanel = () => {
   return (
     <>
       <div className="header p-4 flex flex-row justify-between items-center flex-none">
-        <CircleButton className={"p-2"} onClick={() => setNewRoomPopupVisible(true)}>
+        <CircleButton className={"p-2"} onClick={() => setNewGroupPopupVisible(true)}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-70 hover:opacity-100 transition">
@@ -154,12 +155,12 @@ export const LeftPanel = () => {
         {isReady ? (
           <>
             {chatList.length > 0 ? chatList.map(chat => (
-              <Link to={`/my/${isRoomChat(chat) ? "group" : "account"}/${chat.id}`}
+              <Link to={`/my/${isGroupChat(chat) ? "group" : "account"}/${chat.id}`}
                     key={chat.id}
                     className={`flex justify-between items-center p-2 rounded-lg relative mb-1
                   ${isSelected(chat) ? "bg-blue-500/40 text-gray-200" : "hover:bg-gray-800/60 text-gray-400"}`}>
-                {(isRoomChat(chat)) ? (
-                  <LastRoomMessage chat={chat}/>
+                {(isGroupChat(chat)) ? (
+                  <LastGroupMessage chat={chat}/>
                 ) : (
                   <LastPrivateMessage chat={chat}/>
                 )}
@@ -181,9 +182,9 @@ export const LeftPanel = () => {
         isOpen={newMessagePopupVisible}
         setIsOpen={setNewMessagePopupVisible}
       />
-      <NewRoomPopup
-        isOpen={newRoomPopupVisible}
-        setIsOpen={setNewRoomPopupVisible}
+      <NewGroupPopup
+        isOpen={newGroupPopupVisible}
+        setIsOpen={setNewGroupPopupVisible}
       />
 
     </>
