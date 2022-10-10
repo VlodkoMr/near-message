@@ -124,7 +124,7 @@ export const MyGroupChat = () => {
       </div>
 
       {group && (
-        <WriteMessage toGroupm={group} onSuccess={appendTemporaryMessage}/>
+        <WriteMessage toGroup={group} onSuccess={appendTemporaryMessage}/>
       )}
     </>
   );
