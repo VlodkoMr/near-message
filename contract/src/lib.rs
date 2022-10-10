@@ -278,10 +278,8 @@ impl Contract {
      */
     pub fn send_private_message(&mut self, text: String, media: String, to_address: AccountId, reply_message_id: Option<String>) -> U128 {
         let account = env::predecessor_account_id();
-        let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
-        if spam_count > 10 {
-            env::panic_str("You can't send messages, spam detected");
-        }
+        self.send_message_validate_spam(&account);
+
         if to_address == account {
             env::panic_str("Can't send message to yourself");
         }
@@ -310,10 +308,8 @@ impl Contract {
     pub fn send_room_message(&mut self, text: String, media: String, room_id: u32, reply_message_id: Option<String>) -> U128 {
         let room = self.rooms.get(&room_id).unwrap();
         let account = env::predecessor_account_id();
-        let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
-        if spam_count > 10 {
-            env::panic_str("You can't send messages, spam detected");
-        }
+        self.send_message_validate_spam(&account);
+
         if room.is_read_only && room.owner != account {
             env::panic_str("No access to this room");
         }

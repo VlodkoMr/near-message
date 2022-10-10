@@ -25,6 +25,16 @@ Test your contract:
 If you have a frontend, run `npm start`. This will run a dev server.
 
 
+Spam detection
+===============
+
+We lock message sending for spam accounts based on account type:
+- Free: up to 10 spam reports till account will be locked forever.
+- Bronze: lock after last spam report. Lock time based on spam count reports (up to 1 hour).
+- Gold: lock after last spam report. Lock time based on spam count reports divided by 6 (up to 10 minutes).
+
+Accounts that send spam from Bronze or Gold account can receive additional locks when account is used for spam.
+
 
 Contract Iteraction
 ===============

@@ -69,8 +69,8 @@ export const transformMessages = (messages, accountId, lastMessageUser) => {
   });
 }
 
-export const generateTemporaryMessage = (id, text, media, accountId, toUser) => {
-  let tmpMessage = {
+export const generateTemporaryMessage = (id, text, media, accountId) => {
+  return {
     created_at: new Date() / 1000,
     from_user: { id: accountId, media: null },
     id: id,
@@ -81,10 +81,4 @@ export const generateTemporaryMessage = (id, text, media, accountId, toUser) => 
     text,
     media,
   };
-
-  // if (toUser) {
-  //   tmpMessage['to_user'] = toUser;
-  // }
-
-  return tmpMessage;
 }
