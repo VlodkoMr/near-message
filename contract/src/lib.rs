@@ -7,20 +7,27 @@ use near_sdk::json_types::U128;
 mod utils;
 mod members;
 
-const MAX_MEMBERS_IN_ROOM: u32 = 1000;
-const CREATE_ROOM_PRICE: &str = "0.25";
+const MAX_MEMBERS_IN_GROUP: u32 = 1000;
+const CREATE_GROUP_PRICE: &str = "0.25";
 const JOIN_PUBLIC_PRICE: &str = "0.1";
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub enum GroupType {
+    Channel,
+    Private,
+    Public,
+}
 
 #[near_bindgen]
 #[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Room {
+pub struct Group {
     id: u32,
     owner: AccountId,
     title: String,
     media: String,
-    is_private: bool,
-    is_read_only: bool,
+    group_type: GroupType,
     created_at: Timestamp,
     members: Vec<AccountId>,
 }
@@ -32,15 +39,16 @@ pub struct User {
     level: u8,
     last_spam_report: Timestamp,
     spam_counts: u32,
+    verified: bool, // verified - no locks
 }
 
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKeys {
     UserSpamCounts,
     Users,
-    Rooms,
-    UserRooms,
-    OwnerRooms,
+    Groups,
+    UserGroups,
+    OwnerGroups,
 }
 
 #[near_bindgen]
@@ -48,10 +56,10 @@ pub enum StorageKeys {
 pub struct Contract {
     user_spam_counts: LookupMap<AccountId, u32>,
     users: LookupMap<AccountId, User>,
-    rooms: LookupMap<u32, Room>,
-    user_rooms: LookupMap<AccountId, Vec<u32>>,
-    owner_rooms: LookupMap<AccountId, Vec<u32>>,
-    rooms_count: u32,
+    groups: LookupMap<u32, Group>,
+    user_groups: LookupMap<AccountId, Vec<u32>>,
+    owner_groups: LookupMap<AccountId, Vec<u32>>,
+    groups_count: u32,
     messages_count: u128,
 }
 
@@ -60,10 +68,10 @@ impl Default for Contract {
         Self {
             user_spam_counts: LookupMap::new(StorageKeys::UserSpamCounts),
             users: LookupMap::new(StorageKeys::Users),
-            rooms: LookupMap::new(StorageKeys::Rooms),
-            user_rooms: LookupMap::new(StorageKeys::UserRooms),
-            owner_rooms: LookupMap::new(StorageKeys::OwnerRooms),
-            rooms_count: 0,
+            groups: LookupMap::new(StorageKeys::Groups),
+            user_groups: LookupMap::new(StorageKeys::UserGroups),
+            owner_groups: LookupMap::new(StorageKeys::OwnerGroups),
+            groups_count: 0,
             messages_count: 0,
         }
     }
@@ -72,10 +80,10 @@ impl Default for Contract {
 #[near_bindgen]
 impl Contract {
     /**
-     * Get count rooms
+     * Get count groups
      */
-    pub fn get_rooms_count(&self) -> u32 {
-        self.rooms_count
+    pub fn get_groups_count(&self) -> u32 {
+        self.groups_count
     }
 
     /**
@@ -86,10 +94,10 @@ impl Contract {
     }
 
     /**
-     * Get Room by ID
+     * Get Group by ID
      */
-    pub fn get_room_by_id(&self, id: u32) -> Room {
-        self.rooms.get(&id).unwrap()
+    pub fn get_group_by_id(&self, id: u32) -> Group {
+        self.groups.get(&id).unwrap()
     }
 
     /**
@@ -100,177 +108,174 @@ impl Contract {
     }
 
     /**
-     * Get owner rooms
+     * Get owner groups
      */
-    pub fn get_owner_rooms(&self, account: AccountId) -> Vec<Room> {
-        let id_list = self.owner_rooms.get(&account).unwrap_or(vec![]);
-        id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
+    pub fn get_owner_groups(&self, account: AccountId) -> Vec<Group> {
+        let id_list = self.owner_groups.get(&account).unwrap_or(vec![]);
+        id_list.iter().map(|id| self.groups.get(&id).unwrap()).collect()
     }
 
     /**
-     * Get user rooms
+     * Get user groups
      */
-    pub fn get_user_rooms(&self, account: AccountId) -> Vec<Room> {
-        let id_list = self.user_rooms.get(&account).unwrap_or(vec![]);
-        id_list.iter().map(|room_id| self.rooms.get(&room_id).unwrap()).collect()
+    pub fn get_user_groups(&self, account: AccountId) -> Vec<Group> {
+        let id_list = self.user_groups.get(&account).unwrap_or(vec![]);
+        id_list.iter().map(|id| self.groups.get(&id).unwrap()).collect()
     }
 
     /**
-     * Create new room
+     * Create new group
      */
     #[payable]
-    pub fn create_new_room(&mut self, title: String, media: String, is_private: bool, is_read_only: bool, members: Vec<AccountId>) -> u32 {
+    pub fn create_new_group(&mut self, title: String, media: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
         let owner = env::predecessor_account_id();
-        let mut owner_rooms = self.owner_rooms.get(&owner).unwrap_or(vec![]);
+        let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
-        if env::attached_deposit() < Contract::convert_to_yocto(CREATE_ROOM_PRICE) {
+        if env::attached_deposit() < Contract::convert_to_yocto(CREATE_GROUP_PRICE) {
             env::panic_str("Wrong payment amount");
         }
-        if members.len() > MAX_MEMBERS_IN_ROOM as usize {
-            env::panic_str("You can't add so much room members");
+        if members.len() > MAX_MEMBERS_IN_GROUP as usize {
+            env::panic_str("You can't add so much group members");
         }
         if title.len() < 3 as usize || title.len() >= 160 as usize {
-            env::panic_str("Wrong room title length");
+            env::panic_str("Wrong group title length");
         }
         let spam_count = self.user_spam_counts.get(&owner).unwrap_or(0);
         if spam_count > 10 {
-            env::panic_str("You can't create rooms, spam detected");
+            env::panic_str("You can't create groups, spam detected");
         }
 
-        self.rooms_count += 1;
-        let room_id = self.rooms_count;
+        self.groups_count += 1;
+        let group_id = self.groups_count;
 
-        let room = Room {
-            id: room_id,
+        let group = Group {
+            id: group_id,
             owner: owner.clone(),
             title,
             media,
-            is_private,
-            is_read_only,
+            group_type,
             created_at: env::block_timestamp(),
             members: members.clone(),
         };
-        self.rooms.insert(&room_id, &room);
+        self.groups.insert(&group_id, &group);
 
         // add to owner
-        owner_rooms.push(room_id.clone());
-        self.owner_rooms.insert(&owner, &owner_rooms);
+        owner_groups.push(group_id.clone());
+        self.owner_groups.insert(&owner, &owner_groups);
 
-        // add to user rooms
+        // add to user groups
         if members.len() > 0 {
-            self.add_room_member_internal(members, room_id, false);
+            self.add_group_member_internal(members, group_id, false);
         }
-        room_id
+        group_id
     }
 
     /**
-     * Edit room
-     * (only room owner)
+     * Edit group
+     * (only group owner)
      */
-    pub fn edit_room(&mut self, room_id: u32, title: String, media: String, is_private: bool, is_read_only: bool) {
-        let mut room = self.rooms.get(&room_id).unwrap();
-        if room.owner != env::predecessor_account_id() {
-            env::panic_str("No access to room modification");
+    pub fn edit_group(&mut self, id: u32, title: String, media: String) {
+        let mut group = self.groups.get(&id).unwrap();
+        if group.owner != env::predecessor_account_id() {
+            env::panic_str("No access to group modification");
         }
-        room.title = title;
-        room.media = media;
-        room.is_private = is_private;
-        room.is_read_only = is_read_only;
+        group.title = title;
+        group.media = media;
 
-        self.rooms.insert(&room_id, &room);
+        self.groups.insert(&id, &group);
     }
 
     /**
-     * Add room members
-     * (only room owner)
+     * Add group members
+     * (only group owner)
      */
-    pub fn owner_add_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
-        let room = self.rooms.get(&room_id).unwrap();
-        if room.owner != env::predecessor_account_id() {
-            env::panic_str("No access to room modification");
+    pub fn owner_add_group_members(&mut self, id: u32, members: Vec<AccountId>) {
+        let group = self.groups.get(&id).unwrap();
+        if group.owner != env::predecessor_account_id() {
+            env::panic_str("No access to group modification");
         }
-        if room.members.len() + members.len() > MAX_MEMBERS_IN_ROOM as usize {
-            env::panic_str("Room members limit reached");
+        if group.members.len() + members.len() > MAX_MEMBERS_IN_GROUP as usize {
+            env::panic_str("Group members limit reached");
         }
         if members.len() == 0 {
             env::panic_str("Please add members");
         }
 
-        self.add_room_member_internal(members, room_id, true);
+        self.add_group_member_internal(members, id, true);
     }
 
     /**
-     * Remove room members
-     * (only room owner)
+     * Remove group members
+     * (only group owner)
      */
-    pub fn owner_remove_room_members(&mut self, room_id: u32, members: Vec<AccountId>) {
-        let room = self.rooms.get(&room_id).unwrap();
-        if room.owner != env::predecessor_account_id() {
-            env::panic_str("No access to room modification");
+    pub fn owner_remove_group_members(&mut self, id: u32, members: Vec<AccountId>) {
+        let group = self.groups.get(&id).unwrap();
+        if group.owner != env::predecessor_account_id() {
+            env::panic_str("No access to group modification");
         }
         if members.len() == 0 {
             env::panic_str("Please provide members for removal");
         }
 
-        self.remove_room_member_internal(members, room_id, true);
+        self.remove_group_member_internal(members, id, true);
     }
 
     /**
-     * Remove room
-     * (only room owner)
+     * Remove group
+     * (only group owner)
      */
-    pub fn owner_remove_room(&mut self, room_id: u32, confirm_title: String) {
-        let room = self.rooms.get(&room_id).unwrap();
-        if room.owner != env::predecessor_account_id() {
-            env::panic_str("No access to room modification");
+    pub fn owner_remove_group(&mut self, id: u32, confirm_title: String) {
+        let group = self.groups.get(&id).unwrap();
+        if group.owner != env::predecessor_account_id() {
+            env::panic_str("No access to group modification");
         }
-        if confirm_title != room.title {
+        if confirm_title != group.title {
             env::panic_str("Wrong approval for remove");
         }
 
-        self.remove_room_member_internal(room.members, room_id, false);
-        self.rooms.remove(&room_id);
+        self.remove_group_member_internal(group.members, id, false);
+        self.groups.remove(&id);
     }
 
     /**
-     * Join public room
+     * Join public group
      * (each member pay 0.1N to avoid spam)
      */
     #[payable]
-    pub fn join_public_room(&mut self, room_id: u32) {
-        let room = self.rooms.get(&room_id).unwrap();
+    pub fn join_public_group(&mut self, id: u32) {
+        let group = self.groups.get(&id).unwrap();
         let member = env::predecessor_account_id();
 
-        if room.is_private || room.is_read_only {
-            env::panic_str("Can't join this room");
+        if group.group_type != GroupType::Public {
+            env::panic_str("Can't join this group");
         }
         if env::attached_deposit() < Contract::convert_to_yocto(JOIN_PUBLIC_PRICE) {
             env::panic_str("Wrong payment amount");
         }
-        if room.members.contains(&member) {
-            env::panic_str("You already participate in this room");
+        if group.members.contains(&member) {
+            env::panic_str("You already participate in this group");
         }
-        if room.members.len() + 1 > MAX_MEMBERS_IN_ROOM as usize {
-            env::panic_str("Room members limit reached");
+        if group.members.len() + 1 > MAX_MEMBERS_IN_GROUP as usize {
+            env::panic_str("Group members limit reached");
         }
 
-        self.add_room_member_internal(vec![member], room_id, true);
+        self.add_group_member_internal(vec![member], id, true);
     }
 
     /**
-     * Leave room
+     * Leave group
      */
-    pub fn leave_room(&mut self, room_id: u32) {
-        let room = self.rooms.get(&room_id).unwrap();
+    pub fn leave_group(&mut self, id: u32) {
+        let group = self.groups.get(&id).unwrap();
         let member = env::predecessor_account_id();
-        if !room.members.contains(&member) {
-            env::panic_str("You don't participate in this room");
+        if !group.members.contains(&member) {
+            env::panic_str("You don't participate in this group");
         }
-        if room.owner == member {
-            env::panic_str("You can't leave your room");
+        if group.owner == member {
+            env::panic_str("You can't leave your group");
         }
 
-        self.remove_room_member_internal(vec![member], room_id, true);
+        self.remove_group_member_internal(vec![member], id, true);
     }
 
     /**
@@ -305,17 +310,17 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_room_message(&mut self, text: String, media: String, room_id: u32, reply_message_id: Option<String>) -> U128 {
-        let room = self.rooms.get(&room_id).unwrap();
+    pub fn send_group_message(&mut self, text: String, media: String, group_id: u32, reply_message_id: Option<String>) -> U128 {
+        let group = self.groups.get(&group_id).unwrap();
         let account = env::predecessor_account_id();
         self.send_message_validate_spam(&account);
 
-        if room.is_read_only && room.owner != account {
-            env::panic_str("No access to this room");
+        if group.group_type == GroupType::Channel && group.owner != account {
+            env::panic_str("No access to this group");
         }
-        if room.is_private && room.owner != account {
-            if !room.members.contains(&account) {
-                env::panic_str("No access to this room");
+        if group.group_type == GroupType::Private && group.owner != account {
+            if !group.members.contains(&account) {
+                env::panic_str("No access to this group");
             }
         }
 
@@ -324,7 +329,7 @@ impl Contract {
         let message = json!({
             "id": self.messages_count.to_string(),
             "from_user": env::predecessor_account_id().to_string(),
-            "room_id": room_id.to_string(),
+            "group_id": group_id.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text,
             "media": media.to_string(),
@@ -351,6 +356,7 @@ impl Contract {
             level,
             last_spam_report: 0,
             spam_counts: 0,
+            verified: false
         };
         self.users.insert(&account, &user_account);
     }
@@ -389,10 +395,10 @@ mod tests {
         testing_env!(builder.build());
     }
 
-    fn create_room_internal(contract: &mut Contract, title: String, is_private: bool, is_readonly: bool, members: Vec<AccountId>) {
-        set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_ROOM_PRICE));
-        contract.create_new_room(
-            title, "".to_string(), is_private, is_readonly, members,
+    fn create_group_internal(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
+        set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
+        contract.create_new_group(
+            title, "".to_string(), group_type, members,
         );
     }
 
@@ -405,200 +411,197 @@ mod tests {
     }
 
     #[test]
-    fn create_private_room() {
+    fn create_private_group() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Room 1".to_string(), true, false, vec![
+        create_group_internal(&mut contract, "Group 1".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
-        assert_eq!(contract.get_rooms_count(), 1);
+        assert_eq!(contract.get_groups_count(), 1);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.title, "Room 1".to_string());
-        assert_eq!(room.is_private, true);
-        assert_eq!(room.is_read_only, false);
-        assert_eq!(room.members.len(), 2);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.title, "Group 1".to_string());
+        assert_eq!(group.members.len(), 2);
 
-        // Check owner rooms
-        let rooms = contract.get_owner_rooms(NEAR_ID.parse().unwrap());
-        assert_eq!(rooms.len(), 1);
+        // Check owner groups
+        let groups = contract.get_owner_groups(NEAR_ID.parse().unwrap());
+        assert_eq!(groups.len(), 1);
     }
 
     #[test]
-    fn edit_room() {
+    fn edit_group() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Room 1".to_string(), true, false, vec![]);
+        create_group_internal(&mut contract, "group 1".to_string(), GroupType::Private, vec![]);
 
-        contract.edit_room(
-            1, "Room updated".to_string(), "".to_string(), false, false,
+        contract.edit_group(
+            1, "group updated".to_string(), "".to_string(),
         );
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.title, "Room updated".to_string());
-        assert_eq!(room.is_private, false);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.title, "group updated".to_string());
+        assert_eq!(group.group_type, GroupType::Private);
     }
 
     #[test]
-    fn create_public_room() {
+    fn create_public_group() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
+        create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
-        assert_eq!(contract.get_rooms_count(), 1);
+        assert_eq!(contract.get_groups_count(), 1);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.title, "Room".to_string());
-        assert_eq!(room.is_private, false);
-        assert_eq!(room.is_read_only, false);
-        assert_eq!(room.members.len(), 0);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.title, "group".to_string());
+        assert_eq!(group.group_type, GroupType::Public);
+        assert_eq!(group.members.len(), 0);
 
         // Add members
-        contract.owner_add_room_members(1, vec![
+        contract.owner_add_group_members(1, vec![
             "m1.testnet".parse().unwrap(),
             "m1.testnet".parse().unwrap(), // duplicate test
             "m2.testnet".parse().unwrap(),
         ]);
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 2);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 2);
 
         // Remove member
-        contract.owner_remove_room_members(1, vec![
+        contract.owner_remove_group_members(1, vec![
             "m1.testnet".parse().unwrap()
         ]);
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 1);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 1);
 
-        // Check user rooms
-        let no_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
-        assert_eq!(no_rooms.len(), 0);
+        // Check user groups
+        let no_groups = contract.get_user_groups("m1.testnet".parse().unwrap());
+        assert_eq!(no_groups.len(), 0);
 
-        let is_rooms = contract.get_user_rooms("m2.testnet".parse().unwrap());
-        assert_eq!(is_rooms.len(), 1);
+        let is_groups = contract.get_user_groups("m2.testnet".parse().unwrap());
+        assert_eq!(is_groups.len(), 1);
     }
 
     #[test]
-    fn join_public_room() {
+    fn join_public_group() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
+        create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 0);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 0);
 
-        // Join public room
+        // Join public group
         set_context("new.testnet", Contract::convert_to_yocto(JOIN_PUBLIC_PRICE));
-        contract.join_public_room(1);
+        contract.join_public_group(1);
 
-        // Check user rooms
-        let is_rooms = contract.get_user_rooms("new.testnet".parse().unwrap());
-        assert_eq!(is_rooms.len(), 1);
+        // Check user groups
+        let is_groups = contract.get_user_groups("new.testnet".parse().unwrap());
+        assert_eq!(is_groups.len(), 1);
 
         // Owner add new member
         set_context(NEAR_ID, 0);
-        contract.owner_add_room_members(1, vec!["m1.testnet".parse().unwrap()]);
+        contract.owner_add_group_members(1, vec!["m1.testnet".parse().unwrap()]);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 2);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 2);
 
-        // Check user rooms
-        let is_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
-        assert_eq!(is_rooms.len(), 1);
+        // Check user groups
+        let is_groups = contract.get_user_groups("m1.testnet".parse().unwrap());
+        assert_eq!(is_groups.len(), 1);
     }
 
     #[test]
-    fn send_room_message() {
+    fn send_group_message() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
         // Test owner message
         set_context(NEAR_ID, 0);
-        let message_id = contract.send_room_message("Test message 1".to_string(), 1, None);
+        let message_id = contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
         assert_eq!(message_id, U128::from(1));
 
         // Test member message
         set_context("m1.testnet", 0);
-        let message_id = contract.send_room_message("Test message 2".to_string(), 1, None);
+        let message_id = contract.send_group_message("Test message 2".to_string(), "".to_string(), 1, None);
         assert_eq!(message_id, U128::from(2));
     }
 
     #[test]
-    fn leave_room() {
+    fn leave_group() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 2);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 2);
 
         set_context("m1.testnet", 0);
-        contract.leave_room(1);
+        contract.leave_group(1);
 
-        let room = contract.get_room_by_id(1);
-        assert_eq!(room.members.len(), 1);
+        let group = contract.get_group_by_id(1);
+        assert_eq!(group.members.len(), 1);
 
-        let no_rooms = contract.get_user_rooms("m1.testnet".parse().unwrap());
-        assert_eq!(no_rooms.len(), 0);
+        let no_groups = contract.get_user_groups("m1.testnet".parse().unwrap());
+        assert_eq!(no_groups.len(), 0);
 
-        let is_rooms = contract.get_user_rooms("m2.testnet".parse().unwrap());
-        assert_eq!(is_rooms.len(), 1);
+        let is_groups = contract.get_user_groups("m2.testnet".parse().unwrap());
+        assert_eq!(is_groups.len(), 1);
     }
 
     #[test]
-    #[should_panic(expected = "No access to this room")]
-    fn private_room_message_no_access() {
+    #[should_panic(expected = "No access to this group")]
+    fn private_group_message_no_access() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Private room".to_string(), true, false, vec![
+        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
-        contract.send_room_message("Test message 1".to_string(), 1, None);
+        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
     }
 
     #[test]
-    #[should_panic(expected = "No access to this room")]
-    fn readonly_room_message_no_access() {
+    #[should_panic(expected = "No access to this group")]
+    fn readonly_group_message_no_access() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Readonly room".to_string(), false, true, vec![]);
+        create_group_internal(&mut contract, "Readonly group".to_string(), GroupType::Channel, vec![]);
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
-        contract.send_room_message("Test message 1".to_string(), 1, None);
+        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
     }
 
     #[test]
-    #[should_panic(expected = "No access to room modification")]
-    fn remove_room_no_access() {
+    #[should_panic(expected = "No access to group modification")]
+    fn remove_group_no_access() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "Room".to_string(), false, false, vec![]);
+        create_group_internal(&mut contract, "group".to_string(), GroupType::Private, vec![]);
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
-        contract.owner_remove_room(1, "Room".to_string());
+        contract.owner_remove_group(1, "group".to_string());
     }
 
     #[test]
-    #[should_panic(expected = "No access to room modification")]
-    fn edit_room_no_access() {
+    #[should_panic(expected = "No access to group modification")]
+    fn edit_group_no_access() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "My Room".to_string(), false, false, vec![]);
+        create_group_internal(&mut contract, "My group".to_string(), GroupType::Channel, vec![]);
 
         set_context("guest.testnet", 0);
-        contract.edit_room(
-            1, "Room updated".to_string(), "".to_string(), false, false,
+        contract.edit_group(
+            1, "group updated".to_string(), "".to_string()
         );
     }
 
 
     #[test]
-    #[should_panic(expected = "No access to room modification")]
-    fn room_add_members_no_access() {
+    #[should_panic(expected = "No access to group modification")]
+    fn group_add_members_no_access() {
         let mut contract = Contract::default();
-        create_room_internal(&mut contract, "My Room".to_string(), false, false, vec![]);
+        create_group_internal(&mut contract, "My group".to_string(), GroupType::Public, vec![]);
 
         set_context("guest.testnet", 0);
-        contract.owner_add_room_members(
+        contract.owner_add_group_members(
             1, vec!["some.testnet".parse().unwrap()],
         );
     }
