@@ -99,7 +99,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
                               disabled={isLoading}
                               className={`rounded-3xl text-sm py-2.5 pl-3 pr-10 w-full border 
                               bg-gray-800/60 border-gray-700/60 focus:bg-gray-900/60 focus:outline-none 
-                              text-gray-200 focus:shadow-md transition duration-300 ease-in`}
+                              text-gray-100 focus:shadow-md transition duration-300 ease-in`}
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
                               onKeyDown={handleTextChange}

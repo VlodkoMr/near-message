@@ -21,7 +21,7 @@ export const OneMessage = ({ message, opponent }) => {
 
         <div className="messages text-sm text-white grid grid-flow-row gap-2">
           {message.isFirst && !message.isMy && (
-            <div className={"text-gray-300 leading-3"}>
+            <div className={"text-gray-400 font-medium leading-3"}>
               {opponent?.name ? (
                 <>{opponent?.name} <small className={"opacity-60"}>({message.from_address})</small></>
               ) : (
@@ -63,7 +63,7 @@ export const OneMessage = ({ message, opponent }) => {
             ${message.text === '(like)' ? "py-2.5" : "py-3"}
             ${message.isFirst && message.isMy && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}
-            ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-200"}`}>
+            ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}`}>
               {message.text === '(like)' ? (
                 <AiFillLike size={22}/>
               ) : message.text}

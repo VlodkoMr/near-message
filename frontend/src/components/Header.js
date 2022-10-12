@@ -327,7 +327,7 @@ export const Header = () => {
                 <PrimaryButton onClick={() => near.wallet.signIn()}>Connect Wallet</PrimaryButton>
               ) : (
                 <div className={"flex flex-row"}>
-                  <div className={"text-gray-200 text-right leading-5 pt-1"}>
+                  <div className={"text-gray-100 text-right leading-5 pt-1"}>
                     <div>{formatAddress(near.wallet.accountId)}</div>
                     <small className={"text-red-400 cursor-pointer hover:underline"} onClick={() => near.wallet.signOut()}>
                       Sign Out

@@ -291,7 +291,7 @@ export const Footer = () => {
         <div className="container">
           <p className="text-gray-400 text-sm text-center">
             © Made by
-            <a href="https://atomic-lab.io" className={"hover:underline ml-1 text-gray-200"} target={"_blank"}>
+            <a href="https://atomic-lab.io" className={"hover:underline ml-1 text-gray-100"} target={"_blank"}>
               ATOMIC-LAB.IO
             </a>
           </p>
