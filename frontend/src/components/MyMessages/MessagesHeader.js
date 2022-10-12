@@ -5,7 +5,7 @@ import { Avatar } from "./Avatar";
 import { formatAddress } from "../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
 
-export const MessagesHeader = ({ group, account }) => {
+export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
   const [ myProfile ] = useOutletContext();
 
@@ -13,17 +13,17 @@ export const MessagesHeader = ({ group, account }) => {
     if (group) {
       return group.title;
     }
-    return account.name ? account.name : account.id;
+    return opponent.name ? opponent.name : opponent.id;
   }
 
   return (
     <div className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/60">
       <div className="flex">
-        {group || account ? (
+        {group || opponent ? (
           <>
             <div className="w-12 h-12 mr-4 relative flex flex-shrink-0">
-              <Avatar media={group ? group.media : account.image}
-                      title={group ? group.title : account.id}
+              <Avatar media={group ? group.media : opponent.image}
+                      title={group ? group.title : opponent.id}
                       textSize={"text-3xl"}/>
             </div>
             <div className="text-sm">
@@ -32,9 +32,9 @@ export const MessagesHeader = ({ group, account }) => {
                 <p className={"text-gray-400/80"}>{group.members.length} members</p>
               ) : (
                 <a className={"text-gray-400/80"}
-                   href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${account.id}`}
+                   href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
                    target={"_blank"}>
-                  {account.name ? account.id : "view account"}
+                  {opponent.name ? opponent.id : "view account"}
                 </a>
               )}
             </div>

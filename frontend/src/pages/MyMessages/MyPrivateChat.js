@@ -91,39 +91,39 @@ export const MyPrivateChat = () => {
   return (
     <>
       {opponent && (
-        <MessagesHeader account={opponent}/>
-      )}
+        <>
+          <MessagesHeader opponent={opponent}/>
 
-      <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
-        {isReady ? (
-          <>
-            {messages.map(message => (
-                <OneMessage message={message} key={message.id}/>
-              )
-            )}
-
-            {tmpMessages.length > 0 && (
+          <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
+            {isReady ? (
               <>
-                <p className="p-4 text-center text-sm text-gray-500">
-                  pending...
-                </p>
-                {tmpMessages.map(tmpMessage => (
-                    <OneMessage message={tmpMessage} key={tmpMessage.id}/>
+                {messages.map(message => (
+                    <OneMessage key={message.id} message={message} opponent={opponent}/>
                   )
                 )}
-              </>
-            )}
-          </>
-        ) : (
-          <div className={"mx-auto w-8 pt-2"}>
-            <Loader/>
-          </div>
-        )}
-        <div ref={bottomRef}/>
-      </div>
 
-      {opponent && (
-        <WriteMessage toAddress={opponent.id} onSuccess={appendTemporaryMessage}/>
+                {tmpMessages.length > 0 && (
+                  <>
+                    <p className="p-4 text-center text-sm text-gray-500">
+                      pending...
+                    </p>
+                    {tmpMessages.map(tmpMessage => (
+                        <OneMessage key={tmpMessage.id} message={tmpMessage} opponent={opponent}/>
+                      )
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <div className={"mx-auto w-8 pt-2"}>
+                <Loader/>
+              </div>
+            )}
+            <div ref={bottomRef}/>
+          </div>
+
+          <WriteMessage toAddress={opponent.id} onSuccess={appendTemporaryMessage}/>
+        </>
       )}
     </>
   );

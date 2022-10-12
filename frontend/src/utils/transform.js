@@ -82,3 +82,7 @@ export const generateTemporaryMessage = (id, text, media, accountId) => {
     media,
   };
 }
+
+export const onlyUnique = (value, index, self) => {
+  return self.indexOf(value) === index;
+}

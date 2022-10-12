@@ -4,7 +4,7 @@ import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 
-export const OneMessage = ({ message }) => {
+export const OneMessage = ({ message, opponent }) => {
   const near = useContext(NearContext);
 
   return (
@@ -18,7 +18,7 @@ export const OneMessage = ({ message }) => {
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div className="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
-            <Avatar media={"____from_user.media____"} title={message.from_address}/>
+            <Avatar media={opponent.media || ""} title={message.from_address}/>
           )}
         </div>
 
@@ -28,7 +28,7 @@ export const OneMessage = ({ message }) => {
             ${message.isFirst && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}
             ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-200"}`}>
-              {message.text === '(like)'? (
+              {message.text === '(like)' ? (
                 <AiFillLike size={30}/>
               ) : message.text}
             </p>

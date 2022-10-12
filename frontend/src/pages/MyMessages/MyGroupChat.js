@@ -5,7 +5,7 @@ import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
-import { generateTemporaryMessage, transformMessages } from "../../utils/transform";
+import { generateTemporaryMessage, loadSocialProfile, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 
 const fetchSecondsInterval = 7;
@@ -32,6 +32,13 @@ export const MyGroupChat = () => {
 
     loadGroupMessages(id).then(messages => {
       setMessages(transformMessages(messages, near.wallet.accountId));
+
+      const profiles = messages.map(message => message.from_address).filter(onlyUnique);
+      console.log(`profiles`, profiles);
+      // loadSocialProfile(opponentAddress, near).then(result => {
+      //   setOpponent(result);
+      // });
+
       setIsReady(true);
     });
 
@@ -92,39 +99,39 @@ export const MyGroupChat = () => {
   return (
     <>
       {group && (
-        <MessagesHeader group={group}/>
-      )}
+        <>
+          <MessagesHeader group={group}/>
 
-      <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
-        {isReady ? (
-          <>
-            {messages.map(message => (
-                <OneMessage message={message} key={message.id}/>
-              )
-            )}
-
-            {tmpMessages.length > 0 && (
+          <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
+            {isReady ? (
               <>
-                <p className="p-4 text-center text-sm text-gray-500">
-                  pending...
-                </p>
-                {tmpMessages.map(tmpMessage => (
-                    <OneMessage message={tmpMessage} key={tmpMessage.id}/>
+                {messages.map(message => (
+                    <OneMessage message={message} key={message.id}/>
                   )
                 )}
-              </>
-            )}
-          </>
-        ) : (
-          <div className={"mx-auto w-8 pt-2"}>
-            <Loader/>
-          </div>
-        )}
-        <div ref={bottomRef}/>
-      </div>
 
-      {group && (
-        <WriteMessage toGroup={group} onSuccess={appendTemporaryMessage}/>
+                {tmpMessages.length > 0 && (
+                  <>
+                    <p className="p-4 text-center text-sm text-gray-500">
+                      pending...
+                    </p>
+                    {tmpMessages.map(tmpMessage => (
+                        <OneMessage message={tmpMessage} key={tmpMessage.id}/>
+                      )
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <div className={"mx-auto w-8 pt-2"}>
+                <Loader/>
+              </div>
+            )}
+            <div ref={bottomRef}/>
+          </div>
+
+          <WriteMessage toGroup={group} onSuccess={appendTemporaryMessage}/>
+        </>
       )}
     </>
   );

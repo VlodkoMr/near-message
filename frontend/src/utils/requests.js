@@ -79,7 +79,7 @@ export const loadGroupMessages = (groupId) => {
   });
 }
 
-export const loadNewGroupMessages = (groupId, lastMessage) => {
+export const loadNewGroupMessages = (groupId, lastMessageId) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
@@ -87,7 +87,7 @@ export const loadNewGroupMessages = (groupId, lastMessage) => {
       orderBy: created_at, 
       where: {
         group_id: "${groupId}",
-        id_num_gt: ${lastMessage.id}
+        id_num_gt: ${lastMessageId}
       }) {
         id
         text
@@ -124,7 +124,6 @@ export const loadPrivateMessages = (chatId) => {
 
 export const loadNewPrivateMessages = (chatId, lastMessageId) => {
   return new Promise(async (resolve) => {
-    console.log(`loadNewPrivateMessages`);
     console.log(`lastMessageId`, lastMessageId);
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
