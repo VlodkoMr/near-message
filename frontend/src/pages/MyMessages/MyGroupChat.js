@@ -92,9 +92,6 @@ export const MyGroupChat = () => {
 
   // add temporary message
   const appendTemporaryMessage = (messageId, text, media, toGroup) => {
-    console.log(`tmpMessages`, tmpMessages);
-    console.log(`toGroup`, toGroup);
-    console.log(`id`, id);
     if (parseInt(toGroup) === parseInt(id)) {
       setTmpMessages(prev => prev.concat(generateTemporaryMessage(messageId, text, media, near.wallet.accountId)));
     }

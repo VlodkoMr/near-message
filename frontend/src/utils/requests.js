@@ -32,7 +32,6 @@ export const loadGroupChatsPromise = (idList) => {
     const client = new createClient({ url: API_URL });
     const groupChatListQuery = `{
         groupChats(
-           last: 50, 
            orderBy: updated_at, 
            orderDirection: desc,
            where: {
@@ -63,7 +62,7 @@ export const loadGroupMessages = (groupId) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     groupMessages(
-      last: 50, 
+      last: 100, 
       orderBy: created_at, 
       where: {
         group_id: "${groupId}",
@@ -105,7 +104,7 @@ export const loadPrivateMessages = (chatId) => {
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     privateMessages(
-      last: 50, 
+      last: 100, 
       orderBy: created_at, 
       where: {
         chat_id: "${chatId}",
