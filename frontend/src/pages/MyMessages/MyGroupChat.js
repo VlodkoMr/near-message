@@ -38,7 +38,9 @@ export const MyGroupChat = () => {
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
       loadSocialProfiles(profiles, near).then(result => {
-        setUserProfiles(result);
+        if (result) {
+          setUserProfiles(result);
+        }
       });
 
       setIsReady(true);
@@ -107,7 +109,10 @@ export const MyGroupChat = () => {
             {isReady ? (
               <>
                 {messages.map(message => (
-                    <OneMessage message={message} key={message.id} opponent={userProfiles[message.from_address] || null}/>
+                    <OneMessage message={message}
+                                key={message.id}
+                                opponent={userProfiles[message.from_address] || null}
+                    />
                   )
                 )}
 

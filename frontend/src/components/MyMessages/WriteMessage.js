@@ -86,7 +86,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
         </button>
 
 
-        {/*<button type="button"*/}
+        {/*<button type="button" border-gray-700/80 focus:border-gray-700/80 bg-gray-800/80  */}
         {/*        className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mr-4 mb-4">*/}
         {/*  <FaSmile size={28}/>*/}
         {/*</button>*/}
@@ -97,8 +97,9 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
                               autoFocus
                               maxRows={10}
                               disabled={isLoading}
-                              className={`rounded-3xl text-sm py-2 pl-3 pr-10 w-full border border-gray-700/60 focus:border-gray-700 bg-gray-800 
-                              focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in`}
+                              className={`rounded-3xl text-sm py-2.5 pl-3 pr-10 w-full border 
+                              bg-gray-800/60 border-gray-700/60 focus:bg-gray-900/60 focus:outline-none 
+                              text-gray-200 focus:shadow-md transition duration-300 ease-in`}
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
                               onKeyDown={handleTextChange}

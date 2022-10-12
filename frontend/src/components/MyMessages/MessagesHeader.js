@@ -17,7 +17,8 @@ export const MessagesHeader = ({ group, opponent }) => {
   }
 
   return (
-    <div className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/60">
+    <div
+      className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30">
       <div className="flex">
         {group || opponent ? (
           <>

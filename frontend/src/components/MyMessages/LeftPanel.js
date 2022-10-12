@@ -104,7 +104,7 @@ export const LeftPanel = () => {
       <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
         <Avatar media={groupsById[chat.id].image} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
         <div className="w-5 h-5 md:w-7 md:h-7 group-hover:block absolute right-0 bottom-0">
-          <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
+          <Avatar media={profileList && profileList[chat.last_message.from_address]?.image || ""}
                   title={chat.last_message.from_address}
                   textSize={"text-sm"}/>
         </div>
