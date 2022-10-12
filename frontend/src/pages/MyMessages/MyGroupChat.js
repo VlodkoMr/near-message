@@ -107,7 +107,7 @@ export const MyGroupChat = () => {
             {isReady ? (
               <>
                 {messages.map(message => (
-                    <OneMessage message={message} key={message.id} opponent={userProfiles[message.from_address]}/>
+                    <OneMessage message={message} key={message.id} opponent={userProfiles[message.from_address] || null}/>
                   )
                 )}
 

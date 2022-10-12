@@ -21,7 +21,7 @@ export const MessagesHeader = ({ group, opponent }) => {
       <div className="flex">
         {group || opponent ? (
           <>
-            <div className="w-12 h-12 mr-4 relative flex flex-shrink-0">
+            <div className="w-12 h-12 mr-4 relative flex flex-shrink-0 hidden md:block">
               <Avatar media={group ? group.image : opponent.image}
                       title={group ? group.title : opponent.id}
                       textSize={"text-3xl"}/>
@@ -51,8 +51,8 @@ export const MessagesHeader = ({ group, opponent }) => {
 
       <div className="flex">
         <Link to={"/my"} className={"mr-3 pt-0.5 font-medium"}>
-          <div className={"flex flex-row mr-4"}>
-            <div className={"w-10 h-10 mr-3 mt-1"}>
+          <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
+            <div className={"w-10 h-10 mr-3 mt-1 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
@@ -72,7 +72,7 @@ export const MessagesHeader = ({ group, opponent }) => {
           </div>
         </Link>
 
-        <SecondaryButton onClick={() => near.wallet.signOut()}>
+        <SecondaryButton className={"hidden md:block"} onClick={() => near.wallet.signOut()}>
           <span className={"opacity-80"}>Sign Out</span>
         </SecondaryButton>
       </div>

@@ -101,9 +101,9 @@ export const LeftPanel = () => {
 
   const LastGroupMessage = ({ chat }) => (
     <>
-      <div className="w-16 h-16 relative flex flex-shrink-0">
+      <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
         <Avatar media={groupsById[chat.id].image} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
-        <div className="w-7 h-7 hidden md:block group-hover:block absolute right-0 bottom-0">
+        <div className="w-5 h-5 md:w-7 md:h-7 group-hover:block absolute right-0 bottom-0">
           <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
                   title={chat.last_message.from_address}
                   textSize={"text-sm"}/>
@@ -113,7 +113,7 @@ export const LeftPanel = () => {
         <p className={"font-medium text-gray-50"}>{groupsById[chat.id].title}</p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
-            <p className="truncate opacity-60">{chat.last_message.text}</p>
+            <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">{chat.last_message.text}</p>
           </div>
           <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
             <p>{timestampToDate(chat.updated_at)}</p>
@@ -129,7 +129,7 @@ export const LeftPanel = () => {
 
     return (
       <>
-        <div className="w-16 h-16 relative flex flex-shrink-0">
+        <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
           <Avatar media={profileList[opponent]?.image || ""}
                   title={opponent}
                   textSize={"text-4xl"}/>
@@ -138,7 +138,7 @@ export const LeftPanel = () => {
           <p className={"font-medium text-gray-50"}>{opponent}</p>
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
-              <p className="truncate opacity-60">{chat.last_message.text}</p>
+              <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">{chat.last_message.text}</p>
             </div>
             <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
               <p>{timestampToDate(chat.updated_at)}</p>
@@ -152,19 +152,19 @@ export const LeftPanel = () => {
 
   return (
     <>
-      <div className="header p-4 flex flex-row justify-between items-center flex-none">
-        <CircleButton className={"p-2"} onClick={() => setNewGroupPopupVisible(true)}>
+      <div className="header p-4 md:flex md:flex-row justify-between items-center flex-none">
+        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setNewGroupPopupVisible(true)}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
           <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
-        <CircleButton className={"p-2.5"} onClick={() => setNewMessagePopupVisible(true)}>
+        <CircleButton className={"p-2.5 mx-auto md:mx-0 mt-2 md:mt-0"} onClick={() => setNewMessagePopupVisible(true)}>
           <BsPencilSquare size={20}/>
         </CircleButton>
       </div>
 
-      <div className="search-box px-4 py-3 flex-none">
+      <div className="hidden md:block search-box px-4 py-3 flex-none">
         <form onSubmit={handleSearch}>
           <div className="relative">
             <label>

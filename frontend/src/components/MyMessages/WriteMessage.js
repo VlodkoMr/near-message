@@ -75,13 +75,13 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
       <div className="flex flex-row items-end p-4 relative">
         <button type="button"
                 title={"Start private conversation"}
-                className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
+                className="hidden md:flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
           <RiChatPrivateFill size={28}/>
         </button>
 
         <button type="button"
                 title={"Send Image"}
-                className="flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mb-4">
+                className="hidden md:flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-6 h-6 mb-4">
           <BsImage size={28}/>
         </button>
 
@@ -91,13 +91,13 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
         {/*  <FaSmile size={28}/>*/}
         {/*</button>*/}
 
-        <div className="relative flex-grow ml-4">
+        <div className="relative flex-grow md:ml-4">
           <label>
             <TextareaAutosize placeholder="Aa"
                               autoFocus
                               maxRows={10}
                               disabled={isLoading}
-                              className={`rounded-3xl py-2 pl-3 pr-10 w-full border border-gray-700/60 focus:border-gray-700 bg-gray-800 
+                              className={`rounded-3xl text-sm py-2 pl-3 pr-10 w-full border border-gray-700/60 focus:border-gray-700 bg-gray-800 
                               focus:bg-gray-900 focus:outline-none text-gray-200 focus:shadow-md transition duration-300 ease-in`}
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
@@ -107,7 +107,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
         </div>
 
         <button type="button"
-                className="flex flex-shrink-0 focus:outline-none mx-2 ml-4 block text-blue-500 hover:text-blue-600 w-7 h-7 mb-3.5">
+                className="flex flex-shrink-0 focus:outline-none mx-2 ml-4 block text-blue-500 hover:text-blue-600 md:w-7 md:h-7 mb-3.5">
           {isLoading ? (
             <div className={"cursor-default"}>
               <Loader/>

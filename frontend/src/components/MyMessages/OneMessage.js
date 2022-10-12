@@ -13,7 +13,7 @@ export const OneMessage = ({ message, opponent }) => {
       )}
 
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
-        <div className="w-10 h-10 relative flex flex-shrink-0 mr-4">
+        <div className="hidden md:block md:w-10 md:h-10 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
             <Avatar media={opponent?.image || ""} title={message.from_address}/>
           )}
@@ -59,7 +59,7 @@ export const OneMessage = ({ message, opponent }) => {
             {/*          </svg>*/}
             {/*        </button>*/}
 
-            <p className={`max-w-md lg:max-w-lg 2xl:max-w-xl whitespace-pre-wrap px-5 
+            <p className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 overflow-hidden overflow-ellipsis
             ${message.text === '(like)' ? "py-2.5" : "py-3"}
             ${message.isFirst && message.isMy && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}

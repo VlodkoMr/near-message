@@ -23,7 +23,7 @@ export const MyMessagesLayout = () => {
         <div className="flex-1 flex flex-col">
           <main className="flex-grow flex flex-row min-h-0">
             <section
-              className="flex flex-col flex-none overflow-auto w-24 group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out">
+              className="flex flex-col flex-none overflow-auto w-22 group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out">
               <LeftPanel/>
             </section>
 
