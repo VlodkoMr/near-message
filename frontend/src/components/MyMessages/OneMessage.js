@@ -5,8 +5,6 @@ import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 
 export const OneMessage = ({ message, opponent }) => {
-  const near = useContext(NearContext);
-
   return (
     <>
       {message.isFirst && !message.isTemporary && (
@@ -18,7 +16,7 @@ export const OneMessage = ({ message, opponent }) => {
       <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div className="w-8 h-8 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
-            <Avatar media={opponent.media || ""} title={message.from_address}/>
+            <Avatar media={opponent?.media || ""} title={message.from_address}/>
           )}
         </div>
 

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { NearContext } from "../../context/NearContext";
-import Button from "@mui/material/Button";
 import { Avatar } from "./Avatar";
 import { formatAddress } from "../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
+import { SecondaryButton } from "../../assets/css/components";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
@@ -50,9 +50,9 @@ export const MessagesHeader = ({ group, opponent }) => {
       </div>
 
       <div className="flex">
-        <Link to={"/my"} className={"mr-4 font-medium"}>
+        <Link to={"/my"} className={"mr-3 pt-0.5 font-medium"}>
           <div className={"flex flex-row mr-4"}>
-            <div className={"w-9 h-9 mr-2.5 mt-1"}>
+            <div className={"w-10 h-10 mr-3 mt-1"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
@@ -66,9 +66,8 @@ export const MessagesHeader = ({ group, opponent }) => {
             </div>
           </div>
         </Link>
-        <Button variant={"outlined"} onClick={() => near.wallet.signOut()}>
-          SignOut
-        </Button>
+
+        <SecondaryButton onClick={() => near.wallet.signOut()}>Sign Out</SecondaryButton>
       </div>
     </div>
   )

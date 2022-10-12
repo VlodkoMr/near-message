@@ -17,9 +17,9 @@ export const MyMessagesLayout = () => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden flex items-center justify-center bg-gray-700">
+    <div className="h-screen overflow-hidden flex items-center justify-center">
 
-      <div className="h-screen w-full flex antialiased text-gray-200 bg-gray-900/80 overflow-hidden">
+      <div className="h-screen w-full flex antialiased text-gray-200 bg-gray-900/60 overflow-hidden">
         <div className="flex-1 flex flex-col">
           <main className="flex-grow flex flex-row min-h-0">
             <section

@@ -22,9 +22,8 @@ export const loadSocialProfiles = async (addressList, near) => {
   });
 
   const profiles = await near.socialDBContract.get(userList);
-  Object.keys(profiles).forEach(address => {
+  addressList.map(address => {
     result[address] = transformProfile(address, profiles[address] || {});
-    console.log(`result[address]`, result[address]);
   });
   return result;
 }

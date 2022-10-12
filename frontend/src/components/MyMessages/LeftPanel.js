@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { NearContext } from "../../context/NearContext";
-import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requests";
+import { loadPrivateChatsPromise, loadGroupChatsPromise, loadPrivateMessages } from "../../utils/requests";
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
@@ -10,6 +10,9 @@ import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
 import { NewGroupPopup } from "./NewGroupPopup";
+import { loadSocialProfile, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
+
+const fetchSecondsInterval = 30;
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
@@ -17,12 +20,25 @@ export const LeftPanel = () => {
   const [ isReady, setIsReady ] = useState(false);
   const [ groupsById, setGroupsById ] = useState({});
   const [ chatList, setChatList ] = useState([]);
+  const [ profileList, setProfileList ] = useState({});
   const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
   const [ newGroupPopupVisible, setNewGroupPopupVisible ] = useState(false);
+  const [ reloadCounter, setReloadCounter ] = useState(0);
 
   const loadGroupsIdList = async () => {
     return await near.mainContract.getUserGroups(near.wallet.accountId);
   }
+
+  useEffect(() => {
+    // Fetch new chats each few seconds
+    const updateInterval = setInterval(() => {
+      setReloadCounter(prev => prev + 1);
+    }, 1000 * fetchSecondsInterval);
+
+    return () => {
+      clearInterval(updateInterval);
+    }
+  }, []);
 
   useEffect(() => {
     loadGroupsIdList().then(groups => {
@@ -43,9 +59,22 @@ export const LeftPanel = () => {
         allChats.sort((a, b) => b.updated_at - a.updated_at);
         setChatList(allChats);
         setIsReady(true);
+
+        let profiles = [];
+        allChats.map(chat => {
+          if (Object.keys(chat.last_message).length) {
+            profiles.push(chat.last_message.from_address);
+            if (chat.last_message.to_address) {
+              profiles.push(chat.last_message.to_address);
+            }
+          }
+        });
+        loadSocialProfiles(profiles.filter(onlyUnique), near).then(result => {
+          setProfileList(result);
+        });
       })
     });
-  }, []);
+  }, [ reloadCounter ]);
 
   const setGroupListById = (groups) => {
     let groupsById = {};
@@ -73,7 +102,7 @@ export const LeftPanel = () => {
       <div className="w-16 h-16 relative flex flex-shrink-0">
         <Avatar media={groupsById[chat.id].media} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
         <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0">
-          <Avatar media={"____from_user.media____"}
+          <Avatar media={profileList[chat.last_message.from_address]?.media || ""}
                   title={chat.last_message.from_address}
                   textSize={"text-sm"}/>
         </div>
@@ -99,7 +128,8 @@ export const LeftPanel = () => {
     return (
       <>
         <div className="w-16 h-16 relative flex flex-shrink-0">
-          <Avatar media={"____opponent.media____"} title={opponent} textSize={"text-4xl"}/>
+          <Avatar media={profileList[opponent]?.media || ""}
+                  title={opponent} textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
           <p className={"font-medium text-gray-50"}>{opponent}</p>
@@ -123,7 +153,7 @@ export const LeftPanel = () => {
         <CircleButton className={"p-2"} onClick={() => setNewGroupPopupVisible(true)}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
-        <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-70 hover:opacity-100 transition">
+        <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
           <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
         <CircleButton className={"p-2.5"} onClick={() => setNewMessagePopupVisible(true)}>

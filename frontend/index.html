@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8"/>
-  <link rel="icon" href="src/assets/img/favicon.ico"/>
-  <link rel="apple-touch-icon" href="src/assets/img/favicon.ico"/>
+  <link rel="icon" type="image/png" href="src/assets/img/favicon.png"/>
+  <link rel="apple-touch-icon" href="src/assets/img/logo-96.png"/>
   <meta name="viewport" content="initial-scale=1, width=device-width"/>
-  <link rel="stylesheet" href="./src/assets/css/main.css"/>
-  <title>Welcome to NEAR with React</title>
+  <link rel="stylesheet" href="src/assets/css/main.css"/>
+  <link rel="stylesheet" href="src/assets/css/animate.css"/>
+  <title>ChatMe - NEAR Chat & Messages service</title>
+
 </head>
-<body>
+<body class="dark:bg-black">
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <div id="root"></div>
 <script src="./index.js" type="module"></script>
+<script src="src/assets/js/wow.min.js"></script>
+<script>
+  new WOW().init();
+</script>
 </body>
 </html>
