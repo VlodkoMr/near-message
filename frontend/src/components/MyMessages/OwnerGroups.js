@@ -8,22 +8,23 @@ export const OwnerGroups = () => {
 
   const loadOwnerGroups = async () => {
     const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
-    setOwnerGroups(groups);
-    console.log(`Groups`, groups);
+    if (groups) {
+      setOwnerGroups(groups);
+    }
   }
 
   useEffect(() => {
     loadOwnerGroups();
   }, []);
 
-  return ownerGroup.length > 0 && (
+  return ownerGroup && ownerGroup.length > 0 && (
     <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">
       {ownerGroup.map(group => (
         <div className="text-sm text-center mr-2" key={group.id}>
           <div className="border-blue-600 rounded-full">
             <div className="w-16 h-16 relative">
               <img className="shadow-md rounded-full w-full h-full object-cover"
-                   src={group.media || logoImage}
+                   src={group.image || logoImage}
                    alt={group.id}
               />
             </div>

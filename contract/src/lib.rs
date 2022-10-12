@@ -26,7 +26,7 @@ pub struct Group {
     id: u32,
     owner: AccountId,
     title: String,
-    media: String,
+    image: String,
     group_type: GroupType,
     created_at: Timestamp,
     members: Vec<AccountId>,
@@ -127,7 +127,7 @@ impl Contract {
      * Create new group
      */
     #[payable]
-    pub fn create_new_group(&mut self, title: String, media: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
+    pub fn create_new_group(&mut self, title: String, image: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
@@ -152,7 +152,7 @@ impl Contract {
             id: group_id,
             owner: owner.clone(),
             title,
-            media,
+            image,
             group_type,
             created_at: env::block_timestamp(),
             members: members.clone(),
@@ -174,13 +174,13 @@ impl Contract {
      * Edit group
      * (only group owner)
      */
-    pub fn edit_group(&mut self, id: u32, title: String, media: String) {
+    pub fn edit_group(&mut self, id: u32, title: String, image: String) {
         let mut group = self.groups.get(&id).unwrap();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
         group.title = title;
-        group.media = media;
+        group.image = image;
 
         self.groups.insert(&id, &group);
     }
@@ -281,7 +281,7 @@ impl Contract {
     /**
      * Private Message
      */
-    pub fn send_private_message(&mut self, text: String, media: String, to_address: AccountId, reply_message_id: Option<String>) -> U128 {
+    pub fn send_private_message(&mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>) -> U128 {
         let account = env::predecessor_account_id();
         self.send_message_validate_spam(&account);
 
@@ -300,7 +300,7 @@ impl Contract {
             "to_user": to_address.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text,
-            "media": media.to_string(),
+            "image": image.to_string(),
         }).to_string();
 
         env::log_str(&message[..]);
@@ -310,7 +310,7 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_group_message(&mut self, text: String, media: String, group_id: u32, reply_message_id: Option<String>) -> U128 {
+    pub fn send_group_message(&mut self, text: String, image: String, group_id: u32, reply_message_id: Option<String>) -> U128 {
         let group = self.groups.get(&group_id).unwrap();
         let account = env::predecessor_account_id();
         self.send_message_validate_spam(&account);
@@ -332,7 +332,7 @@ impl Contract {
             "group_id": group_id.to_string(),
             "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text,
-            "media": media.to_string(),
+            "image": image.to_string(),
         }).to_string();
 
         env::log_str(&message[..]);
@@ -356,7 +356,7 @@ impl Contract {
             level,
             last_spam_report: 0,
             spam_counts: 0,
-            verified: false
+            verified: false,
         };
         self.users.insert(&account, &user_account);
     }
@@ -589,7 +589,7 @@ mod tests {
 
         set_context("guest.testnet", 0);
         contract.edit_group(
-            1, "group updated".to_string(), "".to_string()
+            1, "group updated".to_string(), "".to_string(),
         );
     }
 

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { NearContext } from "../../context/NearContext";
-import { loadPrivateChatsPromise, loadGroupChatsPromise, loadPrivateMessages } from "../../utils/requests";
+import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requests";
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
@@ -10,9 +10,9 @@ import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
 import { NewGroupPopup } from "./NewGroupPopup";
-import { loadSocialProfile, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
+import { loadSocialProfiles, onlyUnique } from "../../utils/transform";
 
-const fetchSecondsInterval = 30;
+const fetchSecondsInterval = 14;
 
 export const LeftPanel = () => {
   const near = useContext(NearContext);
@@ -73,6 +73,8 @@ export const LeftPanel = () => {
           setProfileList(result);
         });
       })
+    }).catch(e => {
+      console.log(`Fetch error`, e);
     });
   }, [ reloadCounter ]);
 
@@ -100,9 +102,9 @@ export const LeftPanel = () => {
   const LastGroupMessage = ({ chat }) => (
     <>
       <div className="w-16 h-16 relative flex flex-shrink-0">
-        <Avatar media={groupsById[chat.id].media} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
-        <div className="w-6 h-6 hidden md:block group-hover:block absolute right-0 bottom-0">
-          <Avatar media={profileList[chat.last_message.from_address]?.media || ""}
+        <Avatar media={groupsById[chat.id].image} title={groupsById[chat.id].title} textSize={"text-4xl"}/>
+        <div className="w-7 h-7 hidden md:block group-hover:block absolute right-0 bottom-0">
+          <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
                   title={chat.last_message.from_address}
                   textSize={"text-sm"}/>
         </div>
@@ -128,8 +130,9 @@ export const LeftPanel = () => {
     return (
       <>
         <div className="w-16 h-16 relative flex flex-shrink-0">
-          <Avatar media={profileList[opponent]?.media || ""}
-                  title={opponent} textSize={"text-4xl"}/>
+          <Avatar media={profileList[opponent]?.image || ""}
+                  title={opponent}
+                  textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
           <p className={"font-medium text-gray-50"}>{opponent}</p>

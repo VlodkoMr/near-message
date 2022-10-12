@@ -71,8 +71,7 @@ export const MyPrivateChat = () => {
       if (messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);
-        const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
-        setTmpMessages([ ...newTmp ]);
+        setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
 
         // append new messages
         const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
@@ -82,10 +81,10 @@ export const MyPrivateChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (id, text, media) => {
-    const newMessage = generateTemporaryMessage(id, text, media, near.wallet.accountId, opponent);
-    tmpMessages.push(newMessage);
-    setTmpMessages([ ...tmpMessages ]);
+  const appendTemporaryMessage = (messageId, text, media, toAccount) => {
+    if (toAccount === opponent?.id) {
+      setTmpMessages(prev => prev.concat(generateTemporaryMessage(messageId, text, media, near.wallet.accountId, opponent)));
+    }
   }
 
   return (
@@ -122,7 +121,7 @@ export const MyPrivateChat = () => {
             <div ref={bottomRef}/>
           </div>
 
-          <WriteMessage toAddress={opponent.id} onSuccess={appendTemporaryMessage}/>
+          <WriteMessage toAddress={opponent.id} onMessageSent={appendTemporaryMessage}/>
         </>
       )}
     </>

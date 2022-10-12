@@ -11,7 +11,9 @@ export const formatAddress = (address) => {
 
 export const loadSocialProfile = async (address, near) => {
   const profileData = await near.socialDBContract.get([ `${address}/profile/**` ]);
-  return transformProfile(address, profileData[address]);
+  if (profileData) {
+    return transformProfile(address, profileData[address]);
+  }
 }
 
 export const loadSocialProfiles = async (addressList, near) => {
@@ -22,10 +24,12 @@ export const loadSocialProfiles = async (addressList, near) => {
   });
 
   const profiles = await near.socialDBContract.get(userList);
-  addressList.map(address => {
-    result[address] = transformProfile(address, profiles[address] || {});
-  });
-  return result;
+  if (profiles) {
+    addressList.map(address => {
+      result[address] = transformProfile(address, profiles[address] || {});
+    });
+    return result;
+  }
 }
 
 export const transformProfile = (address, socialProfile) => {

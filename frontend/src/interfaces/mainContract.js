@@ -16,13 +16,17 @@ export class MainContract {
    * @returns {Promise<any>}
    */
   async getGroupById(id) {
-    return await this.wallet.viewMethod({
-      contractId: this.contractId,
-      method: 'get_group_by_id',
-      args: {
-        id
-      }
-    });
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get_group_by_id',
+        args: {
+          id
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   /**
@@ -31,13 +35,17 @@ export class MainContract {
    * @returns {Promise<any>}
    */
   async getUserInfo(address) {
-    return await this.wallet.viewMethod({
-      contractId: this.contractId,
-      method: 'get_user_info',
-      args: {
-        address
-      }
-    });
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get_user_info',
+        args: {
+          address
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   /**
@@ -45,13 +53,17 @@ export class MainContract {
    * @returns {Promise<any>}
    */
   async getOwnerGroups(account) {
-    return await this.wallet.viewMethod({
-      contractId: this.contractId,
-      method: 'get_owner_groups',
-      args: {
-        account
-      }
-    });
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get_owner_groups',
+        args: {
+          account
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   /**
@@ -59,13 +71,17 @@ export class MainContract {
    * @returns {Promise<any>}
    */
   async getUserGroups(account) {
-    return await this.wallet.viewMethod({
-      contractId: this.contractId,
-      method: 'get_user_groups',
-      args: {
-        account
-      }
-    });
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get_user_groups',
+        args: {
+          account
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   /**

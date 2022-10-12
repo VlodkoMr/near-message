@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
-import { AiFillLike, BiSend, BsImage, FaSmile, RiChatPrivateFill } from "react-icons/all";
+import { AiFillLike, BiSend, BsImage, RiChatPrivateFill } from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
 
-export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
+export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   const near = useContext(NearContext);
   const localKey = toAddress ? `acc-${toAddress}` : `group-${toGroup.id}`;
   const [ messageText, setMessageText ] = useState("");
@@ -13,11 +13,14 @@ export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
 
   useEffect(() => {
     // load message from local storage
+    setIsLoading(false);
     const savedMessage = localStorage.getItem(localKey);
     if (savedMessage) {
       setMessageText(savedMessage);
+    } else {
+      setMessageText("");
     }
-  }, []);
+  }, [ toAddress, toGroup?.id ]);
 
   useEffect(() => {
     localStorage.setItem(localKey, messageText);
@@ -47,7 +50,7 @@ export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
           }
         })
 
-        onSuccess?.(messageId, value, messageMedia);
+        onMessageSent?.(messageId, value, messageMedia, toAddress || toGroup.id);
       })
       .catch(e => {
         console.log(e);
@@ -91,6 +94,7 @@ export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
         <div className="relative flex-grow ml-4">
           <label>
             <TextareaAutosize placeholder="Aa"
+                              autoFocus
                               maxRows={10}
                               disabled={isLoading}
                               className={`rounded-3xl py-2 pl-3 pr-10 w-full border border-gray-700/60 focus:border-gray-700 bg-gray-800 
@@ -104,18 +108,18 @@ export const WriteMessage = ({ toAddress, toGroup, onSuccess }) => {
 
         <button type="button"
                 className="flex flex-shrink-0 focus:outline-none mx-2 ml-4 block text-blue-500 hover:text-blue-600 w-7 h-7 mb-3.5">
-          {messageText.length > 0 ? (
+          {isLoading ? (
+            <div className={"cursor-default"}>
+              <Loader/>
+            </div>
+          ) : (
             <>
-              {isLoading ? (
-                <div className={"cursor-default"}>
-                  <Loader/>
-                </div>
-              ) : (
+              {messageText.length > 0 ? (
                 <BiSend size={30} onClick={() => sendMessage(messageText)}/>
+              ) : (
+                <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
               )}
             </>
-          ) : (
-            <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
           )}
         </button>
       </div>

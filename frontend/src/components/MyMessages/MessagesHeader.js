@@ -22,7 +22,7 @@ export const MessagesHeader = ({ group, opponent }) => {
         {group || opponent ? (
           <>
             <div className="w-12 h-12 mr-4 relative flex flex-shrink-0">
-              <Avatar media={group ? group.media : opponent.image}
+              <Avatar media={group ? group.image : opponent.image}
                       title={group ? group.title : opponent.id}
                       textSize={"text-3xl"}/>
             </div>
@@ -56,18 +56,25 @@ export const MessagesHeader = ({ group, opponent }) => {
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
-              {myProfile?.name && (
-                <p className={"text-gray-100"}>{myProfile?.name}</p>
+              {myProfile?.name ? (
+                <>
+                  <p className={"text-gray-100"}>{myProfile?.name}</p>
+                  <small className={"block text-gray-400/80"}>
+                    {formatAddress(near.wallet.accountId)}
+                  </small>
+                </>
+              ) : (
+                <p className={"block text-gray-400/80 text-sm"}>
+                  {formatAddress(near.wallet.accountId)}
+                </p>
               )}
-
-              <small className={"block text-gray-400/80"}>
-                {formatAddress(near.wallet.accountId)}
-              </small>
             </div>
           </div>
         </Link>
 
-        <SecondaryButton onClick={() => near.wallet.signOut()}>Sign Out</SecondaryButton>
+        <SecondaryButton onClick={() => near.wallet.signOut()}>
+          <span className={"opacity-80"}>Sign Out</span>
+        </SecondaryButton>
       </div>
     </div>
   )

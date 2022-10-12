@@ -5,7 +5,7 @@ import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
-import { generateTemporaryMessage, loadSocialProfile, onlyUnique, transformMessages } from "../../utils/transform";
+import { generateTemporaryMessage, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 
 const fetchSecondsInterval = 7;
@@ -19,6 +19,7 @@ export const MyGroupChat = () => {
   const [ group, setGroup ] = useState();
   const [ reloadCounter, setReloadCounter ] = useState(0);
   const [ tmpMessages, setTmpMessages ] = useState([]);
+  const [ userProfiles, setUserProfiles ] = useState({});
 
   const loadGroupInfo = async () => {
     return await near.mainContract.getGroupById(parseInt(id));
@@ -26,6 +27,8 @@ export const MyGroupChat = () => {
 
   useEffect(() => {
     setIsReady(false);
+
+    setTmpMessages([]);
     loadGroupInfo().then(group => {
       setGroup(group);
     })
@@ -34,10 +37,9 @@ export const MyGroupChat = () => {
       setMessages(transformMessages(messages, near.wallet.accountId));
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
-      console.log(`profiles`, profiles);
-      // loadSocialProfile(opponentAddress, near).then(result => {
-      //   setOpponent(result);
-      // });
+      loadSocialProfiles(profiles, near).then(result => {
+        setUserProfiles(result);
+      });
 
       setIsReady(true);
     });
@@ -79,8 +81,7 @@ export const MyGroupChat = () => {
       if (messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);
-        const newTmp = tmpMessages.filter(msg => newMessageIds.indexOf(msg.id) === -1);
-        setTmpMessages([ ...newTmp ]);
+        setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
 
         // append new messages
         const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
@@ -90,10 +91,13 @@ export const MyGroupChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (id, text, media) => {
-    const newMessage = generateTemporaryMessage(id, text, media, near.wallet.accountId);
-    tmpMessages.push(newMessage);
-    setTmpMessages([ ...tmpMessages ]);
+  const appendTemporaryMessage = (messageId, text, media, toGroup) => {
+    console.log(`tmpMessages`, tmpMessages);
+    console.log(`toGroup`, toGroup);
+    console.log(`id`, id);
+    if (parseInt(toGroup) === parseInt(id)) {
+      setTmpMessages(prev => prev.concat(generateTemporaryMessage(messageId, text, media, near.wallet.accountId)));
+    }
   }
 
   return (
@@ -106,7 +110,7 @@ export const MyGroupChat = () => {
             {isReady ? (
               <>
                 {messages.map(message => (
-                    <OneMessage message={message} key={message.id}/>
+                    <OneMessage message={message} key={message.id} opponent={userProfiles[message.from_address]}/>
                   )
                 )}
 
@@ -130,7 +134,7 @@ export const MyGroupChat = () => {
             <div ref={bottomRef}/>
           </div>
 
-          <WriteMessage toGroup={group} onSuccess={appendTemporaryMessage}/>
+          <WriteMessage toGroup={group} onMessageSent={appendTemporaryMessage}/>
         </>
       )}
     </>

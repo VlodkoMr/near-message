@@ -10,13 +10,17 @@ export class SocialDBContract {
    * @returns {Promise<any>}
    */
   async get(keys) {
-    return await this.wallet.viewMethod({
-      contractId: this.contractId,
-      method: 'get',
-      args: {
-        keys
-      }
-    });
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get',
+        args: {
+          keys
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   // async createUserAccount(media, instagram, telegram, twitter, website) {
