@@ -53,7 +53,7 @@ export const MessagesHeader = ({ group, opponent }) => {
       <div className="flex">
         <Link to={"/my"} className={"mr-3 pt-0.5 font-medium"}>
           <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
-            <div className={"w-10 h-10 mr-3 mt-1 hidden md:block"}>
+            <div className={"w-12 h-12 mr-3 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>

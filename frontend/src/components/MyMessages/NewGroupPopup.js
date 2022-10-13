@@ -19,6 +19,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   const [ formData, setFormData ] = useState({
     title: "",
     logo: "",
+    url: "",
     group_type: "",
     members: [],
   });
@@ -33,6 +34,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     setFormData({
       title: "",
       logo: "",
+      url: "",
       group_type: "",
       members: [],
     });
@@ -73,7 +75,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     }
 
     setIsLoading(true);
-    near.mainContract.createNewGroup(formData.title, formData.logo, formData.group_type, formData.members)
+    near.mainContract.createNewGroup(formData.title, formData.logo, formData.url, formData.group_type, formData.members)
       .then((result) => {
         navigate(`/my/group/${result}`);
         setIsOpen(false);
@@ -130,18 +132,25 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
             )}
           </label>
           <div className={"flex-1"}>
-            <div className={"mb-4"}>
-              <PrimaryInput placeholder={"Group Title"}
+            <div className={"mb-2"}>
+              <PrimaryInput placeholder={"Group Title*"}
                             disabled={isMediaLoading}
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
+            <div className={"mb-4"}>
+              <PrimaryInput placeholder={"Website / Group URL"}
+                            disabled={isMediaLoading}
+                            value={formData.url}
+                            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               />
             </div>
 
             <RadioGroup className={"mb-4"}
                         disabled={isMediaLoading}
                         onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
-              <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type</span>
+              <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
               <RadioLabel className={"rounded-t-md"}>
                 <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
                 <RadioLabelText>Broadcast messages to general public audience. <br/>
