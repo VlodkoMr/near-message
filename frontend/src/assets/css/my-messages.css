@@ -65,3 +65,27 @@ textarea {
 .MuiDialogTitle-root {
   line-height: initial !important;
 }
+
+.MuiInputBase-input {
+  color: #EEE !important;
+}
+
+.MuiSvgIcon-root {
+  color: #9ca3af !important;
+}
+
+.MuiFormLabel-root, .MuiChip-label, .MuiChip-deleteIcon, .MuiIconButton-root {
+  color: #9ca3af !important;
+}
+
+.MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.MuiInputBase-input::placeholder {
+  color: #EEE !important;
+}
+
+input[type=file] {
+  opacity: 0;
+}

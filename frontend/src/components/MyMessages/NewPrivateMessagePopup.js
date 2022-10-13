@@ -3,8 +3,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { TextareaAutosize, TextField } from "@mui/material";
 import { PrimaryButton, PrimaryInput, PrimaryTextarea } from "../../assets/css/components";
+import { Loader } from "../Loader";
 
 export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const [ isLoading, setIsLoading ] = useState(false);
@@ -14,6 +14,12 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  const handleSendMessage = () => {
+
+
+    setIsLoading(true);
+  }
 
   return (
     <Dialog
@@ -45,7 +51,11 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
             />
           </div>
           <div className={"text-right"}>
-            <PrimaryButton>Send Message</PrimaryButton>
+            <PrimaryButton onClick={handleSendMessage}
+                           disabled={isLoading}>
+              Send Message
+              {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
+            </PrimaryButton>
           </div>
         </div>
       </DialogContent>

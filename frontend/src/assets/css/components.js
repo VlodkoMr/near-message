@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { TextareaAutosize } from "@mui/material";
+import { TextareaAutosize, TextField } from "@mui/material";
 
 export const CircleButton = styled.section.attrs({
   className: `
   block rounded-full hover:bg-gray-700 bg-gray-700/60 w-10 h-10 group-hover:block cursor-pointer transition`,
 })``;
 
-export const Button = styled(Link).attrs({
+export const Button = styled(Link).attrs(props => ({
   className: `text-base font-medium text-dark dark:text-white hover:opacity-70 py-3 px-7 rounded-full transition 
-   ease-in-up duration-300 cursor-pointer inline-block`,
-})``;
+   ease-in-up duration-300 cursor-pointer inline-block ${props.disabled && "opacity-60 pointer-events-none"}`,
+}))``;
 
 export const PrimaryButton = styled(Button).attrs({
   className: `
@@ -24,12 +24,25 @@ export const SecondaryButton = styled(Button).attrs({
 
 export const PrimaryInput = styled.input.attrs({
   className: `
-  w-full bg-[#242B51] rounded-lg shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4 
-  border border-transparent transition focus:border-gray-700 focus:bg-[#19203c]`,
+  w-full bg-[#242B51] rounded-md shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4 
+  border-2 border-transparent transition focus:border-[#1976d2] focus:bg-[#171c3a]`,
 })``;
 
 export const PrimaryTextarea = styled(TextareaAutosize).attrs({
   className: `
-  w-full bg-[#242B51] rounded-lg shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4
-  border border-transparent transition focus:border-gray-700 focus:bg-[#19203c]`,
+  w-full bg-[#242B51] rounded-md shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4
+  border-2 border-transparent transition focus:border-[#1976d2] focus:bg-[#171c3a]`,
+})``;
+
+export const PrimaryTextField = styled(TextField).attrs({
+  className: `
+  w-full bg-[#242B51] rounded-md shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4`,
+})``;
+
+export const RadioLabel = styled.label.attrs({
+  className: `
+  block bg-[#242B51]/50 px-3 py-1 mb-1 transition hover:bg-[#242B51]/70 cursor-pointer`,
+})``;
+export const RadioLabelText = styled.p.attrs({
+  className: `text-sm text-gray-400/80 ml-8 mb-2 -mt-2`,
 })``;

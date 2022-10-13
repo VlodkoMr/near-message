@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
-    "start": "./start.sh",
-    "build": "parcel build index.html --public-url ./"
+    "start": "NODE_ENV=localhost ./start.sh",
+    "build": "NODE_ENV=localhost parcel build index.html --public-url ./"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
