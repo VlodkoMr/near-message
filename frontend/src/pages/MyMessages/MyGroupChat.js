@@ -80,7 +80,7 @@ export const MyGroupChat = () => {
   const appendNewChatMessages = () => {
     const lastMessage = messages[messages.length - 1];
     loadNewGroupMessages(id, lastMessage.id).then(messages => {
-      if (messages.length) {
+      if (messages && messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);
         setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
