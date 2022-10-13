@@ -59,11 +59,12 @@ export const OneMessage = ({ message, opponent }) => {
             {/*          </svg>*/}
             {/*        </button>*/}
 
-            <p className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 overflow-hidden overflow-ellipsis
+            <p className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
+            overflow-hidden overflow-ellipsis text-base
             ${message.text === '(like)' ? "py-2.5" : "py-3"}
             ${message.isFirst && message.isMy && "rounded-t-3xl"}
             ${message.isLast && "rounded-b-3xl"}
-            ${message.isMy ? "bg-blue-500/40 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}`}>
+            ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}`}>
               {message.text === '(like)' ? (
                 <AiFillLike size={22}/>
               ) : message.text}

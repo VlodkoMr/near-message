@@ -195,7 +195,7 @@ export const LeftPanel = () => {
               <Link to={`/my/${isGroupChat(chat) ? "group" : "account"}/${chat.id}`}
                     key={chat.id}
                     className={`flex justify-between items-center p-2 rounded-lg relative mb-1
-                  ${isSelected(chat) ? "bg-sky-500/30 text-gray-50" : "hover:bg-gray-800/80 text-gray-400"}`}>
+                  ${isSelected(chat) ? "bg-sky-500/40 text-gray-50" : "hover:bg-gray-800/80 text-gray-400"}`}>
                 {(isGroupChat(chat)) ? (
                   <LastGroupMessage chat={chat}/>
                 ) : (

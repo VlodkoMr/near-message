@@ -28,7 +28,7 @@ export const MessagesHeader = ({ group, opponent }) => {
                       textSize={"text-3xl"}/>
             </div>
             <div className="text-sm">
-              <p className="font-bold text-base mt-0.5">{getTitle()}</p>
+              <p className="font-medium text-base mt-0.5">{getTitle()}</p>
               {group ? (
                 <p className={"text-gray-400/80"}>{group.members.length} members</p>
               ) : (
@@ -59,13 +59,13 @@ export const MessagesHeader = ({ group, opponent }) => {
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
               {myProfile?.name ? (
                 <>
-                  <p className={"text-gray-100"}>{myProfile?.name}</p>
+                  <p className={"text-gray-100 font-medium"}>{myProfile?.name}</p>
                   <small className={"block text-gray-400/80"}>
                     {formatAddress(near.wallet.accountId)}
                   </small>
                 </>
               ) : (
-                <p className={"block text-gray-400/80 text-sm"}>
+                <p className={"block text-gray-400/80 text-sm font-semibold"}>
                   {formatAddress(near.wallet.accountId)}
                 </p>
               )}

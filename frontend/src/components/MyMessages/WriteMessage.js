@@ -54,7 +54,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
       })
       .catch(e => {
         console.log(e);
-        alert('Message not sent');
+        alert('Error: Message not sent');
       })
       .finally(() => {
         setIsLoading(false);
@@ -97,7 +97,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
                               autoFocus
                               maxRows={10}
                               disabled={isLoading}
-                              className={`rounded-3xl text-sm py-2.5 pl-3 pr-10 w-full border 
+                              className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base
                               bg-gray-800/60 border-gray-700/60 focus:bg-gray-900/60 focus:outline-none 
                               text-gray-100 focus:shadow-md transition duration-300 ease-in`}
                               value={messageText}

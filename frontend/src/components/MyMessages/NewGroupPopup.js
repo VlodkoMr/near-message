@@ -1,24 +1,42 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryInput, PrimaryTextField, RadioLabel, RadioLabelText } from "../../assets/css/components";
 import { Loader } from "../Loader";
-import { Autocomplete, Chip, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Autocomplete, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 import { mediaURL } from "../../utils/transform";
+import { useNavigate } from "react-router-dom";
+import { NearContext } from "../../context/NearContext";
 
 export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
+  const navigate = useNavigate();
+  const near = useContext(NearContext);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ isMediaLoading, setIsMediaLoading ] = useState(false);
-  const [ options, setOptions ] = useState([]);
   const [ formData, setFormData ] = useState({
     title: "",
     logo: "",
     group_type: "",
     members: [],
   });
+
+  useEffect(() => {
+    resetForm();
+  }, [ isOpen ]);
+
+  const resetForm = () => {
+    setIsLoading(false);
+    setIsMediaLoading(false);
+    setFormData({
+      title: "",
+      logo: "",
+      group_type: "",
+      members: [],
+    });
+  }
 
   const handleClose = () => {
     setIsOpen(false);
@@ -38,25 +56,35 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     });
   };
 
-  const addNewMember = (e) => {
-    console.log(`addNewMember`, e);
-    if (e.target.value) {
-      setFormData(prev => {
-        prev.members.push(e.target.value);
-        return prev;
-      });
-    }
+  const changeMemberList = (event, inputs) => {
+    setFormData({ ...formData, members: inputs });
   }
-  
-  const removeMember = (e) => {
-    console.log(`e`, e);
-    console.log(`removeMember`, e.target.value);
-  }
-  
-  const handleSendMessage = () => {
+
+  const handleCreateGroup = () => {
     console.log(`formData`, formData);
 
+    if (formData.title.length < 3) {
+      alert("Please provide correct group title");
+      return;
+    }
+    if (!formData.group_type.length) {
+      alert("Please select group type");
+      return;
+    }
+
     setIsLoading(true);
+    near.mainContract.createNewGroup(formData.title, formData.logo, formData.group_type, formData.members)
+      .then((result) => {
+        navigate(`/my/group/${result}`);
+        setIsOpen(false);
+      })
+      .catch(e => {
+        console.log(e);
+        alert('Error: Group');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -68,15 +96,15 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     >
       <DialogTitle align={"center"} className={"border-b-2 border-gray-700/30 text-gray-100"}>
         <span className={"text-gray-200/80"}>Create New Group</span>
-        <div className={"absolute right-4 top-4 opacity-70 hover:opacity-90 cursor-pointer transition text-gray-200"} onClick={handleClose}>
+        <div className={"absolute right-4 top-4 opacity-80 hover:opacity-90 cursor-pointer transition text-gray-200"} onClick={handleClose}>
           <IoClose size={26}/>
         </div>
       </DialogTitle>
       <DialogContent className={"mx-2 mt-6 mb-2"}>
         <div className={"p-2 flex flex-row gap-8 text-gray-100"}>
           <label
-            className={`flex w-40 h-40 items-center mx-auto bg-gray-700/50 rounded-full text-gray-400 cursor-pointer 
-            hover:bg-gray-700/70 transition overflow-hidden shadow-lg`}>
+            className={`flex w-40 h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
+            hover:bg-gray-700/60 transition overflow-hidden shadow-lg`}>
             <PrimaryInput placeholder={"Logo"}
                           type={"file"}
                           accept={"image/*"}
@@ -85,7 +113,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
             />
 
             {formData.logo ? (
-              <img src={mediaURL(formData.logo)} alt="" className={"block object-cover"}/>
+              <img src={mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
             ) : (
               <>
                 {isMediaLoading ? (
@@ -104,12 +132,15 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
           <div className={"flex-1"}>
             <div className={"mb-4"}>
               <PrimaryInput placeholder={"Group Title"}
+                            disabled={isMediaLoading}
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
             </div>
 
-            <RadioGroup className={"mb-4"} onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
+            <RadioGroup className={"mb-4"}
+                        disabled={isMediaLoading}
+                        onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
               <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type</span>
               <RadioLabel className={"rounded-t-md"}>
                 <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
@@ -132,23 +163,15 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
             {formData.group_type && formData.group_type !== "Channel" && (
               <div className={"mb-2"}>
                 <Autocomplete
-                  options={options}
+                  options={[]}
                   multiple
-                  onChange={e => addNewMember(e)}
+                  onChange={changeMemberList}
                   freeSolo
-                  ChipProps={{onDelete: (e) => removeMember(e)}}
-                  // renderTags={(value, getTagProps) =>
-                  //   value.map((option, index) => (
-                  //     <Chip variant="outlined"
-                  //           onDelete={e => removeMember(e)}
-                  //           label={option} {...getTagProps({ index })}
-                  //     />
-                  //   ))
-                  // }
                   renderInput={(params) => (
                     <PrimaryTextField
                       {...params}
                       label="Members"
+                      disabled={isMediaLoading}
                       placeholder="NEAR Address"
                     />
                   )}
@@ -157,19 +180,17 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
             )}
 
             <div className={"flex justify-between"}>
-              <div className={"text-gray-500 text-sm pt-4"}>
+              <div className={"text-red-400/90 text-sm pt-4"}>
                 Payment 0.25 NEAR required
               </div>
               <div className={"text-right"}>
-                <PrimaryButton onClick={handleSendMessage}>
-                               // disabled={isLoading || isMediaLoading}>
+                <PrimaryButton onClick={handleCreateGroup} disabled={isLoading || isMediaLoading}>
                   Create Group
                   {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                 </PrimaryButton>
               </div>
             </div>
           </div>
-
 
         </div>
       </DialogContent>

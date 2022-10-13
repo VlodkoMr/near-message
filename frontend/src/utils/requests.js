@@ -123,7 +123,6 @@ export const loadPrivateMessages = (chatId) => {
 
 export const loadNewPrivateMessages = (chatId, lastMessageId) => {
   return new Promise(async (resolve) => {
-    console.log(`lastMessageId`, lastMessageId);
     const client = new createClient({ url: API_URL });
     const messagesQuery = `{
     privateMessages(
@@ -142,4 +141,11 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
     const result = await client.query(messagesQuery).toPromise();
     resolve(result.data?.privateMessages);
   });
+}
+
+export const getPrivateChatId = (user1, user2) => {
+  if (user1 > user2) {
+    return user1.concat("|").concat(user2);
+  }
+  return user2.concat("|").concat(user1);
 }

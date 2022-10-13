@@ -27,6 +27,7 @@ pub struct Group {
     owner: AccountId,
     title: String,
     image: String,
+    url: String,
     group_type: GroupType,
     created_at: Timestamp,
     members: Vec<AccountId>,
@@ -127,7 +128,7 @@ impl Contract {
      * Create new group
      */
     #[payable]
-    pub fn create_new_group(&mut self, title: String, image: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
+    pub fn create_new_group(&mut self, title: String, image: String, url: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
@@ -153,6 +154,7 @@ impl Contract {
             owner: owner.clone(),
             title,
             image,
+            url,
             group_type,
             created_at: env::block_timestamp(),
             members: members.clone(),
@@ -174,13 +176,14 @@ impl Contract {
      * Edit group
      * (only group owner)
      */
-    pub fn edit_group(&mut self, id: u32, title: String, image: String) {
+    pub fn edit_group(&mut self, id: u32, title: String, image: String, url: String) {
         let mut group = self.groups.get(&id).unwrap();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
         group.title = title;
         group.image = image;
+        group.url = url;
 
         self.groups.insert(&id, &group);
     }
@@ -398,7 +401,7 @@ mod tests {
     fn create_group_internal(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
         set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
         contract.create_new_group(
-            title, "".to_string(), group_type, members,
+            title, "".to_string(), "".to_string(), group_type, members,
         );
     }
 
@@ -406,7 +409,7 @@ mod tests {
     fn send_private_message() {
         let mut contract = Contract::default();
 
-        let message_id = contract.send_private_message("Test message".to_string(), "test.testnet".parse().unwrap(), None);
+        let message_id = contract.send_private_message("Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None);
         assert_eq!(message_id, U128::from(1));
     }
 
@@ -434,7 +437,7 @@ mod tests {
         create_group_internal(&mut contract, "group 1".to_string(), GroupType::Private, vec![]);
 
         contract.edit_group(
-            1, "group updated".to_string(), "".to_string(),
+            1, "group updated".to_string(), "".to_string(), "https://someurl.com".to_string(),
         );
         let group = contract.get_group_by_id(1);
         assert_eq!(group.title, "group updated".to_string());
@@ -589,7 +592,7 @@ mod tests {
 
         set_context("guest.testnet", 0);
         contract.edit_group(
-            1, "group updated".to_string(), "".to_string(),
+            1, "group updated".to_string(), "".to_string(), "".to_string(),
         );
     }
 

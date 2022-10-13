@@ -26,6 +26,8 @@ export const MyPrivateChat = () => {
 
     loadSocialProfile(opponentAddress, near).then(result => {
       setOpponent(result);
+    }).catch(e => {
+      console.log(`Load profile error`, e);
     });
 
     // Load last messages
