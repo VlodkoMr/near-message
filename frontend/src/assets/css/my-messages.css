@@ -89,3 +89,7 @@ textarea {
 input[type=file] {
   opacity: 0;
 }
+
+.MuiAutocomplete-tag{
+  border: 1px solid #444 !important;
+}

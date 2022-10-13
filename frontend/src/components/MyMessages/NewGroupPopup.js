@@ -5,38 +5,56 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryInput, PrimaryTextField, RadioLabel, RadioLabelText } from "../../assets/css/components";
 import { Loader } from "../Loader";
-import { Autocomplete, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Autocomplete, Chip, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 import { mediaURL } from "../../utils/transform";
 
 export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ isMediaLoading, setIsMediaLoading ] = useState(false);
-
-  const [ groupTitle, setGroupTitle ] = useState("");
-  const [ groupType, setGroupType ] = useState("");
-  const [ groupLogo, setGroupLogo ] = useState("");
+  const [ options, setOptions ] = useState([]);
+  const [ formData, setFormData ] = useState({
+    title: "",
+    logo: "",
+    group_type: "",
+    members: [],
+  });
 
   const handleClose = () => {
     setIsOpen(false);
   };
 
   const resizeImage = (e) => {
-    setGroupLogo("");
+    setFormData({ ...formData, logo: "" })
 
     const image = e.target.files[0];
     resizeFileImage(image, 600, 600).then(blobData => {
       setIsMediaLoading(true);
 
       uploadMediaToIPFS(blobData).then(result => {
-        setGroupLogo(result);
+        setFormData({ ...formData, logo: result });
         setIsMediaLoading(false);
       }).catch(() => setIsMediaLoading(false));
     });
   };
 
+  const addNewMember = (e) => {
+    console.log(`addNewMember`, e);
+    if (e.target.value) {
+      setFormData(prev => {
+        prev.members.push(e.target.value);
+        return prev;
+      });
+    }
+  }
+  
+  const removeMember = (e) => {
+    console.log(`e`, e);
+    console.log(`removeMember`, e.target.value);
+  }
+  
   const handleSendMessage = () => {
-
+    console.log(`formData`, formData);
 
     setIsLoading(true);
   }
@@ -66,8 +84,8 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
                           onChange={(e) => resizeImage(e)}
             />
 
-            {groupLogo ? (
-              <img src={mediaURL(groupLogo)} alt="" className={"block object-cover"}/>
+            {formData.logo ? (
+              <img src={mediaURL(formData.logo)} alt="" className={"block object-cover"}/>
             ) : (
               <>
                 {isMediaLoading ? (
@@ -86,12 +104,12 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
           <div className={"flex-1"}>
             <div className={"mb-4"}>
               <PrimaryInput placeholder={"Group Title"}
-                            value={groupTitle}
-                            onChange={(e) => setGroupTitle(e.target.value)}
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
             </div>
 
-            <RadioGroup className={"mb-4"} onChange={e => setGroupType(e.target.value)}>
+            <RadioGroup className={"mb-4"} onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
               <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type</span>
               <RadioLabel className={"rounded-t-md"}>
                 <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
@@ -111,12 +129,22 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
               </RadioLabel>
             </RadioGroup>
 
-            {groupType && groupType !== "Channel" && (
+            {formData.group_type && formData.group_type !== "Channel" && (
               <div className={"mb-2"}>
                 <Autocomplete
-                  options={[]}
+                  options={options}
                   multiple
+                  onChange={e => addNewMember(e)}
                   freeSolo
+                  ChipProps={{onDelete: (e) => removeMember(e)}}
+                  // renderTags={(value, getTagProps) =>
+                  //   value.map((option, index) => (
+                  //     <Chip variant="outlined"
+                  //           onDelete={e => removeMember(e)}
+                  //           label={option} {...getTagProps({ index })}
+                  //     />
+                  //   ))
+                  // }
                   renderInput={(params) => (
                     <PrimaryTextField
                       {...params}
@@ -128,14 +156,13 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
               </div>
             )}
 
-
             <div className={"flex justify-between"}>
               <div className={"text-gray-500 text-sm pt-4"}>
                 Payment 0.25 NEAR required
               </div>
               <div className={"text-right"}>
-                <PrimaryButton onClick={handleSendMessage}
-                               disabled={isLoading || isMediaLoading}>
+                <PrimaryButton onClick={handleSendMessage}>
+                               // disabled={isLoading || isMediaLoading}>
                   Create Group
                   {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                 </PrimaryButton>
