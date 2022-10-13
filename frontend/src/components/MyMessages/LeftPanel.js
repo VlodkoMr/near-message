@@ -189,12 +189,6 @@ export const LeftPanel = () => {
       <OwnerGroups/>
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
-        {isBlockchainError && (
-          <div className={"fixed top-0 left-0 right-0 font-medium text-center bg-red-600 p-5 z-30"}>
-            Blockchain RPC Error, please wait.
-          </div>
-        )}
-
         {isReady ? (
           <>
             {chatList.length > 0 ? chatList.map(chat => (
@@ -215,9 +209,16 @@ export const LeftPanel = () => {
             )}
           </>
         ) : (
-          <div className={`mx-auto w-8`}>
-            <Loader/>
-          </div>
+          <>
+            {isBlockchainError && (
+              <div className={"font-medium text-center bg-red-600 p-3 mb-4"}>
+                Blockchain RPC Error, please wait.
+              </div>
+            )}
+            <div className={`mx-auto w-8`}>
+              <Loader/>
+            </div>
+          </>
         )}
       </div>
 

@@ -17,10 +17,8 @@ window.onload = async () => {
   const isSigned = await wallet.startUp()
 
   ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-      <NearProvider wallet={wallet} mainContract={mainContract} socialDBContract={socialDBContract} isSigned={isSigned}>
-        <App/>
-      </NearProvider>
-    </React.StrictMode>
+    <NearProvider wallet={wallet} mainContract={mainContract} socialDBContract={socialDBContract} isSigned={isSigned}>
+      <App/>
+    </NearProvider>
   )
 }

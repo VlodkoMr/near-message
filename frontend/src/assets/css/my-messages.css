@@ -59,7 +59,7 @@ textarea {
 /* MUI Material override */
 .MuiDialog-paper {
   border-radius: 15px !important;
-  background: #F9F9F9 !important;
+  background: #1d2244 !important;
 }
 
 .MuiDialogTitle-root {
