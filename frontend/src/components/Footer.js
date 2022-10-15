@@ -26,8 +26,8 @@ export const Footer = () => {
                   mb-9
                 "
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                lobortis.
+                Chats & Messages service for NEAR Blockchain.
+                Direct messages, channels, private and public chats.
               </p>
               <div className="flex items-center">
                 <a
@@ -297,7 +297,7 @@ export const Footer = () => {
           </p>
         </div>
       </div>
-      <div className="absolute right-0 top-14 z-[-1]">
+      <div className="absolute right-0 top-14 opacity-30 z-[-1]">
         <svg
           width="55"
           height="99"

@@ -11,6 +11,39 @@ export const Home = () => {
     console.log(`near`, near);
   }, [ near ])
 
+  const SectionTitle = ({ title, text }) => (
+    <div className="flex flex-wrap mx-[-16px]">
+      <div className="w-full px-4">
+        <div className="mx-auto max-w-[655px] text-center mb-[100px] wow fadeInUp"
+             data-wow-delay=".1s">
+          <h2 className="text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-[45px] mb-4">
+            {title}
+          </h2>
+          <p className="text-body-color text-base md:text-lg leading-relaxed md:leading-relaxed max-w-[570px] mx-auto">
+            {text}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+
+  const PartnerLogo = ({ title, image, url }) => (
+    <a href={url} target="_blank" rel="nofollow noreferrer"
+       className="flex items-center justify-center lg:max-w-[130px] xl:max-w-[150px] 2xl:max-w-[160px]
+                  mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] grayscale hover:grayscale-0 opacity-80 hover:opacity-100
+                  dark:opacity-80 dark:hover:opacity-100 transition">
+      <img src={image} alt={title}/>
+    </a>
+  )
+
+  const TechLogo = ({ title, image }) => (
+    <span target="_blank" rel="nofollow noreferrer"
+          className="flex items-center justify-center max-w-[120px] xl:max-w-[135px] 2xl:max-w-[150px]
+                  mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] opacity-80 hover:opacity-100 transition">
+      <img src={image} alt={title}/>
+    </span>
+  )
+
   const OneFeature = ({ title, icon, text }) => (
     <div className="w-full md:w-1/2 lg:w-1/3 px-4">
       <div className="mb-[70px] wow fadeInUp text-center" data-wow-delay=".15s">
@@ -28,6 +61,25 @@ export const Home = () => {
         </p>
       </div>
     </div>
+  )
+
+  const TechCheckbox = ({ text }) => (
+    <p className="flex items-center text-body-color text-lg font-medium mb-5">
+      <span className="w-[30px] h-[30px] flex items-center justify-center rounded-md
+        bg-primary bg-opacity-10 text-primary mr-4">
+        <svg
+          width="16"
+          height="13"
+          viewBox="0 0 16 13"
+          className="fill-current"
+        >
+        <path
+          d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"
+        />
+        </svg>
+      </span>
+      {text}
+    </p>
   )
 
   const PriceBlockItem = ({ text, isOk }) => (
@@ -78,13 +130,7 @@ export const Home = () => {
         <p className="text-base text-body-color mb-7">
           {description}
         </p>
-        <div className="border-b border-body-color dark:border-white border-opacity-10 dark:border-opacity-10 pb-8 mb-8">
-          <a className="font-semibold text-base text-white bg-primary w-full flex items-center justify-center rounded-md p-3
-                    hover:shadow-signUp hover:bg-opacity-80 transition duration-300 ease-in-out">
-            Start Free Trial
-          </a>
-        </div>
-        <div>
+        <div className={`border-t border-body-color dark:border-white border-opacity-10 dark:border-opacity-10 pt-10`}>
           {children}
         </div>
         <div className="absolute bottom-0 right-0 z-[-1]">
@@ -179,10 +225,10 @@ export const Home = () => {
                   mb-12
                 "
                 >
-                  All-in-One solution: private messages, channels, public and private chats. <br/>
-                  Our application collect all conversation in one place, integrate your NEAR project
-                  by follow simple instructions with pre-build components or call our smart-contract directly
-                  to send messages or create your chats.
+                  All-in-One solution: direct messages, channels, public and private chats. <br/>
+                  You can integrate our features into your NEAR project by follow simple instructions
+                  with pre-build components or call our smart-contract directly
+                  to send private messages, create your chats and channels.
                 </p>
                 <div>
 
@@ -442,43 +488,13 @@ export const Home = () => {
         id="features"
         className="bg-primary bg-opacity-[3%] pt-[120px] pb-[50px]"
       >
+
+
         <div className="container">
-          <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4">
-              <div
-                className="
-                mx-auto max-w-[570px] text-center mb-[100px]
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s"
-              >
-                <h2
-                  className="
-                  text-black
-                  dark:text-white
-                  font-bold text-3xl
-                  sm:text-4xl
-                  md:text-[45px]
-                  mb-4
-                "
-                >
-                  Main Features
-                </h2>
-                <p
-                  className="
-                  text-body-color text-base
-                  md:text-lg
-                  leading-relaxed
-                  md:leading-relaxed
-                "
-                >
-                  Best features implemented in our service for NEAR blockchain - fast, secure and cheap solution that allow easy integration
-                  and cross-platform communication.
-                </p>
-              </div>
-            </div>
-          </div>
+          <SectionTitle title={"Main Features"}
+                        text={`Best features implemented in our service for NEAR blockchain - fast, 
+                      secure and cheap solution with easy integration and cross-platform communication.`}
+          />
 
           <div className="flex flex-wrap mx-[-16px]">
             <OneFeature title={"Direct Messages"}
@@ -505,561 +521,81 @@ export const Home = () => {
 
       <section className="relative z-10 py-[120px]">
         <div className="container">
+          <SectionTitle title={"Video Overview"} text={``}/>
+
           <div className="flex flex-wrap mx-[-16px]">
             <div className="w-full px-4">
-              <div
-                className="
-                mx-auto max-w-[570px] text-center mb-20
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s"
+              <div className="mx-auto max-w-[770px] rounded-md overflow-hidden wow fadeInUp text-white text-center"
+                   data-wow-delay=".15s"
               >
-                <h2
-                  className="
-                  text-black
-                  dark:text-white
-                  font-bold text-3xl
-                  sm:text-4xl
-                  md:text-[45px]
-                  mb-4
-                "
-                >
-                  We are ready to help
-                </h2>
-                <p
-                  className="
-                  text-body-color text-base
-                  md:text-lg
-                  leading-relaxed
-                  md:leading-relaxed
-                "
-                >
-                  There are many variations of passages of Lorem Ipsum available
-                  but the majority have suffered alteration in some form.
-                </p>
+                ___video___
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4">
-              <div
-                className="
-                mx-auto max-w-[770px] rounded-md overflow-hidden
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".15s"
-              >
-                <div className="relative items-center justify-center">
-                  <img
-                    src="images/video/video.jpg"
-                    alt="video image"
-                    className="w-full h-full object-cover object-center"
-                  />
-                  <div
-                    className="
-                    absolute
-                    w-full
-                    h-full
-                    top-0
-                    right-0
-                    flex
-                    items-center
-                    justify-center
-                  "
+        </div>
+      </section>
+
+      <section id="about" className="py-[100px] bg-primary bg-opacity-5">
+        <div className="container">
+          <div>
+            <div className="flex flex-wrap items-center mx-[-16px]">
+              <div className="w-full lg:w-2/3 px-4">
+                <div className="mb-12 lg:mb-0 max-w-[620px] wow fadeInUp" data-wow-delay=".15s">
+                  <h2
+                    className="text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-[45px]
+                    lg:text-4xl xl:text-[45px] leading-tight sm:leading-tight md:leading-tight lg:leading-tight
+                    xl:leading-tight mb-6">
+                    Technical Details
+                  </h2>
+                  <p className="font-medium text-body-color text-base sm:text-lg leading-relaxed
+                    sm:leading-relaxed mb-11"
                   >
-                    <a
-                      className="
-                      glightbox
-                      w-[70px]
-                      h-[70px]
-                      rounded-full
-                      flex
-                      items-center
-                      justify-center
-                      bg-white
-                      bg-opacity-75
-                      text-primary
-                      hover:bg-opacity-100
-                      transition
-                    "
-                    >
-                      <svg
-                        width="16"
-                        height="18"
-                        viewBox="0 0 16 18"
-                        className="fill-current"
-                      >
-                        <path
-                          d="M15.5 8.13397C16.1667 8.51888 16.1667 9.48112 15.5 9.86602L2 17.6603C1.33333 18.0452 0.499999 17.564 0.499999 16.7942L0.5 1.20577C0.5 0.43597 1.33333 -0.0451549 2 0.339745L15.5 8.13397Z"
-                        />
-                      </svg>
-                    </a>
+                    Use our smart-contract in your NEAR application to integrate public/private chats,
+                    send direct messages or create channel broadcasting. You can send messages using NEAR-API-JS,
+                    smart-contract or by our widgets.
+                  </p>
+                  <div className="flex flex-wrap mx-[-12px]">
+                    <div className="w-full px-3">
+                      <TechCheckbox text={"Message delivery in 3-7 seconds"}/>
+                      <TechCheckbox text={"No storage payments, only transaction fee (~9 TGas)"}/>
+                      <TechCheckbox text={"NEAR Social integration: get more information about all Accounts"}/>
+
+                    </div>
                   </div>
+                </div>
+              </div>
+              <div className="w-full lg:w-1/3 px-4">
+                <div
+                  className="text-center lg:text-right wow fadeInUp"
+                  data-wow-delay=".2s"
+                >
+                  <img
+                    src="images/about/about-image.svg"
+                    alt="about-image"
+                    className="max-w-full mx-auto lg:mr-0"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 z-[-1]">
-          <img src="images/video/shape.svg" alt="shape" className="w-full"/>
-        </div>
-      </section>
 
-      <section className="pt-16">
-        <div className="container">
+        <div className="container mt-10">
           <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4">
-              <div
-                className="
-                bg-dark
-                dark:bg-primary dark:bg-opacity-5
-                rounded-md
-                flex
-                flex-wrap
-                items-center
-                justify-center
-                py-8
-                px-8
-                sm:px-10
-                md:py-[40px] md:px-[50px]
-                xl:p-[50px]
-                2xl:py-[60px] 2xl:px-[70px]
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s
-              "
-              >
-                <a
-                  href="https://uideck.com"
-                  target="_blank"
-                  rel="nofollow noreferrer"
-                  className="
-                  flex items-center justify-center
-                  lg:max-w-[130px]
-                  xl:max-w-[150px]
-                  2xl:max-w-[160px]
-                  mx-3
-                  sm:mx-4
-                  xl:mx-6
-                  2xl:mx-8
-                  py-[15px] grayscale
-                  hover:grayscale-0
-                  opacity-70
-                  hover:opacity-100
-                  dark:opacity-60 dark:hover:opacity-100
-                  transition
-                "
-                >
-                  <img src="images/brands/uideck.svg" alt="uideck"/>
-                </a>
-                <a
-                  href="https://tailgrids.com"
-                  target="_blank"
-                  rel="nofollow noreferrer"
-                  className="
-                  flex items-center justify-center
-                  lg:max-w-[130px]
-                  xl:max-w-[150px]
-                  2xl:max-w-[160px]
-                  mx-3
-                  sm:mx-4
-                  xl:mx-6
-                  2xl:mx-8
-                  py-[15px] grayscale
-                  hover:grayscale-0
-                  opacity-70
-                  hover:opacity-100
-                  dark:opacity-60 dark:hover:opacity-100
-                  transition
-                "
-                >
-                  <img src="images/brands/tailgrids.svg" alt="tailgrids"/>
-                </a>
-                <a
-                  href="https://lineicons.com"
-                  target="_blank"
-                  rel="nofollow noreferrer"
-                  className="
-                  flex items-center justify-center
-                  lg:max-w-[130px]
-                  xl:max-w-[150px]
-                  2xl:max-w-[160px]
-                  mx-3
-                  sm:mx-4
-                  xl:mx-6
-                  2xl:mx-8
-                  py-[15px] grayscale
-                  hover:grayscale-0
-                  opacity-70
-                  hover:opacity-100
-                  dark:opacity-60 dark:hover:opacity-100
-                  transition
-                "
-                >
-                  <img src="images/brands/lineicons.svg" alt="lineicons"/>
-                </a>
-                <a
-                  href="https://ayroui.com"
-                  target="_blank"
-                  rel="nofollow noreferrer"
-                  className="
-                  flex items-center justify-center
-                  lg:max-w-[130px]
-                  xl:max-w-[150px]
-                  2xl:max-w-[160px]
-                  mx-3
-                  sm:mx-4
-                  xl:mx-6
-                  2xl:mx-8
-                  py-[15px] grayscale
-                  hover:grayscale-0
-                  opacity-70
-                  hover:opacity-100
-                  dark:opacity-60 dark:hover:opacity-100
-                  transition
-                "
-                >
-                  <img src="images/brands/ayroui.svg" alt="ayroui"/>
-                </a>
-                <a
-                  href="https://plainadmin.com"
-                  target="_blank"
-                  rel="nofollow noreferrer"
-                  className="
-                  flex items-center justify-center
-                  lg:max-w-[130px]
-                  xl:max-w-[150px]
-                  2xl:max-w-[160px]
-                  mx-3
-                  sm:mx-4
-                  xl:mx-6
-                  2xl:mx-8
-                  py-[15px] grayscale
-                  hover:grayscale-0
-                  opacity-70
-                  hover:opacity-100
-                  dark:opacity-60 dark:hover:opacity-100
-                  transition
-                "
-                >
-                  <img src="images/brands/plainadmin.svg" alt="plainadmin"/>
-                </a>
+            <div className="w-full px-4 bg-dark dark:bg-primary dark:bg-opacity-5 rounded-md wow fadeInUp
+                py-8 px-8 sm:px-10 md:py-[40px] md:px-[50px] xl:p-[50px] 2xl:py-[60px] 2xl:px-[70px]">
+              <div className="flex flex-wrap items-center justify-center" data-wow-delay=".1s">
+                <TechLogo title={"Rust"} image={require("../assets/img/logo/rust.png")}/>
+                <TechLogo title={"NEAR"} image={require("../assets/img/logo/near.png")}/>
+                <TechLogo title={"The Graph"} image={require("../assets/img/logo/thegraph.png")}/>
+                <TechLogo title={"React"} image={require("../assets/img/logo/react.png")}/>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/*<section id="about" className="pt-[120px]">*/}
-      {/*  <div className="container">*/}
-      {/*    <div*/}
-      {/*      className="*/}
-      {/*      pb-[100px] border-b border-white border-opacity-[.15]*/}
-      {/*    "*/}
-      {/*    >*/}
-      {/*      <div className="flex flex-wrap items-center mx-[-16px]">*/}
-      {/*        <div className="w-full lg:w-1/2 px-4">*/}
-      {/*          <div*/}
-      {/*            className="mb-12 lg:mb-0 max-w-[570px] wow fadeInUp"*/}
-      {/*            data-wow-delay=".15s"*/}
-      {/*          >*/}
-      {/*            <h2*/}
-      {/*              className="*/}
-      {/*              text-black*/}
-      {/*              dark:text-white*/}
-      {/*              font-bold text-3xl*/}
-      {/*              sm:text-4xl*/}
-      {/*              md:text-[45px]*/}
-      {/*              lg:text-4xl*/}
-      {/*              xl:text-[45px]*/}
-      {/*              leading-tight*/}
-      {/*              sm:leading-tight*/}
-      {/*              md:leading-tight*/}
-      {/*              lg:leading-tight*/}
-      {/*              xl:leading-tight*/}
-      {/*              mb-6*/}
-      {/*            "*/}
-      {/*            >*/}
-      {/*              Crafted for Startup, SaaS and Business Sites.*/}
-      {/*            </h2>*/}
-      {/*            <p*/}
-      {/*              className="*/}
-      {/*              font-medium text-body-color text-base*/}
-      {/*              sm:text-lg*/}
-      {/*              leading-relaxed*/}
-      {/*              sm:leading-relaxed*/}
-      {/*              mb-11*/}
-      {/*            "*/}
-      {/*            >*/}
-      {/*              The main ‘thrust’ is to focus on educating attendees on how to*/}
-      {/*              best protect highly vulnerable business applications with*/}
-      {/*              interactive panel discussions and roundtables.*/}
-      {/*            </p>*/}
-      {/*            <div className="flex flex-wrap mx-[-12px]">*/}
-      {/*              <div*/}
-      {/*                className="*/}
-      {/*                w-full*/}
-      {/*                sm:w-1/2*/}
-      {/*                lg:w-full*/}
-      {/*                xl:w-1/2*/}
-      {/*                px-3*/}
-      {/*              "*/}
-      {/*              >*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  Premium quality*/}
-      {/*                </p>*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  No code required*/}
-      {/*                </p>*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  Use for lifetime*/}
-      {/*                </p>*/}
-      {/*              </div>*/}
-      {/*              <div*/}
-      {/*                className="*/}
-      {/*                w-full*/}
-      {/*                sm:w-1/2*/}
-      {/*                lg:w-full*/}
-      {/*                xl:w-1/2*/}
-      {/*                px-3*/}
-      {/*              "*/}
-      {/*              >*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  Regular updates*/}
-      {/*                </p>*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  Rich documentation*/}
-      {/*                </p>*/}
-      {/*                <p*/}
-      {/*                  className="*/}
-      {/*                  flex*/}
-      {/*                  items-center*/}
-      {/*                  text-body-color*/}
-      {/*                  text-lg*/}
-      {/*                  font-medium*/}
-      {/*                  mb-5*/}
-      {/*                "*/}
-      {/*                >*/}
-      {/*                <span*/}
-      {/*                  className="*/}
-      {/*                    w-[30px]*/}
-      {/*                    h-[30px]*/}
-      {/*                    flex*/}
-      {/*                    items-center*/}
-      {/*                    justify-center*/}
-      {/*                    rounded-md*/}
-      {/*                    bg-primary*/}
-      {/*                    bg-opacity-10*/}
-      {/*                    text-primary*/}
-      {/*                    mr-4*/}
-      {/*                  "*/}
-      {/*                >*/}
-      {/*                  <svg*/}
-      {/*                    width="16"*/}
-      {/*                    height="13"*/}
-      {/*                    viewBox="0 0 16 13"*/}
-      {/*                    className="fill-current"*/}
-      {/*                  >*/}
-      {/*                    <path*/}
-      {/*                      d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"*/}
-      {/*                    />*/}
-      {/*                  </svg>*/}
-      {/*                </span>*/}
-      {/*                  Developer friendly*/}
-      {/*                </p>*/}
-      {/*              </div>*/}
-      {/*            </div>*/}
-      {/*          </div>*/}
-      {/*        </div>*/}
-      {/*        <div className="w-full lg:w-1/2 px-4">*/}
-      {/*          <div*/}
-      {/*            className="text-center lg:text-right wow fadeInUp"*/}
-      {/*            data-wow-delay=".2s"*/}
-      {/*          >*/}
-      {/*            <img*/}
-      {/*              src="images/about/about-image.svg"*/}
-      {/*              alt="about-image"*/}
-      {/*              className="max-w-full mx-auto lg:mr-0"*/}
-      {/*            />*/}
-      {/*          </div>*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*</section>*/}
+
       {/*<section className="pt-[100px] pb-[120px]">*/}
       {/*  <div className="container">*/}
       {/*    <div className="flex flex-wrap items-center mx-[-16px]">*/}
@@ -1720,77 +1256,41 @@ export const Home = () => {
 
       <section id="pricing" className="relative z-10 pt-[120px] pb-20">
         <div className="container">
-          <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4">
-              <div
-                className="
-                mx-auto max-w-[655px] text-center mb-[100px]
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s"
-              >
-                <h2
-                  className="
-                  text-black
-                  dark:text-white
-                  font-bold text-3xl
-                  sm:text-4xl
-                  md:text-[45px]
-                  mb-4
-                "
-                >
-                  Account Levels
-                </h2>
-                <p
-                  className="
-                  text-body-color text-base
-                  md:text-lg
-                  leading-relaxed
-                  md:leading-relaxed
-                  max-w-[570px] mx-auto
-                "
-                >
-                  You can use our service for free or increase your Account Level by your needs.
-                  You pay only once to get access to all our features!
-                </p>
-              </div>
-            </div>
-          </div>
+          <SectionTitle title={"Account Levels"}
+                        text={`You can use our service for free or increase your Account Level by your needs. 
+                        You pay only once to get access to all our features!`}
+          />
 
           <div className="flex flex-wrap mx-[-16px]">
-            <PriceBlock plan={""}
-                        price={"Free"}
-                        description={"..."}>
-              <PriceBlockItem text={"Create up to 10 groups or channels"} isOk={true}/>
+            <PriceBlock plan={""} price={"Free"}
+                        description={"Any NEAR Account can use our application, just don't send a spam! Perfect for individuals and small community."}>
+              <PriceBlockItem text={"Create up to 5 groups or channels"} isOk={true}/>
               <PriceBlockItem text={"Up to 500 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"No Private messages encryption"} isOk={false}/>
               <PriceBlockItem text={"10 reports about spam in your messages lock account from sending messages"} isOk={false}/>
             </PriceBlock>
-            <PriceBlock plan={"Bronze"}
-                        price={"5 NEAR"}
-                        description={"..."}>
-              <PriceBlockItem text={"Create up to 100 groups or channels"} isOk={true}/>
+            <PriceBlock plan={"Bronze"} price={"7 NEAR"}
+                        description={"Create more groups, join more group members, send encrypted private messages and avoid account lock."}>
+              <PriceBlockItem text={"Create up to 50 groups or channels"} isOk={true}/>
               <PriceBlockItem text={"Up to 2000 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"Private messages encryption"} isOk={true}/>
-              <PriceBlockItem text={"Temporary lock on spam detection: 1 minute per each spam report (up to 1 hour) *"} isOk={true}/>
+              <PriceBlockItem text={"Temporary lock on spam detection: 1 minute per each spam report (up to 1 hour)"} isOk={true}/>
             </PriceBlock>
-            <PriceBlock plan={"Gold"}
-                        price={"10 NEAR"}
-                        description={"..."}>
+            <PriceBlock plan={"Gold"} price={"14 NEAR"}
+                        description={"Create unlimited groups, join more group members, send encrypted private messages and minimize account lock time."}>
               <PriceBlockItem text={"Create unlimited groups or channels"} isOk={true}/>
               <PriceBlockItem text={"Up to 5000 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"Private messages encryption"} isOk={true}/>
-              <PriceBlockItem text={"Temporary lock on spam detection: 10 sec. per each spam report (up to 10 minutes) *"} isOk={true}/>
+              <PriceBlockItem text={"Temporary lock on spam detection: 15 sec. per each spam report (up to 15 minutes) **"} isOk={true}/>
             </PriceBlock>
           </div>
 
           <div className={"text-body-color text-base text-center"}>
-            * Bronze and Gold accounts can be Verified to avoid any locks. <br/>
-            Send us message from your official channel with your NEAR Address to verify your account!
+            ** Gold account can be "Verified" to avoid any locks if you are part of NEAR ecosystem builders. <br/>
+            Send us message from your official email / twitter / discord with your NEAR Address to verify your account!
           </div>
         </div>
 
@@ -1855,42 +1355,9 @@ export const Home = () => {
         className="bg-primary bg-opacity-5 pt-[120px] pb-20"
       >
         <div className="container">
-          <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4">
-              <div
-                className="
-                mx-auto max-w-[570px] text-center mb-[100px]
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s"
-              >
-                <h2
-                  className="
-                  text-black
-                  dark:text-white
-                  font-bold text-3xl
-                  sm:text-4xl
-                  md:text-[45px]
-                  mb-4
-                "
-                >
-                  Our Latest Blogs
-                </h2>
-                <p
-                  className="
-                  text-body-color text-base
-                  md:text-lg
-                  leading-relaxed
-                  md:leading-relaxed
-                "
-                >
-                  There are many variations of passages of Lorem Ipsum available
-                  but the majority have suffered alteration in some form.
-                </p>
-              </div>
-            </div>
-          </div>
+          <SectionTitle title={"Most Popular Articles"}
+                        text={`More details about service functionality with technical details.`}
+          />
 
           <div className="flex flex-wrap mx-[-16px] justify-center">
             <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
@@ -2344,438 +1811,134 @@ export const Home = () => {
         </div>
       </section>
 
-      <section id="contact" className="pt-[120px] pb-20">
-        <div className="container">
-          <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full lg:w-8/12 px-4">
-              <div
-                className="
-                bg-primary bg-opacity-[3%]
-                dark:bg-dark
-                rounded-md p-11 mb-12
-                lg:mb-5
-                sm:p-[55px]
-                lg:p-11
-                xl:p-[55px]
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".15s
-              "
-              >
-                <h2
-                  className="
-                  font-bold text-black
-                  dark:text-white
-                  text-2xl
-                  sm:text-3xl
-                  lg:text-2xl
-                  xl:text-3xl
-                  mb-3
-                "
-                >
-                  Need Help? Open a Ticket
-                </h2>
-                <p
-                  className="text-body-color text-base font-medium mb-12"
-                >
-                  Our support team will get back to you ASAP via email.
-                </p>
-                <form>
-                  <div className="flex flex-wrap mx-[-16px]">
-                    <div className="w-full md:w-1/2 px-4">
-                      <div className="mb-8">
-                        <label
-                          htmlFor="name"
-                          className="
-                          block text-sm font-medium text-dark
-                          dark:text-white
-                          mb-3
-                        "
-                        >
-                          Your Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter your name"
-                          className="
-                          w-full border border-transparent
-                          dark:bg-[#242B51]
-                          rounded-md shadow-one
-                          dark:shadow-signUp
-                          py-3
-                          px-6
-                          text-body-color
-                          text-base
-                          placeholder-body-color
-                          outline-none
-                          focus-visible:shadow-none
-                          focus:border-primary
-                        "
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full md:w-1/2 px-4">
-                      <div className="mb-8">
-                        <label
-                          htmlFor="email"
-                          className="
-                          block text-sm font-medium text-dark
-                          dark:text-white
-                          mb-3
-                        "
-                        >
-                          Your Email
-                        </label>
-                        <input
-                          type="email"
-                          placeholder="Enter your email"
-                          className="
-                          w-full border border-transparent
-                          dark:bg-[#242B51]
-                          rounded-md shadow-one
-                          dark:shadow-signUp
-                          py-3
-                          px-6
-                          text-body-color
-                          text-base
-                          placeholder-body-color
-                          outline-none
-                          focus-visible:shadow-none
-                          focus:border-primary
-                        "
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full px-4">
-                      <div className="mb-8">
-                        <label
-                          htmlFor="message"
-                          className="
-                          block text-sm font-medium text-dark
-                          dark:text-white
-                          mb-3
-                        "
-                        >
-                          Your Message
-                        </label>
-                        <textarea
-                          name="message"
-                          rows="5"
-                          placeholder="Enter your Message"
-                          className="
-                          w-full border border-transparent
-                          dark:bg-[#242B51]
-                          rounded-md shadow-one
-                          dark:shadow-signUp
-                          py-3
-                          px-6
-                          text-body-color
-                          text-base
-                          placeholder-body-color
-                          outline-none
-                          focus-visible:shadow-none
-                          focus:border-primary
-                          resize-none
-                        "
-                        ></textarea>
-                      </div>
-                    </div>
-                    <div className="w-full px-4">
-                      <a
-                        className="
-                        text-base
-                        font-medium
-                        text-white
-                        bg-primary
-                        py-4
-                        px-9
-                        hover:bg-opacity-80 hover:shadow-signUp
-                        rounded-md
-                        transition
-                        duration-300
-                        ease-in-out
-                      "
-                      >
-                        Submit Ticket
-                      </a>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <div className="w-full lg:w-4/12 px-4">
-              <div
-                className="
-                relative
-                z-10
-                rounded-md
-                bg-primary
-                bg-opacity-[3%]
-                dark:bg-opacity-10
-                p-8
-                sm:p-11
-                lg:p-8
-                xl:p-11
-                mb-5
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".2s
-              "
-              >
-                <h3
-                  className="
-                  text-black
-                  dark:text-white
-                  font-bold text-2xl leading-tight mb-4
-                "
-                >
-                  Subscribe to receive future updates
-                </h3>
-                <p
-                  className="
-                  font-medium
-                  text-base
-                  text-body-color
-                  leading-relaxed
-                  pb-11
-                  mb-11
-                  border-b
-                  border-body-color
-                  border-opacity-25
-                  dark:border-white dark:border-opacity-25
-                "
-                >
-                  Lorem ipsum dolor sited Sed ullam corper consectur adipiscing
-                  Mae ornare massa quis lectus.
-                </p>
-                <form>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your name"
-                    className="
-                    w-full
-                    border
-                    border-body-color
-                    border-opacity-10
-                    dark:border-white
-                    dark:border-opacity-10
-                    dark:bg-[#242B51]
-                    rounded-md
-                    py-3
-                    px-6
-                    font-medium
-                    text-body-color
-                    text-base
-                    placeholder-body-color
-                    outline-none
-                    focus-visible:shadow-none
-                    focus:border-primary focus:border-opacity-100
-                    mb-4
-                  "
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    className="
-                    w-full
-                    border
-                    border-body-color
-                    border-opacity-10
-                    dark:border-white
-                    dark:border-opacity-10
-                    dark:bg-[#242B51]
-                    rounded-md
-                    py-3
-                    px-6
-                    font-medium
-                    text-body-color
-                    text-base
-                    placeholder-body-color
-                    outline-none
-                    focus-visible:shadow-none
-                    focus:border-primary focus:border-opacity-100
-                    mb-4
-                  "
-                  />
-                  <input
-                    type="submit"
-                    value="Subscribe"
-                    className="
-                    w-full
-                    border
-                    border-primary
-                    bg-primary
-                    rounded-md
-                    py-3
-                    px-6
-                    font-medium
-                    text-white
-                    text-base
-                    text-center
-                    outline-none
-                    cursor-pointer
-                    focus-visible:shadow-none
-                    hover:shadow-signUp hover:bg-opacity-80
-                    transition duration-80 ease-in-out mb-4
-                  "
-                  />
-                  <p
-                    className="
-                    text-base
-                    text-body-color
-                    text-center
-                    font-medium
-                    leading-relaxed
-                  "
-                  >
-                    No spam guaranteed, So please don’t send any spam mail.
-                  </p>
-                </form>
-                <div className="absolute top-0 left-0 z-[-1]">
-                  {/*<svg*/}
-                  {/*  width="370"*/}
-                  {/*  height="596"*/}
-                  {/*  viewBox="0 0 370 596"*/}
-                  {/*  fill="none"*/}
-                  {/*  xmlns="http://www.w3.org/2000/svg"*/}
-                  {/*>*/}
-                  {/*  <mask*/}
-                  {/*    id="mask0_88:141"*/}
-                  {/*    style="mask-type: alpha"*/}
-                  {/*    maskUnits="userSpaceOnUse"*/}
-                  {/*    x="0"*/}
-                  {/*    y="0"*/}
-                  {/*    width="370"*/}
-                  {/*    height="596"*/}
-                  {/*  >*/}
-                  {/*    <rect width="370" height="596" rx="2" fill="#1D2144"/>*/}
-                  {/*  </mask>*/}
-                  {/*  <g mask="url(#mask0_88:141)">*/}
-                  {/*    <path*/}
-                  {/*      opacity="0.15"*/}
-                  {/*      d="M15.4076 50.9571L54.1541 99.0711L71.4489 35.1605L15.4076 50.9571Z"*/}
-                  {/*      fill="url(#paint0_linear_88:141)"*/}
-                  {/*    />*/}
-                  {/*    <path*/}
-                  {/*      opacity="0.15"*/}
-                  {/*      d="M20.7137 501.422L44.6431 474.241L6 470.624L20.7137 501.422Z"*/}
-                  {/*      fill="url(#paint1_linear_88:141)"*/}
-                  {/*    />*/}
-                  {/*    <path*/}
-                  {/*      opacity="0.1"*/}
-                  {/*      d="M331.676 198.309C344.398 204.636 359.168 194.704 358.107 180.536C357.12 167.363 342.941 159.531 331.265 165.71C318.077 172.69 318.317 191.664 331.676 198.309Z"*/}
-                  {/*      fill="url(#paint2_linear_88:141)"*/}
-                  {/*    />*/}
-                  {/*    <g opacity="0.3">*/}
-                  {/*      <path*/}
-                  {/*        d="M209 89.9999C216 77.3332 235.7 50.7999 258.5 45.9999C287 39.9999 303 41.9999 314 30.4999C325 18.9999 334 -3.50014 357 -3.50014C380 -3.50014 395 4.99986 408.5 -8.50014C422 -22.0001 418.5 -46.0001 452 -37.5001C478.8 -30.7001 515.167 -45 530 -53"*/}
-                  {/*        stroke="url(#paint3_linear_88:141)"*/}
-                  {/*      />*/}
-                  {/*      <path*/}
-                  {/*        d="M251 64.9999C258 52.3332 277.7 25.7999 300.5 20.9999C329 14.9999 345 16.9999 356 5.49986C367 -6.00014 376 -28.5001 399 -28.5001C422 -28.5001 437 -20.0001 450.5 -33.5001C464 -47.0001 460.5 -71.0001 494 -62.5001C520.8 -55.7001 557.167 -70 572 -78"*/}
-                  {/*        stroke="url(#paint4_linear_88:141)"*/}
-                  {/*      />*/}
-                  {/*      <path*/}
-                  {/*        d="M212 73.9999C219 61.3332 238.7 34.7999 261.5 29.9999C290 23.9999 306 25.9999 317 14.4999C328 2.99986 337 -19.5001 360 -19.5001C383 -19.5001 398 -11.0001 411.5 -24.5001C425 -38.0001 421.5 -62.0001 455 -53.5001C481.8 -46.7001 518.167 -61 533 -69"*/}
-                  {/*        stroke="url(#paint5_linear_88:141)"*/}
-                  {/*      />*/}
-                  {/*      <path*/}
-                  {/*        d="M249 40.9999C256 28.3332 275.7 1.79986 298.5 -3.00014C327 -9.00014 343 -7.00014 354 -18.5001C365 -30.0001 374 -52.5001 397 -52.5001C420 -52.5001 435 -44.0001 448.5 -57.5001C462 -71.0001 458.5 -95.0001 492 -86.5001C518.8 -79.7001 555.167 -94 570 -102"*/}
-                  {/*        stroke="url(#paint6_linear_88:141)"*/}
-                  {/*      />*/}
-                  {/*    </g>*/}
-                  {/*  </g>*/}
-                  {/*  <defs>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint0_linear_88:141"*/}
-                  {/*      x1="13.4497"*/}
-                  {/*      y1="63.5059"*/}
-                  {/*      x2="81.144"*/}
-                  {/*      y2="41.5072"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint1_linear_88:141"*/}
-                  {/*      x1="28.1579"*/}
-                  {/*      y1="501.301"*/}
-                  {/*      x2="8.69936"*/}
-                  {/*      y2="464.391"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint2_linear_88:141"*/}
-                  {/*      x1="338"*/}
-                  {/*      y1="167"*/}
-                  {/*      x2="349.488"*/}
-                  {/*      y2="200.004"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint3_linear_88:141"*/}
-                  {/*      x1="369.5"*/}
-                  {/*      y1="-53"*/}
-                  {/*      x2="369.5"*/}
-                  {/*      y2="89.9999"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint4_linear_88:141"*/}
-                  {/*      x1="411.5"*/}
-                  {/*      y1="-78"*/}
-                  {/*      x2="411.5"*/}
-                  {/*      y2="64.9999"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint5_linear_88:141"*/}
-                  {/*      x1="372.5"*/}
-                  {/*      y1="-69"*/}
-                  {/*      x2="372.5"*/}
-                  {/*      y2="73.9999"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*    <linearGradient*/}
-                  {/*      id="paint6_linear_88:141"*/}
-                  {/*      x1="409.5"*/}
-                  {/*      y1="-102"*/}
-                  {/*      x2="409.5"*/}
-                  {/*      y2="40.9999"*/}
-                  {/*      gradientUnits="userSpaceOnUse"*/}
-                  {/*    >*/}
-                  {/*      <stop stopColor="white"/>*/}
-                  {/*      <stop offset="1" stopColor="white" stopOpacity="0"/>*/}
-                  {/*    </linearGradient>*/}
-                  {/*  </defs>*/}
-                  {/*</svg>*/}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/*<section id="contact" className="pt-[120px] pb-20">*/}
+      {/*  <div className="container">*/}
+      {/*    <div className="flex flex-wrap mx-[-16px]">*/}
+      {/*      <div className="w-full lg:w-8/12 px-4">*/}
+      {/*        <div*/}
+      {/*          className="*/}
+      {/*          bg-primary*/}
+      {/*          bg-opacity-[3%]*/}
+      {/*          dark:bg-opacity-10*/}
+      {/*          rounded-md p-11 mb-12*/}
+      {/*          lg:mb-5*/}
+      {/*          sm:p-[55px]*/}
+      {/*          lg:p-11*/}
+      {/*          xl:p-[55px]*/}
+      {/*          wow*/}
+      {/*          fadeInUp*/}
+      {/*          h-full*/}
+      {/*        "*/}
+      {/*          data-wow-delay=".15s*/}
+      {/*        "*/}
+      {/*        >*/}
+      {/*          <h2*/}
+      {/*            className="*/}
+      {/*            font-bold text-black*/}
+      {/*            dark:text-white*/}
+      {/*            text-2xl*/}
+      {/*            sm:text-3xl*/}
+      {/*            lg:text-2xl*/}
+      {/*            xl:text-3xl*/}
+      {/*            mb-3*/}
+      {/*          "*/}
+      {/*          >*/}
+      {/*            Our Partners*/}
+      {/*          </h2>*/}
 
+      {/*          <div className="flex flex-wrap items-center justify-center" data-wow-delay=".1s">*/}
+      {/*            <PartnerLogo title={"ZomLand"} image={require("../assets/img/logo/zomland.png")} url={"https://zomland.com"}/>*/}
+      {/*          </div>*/}
+
+      {/*        </div>*/}
+      {/*      </div>*/}
+      {/*      <div className="w-full lg:w-4/12 px-4">*/}
+      {/*        <div className="relative z-10 rounded-md bg-primary bg-opacity-[3%] dark:bg-dark p-8 sm:p-11*/}
+      {/*          lg:p-8 xl:p-11 wow fadeInUp" data-wow-delay=".2s">*/}
+      {/*          <h3 className="text-black dark:text-white font-bold text-2xl leading-tight mb-4">*/}
+      {/*            Have a question or proposal*/}
+      {/*          </h3>*/}
+      {/*          <p className="font-medium text-base text-body-color leading-relaxed pb-6">*/}
+      {/*            Just send a message and our team will get back to you via email.*/}
+      {/*          </p>*/}
+      {/*          <form>*/}
+      {/*            <input*/}
+      {/*              type="email"*/}
+      {/*              name="email"*/}
+      {/*              placeholder="Your email"*/}
+      {/*              className="*/}
+      {/*              w-full*/}
+      {/*              border*/}
+      {/*              border-body-color*/}
+      {/*              border-opacity-10*/}
+      {/*              dark:border-white*/}
+      {/*              dark:border-opacity-10*/}
+      {/*              dark:bg-[#242B51]*/}
+      {/*              rounded-md*/}
+      {/*              py-3*/}
+      {/*              px-6*/}
+      {/*              font-medium*/}
+      {/*              text-body-color*/}
+      {/*              text-base*/}
+      {/*              placeholder-body-color*/}
+      {/*              outline-none*/}
+      {/*              focus-visible:shadow-none*/}
+      {/*              focus:border-primary focus:border-opacity-100*/}
+      {/*              mb-4*/}
+      {/*            "*/}
+      {/*            />*/}
+      {/*            <textarea*/}
+      {/*              name=""*/}
+      {/*              rows={4}*/}
+      {/*              className="*/}
+      {/*                w-full*/}
+      {/*                border*/}
+      {/*                border-body-color*/}
+      {/*                border-opacity-10*/}
+      {/*                dark:border-white*/}
+      {/*                dark:border-opacity-10*/}
+      {/*                dark:bg-[#242B51]*/}
+      {/*                rounded-md*/}
+      {/*                py-3*/}
+      {/*                px-6*/}
+      {/*                font-medium*/}
+      {/*                text-body-color*/}
+      {/*                text-base*/}
+      {/*                placeholder-body-color*/}
+      {/*                outline-none*/}
+      {/*                focus-visible:shadow-none*/}
+      {/*                focus:border-primary focus:border-opacity-100*/}
+      {/*                mb-4*/}
+      {/*              "*/}
+      {/*              placeholder={"Message"}></textarea>*/}
+      {/*            <input*/}
+      {/*              type="submit"*/}
+      {/*              value="Send"*/}
+      {/*              className="*/}
+      {/*              w-full*/}
+      {/*              border*/}
+      {/*              border-primary*/}
+      {/*              bg-primary*/}
+      {/*              rounded-md*/}
+      {/*              py-3*/}
+      {/*              px-6*/}
+      {/*              font-medium*/}
+      {/*              text-white*/}
+      {/*              text-base*/}
+      {/*              text-center*/}
+      {/*              outline-none*/}
+      {/*              cursor-pointer*/}
+      {/*              focus-visible:shadow-none*/}
+      {/*              hover:shadow-signUp hover:bg-opacity-80*/}
+      {/*              transition duration-80 ease-in-out*/}
+      {/*            "*/}
+      {/*            />*/}
+      {/*          </form>*/}
+      {/*        </div>*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</section>*/}
 
     </Layout>
   );

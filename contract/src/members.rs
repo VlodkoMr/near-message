@@ -9,14 +9,14 @@ impl Contract {
         if user_account.is_some() {
             let user_account = user_account.unwrap();
 
-            // Bronze/Gold account: temporary lock after last spam report. Verified - no locks
+            // Bronze/Gold account: temporary lock after last spam report. Verified: no locks
             if !user_account.verified {
                 let mut max_lock_seconds: u64 = 60 * 60;
                 let mut lock_seconds: u64 = user_account.spam_counts as u64 * 60;
 
                 if user_account.level > 1 {
-                    lock_seconds = lock_seconds / 6;
-                    max_lock_seconds = max_lock_seconds / 6;
+                    lock_seconds = lock_seconds / 4;
+                    max_lock_seconds = max_lock_seconds / 4;
                 }
                 if lock_seconds > max_lock_seconds {
                     lock_seconds = max_lock_seconds;

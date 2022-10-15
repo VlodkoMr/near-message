@@ -1,9 +1,13 @@
 #!/bin/sh
 
+OWNER_ID=vlodkow.testnet
+
 NEAR_ID_1=vlodkow.testnet
 NEAR_ID_2=vlodkow2.testnet
 NEAR_ID_3=vlodkow3.testnet
 CONTRACT_ID=$(<neardev/dev-account)
+
+near call $CONTRACT_ID init '{"owner_id":"'$OWNER_ID'"}' --accountId $OWNER_ID
 
 #----------- Private Messages
 

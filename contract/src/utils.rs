@@ -14,12 +14,12 @@ impl Contract {
         }
     }
 
-    // Get user account level by deposit
-    pub(crate) fn get_level_by_deposit() -> u8 {
+    // Get user account level increase by deposit
+    pub(crate) fn get_level_increase_by_deposit() -> u8 {
         let deposit = env::attached_deposit();
-        if deposit >= Contract::convert_to_yocto("10") {
+        if deposit >= Contract::convert_to_yocto("14") {
             return 2;
-        } else if deposit >= Contract::convert_to_yocto("1") {
+        } else if deposit >= Contract::convert_to_yocto("7") {
             return 1;
         }
         env::panic_str("Wrong payment deposit");

@@ -1,7 +1,7 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, Timestamp, BorshStorageKey};
-use near_sdk::collections::LookupMap;
+use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, PanicOnDefault, Timestamp, BorshStorageKey, assert_one_yocto};
+use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
 
 mod utils;
@@ -9,7 +9,8 @@ mod members;
 
 const MAX_MEMBERS_IN_GROUP: u32 = 1000;
 const CREATE_GROUP_PRICE: &str = "0.25";
-const JOIN_PUBLIC_PRICE: &str = "0.1";
+const JOIN_PUBLIC_PRICE: &str = "0.01";
+const JOIN_CHANNEL_PRICE: &str = "0.00001";
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -26,6 +27,7 @@ pub struct Group {
     id: u32,
     owner: AccountId,
     title: String,
+    text: String,
     image: String,
     url: String,
     group_type: GroupType,
@@ -50,36 +52,43 @@ pub enum StorageKeys {
     Groups,
     UserGroups,
     OwnerGroups,
+    PublicGroups,
+    PublicChannels,
 }
 
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
+    owner: AccountId,
     user_spam_counts: LookupMap<AccountId, u32>,
     users: LookupMap<AccountId, User>,
     groups: LookupMap<u32, Group>,
+    public_groups: UnorderedSet<u32>,
+    public_channels: UnorderedSet<u32>,
     user_groups: LookupMap<AccountId, Vec<u32>>,
     owner_groups: LookupMap<AccountId, Vec<u32>>,
     groups_count: u32,
     messages_count: u128,
 }
 
-impl Default for Contract {
-    fn default() -> Self {
+#[near_bindgen]
+impl Contract {
+    #[init]
+    pub fn init(owner_id: AccountId) -> Self {
         Self {
+            owner: owner_id,
             user_spam_counts: LookupMap::new(StorageKeys::UserSpamCounts),
             users: LookupMap::new(StorageKeys::Users),
             groups: LookupMap::new(StorageKeys::Groups),
+            public_groups: UnorderedSet::new(StorageKeys::PublicGroups),
+            public_channels: UnorderedSet::new(StorageKeys::PublicChannels),
             user_groups: LookupMap::new(StorageKeys::UserGroups),
             owner_groups: LookupMap::new(StorageKeys::OwnerGroups),
             groups_count: 0,
             messages_count: 0,
         }
     }
-}
 
-#[near_bindgen]
-impl Contract {
     /**
      * Get count groups
      */
@@ -128,7 +137,7 @@ impl Contract {
      * Create new group
      */
     #[payable]
-    pub fn create_new_group(&mut self, title: String, image: String, url: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
+    pub fn create_new_group(&mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
@@ -140,6 +149,9 @@ impl Contract {
         }
         if title.len() < 3 as usize || title.len() >= 160 as usize {
             env::panic_str("Wrong group title length");
+        }
+        if text.len() > 300 as usize {
+            env::panic_str("Wrong group text length");
         }
         let spam_count = self.user_spam_counts.get(&owner).unwrap_or(0);
         if spam_count > 10 {
@@ -153,17 +165,26 @@ impl Contract {
             id: group_id,
             owner: owner.clone(),
             title,
+            text,
             image,
             url,
-            group_type,
+            group_type: group_type.clone(),
             created_at: env::block_timestamp(),
             members: members.clone(),
         };
         self.groups.insert(&group_id, &group);
 
-        // add to owner
+        // add for owner
         owner_groups.push(group_id.clone());
         self.owner_groups.insert(&owner, &owner_groups);
+
+        // add to public/channels list
+        if group_type == GroupType::Public {
+            self.public_groups.insert(&group_id);
+        }
+        if group_type == GroupType::Channel {
+            self.public_channels.insert(&group_id);
+        }
 
         // add to user groups
         if members.len() > 0 {
@@ -176,11 +197,18 @@ impl Contract {
      * Edit group
      * (only group owner)
      */
-    pub fn edit_group(&mut self, id: u32, title: String, image: String, url: String) {
+    pub fn edit_group(&mut self, id: u32, title: String, image: String, text: String, url: String) {
         let mut group = self.groups.get(&id).unwrap();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
+        if title.len() < 3 as usize || title.len() >= 160 as usize {
+            env::panic_str("Wrong group title length");
+        }
+        if text.len() > 300 as usize {
+            env::panic_str("Wrong group text length");
+        }
+
         group.title = title;
         group.image = image;
         group.url = url;
@@ -203,6 +231,9 @@ impl Contract {
         if members.len() == 0 {
             env::panic_str("Please add members");
         }
+        if group.group_type == GroupType::Channel {
+            env::panic_str("You can't add members to Channel");
+        }
 
         self.add_group_member_internal(members, id, true);
     }
@@ -218,6 +249,9 @@ impl Contract {
         }
         if members.len() == 0 {
             env::panic_str("Please provide members for removal");
+        }
+        if group.group_type == GroupType::Channel {
+            env::panic_str("You can't remove members from Channel");
         }
 
         self.remove_group_member_internal(members, id, true);
@@ -236,13 +270,21 @@ impl Contract {
             env::panic_str("Wrong approval for remove");
         }
 
+        // remove from public/channels list
+        if group.group_type == GroupType::Public {
+            self.public_groups.remove(&id);
+        }
+        if group.group_type == GroupType::Channel {
+            self.public_channels.remove(&id);
+        }
+
         self.remove_group_member_internal(group.members, id, false);
         self.groups.remove(&id);
     }
 
     /**
      * Join public group
-     * (each member pay 0.1N to avoid spam)
+     * (each member pay 0.01N to avoid spam)
      */
     #[payable]
     pub fn join_public_group(&mut self, id: u32) {
@@ -266,6 +308,25 @@ impl Contract {
     }
 
     /**
+     * Join channel
+     * (each member pay 0.00001N)
+     */
+    #[payable]
+    pub fn join_public_channel(&mut self, id: u32) {
+        let group = self.groups.get(&id).unwrap();
+        let member = env::predecessor_account_id();
+
+        if group.group_type != GroupType::Channel {
+            env::panic_str("Can't join this group");
+        }
+        if env::attached_deposit() < Contract::convert_to_yocto(JOIN_CHANNEL_PRICE) {
+            env::panic_str("Wrong payment amount");
+        }
+
+        self.add_group_member_internal(vec![member], id, false);
+    }
+
+    /**
      * Leave group
      */
     pub fn leave_group(&mut self, id: u32) {
@@ -275,10 +336,29 @@ impl Contract {
             env::panic_str("You don't participate in this group");
         }
         if group.owner == member {
-            env::panic_str("You can't leave your group");
+            env::panic_str("You can't leave your own group");
+        }
+        if group.group_type == GroupType::Channel {
+            env::panic_str("This group is channel, please use 'leave_channel' method");
         }
 
         self.remove_group_member_internal(vec![member], id, true);
+    }
+
+    /**
+     * Leave channel
+     */
+    pub fn leave_channel(&mut self, id: u32) {
+        let channel = self.groups.get(&id).unwrap();
+        let member = env::predecessor_account_id();
+        if channel.owner == member {
+            env::panic_str("You can't leave your own channel");
+        }
+        if channel.group_type != GroupType::Channel {
+            env::panic_str("This group is not channel, please use 'leave_group' method");
+        }
+
+        self.remove_group_member_internal(vec![member], id, false);
     }
 
     /**
@@ -326,6 +406,9 @@ impl Contract {
                 env::panic_str("No access to this group");
             }
         }
+        if group.group_type == GroupType::Public && !group.members.contains(&account) {
+            env::panic_str("Please join public group before sending message");
+        }
 
         // send message
         self.messages_count += 1;
@@ -344,37 +427,80 @@ impl Contract {
     }
 
     /**
-     * Register user account
+     * Increase User Level
      */
-    #[payable]
-    pub fn create_user_account(&mut self) {
-        let account = env::predecessor_account_id();
-        if self.users.get(&account).is_some() {
-            env::panic_str("Account already exists!");
-        }
-
-        let level = Contract::get_level_by_deposit();
-        let user_account = User {
-            id: account.clone(),
-            level,
-            last_spam_report: 0,
-            spam_counts: 0,
-            verified: false,
-        };
-        self.users.insert(&account, &user_account);
-    }
-
     #[payable]
     pub fn user_account_level_up(&mut self) {
         let account = env::predecessor_account_id();
-        let mut user_account = self.users.get(&account).expect("User account not found!");
-        let level = Contract::get_level_by_deposit();
+        let level_increase = Contract::get_level_increase_by_deposit();
 
-        if user_account.level >= level {
-            env::panic_str("Not enough deposit to increase account level");
+        let user_account = self.users.get(&account);
+        if user_account.is_some() {
+            let mut user_account = user_account.unwrap();
+            user_account.level += level_increase;
+            if user_account.level > 2 {
+                env::panic_str("Account level error");
+            }
+            self.users.insert(&account, &user_account);
+        } else {
+            let user_account = User {
+                id: account.clone(),
+                level: level_increase,
+                last_spam_report: 0,
+                spam_counts: 0,
+                verified: false,
+            };
+            self.users.insert(&account, &user_account);
+        }
+    }
+
+    /**
+     * Admin - update account level
+     */
+    #[payable]
+    pub fn admin_set_user_level(&mut self, account: AccountId, level: u8) {
+        assert_one_yocto();
+        let user_account = self.users.get(&account);
+
+        if self.owner != env::predecessor_account_id() {
+            env::panic_str("No Access");
+        }
+        if level < 1 || level > 2 {
+            env::panic_str("Account level error");
         }
 
-        user_account.level = level;
+        if user_account.is_some() {
+            let mut user_account = user_account.unwrap();
+            user_account.level = level;
+            self.users.insert(&account, &user_account);
+        } else {
+            let user_account = User {
+                id: account.clone(),
+                level,
+                last_spam_report: 0,
+                spam_counts: 0,
+                verified: false,
+            };
+            self.users.insert(&account, &user_account);
+        }
+    }
+
+    /**
+     * Admin - verify account
+     */
+    #[payable]
+    pub fn admin_user_account_verify(&mut self, account: AccountId) {
+        assert_one_yocto();
+        if self.owner != env::predecessor_account_id() {
+            env::panic_str("No Access");
+        }
+
+        let mut user_account = self.users.get(&account).expect("Account not found");
+        if user_account.level != 2 {
+            env::panic_str("Account level should be 'Gold'");
+        }
+
+        user_account.verified = true;
         self.users.insert(&account, &user_account);
     }
 }
