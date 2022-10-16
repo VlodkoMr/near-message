@@ -1,49 +1,23 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, PanicOnDefault, Timestamp, BorshStorageKey, assert_one_yocto};
+use near_sdk::{
+    AccountId, env, Balance, near_bindgen, serde_json::json, PanicOnDefault, Timestamp,
+    BorshStorageKey, assert_one_yocto,
+};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
 
+pub use crate::users::{User, UserVersion};
+pub use crate::groups::{GroupVersion, Group, GroupType};
+
 mod utils;
-mod members;
+mod users;
+mod groups;
 
 const MAX_MEMBERS_IN_GROUP: u32 = 1000;
 const CREATE_GROUP_PRICE: &str = "0.25";
 const JOIN_PUBLIC_PRICE: &str = "0.01";
 const JOIN_CHANNEL_PRICE: &str = "0.00001";
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
-#[serde(crate = "near_sdk::serde")]
-pub enum GroupType {
-    Channel,
-    Private,
-    Public,
-}
-
-#[near_bindgen]
-#[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
-#[serde(crate = "near_sdk::serde")]
-pub struct Group {
-    id: u32,
-    owner: AccountId,
-    title: String,
-    text: String,
-    image: String,
-    url: String,
-    group_type: GroupType,
-    created_at: Timestamp,
-    members: Vec<AccountId>,
-}
-
-#[derive(Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
-#[serde(crate = "near_sdk::serde")]
-pub struct User {
-    id: AccountId,
-    level: u8,
-    last_spam_report: Timestamp,
-    spam_counts: u32,
-    verified: bool, // verified - no locks
-}
 
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKeys {
@@ -61,8 +35,8 @@ pub enum StorageKeys {
 pub struct Contract {
     owner: AccountId,
     user_spam_counts: LookupMap<AccountId, u32>,
-    users: LookupMap<AccountId, User>,
-    groups: LookupMap<u32, Group>,
+    users: LookupMap<AccountId, UserVersion>,
+    groups: LookupMap<u32, GroupVersion>,
     public_groups: UnorderedSet<u32>,
     public_channels: UnorderedSet<u32>,
     user_groups: LookupMap<AccountId, Vec<u32>>,
@@ -107,14 +81,19 @@ impl Contract {
      * Get Group by ID
      */
     pub fn get_group_by_id(&self, id: u32) -> Group {
-        self.groups.get(&id).unwrap()
+        self.groups.get(&id).unwrap().into()
     }
 
     /**
      * Get User Info
      */
     pub fn get_user_info(&self, address: AccountId) -> Option<User> {
-        self.users.get(&address)
+        let user = self.users.get(&address);
+        if user.is_some() {
+            let user: User = user.unwrap().into();
+            return Some(user);
+        }
+        None
     }
 
     /**
@@ -122,7 +101,7 @@ impl Contract {
      */
     pub fn get_owner_groups(&self, account: AccountId) -> Vec<Group> {
         let id_list = self.owner_groups.get(&account).unwrap_or(vec![]);
-        id_list.iter().map(|id| self.groups.get(&id).unwrap()).collect()
+        id_list.iter().map(|id| self.groups.get(&id).unwrap().into()).collect()
     }
 
     /**
@@ -130,14 +109,16 @@ impl Contract {
      */
     pub fn get_user_groups(&self, account: AccountId) -> Vec<Group> {
         let id_list = self.user_groups.get(&account).unwrap_or(vec![]);
-        id_list.iter().map(|id| self.groups.get(&id).unwrap()).collect()
+        id_list.iter().map(|id| self.groups.get(&id).unwrap().into()).collect()
     }
 
     /**
      * Create new group
      */
     #[payable]
-    pub fn create_new_group(&mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>) -> u32 {
+    pub fn create_new_group(
+        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>,
+    ) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
@@ -172,7 +153,7 @@ impl Contract {
             created_at: env::block_timestamp(),
             members: members.clone(),
         };
-        self.groups.insert(&group_id, &group);
+        self.groups.insert(&group_id, &group.into());
 
         // add for owner
         owner_groups.push(group_id.clone());
@@ -198,7 +179,7 @@ impl Contract {
      * (only group owner)
      */
     pub fn edit_group(&mut self, id: u32, title: String, image: String, text: String, url: String) {
-        let mut group = self.groups.get(&id).unwrap();
+        let mut group: Group = self.groups.get(&id).unwrap().into();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
@@ -212,8 +193,9 @@ impl Contract {
         group.title = title;
         group.image = image;
         group.url = url;
+        group.text = text;
 
-        self.groups.insert(&id, &group);
+        self.groups.insert(&id, &group.into());
     }
 
     /**
@@ -221,7 +203,7 @@ impl Contract {
      * (only group owner)
      */
     pub fn owner_add_group_members(&mut self, id: u32, members: Vec<AccountId>) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
@@ -243,7 +225,7 @@ impl Contract {
      * (only group owner)
      */
     pub fn owner_remove_group_members(&mut self, id: u32, members: Vec<AccountId>) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
@@ -262,7 +244,7 @@ impl Contract {
      * (only group owner)
      */
     pub fn owner_remove_group(&mut self, id: u32, confirm_title: String) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
@@ -288,7 +270,7 @@ impl Contract {
      */
     #[payable]
     pub fn join_public_group(&mut self, id: u32) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         let member = env::predecessor_account_id();
 
         if group.group_type != GroupType::Public {
@@ -313,7 +295,7 @@ impl Contract {
      */
     #[payable]
     pub fn join_public_channel(&mut self, id: u32) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         let member = env::predecessor_account_id();
 
         if group.group_type != GroupType::Channel {
@@ -330,7 +312,7 @@ impl Contract {
      * Leave group
      */
     pub fn leave_group(&mut self, id: u32) {
-        let group = self.groups.get(&id).unwrap();
+        let group: Group = self.groups.get(&id).unwrap().into();
         let member = env::predecessor_account_id();
         if !group.members.contains(&member) {
             env::panic_str("You don't participate in this group");
@@ -349,7 +331,7 @@ impl Contract {
      * Leave channel
      */
     pub fn leave_channel(&mut self, id: u32) {
-        let channel = self.groups.get(&id).unwrap();
+        let channel: Group = self.groups.get(&id).unwrap().into();
         let member = env::predecessor_account_id();
         if channel.owner == member {
             env::panic_str("You can't leave your own channel");
@@ -364,7 +346,9 @@ impl Contract {
     /**
      * Private Message
      */
-    pub fn send_private_message(&mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>) -> U128 {
+    pub fn send_private_message(
+        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>,
+    ) -> U128 {
         let account = env::predecessor_account_id();
         self.send_message_validate_spam(&account);
 
@@ -393,8 +377,10 @@ impl Contract {
     /**
      * Group Message
      */
-    pub fn send_group_message(&mut self, text: String, image: String, group_id: u32, reply_message_id: Option<String>) -> U128 {
-        let group = self.groups.get(&group_id).unwrap();
+    pub fn send_group_message(
+        &mut self, text: String, image: String, group_id: u32, reply_message_id: Option<String>,
+    ) -> U128 {
+        let group: Group = self.groups.get(&group_id).unwrap().into();
         let account = env::predecessor_account_id();
         self.send_message_validate_spam(&account);
 
@@ -436,21 +422,14 @@ impl Contract {
 
         let user_account = self.users.get(&account);
         if user_account.is_some() {
-            let mut user_account = user_account.unwrap();
+            let mut user_account: User = user_account.unwrap().into();
             user_account.level += level_increase;
             if user_account.level > 2 {
                 env::panic_str("Account level error");
             }
-            self.users.insert(&account, &user_account);
+            self.users.insert(&account, &user_account.into());
         } else {
-            let user_account = User {
-                id: account.clone(),
-                level: level_increase,
-                last_spam_report: 0,
-                spam_counts: 0,
-                verified: false,
-            };
-            self.users.insert(&account, &user_account);
+            self.create_user_internal(&account, level_increase);
         }
     }
 
@@ -470,18 +449,11 @@ impl Contract {
         }
 
         if user_account.is_some() {
-            let mut user_account = user_account.unwrap();
+            let mut user_account: User = user_account.unwrap().into();
             user_account.level = level;
-            self.users.insert(&account, &user_account);
+            self.users.insert(&account, &user_account.into());
         } else {
-            let user_account = User {
-                id: account.clone(),
-                level,
-                last_spam_report: 0,
-                spam_counts: 0,
-                verified: false,
-            };
-            self.users.insert(&account, &user_account);
+            self.create_user_internal(&account, level);
         }
     }
 
@@ -495,13 +467,13 @@ impl Contract {
             env::panic_str("No Access");
         }
 
-        let mut user_account = self.users.get(&account).expect("Account not found");
+        let mut user_account: User = self.users.get(&account).expect("Account not found").into();
         if user_account.level != 2 {
             env::panic_str("Account level should be 'Gold'");
         }
 
         user_account.verified = true;
-        self.users.insert(&account, &user_account);
+        self.users.insert(&account, &user_account.into());
     }
 }
 
@@ -527,13 +499,19 @@ mod tests {
     fn create_group_internal(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
         set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
         contract.create_new_group(
-            title, "".to_string(), "".to_string(), group_type, members,
+            title, "".to_string(), "".to_string(), "".to_string(), group_type, members,
         );
     }
 
     #[test]
+    fn test_contract_owner() {
+        let contract = Contract::init(NEAR_ID.parse().unwrap());
+        assert_eq!(contract.owner, NEAR_ID.parse().unwrap())
+    }
+
+    #[test]
     fn send_private_message() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
 
         let message_id = contract.send_private_message("Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None);
         assert_eq!(message_id, U128::from(1));
@@ -541,7 +519,7 @@ mod tests {
 
     #[test]
     fn create_private_group() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "Group 1".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
@@ -558,12 +536,12 @@ mod tests {
     }
 
     #[test]
-    fn edit_group() {
-        let mut contract = Contract::default();
+    fn edit_private_group() {
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "group 1".to_string(), GroupType::Private, vec![]);
 
         contract.edit_group(
-            1, "group updated".to_string(), "".to_string(), "https://someurl.com".to_string(),
+            1, "group updated".to_string(), "".to_string(), "description...".to_string(), "https://someurl.com".to_string(),
         );
         let group = contract.get_group_by_id(1);
         assert_eq!(group.title, "group updated".to_string());
@@ -572,7 +550,7 @@ mod tests {
 
     #[test]
     fn create_public_group() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
         assert_eq!(contract.get_groups_count(), 1);
@@ -608,7 +586,7 @@ mod tests {
 
     #[test]
     fn join_public_group() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
         let group = contract.get_group_by_id(1);
@@ -636,7 +614,7 @@ mod tests {
 
     #[test]
     fn send_group_message() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
@@ -654,7 +632,7 @@ mod tests {
 
     #[test]
     fn leave_group() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
@@ -678,7 +656,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "No access to this group")]
     fn private_group_message_no_access() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
@@ -691,7 +669,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "No access to this group")]
     fn readonly_group_message_no_access() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "Readonly group".to_string(), GroupType::Channel, vec![]);
 
         // Test guest message - error expected
@@ -702,7 +680,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "No access to group modification")]
     fn remove_group_no_access() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "group".to_string(), GroupType::Private, vec![]);
 
         // Test guest message - error expected
@@ -713,12 +691,12 @@ mod tests {
     #[test]
     #[should_panic(expected = "No access to group modification")]
     fn edit_group_no_access() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "My group".to_string(), GroupType::Channel, vec![]);
 
         set_context("guest.testnet", 0);
         contract.edit_group(
-            1, "group updated".to_string(), "".to_string(), "".to_string(),
+            1, "group updated".to_string(), "".to_string(), "".to_string(), "".to_string(),
         );
     }
 
@@ -726,7 +704,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "No access to group modification")]
     fn group_add_members_no_access() {
-        let mut contract = Contract::default();
+        let mut contract = Contract::init(NEAR_ID.parse().unwrap());
         create_group_internal(&mut contract, "My group".to_string(), GroupType::Public, vec![]);
 
         set_context("guest.testnet", 0);
