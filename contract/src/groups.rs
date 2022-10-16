@@ -57,6 +57,44 @@ impl From<Group> for GroupVersion {
 }
 
 impl Contract {
+    /*
+     * Get owner groups limit: 5 / 50 / unlimited
+     */
+    pub fn get_owner_groups_limit(&self, account: &AccountId) -> u32 {
+        let user_account = self.users.get(account);
+        let mut limit_count = 5;
+        if user_account.is_some() {
+            let user_account: User = user_account.unwrap().into();
+            if user_account.level == 1 {
+                limit_count = 50;
+            } else {
+                limit_count = u32::MAX;
+            }
+        }
+
+        limit_count
+    }
+
+    /*
+     * Get group members limit: 500 / 2000 / 5000
+     */
+    pub fn get_group_members_limit(&self) -> u32 {
+        let account = env::predecessor_account_id();
+        let user_account = self.users.get(&account);
+
+        let mut limit_count = 500;
+        if user_account.is_some() {
+            let user_account: User = user_account.unwrap().into();
+            if user_account.level == 1 {
+                limit_count = 2000;
+            } else {
+                limit_count = 5000;
+            }
+        }
+
+        limit_count
+    }
+
     // Add new members to group
     pub(crate) fn add_group_member_internal(&mut self, members: Vec<AccountId>, group_id: u32, change_group: bool) {
         let mut group: Group = self.groups.get(&group_id).unwrap().into();
@@ -101,5 +139,46 @@ impl Contract {
         if change_group {
             self.groups.insert(&group_id, &group.into());
         }
+    }
+
+    pub(crate) fn create_group_internal(
+        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>,
+    ) -> u32 {
+        let owner = env::predecessor_account_id();
+        let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
+
+        self.groups_count += 1;
+        let group_id = self.groups_count;
+
+        let group = Group {
+            id: group_id,
+            owner: owner.clone(),
+            title,
+            text,
+            image,
+            url,
+            group_type: group_type.clone(),
+            created_at: env::block_timestamp(),
+            members: members.clone(),
+        };
+        self.groups.insert(&group_id, &group.into());
+
+        // add for owner
+        owner_groups.push(group_id.clone());
+        self.owner_groups.insert(&owner, &owner_groups);
+
+        // add to public/channels list
+        if group_type == GroupType::Public {
+            self.public_groups.insert(&group_id);
+        }
+        if group_type == GroupType::Channel {
+            self.public_channels.insert(&group_id);
+        }
+
+        // add to user groups
+        if members.len() > 0 {
+            self.add_group_member_internal(members, group_id, false);
+        }
+        group_id
     }
 }

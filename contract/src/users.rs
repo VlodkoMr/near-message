@@ -42,9 +42,9 @@ impl From<User> for UserVersion {
 
 impl Contract {
     // Validate user account - lock spammers
-    pub(crate) fn send_message_validate_spam(&self, account: &AccountId) {
-        let user_account = self.users.get(account);
-        let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
+    pub(crate) fn user_validate_spam(&self) {
+        let account = env::predecessor_account_id();
+        let user_account = self.users.get(&account);
 
         if user_account.is_some() {
             let user_account: User = user_account.unwrap().into();
@@ -66,9 +66,12 @@ impl Contract {
                     env::panic_str("You can't send messages, spam detected. Account temporary locked.");
                 }
             }
-        } else if spam_count > 10 {
+        } else {
             // Free accounts: up to 10 spam messages to complete lock
-            env::panic_str("You can't send messages, spam detected. Upgrade account to avoid complete lock.");
+            let spam_count = self.user_spam_counts.get(&account).unwrap_or(0);
+            if spam_count > 10 {
+                env::panic_str("Spam Detected! Upgrade account level to avoid complete lock.");
+            }
         }
     }
 

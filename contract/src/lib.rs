@@ -14,7 +14,6 @@ mod utils;
 mod users;
 mod groups;
 
-const MAX_MEMBERS_IN_GROUP: u32 = 1000;
 const CREATE_GROUP_PRICE: &str = "0.25";
 const JOIN_PUBLIC_PRICE: &str = "0.01";
 const JOIN_CHANNEL_PRICE: &str = "0.00001";
@@ -119,13 +118,17 @@ impl Contract {
     pub fn create_new_group(
         &mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>,
     ) -> u32 {
-        let owner = env::predecessor_account_id();
-        let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
+        let account = env::predecessor_account_id();
+        let owner_groups_count = self.owner_groups.get(&account).unwrap_or(vec![]).len();
 
+        self.user_validate_spam();
+        if owner_groups_count + 1 > self.get_owner_groups_limit(&account) as usize {
+            env::panic_str("Groups limit reached");
+        }
         if env::attached_deposit() < Contract::convert_to_yocto(CREATE_GROUP_PRICE) {
             env::panic_str("Wrong payment amount");
         }
-        if members.len() > MAX_MEMBERS_IN_GROUP as usize {
+        if members.len() > self.get_group_members_limit() as usize {
             env::panic_str("You can't add so much group members");
         }
         if title.len() < 3 as usize || title.len() >= 160 as usize {
@@ -134,44 +137,8 @@ impl Contract {
         if text.len() > 300 as usize {
             env::panic_str("Wrong group text length");
         }
-        let spam_count = self.user_spam_counts.get(&owner).unwrap_or(0);
-        if spam_count > 10 {
-            env::panic_str("You can't create groups, spam detected");
-        }
 
-        self.groups_count += 1;
-        let group_id = self.groups_count;
-
-        let group = Group {
-            id: group_id,
-            owner: owner.clone(),
-            title,
-            text,
-            image,
-            url,
-            group_type: group_type.clone(),
-            created_at: env::block_timestamp(),
-            members: members.clone(),
-        };
-        self.groups.insert(&group_id, &group.into());
-
-        // add for owner
-        owner_groups.push(group_id.clone());
-        self.owner_groups.insert(&owner, &owner_groups);
-
-        // add to public/channels list
-        if group_type == GroupType::Public {
-            self.public_groups.insert(&group_id);
-        }
-        if group_type == GroupType::Channel {
-            self.public_channels.insert(&group_id);
-        }
-
-        // add to user groups
-        if members.len() > 0 {
-            self.add_group_member_internal(members, group_id, false);
-        }
-        group_id
+        self.create_group_internal(title, image, text, url, group_type, members)
     }
 
     /**
@@ -207,7 +174,7 @@ impl Contract {
         if group.owner != env::predecessor_account_id() {
             env::panic_str("No access to group modification");
         }
-        if group.members.len() + members.len() > MAX_MEMBERS_IN_GROUP as usize {
+        if group.members.len() + members.len() > self.get_group_members_limit() as usize {
             env::panic_str("Group members limit reached");
         }
         if members.len() == 0 {
@@ -282,7 +249,7 @@ impl Contract {
         if group.members.contains(&member) {
             env::panic_str("You already participate in this group");
         }
-        if group.members.len() + 1 > MAX_MEMBERS_IN_GROUP as usize {
+        if group.members.len() + 1 > self.get_group_members_limit() as usize {
             env::panic_str("Group members limit reached");
         }
 
@@ -299,7 +266,7 @@ impl Contract {
         let member = env::predecessor_account_id();
 
         if group.group_type != GroupType::Channel {
-            env::panic_str("Can't join this group");
+            env::panic_str("Can't join this group, it is public channel");
         }
         if env::attached_deposit() < Contract::convert_to_yocto(JOIN_CHANNEL_PRICE) {
             env::panic_str("Wrong payment amount");
@@ -349,9 +316,9 @@ impl Contract {
     pub fn send_private_message(
         &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>,
     ) -> U128 {
-        let account = env::predecessor_account_id();
-        self.send_message_validate_spam(&account);
+        self.user_validate_spam();
 
+        let account = env::predecessor_account_id();
         if to_address == account {
             env::panic_str("Can't send message to yourself");
         }
@@ -382,7 +349,7 @@ impl Contract {
     ) -> U128 {
         let group: Group = self.groups.get(&group_id).unwrap().into();
         let account = env::predecessor_account_id();
-        self.send_message_validate_spam(&account);
+        self.user_validate_spam();
 
         if group.group_type == GroupType::Channel && group.owner != account {
             env::panic_str("No access to this group");
@@ -393,7 +360,7 @@ impl Contract {
             }
         }
         if group.group_type == GroupType::Public && !group.members.contains(&account) {
-            env::panic_str("Please join public group before sending message");
+            env::panic_str("Please join public group before sending messages");
         }
 
         // send message
