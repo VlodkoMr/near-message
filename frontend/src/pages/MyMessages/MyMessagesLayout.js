@@ -12,6 +12,7 @@ export const MyMessagesLayout = () => {
 
   useEffect(() => {
     loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
+      console.log(`myProfile`, myProfile);
       setMyProfile(myProfile);
     });
   }, []);
