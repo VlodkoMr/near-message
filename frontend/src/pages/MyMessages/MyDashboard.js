@@ -56,9 +56,9 @@ export const MyDashboard = () => {
   return (
     <>
       <MessagesHeader title={""} media={""}/>
-      <div className={"p-6 mb-auto max-w-[1600px]"}>
+      <div className={"p-6 mb-auto max-w-[1600px] overflow-y-scroll"}>
         <div className={"flex flex-row gap-6 mb-6"}>
-          <div className={"bg-gray-800 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
             <BlockTitle text={"My Account"}>
               <a href={process.env.NEAR_SOCIAL_PROFILE_URL}
                  target={"_blank"}
@@ -105,7 +105,7 @@ export const MyDashboard = () => {
             </div>
           </div>
 
-          <div className={"bg-gray-800 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
             <BlockTitle text={"My Groups"}/>
             <div>
               ...
@@ -114,7 +114,7 @@ export const MyDashboard = () => {
         </div>
 
         <div className={"mb-6"}>
-          <div className={"bg-gray-800 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
             {isReady && (
               <>
                 <BlockTitle text={"Account Level"}>
@@ -216,7 +216,7 @@ export const MyDashboard = () => {
         </div>
 
         <div className={"flex flex-row gap-6 mb-6"}>
-          <div className={"bg-gray-800 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
             <BlockTitle text={"Documentation"}/>
             <div>
               <ExternalLink text={"General Overview"} url={""}/>
@@ -225,7 +225,7 @@ export const MyDashboard = () => {
               <ExternalLink text={"Widgets (React components)"} url={""}/>
             </div>
           </div>
-          <div className={"bg-gray-800 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
             <BlockTitle text={"External Links"}/>
             <div className={"flex flex-row"}>
               <div className={"flex-1"}>
@@ -246,7 +246,7 @@ export const MyDashboard = () => {
 
         <div className={"mb-6"}>
           <div className={"mb-2 font-semibold text-red-400/80"}>Important Information!</div>
-          <div className={"bg-red-700/60 py-4 px-6 flex-1 rounded-lg text-sm"}>
+          <div className={"bg-red-600/40 py-4 px-6 flex-1 rounded-lg text-sm"}>
             <p className={"font-semibold text-white/80"}>All blockchain data is publically visible!</p>
             <p>Do not send private information, passwords or other important information. </p>
           </div>
