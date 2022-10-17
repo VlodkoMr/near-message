@@ -181,4 +181,17 @@ impl Contract {
         }
         group_id
     }
+
+    pub(crate) fn remove_group_internal(&mut self, id: u32, group: Group) {
+        // remove from public/channels list
+        if group.group_type == GroupType::Public {
+            self.public_groups.remove(&id);
+        }
+        if group.group_type == GroupType::Channel {
+            self.public_channels.remove(&id);
+        }
+
+        self.remove_group_member_internal(group.members, id, false);
+        self.groups.remove(&id);
+    }
 }
