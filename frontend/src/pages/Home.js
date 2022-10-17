@@ -3,6 +3,13 @@ import { Layout } from "./Layout";
 import { NearContext } from "../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../assets/css/components";
 import { HiChat, HiUserGroup, ImFeed, MdChromeReaderMode, MdSecurity, SiLetsencrypt } from "react-icons/all";
+import { SectionTitle } from "../components/Home/SectionTitle";
+import { OneFeature } from "../components/Home/OneFeature";
+import { TechCheckbox } from "../components/Home/TechCheckbox";
+import { TechLogo } from "../components/Home/TechLogo";
+import { PriceBlock } from "../components/Home/PriceBlock";
+import { PriceBlockItem } from "../components/Home/PriceBlockItem";
+import { BlogArticle } from "../components/Home/BlogArticle";
 
 export const Home = () => {
   const near = useContext(NearContext);
@@ -11,175 +18,14 @@ export const Home = () => {
     console.log(`near`, near);
   }, [ near ])
 
-  const SectionTitle = ({ title, text }) => (
-    <div className="flex flex-wrap mx-[-16px]">
-      <div className="w-full px-4">
-        <div className="mx-auto max-w-[655px] text-center mb-[100px] wow fadeInUp"
-             data-wow-delay=".1s">
-          <h2 className="text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-[45px] mb-4">
-            {title}
-          </h2>
-          <p className="text-body-color text-base md:text-lg leading-relaxed md:leading-relaxed max-w-[570px] mx-auto">
-            {text}
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-
-  const PartnerLogo = ({ title, image, url }) => (
-    <a href={url} target="_blank" rel="nofollow noreferrer"
-       className="flex items-center justify-center lg:max-w-[130px] xl:max-w-[150px] 2xl:max-w-[160px]
-                  mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] grayscale hover:grayscale-0 opacity-80 hover:opacity-100
-                  dark:opacity-80 dark:hover:opacity-100 transition">
-      <img src={image} alt={title}/>
-    </a>
-  )
-
-  const TechLogo = ({ title, image }) => (
-    <div target="_blank" rel="nofollow noreferrer"
-         className="flex items-center justify-center
-                  mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] opacity-80 hover:opacity-100 transition">
-      <img src={image} alt={title} className={"h-16"}/>
-    </div>
-  )
-
-  const OneFeature = ({ title, icon, text }) => (
-    <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-      <div className="mb-[70px] wow fadeInUp text-center" data-wow-delay=".15s">
-        <div
-          className="w-[80px] h-[80px] flex items-center justify-center mx-auto rounded-full bg-primary
-          bg-opacity-10 mb-6 text-primary"
-        >
-          {icon}
-        </div>
-        <h3 className="font-bold text-black dark:text-white text-xl sm:text-2xl lg:text-xl xl:text-2xl mb-5">
-          {title}
-        </h3>
-        <p className="text-body-color text-base leading-relaxed font-medium px-8">
-          {text}
-        </p>
-      </div>
-    </div>
-  )
-
-  const TechCheckbox = ({ text }) => (
-    <p className="flex items-center text-body-color text-lg font-medium mb-5">
-      <span className="w-[30px] h-[30px] flex items-center justify-center rounded-md
-        bg-primary bg-opacity-10 text-primary mr-4">
-        <svg
-          width="16"
-          height="13"
-          viewBox="0 0 16 13"
-          className="fill-current"
-        >
-        <path
-          d="M5.8535 12.6631C5.65824 12.8584 5.34166 12.8584 5.1464 12.6631L0.678505 8.1952C0.483242 7.99994 0.483242 7.68336 0.678505 7.4881L2.32921 5.83739C2.52467 5.64193 2.84166 5.64216 3.03684 5.83791L5.14622 7.95354C5.34147 8.14936 5.65859 8.14952 5.85403 7.95388L13.3797 0.420561C13.575 0.22513 13.8917 0.225051 14.087 0.420383L15.7381 2.07143C15.9333 2.26669 15.9333 2.58327 15.7381 2.77854L5.8535 12.6631Z"
-        />
-        </svg>
-      </span>
-      {text}
-    </p>
-  )
-
-  const PriceBlockItem = ({ text, isOk }) => (
-    <div className="flex items-center mb-3">
-      <span className="bg-primary bg-opacity-10 text-primary max-w-[18px] w-full h-[18px] mr-3 flex items-center
-        justify-center rounded-full">
-        {isOk ? (
-          <svg
-            width="8"
-            height="6"
-            viewBox="0 0 8 6"
-            className="fill-current"
-          >
-            <path
-              d="M2.90567 6.00024C2.68031 6.00024 2.48715 5.92812 2.294 5.74764L0.169254 3.43784C-0.0560926 3.18523 -0.0560926 2.78827 0.169254 2.53566C0.39461 2.28298 0.74873 2.28298 0.974086 2.53566L2.90567 4.66497L7.02642 0.189715C7.25175 -0.062913 7.60585 -0.062913 7.83118 0.189715C8.0566 0.442354 8.0566 0.839355 7.83118 1.09198L3.54957 5.78375C3.32415 5.92812 3.09882 6.00024 2.90567 6.00024Z"
-            />
-          </svg>
-        ) : (
-          <svg
-            width="8"
-            height="8"
-            viewBox="0 0 8 8"
-            className="fill-current stroke-current"
-          >
-            <path
-              d="M1.40102 0.95486C1.27421 0.828319 1.07219 0.828354 0.945421 0.954965C0.818519 1.08171 0.818519 1.28389 0.945421 1.41063L0.945612 1.41083L3.54915 4.00184L0.955169 6.60202C0.955106 6.60209 0.95504 6.60215 0.954978 6.60222C0.828263 6.72897 0.82833 6.93101 0.955169 7.05769C1.01288 7.11533 1.09989 7.15024 1.17815 7.15024C1.25641 7.15024 1.34342 7.11533 1.40113 7.05769L1.29513 6.95156L1.40113 7.05769L4.00493 4.45706L6.59917 7.0575L6.59936 7.05769C6.65707 7.11533 6.74408 7.15024 6.82234 7.15024C6.9006 7.15024 6.98761 7.11533 7.04532 7.05769C7.17215 6.93102 7.17222 6.729 7.04553 6.60224C7.04546 6.60217 7.04539 6.6021 7.04532 6.60202L4.46051 4.00165L7.05507 1.4009C7.05511 1.40085 7.05516 1.4008 7.05521 1.40076L7.05526 1.40071L6.94907 1.29477L1.40102 0.95486ZM1.40102 0.95486C1.40106 0.954895 1.40109 0.95493 1.40113 0.954965L1.40102 0.95486Z"
-              strokeWidth="0.3"
-            />
-          </svg>
-        )}
-      </span>
-      <p className="text-base font-medium text-body-color m-0">
-        {text}
-      </p>
-    </div>
-  )
-
-  const PriceBlock = ({ price, plan, description, children }) => (
-    <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-      <div className="relative z-10 bg-white dark:bg-[#1D2144] shadow-signUp px-8 py-10 rounded-md mb-10 wow fadeInUp"
-           data-wow-delay=".1s">
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-black dark:text-white text-3xl mb-2 price">
-            <span className="amount">{price}</span>
-          </h3>
-          <h4 className="text-white font-bold text-xl mb-2 text-white/70">{plan}</h4>
-        </div>
-        <p className="text-base text-body-color mb-7">
-          {description}
-        </p>
-        <div className={`border-t border-body-color dark:border-white border-opacity-10 dark:border-opacity-10 pt-10`}>
-          {children}
-        </div>
-        <div className="absolute bottom-0 right-0 z-[-1]">
-          <svg
-            width="179"
-            height="158"
-            viewBox="0 0 179 158"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              opacity="0.5"
-              d="M75.0002 63.256C115.229 82.3657 136.011 137.496 141.374 162.673C150.063 203.47 207.217 197.755 202.419 167.738C195.393 123.781 137.273 90.3579 75.0002 63.256Z"
-              fill="url(#paint0_linear_70:153)"
-            />
-            <path
-              opacity="0.3"
-              d="M178.255 0.150879C129.388 56.5969 134.648 155.224 143.387 197.482C157.547 265.958 65.9705 295.709 53.1024 246.401C34.2588 174.197 100.939 83.7223 178.255 0.150879Z"
-              fill="url(#paint1_linear_70:153)"
-            />
-            <defs>
-              <linearGradient
-                id="paint0_linear_70:153"
-                x1="69.6694"
-                y1="29.9033"
-                x2="196.108"
-                y2="83.2919"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#4A6CF7" stopOpacity="0.62"/>
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0"/>
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear_70:153"
-                x1="165.348"
-                y1="-75.4466"
-                x2="-3.75136"
-                y2="103.645"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#4A6CF7" stopOpacity="0.62"/>
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
-    </div>
-  )
+  // const PartnerLogo = ({ title, image, url }) => (
+  //   <a href={url} target="_blank" rel="nofollow noreferrer"
+  //      className="flex items-center justify-center lg:max-w-[130px] xl:max-w-[150px] 2xl:max-w-[160px]
+  //                 mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] grayscale hover:grayscale-0 opacity-80 hover:opacity-100
+  //                 dark:opacity-80 dark:hover:opacity-100 transition">
+  //     <img src={image} alt={title}/>
+  //   </a>
+  // )
 
   return (
     <Layout>
@@ -227,7 +73,7 @@ export const Home = () => {
                 >
                   All-in-One solution: direct messages, channels, public and private chats. <br/>
                   You can integrate our features into your NEAR project by follow simple instructions
-                  with pre-build components or call our smart-contract directly
+                  with pre-build components or call smart-contract directly
                   to send private messages, create your chats and channels.
                 </p>
                 <div>
@@ -520,7 +366,7 @@ export const Home = () => {
 
           <div className="flex flex-wrap mx-[-16px]">
             <div className="w-full px-4">
-              <div className="mx-auto max-w-[770px] rounded-md overflow-hidden wow fadeInUp text-white text-center"
+              <div className="mx-auto max-w-[770px] h-96 bg-gray-900 rounded-md overflow-hidden wow fadeInUp text-white text-center"
                    data-wow-delay=".15s"
               >
                 ___video___
@@ -554,7 +400,6 @@ export const Home = () => {
                       <TechCheckbox text={"Message delivery in 3-7 seconds"}/>
                       <TechCheckbox text={"No storage payments, only transaction fee (~9 TGas)"}/>
                       <TechCheckbox text={"NEAR Social integration: get more information about all Accounts"}/>
-
                     </div>
                   </div>
                 </div>
@@ -1348,457 +1193,20 @@ export const Home = () => {
       <section className="bg-primary bg-opacity-5 pt-[120px] pb-20">
         <div className="container" id="documentation">
           <SectionTitle title={"Documentation"}
-                        text={`More details about service functionality with technical details.`}
+                        text={`Technical documentation for developers: integrate our service in your application. 
+                        You can call our smart-contract directly, use NEAR-API-JS or install our widget with React components.`}
           />
 
           <div className="flex flex-wrap mx-[-16px] justify-center">
-            <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
-              <div
-                className="
-                relative bg-white
-                dark:bg-dark
-                shadow-one rounded-md overflow-hidden mb-10
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".1s"
-              >
-                <a
-                  className="w-full block relative"
-                >
-                <span
-                  className="
-                    absolute
-                    top-6
-                    right-6
-                    bg-primary
-                    rounded-full
-                    inline-flex
-                    items-center
-                    justify-center
-                    py-2
-                    px-4
-                    font-semibold
-                    text-sm
-                    text-white
-                  "
-                >
-                  Computer
-                </span>
-                  <img
-                    src="images/blog/blog-01.jpg"
-                    alt="image"
-                    className="w-full"
-                  />
-                </a>
-                <div
-                  className="
-                  p-6
-                  sm:p-8
-                  md:py-8 md:px-6
-                  lg:p-8
-                  xl:py-8 xl:px-5
-                  2xl:p-8
-                "
-                >
-                  <h3>
-                    <a
-                      className="
-                      font-bold text-black
-                      dark:text-white
-                      text-xl
-                      sm:text-2xl
-                      block mb-4
-                      hover:text-primary
-                      dark:hover:text-primary
-                    "
-                    >
-                      Best UI components for modern websites
-                    </a>
-                  </h3>
-                  <p
-                    className="
-                    text-base
-                    text-body-color
-                    font-medium
-                    pb-6
-                    mb-6
-                    border-b
-                    border-body-color
-                    border-opacity-10
-                    dark:border-white dark:border-opacity-10
-                  "
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-                    sit amet dictum neque, laoreet dolor.
-                  </p>
-                  <div className="flex items-center">
-                    <div
-                      className="
-                      flex items-center pr-5 mr-5
-                      xl:pr-3
-                      2xl:pr-5
-                      xl:mr-3
-                      2xl:mr-5
-                      border-r border-body-color border-opacity-10
-                      dark:border-white dark:border-opacity-10
-                    "
-                    >
-                      <div
-                        className="
-                        max-w-[40px]
-                        w-full
-                        h-[40px]
-                        rounded-full
-                        overflow-hidden
-                        mr-4
-                      "
-                      >
-                        <img
-                          src="images/blog/author-01.png"
-                          alt="author"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="w-full">
-                        <h4
-                          className="
-                          text-sm font-medium text-dark
-                          dark:text-white
-                          mb-1
-                        "
-                        >
-                          By
-                          <a
-                            className="
-                            text-dark
-                            dark:text-white
-                            hover:text-primary
-                            dark:hover:text-primary
-                          "
-                          >
-                            Samuyl Joshi
-                          </a>
-                        </h4>
-                        <p className="text-xs text-body-color">
-                          Graphic Designer
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inline-block">
-                      <h4
-                        className="
-                        text-sm font-medium text-dark
-                        dark:text-white
-                        mb-1
-                      "
-                      >
-                        Date
-                      </h4>
-                      <p className="text-xs text-body-color">15 Dec, 2023</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
-              <div
-                className="
-                relative bg-white
-                dark:bg-dark
-                shadow-one rounded-md overflow-hidden mb-10
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".15s"
-              >
-                <a
-                  className="w-full block relative"
-                >
-                <span
-                  className="
-                    absolute
-                    top-6
-                    right-6
-                    bg-primary
-                    rounded-full
-                    inline-flex
-                    items-center
-                    justify-center
-                    py-2
-                    px-4
-                    font-semibold
-                    text-sm
-                    text-white
-                  "
-                >
-                  Design
-                </span>
-                  <img
-                    src="images/blog/blog-02.jpg"
-                    alt="image"
-                    className="w-full"
-                  />
-                </a>
-                <div
-                  className="
-                  p-6
-                  sm:p-8
-                  md:py-8 md:px-6
-                  lg:p-8
-                  xl:py-8 xl:px-5
-                  2xl:p-8
-                "
-                >
-                  <h3>
-                    <a
-                      className="
-                      font-bold text-black
-                      dark:text-white
-                      text-xl
-                      sm:text-2xl
-                      block mb-4
-                      hover:text-primary
-                      dark:hover:text-primary
-                    "
-                    >
-                      9 simple ways to improve your design skills
-                    </a>
-                  </h3>
-                  <p
-                    className="
-                    text-base
-                    text-body-color
-                    font-medium
-                    pb-6
-                    mb-6
-                    border-b
-                    border-body-color
-                    border-opacity-10
-                    dark:border-white dark:border-opacity-10
-                  "
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-                    sit amet dictum neque, laoreet dolor.
-                  </p>
-                  <div className="flex items-center">
-                    <div
-                      className="
-                      flex items-center pr-5 mr-5
-                      xl:pr-3
-                      2xl:pr-5
-                      xl:mr-3
-                      2xl:mr-5
-                      border-r border-body-color border-opacity-10
-                      dark:border-white dark:border-opacity-10
-                    "
-                    >
-                      <div
-                        className="
-                        max-w-[40px]
-                        w-full
-                        h-[40px]
-                        rounded-full
-                        overflow-hidden
-                        mr-4
-                      "
-                      >
-                        <img
-                          src="images/blog/author-02.png"
-                          alt="author"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="w-full">
-                        <h4
-                          className="
-                          text-sm font-medium text-dark
-                          dark:text-white
-                          mb-1
-                        "
-                        >
-                          By
-                          <a
-                            className="
-                            text-dark
-                            dark:text-white
-                            hover:text-primary
-                            dark:hover:text-primary
-                          "
-                          >
-                            Musharof Chy
-                          </a>
-                        </h4>
-                        <p className="text-xs text-body-color">
-                          Content Writer
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inline-block">
-                      <h4
-                        className="
-                        text-sm font-medium text-dark
-                        dark:text-white
-                        mb-1
-                      "
-                      >
-                        Date
-                      </h4>
-                      <p className="text-xs text-body-color">15 Dec, 2023</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
-              <div
-                className="
-                relative bg-white
-                dark:bg-dark
-                shadow-one rounded-md overflow-hidden mb-10
-                wow
-                fadeInUp
-              "
-                data-wow-delay=".2s"
-              >
-                <a
-                  className="w-full block relative"
-                >
-                <span
-                  className="
-                    absolute
-                    top-6
-                    right-6
-                    bg-primary
-                    rounded-full
-                    inline-flex
-                    items-center
-                    justify-center
-                    py-2
-                    px-4
-                    font-semibold
-                    text-sm
-                    text-white
-                  "
-                >
-                  Computer
-                </span>
-                  <img
-                    src="images/blog/blog-03.jpg"
-                    alt="image"
-                    className="w-full"
-                  />
-                </a>
-                <div
-                  className="
-                  p-6
-                  sm:p-8
-                  md:py-8 md:px-6
-                  lg:p-8
-                  xl:py-8 xl:px-5
-                  2xl:p-8
-                "
-                >
-                  <h3>
-                    <a
-                      className="
-                      font-bold text-black
-                      dark:text-white
-                      text-xl
-                      sm:text-2xl
-                      block mb-4
-                      hover:text-primary
-                      dark:hover:text-primary
-                    "
-                    >
-                      Tips to quickly improve your coding speed.
-                    </a>
-                  </h3>
-                  <p
-                    className="
-                    text-base
-                    text-body-color
-                    font-medium
-                    pb-6
-                    mb-6
-                    border-b
-                    border-body-color
-                    border-opacity-10
-                    dark:border-white dark:border-opacity-10
-                  "
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-                    sit amet dictum neque, laoreet dolor.
-                  </p>
-                  <div className="flex items-center">
-                    <div
-                      className="
-                      flex items-center pr-5 mr-5
-                      xl:pr-3
-                      2xl:pr-5
-                      xl:mr-3
-                      2xl:mr-5
-                      border-r border-body-color border-opacity-10
-                      dark:border-white dark:border-opacity-10
-                    "
-                    >
-                      <div
-                        className="
-                        max-w-[40px]
-                        w-full
-                        h-[40px]
-                        rounded-full
-                        overflow-hidden
-                        mr-4
-                      "
-                      >
-                        <img
-                          src="images/blog/author-03.png"
-                          alt="author"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="w-full">
-                        <h4
-                          className="
-                          text-sm font-medium text-dark
-                          dark:text-white
-                          mb-1
-                        "
-                        >
-                          By
-                          <a
-                            className="
-                            text-dark
-                            dark:text-white
-                            hover:text-primary
-                            dark:hover:text-primary
-                          "
-                          >
-                            Lethium Deo
-                          </a>
-                        </h4>
-                        <p className="text-xs text-body-color">
-                          Graphic Designer
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inline-block">
-                      <h4
-                        className="
-                        text-sm font-medium text-dark
-                        dark:text-white
-                        mb-1
-                      "
-                      >
-                        Date
-                      </h4>
-                      <p className="text-xs text-body-color">15 Dec, 2023</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <BlogArticle title={"General Overview"}
+                         text={"Learn more about ChatMe functionality with technical details to get started application usage or integration."}
+                         url={"..."}/>
+            <BlogArticle title={"App Integration"}
+                         text={"Integrate any part of ChatMe functionality in your application by call smart-contract or use NEAR-API-JS."}
+                         url={"..."}/>
+            <BlogArticle title={"Our Widgets"}
+                         text={"We prepare few components for simple frontend integration: install npm package and use our React components in your application."}
+                         url={"..."}/>
           </div>
         </div>
       </section>

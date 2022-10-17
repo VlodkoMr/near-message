@@ -9,6 +9,11 @@ export const NavScrollLink = styled(Scroll.Link).attrs({
   mx-8 lg:mr-2 cursor-pointer outline-none`,
 })``;
 
+export const FooterScrollLink = styled(Scroll.Link).attrs({
+  className: `
+  text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none`,
+})``;
+
 export const CircleButton = styled.section.attrs({
   className: `
   block rounded-full hover:bg-gray-700 bg-gray-700/60 w-10 h-10 group-hover:block cursor-pointer transition`,

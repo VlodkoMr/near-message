@@ -1,8 +1,25 @@
 import React from "react";
 import { FaDiscord, FaTelegramPlane, FaTwitter } from "react-icons/all";
 import { Link } from "react-router-dom";
+import { FooterScrollLink } from "../assets/css/components";
 
 export const Footer = () => {
+
+  const ExternalLink = ({ title, url }) => (
+    <a target={"_blank"}
+       href={url}
+       className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+      {title}
+    </a>
+  )
+
+  const scrollProps = {
+    smooth: true,
+    duration: 400,
+    exact: "true",
+    offset: -100,
+  };
+
   return (
     <footer
       className="relative z-10 bg-primary bg-opacity-5 pt-[100px] wow fadeInUp"
@@ -49,19 +66,19 @@ export const Footer = () => {
               </h2>
               <ul>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
+                  <FooterScrollLink to="features" {...scrollProps}>
                     Features
-                  </a>
+                  </FooterScrollLink>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
+                  <FooterScrollLink to="overview" {...scrollProps}>
                     Overview
-                  </a>
+                  </FooterScrollLink>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
+                  <FooterScrollLink to="accounts" {...scrollProps}>
                     Accounts
-                  </a>
+                  </FooterScrollLink>
                 </li>
               </ul>
             </div>
@@ -74,19 +91,13 @@ export const Footer = () => {
               </h2>
               <ul>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Get Started
-                  </a>
+                  <ExternalLink title={"Get Started"} url={""}/>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Technical Details
-                  </a>
+                  <ExternalLink title={"Smart-Contract"} url={""}/>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Smart-Contract
-                  </a>
+                  <ExternalLink title={"NEAR-API-JS"} url={""}/>
                 </li>
               </ul>
             </div>
@@ -97,19 +108,13 @@ export const Footer = () => {
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">Support & Terms</h2>
               <ul>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Privacy Policy
-                  </a>
+                  <ExternalLink title={"Privacy Policy"} url={""}/>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Terms & Conditions
-                  </a>
+                  <ExternalLink title={"Terms & Conditions"} url={""}/>
                 </li>
                 <li>
-                  <a className="text-base font-medium inline-block text-body-color mb-4 hover:text-primary">
-                    Contact Us
-                  </a>
+                  <ExternalLink title={"Contact Us"} url={""}/>
                 </li>
               </ul>
             </div>
