@@ -37,11 +37,11 @@ export const Home = () => {
   )
 
   const TechLogo = ({ title, image }) => (
-    <span target="_blank" rel="nofollow noreferrer"
-          className="flex items-center justify-center max-w-[120px] xl:max-w-[135px] 2xl:max-w-[150px]
+    <div target="_blank" rel="nofollow noreferrer"
+         className="flex items-center justify-center
                   mx-3 sm:mx-4 xl:mx-6 2xl:mx-8 py-[15px] opacity-80 hover:opacity-100 transition">
-      <img src={image} alt={title}/>
-    </span>
+      <img src={image} alt={title} className={"h-16"}/>
+    </div>
   )
 
   const OneFeature = ({ title, icon, text }) => (
@@ -484,13 +484,8 @@ export const Home = () => {
 
       </section>
 
-      <section
-        id="features"
-        className="bg-primary bg-opacity-[3%] pt-[120px] pb-[50px]"
-      >
-
-
-        <div className="container">
+      <section className="bg-primary bg-opacity-[3%] pt-[120px] pb-[50px]">
+        <div className="container" id="features">
           <SectionTitle title={"Main Features"}
                         text={`Best features implemented in our service for NEAR blockchain - fast, 
                       secure and cheap solution with easy integration and cross-platform communication.`}
@@ -520,7 +515,7 @@ export const Home = () => {
       </section>
 
       <section className="relative z-10 py-[120px]">
-        <div className="container">
+        <div className="container" id={"overview"}>
           <SectionTitle title={"Video Overview"} text={``}/>
 
           <div className="flex flex-wrap mx-[-16px]">
@@ -585,8 +580,8 @@ export const Home = () => {
             <div className="w-full px-4 bg-dark dark:bg-primary dark:bg-opacity-5 rounded-md wow fadeInUp
                 py-8 px-8 sm:px-10 md:py-[40px] md:px-[50px] xl:p-[50px] 2xl:py-[60px] 2xl:px-[70px]">
               <div className="flex flex-wrap items-center justify-center" data-wow-delay=".1s">
-                <TechLogo title={"Rust"} image={require("../assets/img/logo/rust.png")}/>
                 <TechLogo title={"NEAR"} image={require("../assets/img/logo/near.png")}/>
+                <TechLogo title={"Rust"} image={require("../assets/img/logo/rust.png")}/>
                 <TechLogo title={"The Graph"} image={require("../assets/img/logo/thegraph.png")}/>
                 <TechLogo title={"React"} image={require("../assets/img/logo/react.png")}/>
               </div>
@@ -1254,8 +1249,8 @@ export const Home = () => {
       {/*  </div>*/}
       {/*</section>*/}
 
-      <section id="pricing" className="relative z-10 pt-[120px] pb-20">
-        <div className="container">
+      <section className="relative z-10 pt-[120px] pb-20">
+        <div className="container" id="accounts">
           <SectionTitle title={"Account Levels"}
                         text={`You can use our service for free or increase your Account Level by your needs. 
                         You pay only once to get access to all our features!`}
@@ -1350,12 +1345,9 @@ export const Home = () => {
         </div>
       </section>
 
-      <section
-        id="blog"
-        className="bg-primary bg-opacity-5 pt-[120px] pb-20"
-      >
-        <div className="container">
-          <SectionTitle title={"Most Popular Articles"}
+      <section className="bg-primary bg-opacity-5 pt-[120px] pb-20">
+        <div className="container" id="documentation">
+          <SectionTitle title={"Documentation"}
                         text={`More details about service functionality with technical details.`}
           />
 

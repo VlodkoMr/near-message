@@ -9,7 +9,7 @@ dataSources:
     network: near-testnet
     source:
       account: "dev-1665991589931-41687102665032"
-      startBlock: 102774665
+      startBlock: 102774600
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript

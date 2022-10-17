@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import * as Scroll from "react-scroll";
 import { TextareaAutosize, TextField } from "@mui/material";
+
+export const NavScrollLink = styled(Scroll.Link).attrs({
+  className: `
+  menu-scroll text-base text-dark dark:text-white group-hover:opacity-70 py-2 lg:py-6 lg:inline-flex lg:px-0 flex 
+  mx-8 lg:mr-2 cursor-pointer outline-none`,
+})``;
 
 export const CircleButton = styled.section.attrs({
   className: `
