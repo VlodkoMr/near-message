@@ -1,5 +1,5 @@
 export const TechCheckbox = ({ text }) => (
-  <p className="flex items-center text-body-color text-lg font-medium mb-5">
+  <p className="flex items-center text-body-color text-base font-medium mb-5">
       <span className="w-[30px] h-[30px] flex items-center justify-center rounded-md
         bg-primary bg-opacity-10 text-primary mr-4">
         <svg
@@ -13,6 +13,6 @@ export const TechCheckbox = ({ text }) => (
         />
         </svg>
       </span>
-    {text}
+    <span dangerouslySetInnerHTML={{ __html: text }}></span>
   </p>
 )

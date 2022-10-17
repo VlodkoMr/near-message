@@ -380,7 +380,7 @@ export const Home = () => {
         <div className="container">
           <div>
             <div className="flex flex-wrap items-center mx-[-16px]">
-              <div className="w-full lg:w-2/3 px-4">
+              <div className="w-full lg:w-1/2 px-4">
                 <div className="mb-12 lg:mb-0 max-w-[620px] wow fadeInUp" data-wow-delay=".15s">
                   <h2
                     className="text-black dark:text-white font-bold text-3xl sm:text-4xl md:text-[45px]
@@ -388,29 +388,31 @@ export const Home = () => {
                     xl:leading-tight mb-6">
                     Technical Details
                   </h2>
-                  <p className="font-medium text-body-color text-base sm:text-lg leading-relaxed
+                  <p className="font-medium text-body-color text-base leading-relaxed
                     sm:leading-relaxed mb-11"
                   >
-                    Use our smart-contract in your NEAR application to integrate public/private chats,
-                    send direct messages or create channel broadcasting. You can send messages using NEAR-API-JS,
-                    smart-contract or by our widgets.
+                    Rust smart-contract create groups and channels, manage members, validate and send messages into NEAR Blockchain.
+                    We don't use smart-contract data storage, that's why you don't need to pay additional fees by sending any message, only
+                    transaction fee. The Graph index smart-contract logs to read and delivery your message in few seconds.
                   </p>
                   <div className="flex flex-wrap mx-[-12px]">
                     <div className="w-full px-3">
-                      <TechCheckbox text={"Message delivery in 3-7 seconds"}/>
-                      <TechCheckbox text={"No storage payments, only transaction fee (~9 TGas)"}/>
-                      <TechCheckbox text={"NEAR Social integration: get more information about all Accounts"}/>
+                      <TechCheckbox text={"Fast message delivery: 3-5 seconds."}/>
+                      <TechCheckbox text={"No storage payments, only transaction fee ~7 TGas."}/>
+                      <TechCheckbox
+                        text={`<a href='https://near.social/' target='_blank' class='text-blue-300'>NEAR Social</a> 
+                        integration provide more information about Accounts.`}/>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="w-full lg:w-1/3 px-4">
+              <div className="w-full lg:w-1/2 pl-8">
                 <div
                   className="text-center lg:text-right wow fadeInUp"
                   data-wow-delay=".2s"
                 >
                   <img
-                    src="images/about/about-image.svg"
+                    src={require("../assets/img/tech-example.png")}
                     alt="about-image"
                     className="max-w-full mx-auto lg:mr-0"
                   />
