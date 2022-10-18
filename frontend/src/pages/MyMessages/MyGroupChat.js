@@ -8,7 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 
-const fetchSecondsInterval = 7;
+const fetchSecondsInterval = 5;
 
 export const MyGroupChat = () => {
   let { id } = useParams();
@@ -86,17 +86,20 @@ export const MyGroupChat = () => {
         setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address, id);
         setMessages(prev => prev.concat(newMessages));
       }
     });
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, media, toGroup) => {
-    if (parseInt(toGroup) === parseInt(id)) {
-      setTmpMessages(prev => prev.concat(generateTemporaryMessage(messageId, text, media, near.wallet.accountId)));
-    }
+  const appendTemporaryMessage = (messageId, text, media) => {
+    const tmpMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, id);
+    setTmpMessages(prev => prev.concat(tmpMessage));
+  }
+
+  const isLastMessage = (message, index) => {
+    return !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
   }
 
   return (
@@ -108,24 +111,20 @@ export const MyGroupChat = () => {
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (
               <>
-                {messages.map(message => (
+                {messages.map((message, index) => (
                     <OneMessage message={message}
                                 key={message.id}
                                 opponent={userProfiles[message.from_address] || null}
+                                isLast={isLastMessage(message, index)}
                     />
                   )
                 )}
-
-                {tmpMessages.length > 0 && (
-                  <>
-                    <p className="p-4 text-center text-sm text-gray-500">
-                      pending...
-                    </p>
-                    {tmpMessages.map(tmpMessage => (
-                        <OneMessage message={tmpMessage} key={tmpMessage.id}/>
-                      )
-                    )}
-                  </>
+                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to === id).map(tmpMessage => (
+                    <OneMessage message={tmpMessage}
+                                key={tmpMessage.id}
+                                isLast={true}
+                    />
+                  )
                 )}
               </>
             ) : (

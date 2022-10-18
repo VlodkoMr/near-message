@@ -37,20 +37,19 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
     }
 
     setIsLoading(true);
+    localStorage.setItem(localKey, "");
     near.mainContract[sendFunction](value, messageMedia, sendTo, "")
       .then((result) => {
-        localStorage.setItem(localKey, "");
         setMessageText("");
-
         let messageId = "";
         result.receipts_outcome.map(tx => {
           if (tx.outcome.logs.length > 0) {
             const jsonData = JSON.parse(tx.outcome.logs[0]);
             messageId = jsonData['id'];
           }
-        })
+        });
 
-        onMessageSent?.(messageId, value, messageMedia, toAddress || toGroup.id);
+        onMessageSent?.(messageId, value, messageMedia);
       })
       .catch(e => {
         console.log(e);

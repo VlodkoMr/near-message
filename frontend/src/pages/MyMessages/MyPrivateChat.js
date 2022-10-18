@@ -8,7 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
 
-const fetchSecondsInterval = 7;
+const fetchSecondsInterval = 5;
 
 export const MyPrivateChat = () => {
   let { id } = useParams();
@@ -24,6 +24,7 @@ export const MyPrivateChat = () => {
     const address = id.split("|");
     const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
 
+    setTmpMessages([]);
     loadSocialProfile(opponentAddress, near).then(result => {
       setOpponent(result);
     }).catch(e => {
@@ -83,10 +84,13 @@ export const MyPrivateChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, media, toAccount) => {
-    if (toAccount === opponent?.id) {
-      setTmpMessages(prev => prev.concat(generateTemporaryMessage(messageId, text, media, near.wallet.accountId, opponent)));
-    }
+  const appendTemporaryMessage = (messageId, text, media) => {
+    let newMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, opponent);
+    setTmpMessages(prev => prev.concat(newMessage));
+  }
+
+  const isLastMessage = (message, index) => {
+    return !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
   }
 
   return (
@@ -98,21 +102,21 @@ export const MyPrivateChat = () => {
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (
               <>
-                {messages.map(message => (
-                    <OneMessage key={message.id} message={message} opponent={opponent}/>
+                {messages.map((message, index) => (
+                    <OneMessage key={message.id}
+                                message={message}
+                                opponent={opponent}
+                                isLast={isLastMessage(message, index)}
+                    />
                   )
                 )}
-
-                {tmpMessages.length > 0 && (
-                  <>
-                    <p className="p-4 text-center text-sm text-gray-500">
-                      pending...
-                    </p>
-                    {tmpMessages.map(tmpMessage => (
-                        <OneMessage key={tmpMessage.id} message={tmpMessage} opponent={opponent}/>
-                      )
-                    )}
-                  </>
+                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to === opponent).map(tmpMessage => (
+                    <OneMessage key={tmpMessage.id}
+                                message={tmpMessage}
+                                opponent={opponent}
+                                isLast={true}
+                    />
+                  )
                 )}
               </>
             ) : (
