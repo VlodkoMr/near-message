@@ -3,7 +3,7 @@ import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 
-export const OneMessage = ({ message, opponent }) => {
+export const OneMessage = ({ message, opponent, isLast }) => {
   return (
     <>
       {message.isFirst && !message.isTemporary && (
@@ -63,7 +63,7 @@ export const OneMessage = ({ message, opponent }) => {
             overflow-hidden overflow-ellipsis text-base
             ${message.text === '(like)' ? "py-2.5" : "py-3"}
             ${message.isFirst && message.isMy && "rounded-t-3xl"}
-            ${message.isLast && "rounded-b-3xl"}
+            ${isLast && "rounded-b-3xl"}
             ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}`}>
               {message.text === '(like)' ? (
                 <AiFillLike size={22}/>

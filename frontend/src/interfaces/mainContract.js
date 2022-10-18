@@ -251,18 +251,18 @@ export class MainContract {
   /**
    * Send message to Account
    * @param text
-   * @param media
+   * @param image
    * @param to_address
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendPrivateMessage(text, media, to_address, reply_message_id) {
+  async sendPrivateMessage(text, image, to_address, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',
       args: {
         text,
-        media,
+        image,
         to_address,
         reply_message_id
       }
@@ -272,46 +272,22 @@ export class MainContract {
   /**
    * Send message to the group
    * @param text
-   * @param media
+   * @param image
    * @param group_id
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendGroupMessage(text, media, group_id, reply_message_id) {
+  async sendGroupMessage(text, image, group_id, reply_message_id) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_group_message',
       args: {
         text,
-        media,
+        image,
         group_id,
         reply_message_id
       }
     })
   }
-
-  /**
-   * Create user account
-   * @param media
-   * @param instagram
-   * @param telegram
-   * @param twitter
-   * @param website
-   * @returns {Promise<*>}
-   */
-  async createUserAccount(media, instagram, telegram, twitter, website) {
-    return await this.wallet.callMethod({
-      contractId: this.contractId,
-      method: 'create_user_account',
-      args: {
-        media,
-        instagram,
-        telegram,
-        twitter,
-        website,
-      }
-    })
-  }
-
 
 }
