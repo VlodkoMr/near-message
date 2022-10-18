@@ -1100,7 +1100,7 @@ export const Home = () => {
         <div className="container" id="accounts">
           <SectionTitle title={"Account Levels"}
                         text={`You can use our service for free or increase your Account Level by your needs. 
-                        You pay only once to get access to all our features!`}
+                        You pay only once to get access to all our features forever.`}
           />
 
           <div className="flex flex-wrap mx-[-16px]">

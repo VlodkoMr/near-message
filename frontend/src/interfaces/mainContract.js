@@ -49,6 +49,44 @@ export class MainContract {
   }
 
   /**
+   * User spam count
+   * @param address
+   * @returns {Promise<any>}
+   */
+  async getSpamCount(address) {
+    try {
+      return await this.wallet.viewMethod({
+        contractId: this.contractId,
+        method: 'get_spam_count',
+        args: {
+          address
+        }
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
+  }
+
+  /**
+   * Activate user account Level
+   * @param depositNEAR
+   * @returns {Promise<any>}
+   */
+  async userAccountLevelUp(depositNEAR) {
+    const deposit = utils.format.parseNearAmount(depositNEAR.toString());
+    try {
+      return await this.wallet.callMethod({
+        contractId: this.contractId,
+        method: 'user_account_level_up',
+        THIRTY_TGAS,
+        deposit
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
+  }
+
+  /**
    * Get owned groups
    * @returns {Promise<any>}
    */

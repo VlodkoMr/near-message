@@ -95,6 +95,14 @@ impl Contract {
         None
     }
 
+    pub fn get_spam_count(&self, address: AccountId) -> u32 {
+        let user_spam = self.user_spam_counts.get(&address);
+        if user_spam.is_some() {
+            return user_spam.unwrap();
+        }
+        return 0;
+    }
+
     /**
      * Get owner groups
      */
