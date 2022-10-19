@@ -10,13 +10,22 @@ import { TechLogo } from "../components/Home/TechLogo";
 import { PriceBlock } from "../components/Home/PriceBlock";
 import { PriceBlockItem } from "../components/Home/PriceBlockItem";
 import { BlogArticle } from "../components/Home/BlogArticle";
+import { useLocation } from "react-router-dom";
+import { animateScroll } from "react-scroll";
 
 export const Home = () => {
-  const near = useContext(NearContext);
+  const location = useLocation();
 
   useEffect(() => {
-    console.log(`near`, near);
-  }, [ near ])
+    if (location.hash) {
+      const path = location.hash.replace('#', '');
+      const element = document.getElementById(path);
+      if (element) {
+        const offset = element.getBoundingClientRect();
+        animateScroll.scrollTo(offset.top - 100, true);
+      }
+    }
+  }, []);
 
   // const PartnerLogo = ({ title, image, url }) => (
   //   <a href={url} target="_blank" rel="nofollow noreferrer"

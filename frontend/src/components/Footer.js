@@ -1,9 +1,11 @@
 import React from "react";
 import { FaDiscord, FaTelegramPlane, FaTwitter } from "react-icons/all";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FooterScrollLink } from "../assets/css/components";
 
 export const Footer = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const ExternalLink = ({ title, url }) => (
     <a target={"_blank"}
@@ -18,6 +20,12 @@ export const Footer = () => {
     duration: 400,
     exact: "true",
     offset: -100,
+  };
+
+  const navigateToHome = (anchor) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${anchor}`);
+    }
   };
 
   return (
@@ -66,17 +74,17 @@ export const Footer = () => {
               </h2>
               <ul>
                 <li>
-                  <FooterScrollLink to="features" {...scrollProps}>
+                  <FooterScrollLink to="features" onClick={() => navigateToHome('features')} {...scrollProps}>
                     Features
                   </FooterScrollLink>
                 </li>
                 <li>
-                  <FooterScrollLink to="overview" {...scrollProps}>
+                  <FooterScrollLink to="overview" onClick={() => navigateToHome('overview')} {...scrollProps}>
                     Overview
                   </FooterScrollLink>
                 </li>
                 <li>
-                  <FooterScrollLink to="accounts" {...scrollProps}>
+                  <FooterScrollLink to="accounts" onClick={() => navigateToHome('accounts')} {...scrollProps}>
                     Accounts
                   </FooterScrollLink>
                 </li>
@@ -108,10 +116,16 @@ export const Footer = () => {
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">Support & Terms</h2>
               <ul>
                 <li>
-                  <ExternalLink title={"Privacy Policy"} url={""}/>
+                  <Link to={"/privacy"}
+                        className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+                    Privacy Policy
+                  </Link>
                 </li>
                 <li>
-                  <ExternalLink title={"Terms & Conditions"} url={""}/>
+                  <Link to={"/terms"}
+                        className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+                    Terms & Conditions
+                  </Link>
                 </li>
                 <li>
                   <ExternalLink title={"Contact Us"} url={""}/>

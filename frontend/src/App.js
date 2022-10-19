@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { Home, MyDashboard, MyGroupChat, MyMessagesLayout, MyPrivateChat, Error404, Docs } from "./pages";
+import { Home, MyDashboard, MyGroupChat, MyMessagesLayout, MyPrivateChat, Error404, Privacy, Terms } from "./pages";
 import { NearContext } from "./context/NearContext";
 
 export const App = () => {
@@ -27,7 +27,8 @@ export const App = () => {
             </Route>
           </Route>
 
-          <Route exact path="/docs" element={<Docs/>}/>
+          <Route exact path="/terms" element={<Terms/>}/>
+          <Route exact path="/privacy" element={<Privacy/>}/>
           <Route path='*' element={<Error404/>}/>
         </Routes>
       </BrowserRouter>

@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NearContext } from "../context/NearContext";
 import { NavScrollLink, PrimaryButton } from "../assets/css/components";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formatAddress } from "../utils/transform";
 import { animateScroll } from "react-scroll";
 
 export const Header = () => {
   const near = useContext(NearContext);
-  const [ scroll, setScroll ] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [scroll, setScroll] = useState(false);
 
   const scrollProps = {
     activeClass: "opacity-50",
@@ -24,6 +26,12 @@ export const Header = () => {
       setScroll(window.scrollY > 16);
     });
   }, []);
+
+  const navigateToHome = (anchor) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${anchor}`);
+    }
+  };
 
   const toggleHome = () => animateScroll.scrollToTop();
 
@@ -100,22 +108,22 @@ export const Header = () => {
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="features" {...scrollProps}>
+                    <NavScrollLink to="features" onClick={() => navigateToHome('features')} {...scrollProps}>
                       Features
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="overview" {...scrollProps}>
+                    <NavScrollLink to="overview" onClick={() => navigateToHome('overview')} {...scrollProps}>
                       Overview
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="accounts" {...scrollProps}>
+                    <NavScrollLink to="accounts" onClick={() => navigateToHome('accounts')} {...scrollProps}>
                       Accounts
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="documentation" {...scrollProps}>
+                    <NavScrollLink to="documentation" onClick={() => navigateToHome('documentation')} {...scrollProps}>
                       Documentation
                     </NavScrollLink>
                   </li>
