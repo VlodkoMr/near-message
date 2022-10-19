@@ -17,6 +17,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
   const [tmpImageData, setTmpImageData] = useState(null);
+  const [defaultMembers, setDefaultMembers] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     logo: "",
@@ -34,8 +35,9 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
         text: group?.text || "",
         url: group?.url || "",
         group_type: group?.group_type || "",
-        members: group?.members || [],
+        members: [...group?.members || []],
       });
+      setDefaultMembers([...group?.members || []]);
       console.log(`group`, group);
     }
   }, [isOpen]);
@@ -52,6 +54,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       group_type: "",
       members: [],
     });
+    setDefaultMembers([]);
   }
 
   const handleClose = () => {
@@ -84,6 +87,9 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   }
 
   const handleSaveGroup = () => {
+    console.log(`formData.members`, formData.members);
+    console.log(`group.members`, group.members);
+
     if (formData.title.length < 3) {
       alert("Please provide correct group title");
       return;
@@ -110,13 +116,17 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       navigate(`/my/group/${result}`);
       setIsOpen(false);
       resetForm();
-    })
-      .catch(e => {
-        console.log(e);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    }).catch(e => {
+      console.log(e);
+    }).finally(() => {
+      setIsLoading(false);
+    });
+
+    // update members on edit
+    if (group) {
+      // ownerAddGroupMembers(group.id, [])
+      // ownerRemoveGroupMembers(group.id, [])
+    }
   }
 
   return (
@@ -220,9 +230,9 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
             {formData.group_type && formData.group_type !== "Channel" && (
               <div className={"mb-2"}>
                 <Autocomplete
-                  options={formData.members}
                   multiple
-                  defaultValue={formData.members}
+                  options={formData.members}
+                  defaultValue={defaultMembers}
                   onChange={changeMemberList}
                   freeSolo
                   renderInput={(params) => (
