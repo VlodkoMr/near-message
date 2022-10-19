@@ -81,6 +81,8 @@ export const MyGroupChat = () => {
     const lastMessage = messages[messages.length - 1];
     loadNewGroupMessages(id, lastMessage.id).then(messages => {
       if (messages && messages.length) {
+        // load user profiles
+
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);
         setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));

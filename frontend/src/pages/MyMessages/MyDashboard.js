@@ -11,12 +11,12 @@ import { timestampToDate, timestampToTime } from "../../utils/datetime";
 
 export const MyDashboard = () => {
   const near = useContext(NearContext);
-  const [ myProfile ] = useOutletContext();
-  const [ account, setAccount ] = useState();
-  const [ isUpgradeLoading, setIsUpgradeLoading ] = useState(0);
-  const [ isAccountReady, setIsAccountReady ] = useState(false);
-  const [ isInfoHidden, setIsInfoHidden ] = useState(false);
-  const [ spamCount, setSpamCount ] = useState(0);
+  const [myProfile] = useOutletContext();
+  const [account, setAccount] = useState();
+  const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
+  const [isAccountReady, setIsAccountReady] = useState(false);
+  const [isInfoHidden, setIsInfoHidden] = useState(false);
+  const [spamCount, setSpamCount] = useState(0);
 
   const loadAccount = async () => {
     return await near.mainContract.getUserInfo(near.wallet.accountId);
@@ -187,7 +187,7 @@ export const MyDashboard = () => {
                   </span>
                 </BlockTitle>
                 <div className={"flex flex-row"}>
-                  <AccountLevel level={"Free"} price={""} isCurrent={!account} className={"border-r border-gray-700/50"}>
+                  <AccountLevel level={"Free"} price={""} isCurrent={!account} className={"border-r border-gray-700/50 px-6"}>
                     <p className={"mb-1 mt-2 text-sm opacity-60"}>
                       <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
                       Up to 5 groups or channels;
@@ -248,7 +248,7 @@ export const MyDashboard = () => {
                       <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
                     )}
                   </AccountLevel>
-                  <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={account && account.level === 2} className={`pl-6`}>
+                  <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={account && account.level === 2} className={`px-6`}>
                     <p className={"mb-1 mt-2 text-sm opacity-60"}>
                       <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
                       Unlimited groups and channels;
