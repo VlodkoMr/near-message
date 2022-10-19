@@ -10,7 +10,7 @@ export const formatAddress = (address) => {
 }
 
 export const loadSocialProfile = async (address, near) => {
-  const profileData = await near.socialDBContract.get([ `${address}/profile/**` ]);
+  const profileData = await near.socialDBContract.get([`${address}/profile/**`]);
   if (profileData) {
     return transformProfile(address, profileData[address]);
   }

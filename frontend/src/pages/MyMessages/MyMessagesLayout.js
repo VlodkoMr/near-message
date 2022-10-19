@@ -8,7 +8,7 @@ import "../../assets/css/my-messages.css"
 
 export const MyMessagesLayout = () => {
   const near = useContext(NearContext);
-  const [ myProfile, setMyProfile ] = useState({});
+  const [myProfile, setMyProfile] = useState({});
 
   useEffect(() => {
     loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
@@ -28,7 +28,7 @@ export const MyMessagesLayout = () => {
             </section>
 
             <section className="flex flex-col flex-auto border-l-2 border-gray-700/30">
-              <Outlet context={[ myProfile ]}/>
+              <Outlet context={[myProfile]}/>
             </section>
           </main>
         </div>

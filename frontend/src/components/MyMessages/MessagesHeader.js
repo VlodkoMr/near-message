@@ -7,7 +7,7 @@ import { SecondaryButton } from "../../assets/css/components";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
-  const [ myProfile ] = useOutletContext();
+  const [myProfile] = useOutletContext();
 
   const getTitle = () => {
     if (group) {

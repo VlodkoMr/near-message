@@ -7,9 +7,9 @@ import { Loader } from "../Loader";
 export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   const near = useContext(NearContext);
   const localKey = toAddress ? `acc-${toAddress}` : `group-${toGroup.id}`;
-  const [ messageText, setMessageText ] = useState("");
-  const [ messageMedia, setMessageMedia ] = useState("");
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [messageMedia, setMessageMedia] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // load message from local storage
@@ -20,11 +20,11 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
     } else {
       setMessageText("");
     }
-  }, [ toAddress, toGroup?.id ]);
+  }, [toAddress, toGroup?.id]);
 
   useEffect(() => {
     localStorage.setItem(localKey, messageText);
-  }, [ messageText ]);
+  }, [messageText]);
 
   const sendMessage = (value) => {
     const sendFunction = toAddress ? "sendPrivateMessage" : "sendGroupMessage";

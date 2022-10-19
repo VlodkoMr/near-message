@@ -36,7 +36,7 @@ export const SecondaryButton = styled(Button).attrs({
 
 export const PrimaryInput = styled.input.attrs({
   className: `
-  w-full bg-[#242B51] rounded-md shadow-md text-gray-100 text-base outline-none resize-none py-3 px-4 
+  w-full bg-[#242B51] rounded-md shadow-md text-gray-100 text-base outline-none resize-none py-2 px-4 
   border-2 border-transparent transition focus:border-[#1976d2] focus:bg-[#171c3a]`,
 })``;
 

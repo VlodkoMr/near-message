@@ -14,11 +14,11 @@ export const MyPrivateChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
   const bottomRef = useRef(null);
-  const [ isReady, setIsReady ] = useState(false);
-  const [ messages, setMessages ] = useState([]);
-  const [ tmpMessages, setTmpMessages ] = useState([]);
-  const [ opponent, setOpponent ] = useState();
-  const [ reloadCounter, setReloadCounter ] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [tmpMessages, setTmpMessages] = useState([]);
+  const [opponent, setOpponent] = useState();
+  const [reloadCounter, setReloadCounter] = useState(0);
 
   useEffect(() => {
     const address = id.split("|");
@@ -45,7 +45,7 @@ export const MyPrivateChat = () => {
     return () => {
       clearInterval(updateInterval);
     }
-  }, [ id ]);
+  }, [id]);
 
   useEffect(() => {
     if (reloadCounter) {
@@ -57,7 +57,7 @@ export const MyPrivateChat = () => {
         });
       }
     }
-  }, [ reloadCounter ]);
+  }, [reloadCounter]);
 
   useEffect(() => {
     let behavior = { behavior: 'auto' };
@@ -65,7 +65,7 @@ export const MyPrivateChat = () => {
       behavior = { behavior: 'smooth' };
     }
     bottomRef.current?.scrollIntoView(behavior);
-  }, [ messages, tmpMessages ]);
+  }, [messages, tmpMessages]);
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {

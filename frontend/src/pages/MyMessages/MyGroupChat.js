@@ -14,12 +14,12 @@ export const MyGroupChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
   const bottomRef = useRef(null);
-  const [ messages, setMessages ] = useState([]);
-  const [ isReady, setIsReady ] = useState(false);
-  const [ group, setGroup ] = useState();
-  const [ reloadCounter, setReloadCounter ] = useState(0);
-  const [ tmpMessages, setTmpMessages ] = useState([]);
-  const [ userProfiles, setUserProfiles ] = useState({});
+  const [messages, setMessages] = useState([]);
+  const [isReady, setIsReady] = useState(false);
+  const [group, setGroup] = useState();
+  const [reloadCounter, setReloadCounter] = useState(0);
+  const [tmpMessages, setTmpMessages] = useState([]);
+  const [userProfiles, setUserProfiles] = useState({});
 
   const loadGroupInfo = async () => {
     return await near.mainContract.getGroupById(parseInt(id));
@@ -54,7 +54,7 @@ export const MyGroupChat = () => {
     return () => {
       clearInterval(updateInterval);
     }
-  }, [ id ]);
+  }, [id]);
 
   useEffect(() => {
     if (reloadCounter) {
@@ -66,7 +66,7 @@ export const MyGroupChat = () => {
         });
       }
     }
-  }, [ reloadCounter ]);
+  }, [reloadCounter]);
 
   useEffect(() => {
     let behavior = { behavior: 'auto' };
@@ -74,14 +74,22 @@ export const MyGroupChat = () => {
       behavior = { behavior: 'smooth' };
     }
     bottomRef.current?.scrollIntoView(behavior);
-  }, [ messages, tmpMessages ]);
+  }, [messages, tmpMessages]);
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
     const lastMessage = messages[messages.length - 1];
     loadNewGroupMessages(id, lastMessage.id).then(messages => {
       if (messages && messages.length) {
-        // load user profiles
+        // load new user profiles
+        const profiles = messages.filter(message => !userProfiles[message.from_address]).map(message => message.from_address).filter(onlyUnique);
+        loadSocialProfiles(profiles, near).then(result => {
+          if (result) {
+            setUserProfiles(prev => {
+              return { ...prev, ...result };
+            });
+          }
+        });
 
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.id);

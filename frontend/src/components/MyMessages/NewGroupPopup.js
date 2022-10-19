@@ -14,11 +14,13 @@ import { NearContext } from "../../context/NearContext";
 export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ isMediaLoading, setIsMediaLoading ] = useState(false);
-  const [ formData, setFormData ] = useState({
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [tmpImageData, setTmpImageData] = useState();
+  const [formData, setFormData] = useState({
     title: "",
     logo: "",
+    text: "",
     url: "",
     group_type: "",
     members: [],
@@ -26,14 +28,16 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
 
   useEffect(() => {
     resetForm();
-  }, [ isOpen ]);
+  }, [isOpen]);
 
   const resetForm = () => {
     setIsLoading(false);
     setIsMediaLoading(false);
+    setTmpImageData();
     setFormData({
       title: "",
       logo: "",
+      text: "",
       url: "",
       group_type: "",
       members: [],
@@ -50,6 +54,12 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     const image = e.target.files[0];
     resizeFileImage(image, 600, 600).then(blobData => {
       setIsMediaLoading(true);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(blobData);
+      reader.onloadend = function () {
+        setTmpImageData(reader.result);
+      }
 
       uploadMediaToIPFS(blobData).then(result => {
         setFormData({ ...formData, logo: result });
@@ -75,7 +85,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     }
 
     setIsLoading(true);
-    near.mainContract.createNewGroup(formData.title, formData.logo, formData.url, formData.group_type, formData.members)
+    near.mainContract.createNewGroup(formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members)
       .then((result) => {
         navigate(`/my/group/${result}`);
         setIsOpen(false);
@@ -115,7 +125,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
             />
 
             {formData.logo ? (
-              <img src={mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
+              <img src={tmpImageData ? tmpImageData : mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
             ) : (
               <>
                 {isMediaLoading ? (
@@ -137,6 +147,13 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
                             disabled={isMediaLoading}
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              />
+            </div>
+            <div className={"mb-2"}>
+              <PrimaryInput placeholder={"Description"}
+                            disabled={isMediaLoading}
+                            value={formData.text}
+                            onChange={(e) => setFormData({ ...formData, text: e.target.value })}
               />
             </div>
             <div className={"mb-4"}>

@@ -8,8 +8,8 @@ import { NewGroupPopup } from "./NewGroupPopup";
 import { LeftPanelChats } from "./LeftPanelChats";
 
 export const LeftPanel = () => {
-  const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
-  const [ newGroupPopupVisible, setNewGroupPopupVisible ] = useState(false);
+  const [newMessagePopupVisible, setNewMessagePopupVisible] = useState(false);
+  const [newGroupPopupVisible, setNewGroupPopupVisible] = useState(false);
 
   const handleSearch = () => {
 
@@ -51,7 +51,7 @@ export const LeftPanel = () => {
       <OwnerGroups/>
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
-        <LeftPanelChats />
+        <LeftPanelChats/>
       </div>
 
       <NewPrivateMessagePopup

@@ -12,14 +12,14 @@ import { getPrivateChatId } from "../../utils/requests";
 export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ isMessageSent, setIsMessageSent ] = useState(false);
-  const [ messageAddress, setMessageAddress ] = useState("");
-  const [ messageText, setMessageText ] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMessageSent, setIsMessageSent] = useState(false);
+  const [messageAddress, setMessageAddress] = useState("");
+  const [messageText, setMessageText] = useState("");
 
   useEffect(() => {
     resetForm();
-  }, [ isOpen ]);
+  }, [isOpen]);
 
   const handleClose = () => {
     setIsOpen(false);

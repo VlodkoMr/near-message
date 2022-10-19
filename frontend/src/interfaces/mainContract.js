@@ -126,12 +126,13 @@ export class MainContract {
    * Create group
    * @param title
    * @param image
+   * @param text
    * @param url
    * @param group_type
    * @param members
    * @returns {Promise<*>}
    */
-  async createNewGroup(title, image, url, group_type, members) {
+  async createNewGroup(title, image, text, url, group_type, members) {
     const deposit = utils.format.parseNearAmount("0.25");
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -140,6 +141,7 @@ export class MainContract {
         title,
         image,
         url,
+        text,
         group_type,
         members
       },
