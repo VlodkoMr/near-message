@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NearContext } from "../../context/NearContext";
 import { Avatar } from "./Avatar";
 import { formatAddress } from "../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
 import { SecondaryButton } from "../../assets/css/components";
+import { EditGroupPopup } from "./EditGroupPopup";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
   const [myProfile] = useOutletContext();
+  const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
 
   const getTitle = () => {
     if (group) {
@@ -30,7 +32,18 @@ export const MessagesHeader = ({ group, opponent }) => {
             <div className="text-sm">
               <p className="font-medium text-base mt-0.5">{getTitle()}</p>
               {group ? (
-                <p className={"text-gray-400/80"}>{group.members.length} members</p>
+                <p>
+                  {group.owner === near.wallet.accountId && (
+                    <span onClick={() => setEditGroupPopupVisible(true)}
+                          className={"mr-2 pr-2 text-blue-400 border-r border-gray-400/60 hover:text-blue-300 cursor-pointer"}>
+                      edit group
+                    </span>
+                  )}
+
+                  <span className={"text-gray-400/80"}>
+                    {group.members.length} members
+                  </span>
+                </p>
               ) : (
                 <a className={"text-gray-400/80"}
                    href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
@@ -77,6 +90,14 @@ export const MessagesHeader = ({ group, opponent }) => {
           <span className={"opacity-80"}>Sign Out</span>
         </SecondaryButton>
       </div>
+
+      {(group && group.owner === near.wallet.accountId) && (
+        <EditGroupPopup
+          isOpen={editGroupPopupVisible}
+          setIsOpen={setEditGroupPopupVisible}
+          group={group}
+        />
+      )}
     </div>
   )
 }

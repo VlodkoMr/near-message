@@ -4,7 +4,7 @@ import { OwnerGroups } from "./OwnerGroups";
 import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
-import { NewGroupPopup } from "./NewGroupPopup";
+import { EditGroupPopup } from "./EditGroupPopup";
 import { LeftPanelChats } from "./LeftPanelChats";
 
 export const LeftPanel = () => {
@@ -58,7 +58,7 @@ export const LeftPanel = () => {
         isOpen={newMessagePopupVisible}
         setIsOpen={setNewMessagePopupVisible}
       />
-      <NewGroupPopup
+      <EditGroupPopup
         isOpen={newGroupPopupVisible}
         setIsOpen={setNewGroupPopupVisible}
       />

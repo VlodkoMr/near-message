@@ -8,7 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 
-const fetchSecondsInterval = 5;
+const fetchSecondsInterval = 2;
 
 export const MyGroupChat = () => {
   let { id } = useParams();
@@ -104,6 +104,7 @@ export const MyGroupChat = () => {
 
   // add temporary message
   const appendTemporaryMessage = (messageId, text, media) => {
+    console.log(`messages`, messages);
     const tmpMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, id);
     setTmpMessages(prev => prev.concat(tmpMessage));
   }

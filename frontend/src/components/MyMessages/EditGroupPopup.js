@@ -11,12 +11,12 @@ import { mediaURL } from "../../utils/transform";
 import { useNavigate } from "react-router-dom";
 import { NearContext } from "../../context/NearContext";
 
-export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
+export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
-  const [tmpImageData, setTmpImageData] = useState();
+  const [tmpImageData, setTmpImageData] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     logo: "",
@@ -27,13 +27,23 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   });
 
   useEffect(() => {
-    resetForm();
+    if (isOpen && group) {
+      setFormData({
+        title: group?.title || "",
+        logo: group?.image || "",
+        text: group?.text || "",
+        url: group?.url || "",
+        group_type: group?.group_type || "",
+        members: group?.members || [],
+      });
+      console.log(`group`, group);
+    }
   }, [isOpen]);
 
   const resetForm = () => {
     setIsLoading(false);
     setIsMediaLoading(false);
-    setTmpImageData();
+    setTmpImageData(null);
     setFormData({
       title: "",
       logo: "",
@@ -45,6 +55,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
   }
 
   const handleClose = () => {
+    resetForm();
     setIsOpen(false);
   };
 
@@ -57,7 +68,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
 
       const reader = new FileReader();
       reader.readAsDataURL(blobData);
-      reader.onloadend = function () {
+      reader.onloadend = () => {
         setTmpImageData(reader.result);
       }
 
@@ -72,9 +83,7 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     setFormData({ ...formData, members: inputs });
   }
 
-  const handleCreateGroup = () => {
-    console.log(`formData`, formData);
-
+  const handleSaveGroup = () => {
     if (formData.title.length < 3) {
       alert("Please provide correct group title");
       return;
@@ -85,14 +94,25 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
     }
 
     setIsLoading(true);
-    near.mainContract.createNewGroup(formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members)
-      .then((result) => {
-        navigate(`/my/group/${result}`);
-        setIsOpen(false);
-      })
+
+    let promiseSave;
+    if (group) {
+      promiseSave = near.mainContract.editGroup(
+        group.id, formData.title, formData.logo, formData.text, formData.url
+      );
+    } else {
+      promiseSave = near.mainContract.createNewGroup(
+        formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members
+      );
+    }
+
+    promiseSave.then((result) => {
+      navigate(`/my/group/${result}`);
+      setIsOpen(false);
+      resetForm();
+    })
       .catch(e => {
         console.log(e);
-        alert('Error: Group');
       })
       .finally(() => {
         setIsLoading(false);
@@ -107,7 +127,10 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
       fullWidth={true}
     >
       <DialogTitle align={"center"} className={"border-b-2 border-gray-700/30 text-gray-100"}>
-        <span className={"text-gray-200/80"}>Create New Group</span>
+        <span className={"text-gray-200/80"}>
+          {!group ? ("Create New") : ("Edit My")}{" "}
+          {(!formData.group_type || formData.group_type !== "Channel") ? "Group" : "Channel"}
+        </span>
         <div className={"absolute right-4 top-4 opacity-80 hover:opacity-90 cursor-pointer transition text-gray-200"} onClick={handleClose}>
           <IoClose size={26}/>
         </div>
@@ -164,33 +187,42 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
               />
             </div>
 
-            <RadioGroup className={"mb-4"}
-                        disabled={isMediaLoading}
-                        onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
-              <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
-              <RadioLabel className={"rounded-t-md"}>
-                <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
-                <RadioLabelText>Broadcast messages to general public audience. <br/>
-                  No limit for participants, only you can write
-                  messages.</RadioLabelText>
-              </RadioLabel>
-              <RadioLabel>
-                <FormControlLabel value="Private" control={<Radio/>} label="Private Group"/>
-                <RadioLabelText>You manage group members, all members can write messages. <br/>
-                  Limited by 1000 members.</RadioLabelText>
-              </RadioLabel>
-              <RadioLabel className={"rounded-b-md"}>
-                <FormControlLabel value="Public" control={<Radio/>} label="Public Group"/>
-                <RadioLabelText>Public access where anyone can join and write messages. <br/>
-                  Limited by 1000 members.</RadioLabelText>
-              </RadioLabel>
-            </RadioGroup>
+            {!group ? (
+              <RadioGroup className={"mb-4"}
+                          disabled={isMediaLoading}
+                          value={formData.group_type}
+                          onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
+                <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
+                <RadioLabel className={"rounded-t-md"}>
+                  <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
+                  <RadioLabelText>Broadcast messages to general public audience. <br/>
+                    No limit for participants, only you can write
+                    messages.</RadioLabelText>
+                </RadioLabel>
+                <RadioLabel>
+                  <FormControlLabel value="Private" control={<Radio/>} label="Private Group"/>
+                  <RadioLabelText>You manage group members, all members can write messages. <br/>
+                    Limited by 1000 members.</RadioLabelText>
+                </RadioLabel>
+                <RadioLabel className={"rounded-b-md"}>
+                  <FormControlLabel value="Public" control={<Radio/>} label="Public Group"/>
+                  <RadioLabelText>Public access where anyone can join and write messages. <br/>
+                    Limited by 1000 members.</RadioLabelText>
+                </RadioLabel>
+              </RadioGroup>
+            ) : (
+              <div className={"mb-6"}>
+                Group type: {formData.group_type}
+                <small className={"opacity-60 ml-2"}>(can't be changed)</small>
+              </div>
+            )}
 
             {formData.group_type && formData.group_type !== "Channel" && (
               <div className={"mb-2"}>
                 <Autocomplete
-                  options={[]}
+                  options={formData.members}
                   multiple
+                  defaultValue={formData.members}
                   onChange={changeMemberList}
                   freeSolo
                   renderInput={(params) => (
@@ -207,11 +239,12 @@ export const NewGroupPopup = ({ isOpen, setIsOpen }) => {
 
             <div className={"flex justify-between"}>
               <div className={"text-red-400/90 text-sm pt-4"}>
-                Payment 0.25 NEAR required
+                {!group && ("Payment 0.25 NEAR required")}
               </div>
               <div className={"text-right"}>
-                <PrimaryButton onClick={handleCreateGroup} disabled={isLoading || isMediaLoading}>
-                  Create Group
+                <PrimaryButton onClick={handleSaveGroup} disabled={isLoading || isMediaLoading}>
+                  {!group ? ("Create") : ("Save")}{" "}
+                  {(!formData.group_type || formData.group_type !== "Channel") ? "Group" : "Channel"}
                   {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                 </PrimaryButton>
               </div>

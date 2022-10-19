@@ -154,17 +154,21 @@ export class MainContract {
    * Edit Group
    * @param id
    * @param title
-   * @param media
+   * @param image
+   * @param text
+   * @param url
    * @returns {Promise<*>}
    */
-  async editGroup(id, title, media) {
+  async editGroup(id, title, image, text, url) {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'edit_group',
       args: {
         id,
         title,
-        media,
+        image,
+        text,
+        url
       }
     })
   }
