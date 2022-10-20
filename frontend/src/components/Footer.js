@@ -79,13 +79,13 @@ export const Footer = () => {
                   </FooterScrollLink>
                 </li>
                 <li>
-                  <FooterScrollLink to="overview" onClick={() => navigateToHome('overview')} {...scrollProps}>
-                    Overview
+                  <FooterScrollLink to="chats" onClick={() => navigateToHome('overview')} {...scrollProps}>
+                    Chats & Channels
                   </FooterScrollLink>
                 </li>
                 <li>
                   <FooterScrollLink to="accounts" onClick={() => navigateToHome('accounts')} {...scrollProps}>
-                    Accounts
+                    Account Levels
                   </FooterScrollLink>
                 </li>
               </ul>
