@@ -94,13 +94,12 @@ impl Contract {
             .take(page_limit as usize)
             .collect();
 
-        let groups = groups_id_list.into_iter().flat_map(
-            |id| self.groups.get(&id).unwrap()
+        let groups = groups_id_list.into_iter().map(
+            |id| Group::from(self.groups.get(&id).unwrap())
         ).collect();
-        let channels = channels_id_list.into_iter().flat_map(
-            |id| self.groups.get(&id).unwrap()
+        let channels = channels_id_list.into_iter().map(
+            |id| Group::from(self.groups.get(&id).unwrap())
         ).collect();
-        // let groups = groups_id_list.into_iter().flat_map(|id| self.groups.get(&id).unwrap()).collect()
 
         (groups, channels)
     }
