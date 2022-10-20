@@ -113,7 +113,7 @@ export const Header = () => {
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="chats" onClick={() => navigateToHome('overview')} {...scrollProps}>
+                    <NavScrollLink to="chats" onClick={() => navigateToHome('chats')} {...scrollProps}>
                       Chats & Channels
                     </NavScrollLink>
                   </li>
