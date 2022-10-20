@@ -11,12 +11,12 @@ import { timestampToDate, timestampToTime } from "../../utils/datetime";
 
 export const MyDashboard = () => {
   const near = useContext(NearContext);
-  const [myProfile] = useOutletContext();
-  const [account, setAccount] = useState();
-  const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
-  const [isAccountReady, setIsAccountReady] = useState(false);
-  const [isInfoHidden, setIsInfoHidden] = useState(false);
-  const [spamCount, setSpamCount] = useState(0);
+  const [ myProfile ] = useOutletContext();
+  const [ account, setAccount ] = useState();
+  const [ isUpgradeLoading, setIsUpgradeLoading ] = useState(0);
+  const [ isAccountReady, setIsAccountReady ] = useState(false);
+  const [ isInfoHidden, setIsInfoHidden ] = useState(false);
+  const [ spamCount, setSpamCount ] = useState(0);
 
   const loadAccount = async () => {
     return await near.mainContract.getUserInfo(near.wallet.accountId);
@@ -171,7 +171,7 @@ export const MyDashboard = () => {
                 <ExternalLink text={"Twitter"} url={""}/>
                 <ExternalLink text={"Telegram"} url={""}/>
                 <ExternalLink text={"Contact Us"} url={""}/>
-                <ExternalLink text={"Terms & Conditions"} url={""}/>
+                <ExternalLink text={"Terms & Conditions"} url={"/terms"}/>
               </div>
             </div>
           </div>

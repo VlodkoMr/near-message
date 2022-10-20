@@ -124,7 +124,8 @@ impl Contract {
      */
     #[payable]
     pub fn create_new_group(
-        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>,
+        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
+        members: Vec<AccountId>, edit_members: Option<bool>,
     ) -> u32 {
         let account = env::predecessor_account_id();
         let owner_groups_count = self.owner_groups.get(&account).unwrap_or(vec![]).len();
@@ -146,7 +147,12 @@ impl Contract {
             env::panic_str("Wrong group text length");
         }
 
-        self.create_group_internal(title, image, text, url, group_type, members)
+        // Ability to manage users in chatMe interface (default = true)
+        let mut members_list_edit = true;
+        if edit_members.is_some() && edit_members.unwrap() == false {
+            members_list_edit = false;
+        }
+        self.create_group_internal(title, image, text, url, group_type, members, members_list_edit)
     }
 
     /**
@@ -462,7 +468,7 @@ mod tests {
         testing_env!(builder.build());
     }
 
-    fn create_group_internal(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
+    fn create_test_group(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
         set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
         contract.create_new_group(
             title, "".to_string(), "".to_string(), "".to_string(), group_type, members,
@@ -486,7 +492,7 @@ mod tests {
     #[test]
     fn create_private_group() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "Group 1".to_string(), GroupType::Private, vec![
+        create_test_group(&mut contract, "Group 1".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
@@ -504,7 +510,7 @@ mod tests {
     #[test]
     fn edit_private_group() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "group 1".to_string(), GroupType::Private, vec![]);
+        create_test_group(&mut contract, "group 1".to_string(), GroupType::Private, vec![]);
 
         contract.edit_group(
             1, "group updated".to_string(), "".to_string(), "description...".to_string(), "https://someurl.com".to_string(),
@@ -517,7 +523,7 @@ mod tests {
     #[test]
     fn create_public_group() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
+        create_test_group(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
         assert_eq!(contract.get_groups_count(), 1);
 
@@ -553,7 +559,7 @@ mod tests {
     #[test]
     fn join_public_group() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "group".to_string(), GroupType::Public, vec![]);
+        create_test_group(&mut contract, "group".to_string(), GroupType::Public, vec![]);
 
         let group = contract.get_group_by_id(1);
         assert_eq!(group.members.len(), 0);
@@ -581,7 +587,7 @@ mod tests {
     #[test]
     fn send_group_message() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
+        create_test_group(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
@@ -599,7 +605,7 @@ mod tests {
     #[test]
     fn leave_group() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
+        create_test_group(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
@@ -623,7 +629,7 @@ mod tests {
     #[should_panic(expected = "No access to this group")]
     fn private_group_message_no_access() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "Private group".to_string(), GroupType::Private, vec![
+        create_test_group(&mut contract, "Private group".to_string(), GroupType::Private, vec![
             "m1.testnet".parse().unwrap(), "m2.testnet".parse().unwrap(),
         ]);
 
@@ -636,7 +642,7 @@ mod tests {
     #[should_panic(expected = "No access to this group")]
     fn readonly_group_message_no_access() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "Readonly group".to_string(), GroupType::Channel, vec![]);
+        create_test_group(&mut contract, "Readonly group".to_string(), GroupType::Channel, vec![]);
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
@@ -647,7 +653,7 @@ mod tests {
     #[should_panic(expected = "No access to group modification")]
     fn remove_group_no_access() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "group".to_string(), GroupType::Private, vec![]);
+        create_test_group(&mut contract, "group".to_string(), GroupType::Private, vec![]);
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
@@ -658,7 +664,7 @@ mod tests {
     #[should_panic(expected = "No access to group modification")]
     fn edit_group_no_access() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "My group".to_string(), GroupType::Channel, vec![]);
+        create_test_group(&mut contract, "My group".to_string(), GroupType::Channel, vec![]);
 
         set_context("guest.testnet", 0);
         contract.edit_group(
@@ -671,7 +677,7 @@ mod tests {
     #[should_panic(expected = "No access to group modification")]
     fn group_add_members_no_access() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
-        create_group_internal(&mut contract, "My group".to_string(), GroupType::Public, vec![]);
+        create_test_group(&mut contract, "My group".to_string(), GroupType::Public, vec![]);
 
         set_context("guest.testnet", 0);
         contract.owner_add_group_members(

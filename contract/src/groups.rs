@@ -20,6 +20,7 @@ pub struct Group {
     pub group_type: GroupType,
     pub created_at: Timestamp,
     pub members: Vec<AccountId>,
+    pub edit_members: bool,
 }
 
 #[derive(BorshSerialize, BorshDeserialize)]
@@ -142,7 +143,8 @@ impl Contract {
     }
 
     pub(crate) fn create_group_internal(
-        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType, members: Vec<AccountId>,
+        &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
+        members: Vec<AccountId>, edit_members: bool
     ) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
@@ -160,6 +162,7 @@ impl Contract {
             group_type: group_type.clone(),
             created_at: env::block_timestamp(),
             members: members.clone(),
+            edit_members
         };
         self.groups.insert(&group_id, &group.into());
 
