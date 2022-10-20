@@ -94,12 +94,13 @@ impl Contract {
             .take(page_limit as usize)
             .collect();
 
-        let groups = groups_id_list.into_iter(
+        let groups = groups_id_list.into_iter().flat_map(
             |id| self.groups.get(&id).unwrap()
         ).collect();
-        let channels = channels_id_list.into_iter(
+        let channels = channels_id_list.into_iter().flat_map(
             |id| self.groups.get(&id).unwrap()
         ).collect();
+        // let groups = groups_id_list.into_iter().flat_map(|id| self.groups.get(&id).unwrap()).collect()
 
         (groups, channels)
     }
