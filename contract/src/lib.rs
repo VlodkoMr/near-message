@@ -83,6 +83,27 @@ impl Contract {
         self.groups.get(&id).unwrap().into()
     }
 
+    pub fn get_public_groups(&self) -> (Vec<Group>, Vec<Group>) {
+        let page_limit = 6;
+        let groups_id_list: Vec<u32> = self.public_groups.iter()
+            // .skip(start_index as usize)
+            .take(page_limit as usize)
+            .collect();
+        let channels_id_list: Vec<u32> = self.public_channels.iter()
+            // .skip(start_index as usize)
+            .take(page_limit as usize)
+            .collect();
+
+        let groups = groups_id_list.into_iter(
+            |id| self.groups.get(&id).unwrap()
+        ).collect();
+        let channels = channels_id_list.into_iter(
+            |id| self.groups.get(&id).unwrap()
+        ).collect();
+
+        (groups, channels)
+    }
+
     /**
      * Get User Info
      */
