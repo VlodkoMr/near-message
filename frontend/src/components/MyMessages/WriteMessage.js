@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
 import { AiFillLike, BiSend, BsImage, RiChatPrivateFill } from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
+import { create, open } from '@nearfoundation/near-js-encryption-box';
 import { Loader } from "../Loader";
+import { BrowserLocalStorageKeyStore } from "near-api-js/lib/key_stores";
 
 export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   const near = useContext(NearContext);
@@ -10,6 +12,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     // load message from local storage
@@ -25,6 +28,20 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   useEffect(() => {
     localStorage.setItem(localKey, messageText);
   }, [messageText]);
+
+  const testKeys = async () => {
+    const pubKey = new BrowserLocalStorageKeyStore();
+    const k = await pubKey.getKey('testnet', 'vlodkow2.testnet');
+    console.log(`private`, k);
+    console.log(`pubKey`, k.publicKey.toString());
+  }
+
+  const startSecretChat = async () => {
+    const keyStore = new BrowserLocalStorageKeyStore();
+    const myKeys = await keyStore.getKey(process.env.NEAR_NETWORK, near.wallet.accountId);
+    const pubKey = myKeys.publicKey.toString().replace("ed25519:", "");
+    sendMessage(`(key:${pubKey})`);
+  }
 
   const sendMessage = (value) => {
     const sendFunction = toAddress ? "sendPrivateMessage" : "sendGroupMessage";
@@ -72,11 +89,13 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent }) => {
   return (
     <div className="chat-footer flex-none">
       <div className="flex flex-row items-end p-4 relative">
-        <button type="button"
-                title={"Start private conversation"}
-                className="hidden md:flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
-          <RiChatPrivateFill size={28}/>
-        </button>
+        {toAddress && (
+          <button type="button"
+                  title={"Start private conversation"}
+                  className="hidden md:flex flex-shrink-0 focus:outline-none mx-2 block text-blue-500 hover:text-blue-600 w-7 h-6 mb-4">
+            <RiChatPrivateFill size={28} onClick={() => startSecretChat()}/>
+          </button>
+        )}
 
         <button type="button"
                 title={"Send Image"}
