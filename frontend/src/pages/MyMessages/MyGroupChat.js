@@ -34,7 +34,7 @@ export const MyGroupChat = () => {
     })
 
     loadGroupMessages(id).then(messages => {
-      setMessages(transformMessages(messages, near.wallet.accountId));
+      setMessages(transformMessages(near, messages, near.wallet.accountId));
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
       loadSocialProfiles(profiles, near).then(result => {
@@ -62,7 +62,7 @@ export const MyGroupChat = () => {
         appendNewChatMessages();
       } else {
         loadGroupMessages(id).then(messages => {
-          setMessages(transformMessages(messages, near.wallet.accountId));
+          setMessages(transformMessages(near, messages, near.wallet.accountId));
         });
       }
     }
@@ -96,7 +96,7 @@ export const MyGroupChat = () => {
         setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address, id);
+        const newMessages = transformMessages(near, messages, near.wallet.accountId, lastMessage.from_address, id);
         setMessages(prev => prev.concat(newMessages));
       }
     });
@@ -104,7 +104,6 @@ export const MyGroupChat = () => {
 
   // add temporary message
   const appendTemporaryMessage = (messageId, text, media) => {
-    console.log(`messages`, messages);
     const tmpMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, id);
     setTmpMessages(prev => prev.concat(tmpMessage));
   }

@@ -47,6 +47,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       const fromUser = data.get('from_user')
       const toUser = data.get('to_user')
       const media = data.get('media')
+      const encrypt_key = data.get('encrypt_key')
       const replyToMessage = data.get('reply_to_message')
 
       let replyMessageId = ""
@@ -69,6 +70,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.to_address = toUser.toString()
         message.text = messageText.toString()
         message.media = media ? media.toString() : ""
+        message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
         message.is_protected = false

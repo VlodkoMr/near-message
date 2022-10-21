@@ -146,6 +146,15 @@ export class PrivateMessage extends Entity {
     this.set("to_address", Value.fromString(value));
   }
 
+  get encrypt_key(): string {
+    let value = this.get("encrypt_key");
+    return value!.toString();
+  }
+
+  set encrypt_key(value: string) {
+    this.set("encrypt_key", Value.fromString(value));
+  }
+
   get reply_to_message(): string | null {
     let value = this.get("reply_to_message");
     if (!value || value.kind == ValueKind.NULL) {

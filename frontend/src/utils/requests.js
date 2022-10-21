@@ -6,15 +6,17 @@ export const loadPrivateChatsPromise = (accountId) => {
     const client = new createClient({ url: API_URL });
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
-           id,
+           id
            last_message {
-             id, 
-             text, 
+             id
+             text
+             media
              from_address
              to_address
-           },
-           updated_at,
-           is_removed,
+             encrypt_key
+           }
+           updated_at
+           is_removed
            total_messages
         }
       }`;
@@ -37,14 +39,15 @@ export const loadGroupChatsPromise = (idList) => {
            where: {
            id_in: [${idList.join(',')}],
         }) {
-          id,
+          id
           last_message {
-             id, 
-             text, 
+             id
+             text
+             media
              from_address
-          },
-         updated_at,
-         is_removed,
+          }
+         updated_at
+         is_removed
          total_messages
         }
       }`;
@@ -69,6 +72,7 @@ export const loadGroupMessages = (groupId) => {
       }) {
         id
         text
+        media
         from_address
         created_at
       }
@@ -90,6 +94,7 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
       }) {
         id
         text
+        media
         from_address
         created_at
       }
@@ -111,9 +116,11 @@ export const loadPrivateMessages = (chatId) => {
       }) {
         id
         text
+        media
         from_address
         to_address
         created_at
+        encrypt_key
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
@@ -133,9 +140,11 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
       }) {
         id
         text
+        media
         from_address
         to_address
         created_at
+        encrypt_key
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();

@@ -1,9 +1,44 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
-import { AiFillLike, BsClockHistory } from "react-icons/all";
+import { AiFillLike, BsClockHistory, SiLetsencrypt } from "react-icons/all";
+import { PrimaryButton } from "../../assets/css/components";
+import { Button } from "@mui/material";
+import { NearContext } from "../../context/NearContext";
+import { getMyPublicKey, SecretChat } from "../../settings/secret-chat";
+import { Loader } from "../Loader";
 
 export const OneMessage = ({ message, opponent, isLast }) => {
+  const near = useContext(NearContext);
+  const [messageText, setMessageText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const acceptPrivateMessage = () => {
+    const secretChat = new SecretChat(message.from_address, near);
+    setIsLoading(true);
+    secretChat.acceptChat(message.text).then(() => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 5000);
+    });
+  }
+
+  const getMessageText = async () => {
+    if (message.encrypt_key) {
+      const opponentAddress = message.from_address !== near.wallet.accountId ? message.from_address : message.to_address;
+      const secretChat = new SecretChat(opponentAddress, near);
+      const encryptionKey = message.encrypt_key.split("|");
+      const text = await secretChat.decode(message.text, encryptionKey[0])
+      setMessageText(text);
+    } else {
+      setMessageText(message.text);
+    }
+  }
+
+  useEffect(() => {
+    getMessageText();
+  }, []);
+
   return (
     <>
       {message.isFirst && !message.isTemporary && (
@@ -12,7 +47,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
         </p>
       )}
 
-      <div className={`flex flex-row mb-2 ${message.isMy ? "justify-end" : "justify-start"}`}>
+      <div className={`flex flex-row mb-2 justify-start ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div className="hidden md:block md:w-10 md:h-10 relative flex flex-shrink-0 mr-4">
           {!message.isMy && message.isFirst && (
             <Avatar media={opponent?.image || ""} title={message.from_address}/>
@@ -30,7 +65,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
             </div>
           )}
 
-          <div className="flex items-center group">
+          <div className={`flex items-center group ${message.isMy ? "" : "flex-row-reverse justify-end"}`}>
             {message.isTemporary && (
               <div className={"mr-2 text-gray-400 opacity-60"}>
                 <BsClockHistory size={16}/>
@@ -59,16 +94,47 @@ export const OneMessage = ({ message, opponent, isLast }) => {
             {/*          </svg>*/}
             {/*        </button>*/}
 
+            {message.encrypt_key && (<SiLetsencrypt size={24} className={"opacity-40 mx-2"}/>)}
+
             <p className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
-            overflow-hidden overflow-ellipsis text-base
-            ${message.text === '(like)' ? "py-2.5" : "py-3"}
-            ${message.isFirst && message.isMy && "rounded-t-3xl"}
-            ${isLast && "rounded-b-3xl"}
-            ${message.isTemporary && "opacity-70"}
-            ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}`}>
-              {message.text === '(like)' ? (
-                <AiFillLike size={22}/>
-              ) : message.text}
+              overflow-hidden overflow-ellipsis text-base
+              ${message.text === '(like)' ? "py-2.5" : "py-3"}
+              ${message.isFirst && message.isMy ? "rounded-t-3xl" : ""}
+              ${isLast ? "rounded-b-3xl" : ""}
+              ${message.isTemporary ? "opacity-70" : ""}
+              ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}
+              ${message.isEncryptStart || message.isEncryptAccept ? "bg-red-700/60" : ""}
+            `}>
+              {message.isEncryptStart && (
+                <>
+                  Private chat request
+                  {!message.isMy ? (
+                    <Button disabled={isLoading}>
+                      <span
+                        onClick={() => acceptPrivateMessage()}
+                        className={"text-red-300 hover:text-red-200 pl-3 ml-2 border-l border-red-300/40"}>
+                        Accept
+                        {isLoading && (
+                          <span className={"ml-2"}>
+                            <Loader size={"sm"}/>
+                          </span>
+                        )}
+                      </span>
+                    </Button>
+                  ) : " sent"}
+                </>
+              )}
+              {message.isEncryptAccept && "Private chat request accepted"}
+
+              {(!message.isEncryptStart && !message.isEncryptAccept) && (
+                <>
+                  {messageText === '(like)' ? (
+                    <AiFillLike size={22}/>
+                  ) : (
+                    <>{messageText}</>
+                  )}
+                </>
+              )}
             </p>
           </div>
         </div>

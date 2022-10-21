@@ -7,6 +7,7 @@ import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
+import { SecretChat } from "../../settings/secret-chat";
 
 const fetchSecondsInterval = 5;
 
@@ -19,10 +20,14 @@ export const MyPrivateChat = () => {
   const [tmpMessages, setTmpMessages] = useState([]);
   const [opponent, setOpponent] = useState();
   const [reloadCounter, setReloadCounter] = useState(0);
+  const [opponentAddress, setOpponentAddress] = useState("");
+  const [isSecretChat, setIsSecretChat] = useState(false);
 
   useEffect(() => {
     const address = id.split("|");
     const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
+    setOpponentAddress(opponentAddress);
+    updateIsSecretChat(opponentAddress);
 
     setTmpMessages([]);
     loadSocialProfile(opponentAddress, near).then(result => {
@@ -33,7 +38,7 @@ export const MyPrivateChat = () => {
 
     // Load last messages
     loadPrivateMessages(id).then(messages => {
-      setMessages(transformMessages(messages, near.wallet.accountId));
+      setMessages(transformMessages(near, messages, near.wallet.accountId));
       setIsReady(true);
     });
 
@@ -53,10 +58,13 @@ export const MyPrivateChat = () => {
         appendNewChatMessages();
       } else {
         loadPrivateMessages(id).then(messages => {
-          setMessages(transformMessages(messages, near.wallet.accountId));
+          setMessages(transformMessages(near, messages, near.wallet.accountId));
         });
       }
     }
+
+    // check is secret chat enabled
+    updateIsSecretChat(opponentAddress);
   }, [reloadCounter]);
 
   useEffect(() => {
@@ -66,6 +74,13 @@ export const MyPrivateChat = () => {
     }
     bottomRef.current?.scrollIntoView(behavior);
   }, [messages, tmpMessages]);
+
+  const updateIsSecretChat = (opponent) => {
+    if (opponent) {
+      const secretChat = new SecretChat(opponent);
+      setIsSecretChat(secretChat.exists());
+    }
+  };
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
@@ -77,7 +92,7 @@ export const MyPrivateChat = () => {
         setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
+        const newMessages = transformMessages(near, messages, near.wallet.accountId, lastMessage.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });
@@ -127,7 +142,10 @@ export const MyPrivateChat = () => {
             <div ref={bottomRef}/>
           </div>
 
-          <WriteMessage toAddress={opponent.id} onMessageSent={appendTemporaryMessage}/>
+          <WriteMessage toAddress={opponent.id}
+                        onMessageSent={appendTemporaryMessage}
+                        isSecretChat={isSecretChat}
+          />
         </>
       )}
     </>

@@ -20,8 +20,11 @@ export const CircleButton = styled.section.attrs({
 })``;
 
 export const Button = styled(Link).attrs(props => ({
-  className: `text-base font-medium text-dark dark:text-white hover:opacity-70 py-3 px-7 rounded-full transition 
-   ease-in-up duration-300 cursor-pointer inline-block ${props.disabled && "opacity-60 pointer-events-none"}`,
+  className: `text-base font-medium text-dark dark:text-white hover:opacity-70 rounded-full transition 
+   ease-in-up duration-300 cursor-pointer inline-block 
+   ${props.disabled && "opacity-60 pointer-events-none"}
+   ${props.small ? "py-2 px-5" : "py-3 px-7"}
+   `,
 }))``;
 
 export const PrimaryButton = styled(Button).attrs({

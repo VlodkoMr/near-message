@@ -340,7 +340,7 @@ impl Contract {
      * Private Message
      */
     pub fn send_private_message(
-        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>,
+        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>
     ) -> U128 {
         self.user_validate_spam();
 
@@ -361,6 +361,7 @@ impl Contract {
             "reply_id": reply_message_id.unwrap_or("".to_string()),
             "text": text,
             "image": image.to_string(),
+            "encrypt_key": encrypt_key.unwrap_or("".to_string())
         }).to_string();
 
         env::log_str(&message[..]);
@@ -506,7 +507,9 @@ mod tests {
     fn send_private_message() {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
 
-        let message_id = contract.send_private_message("Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None);
+        let message_id = contract.send_private_message(
+            "Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None, None
+        );
         assert_eq!(message_id, U128::from(1));
     }
 

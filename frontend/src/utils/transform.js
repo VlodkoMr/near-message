@@ -1,3 +1,5 @@
+import { SecretChat } from "../settings/secret-chat";
+
 export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
 }
@@ -60,12 +62,25 @@ export const transformProfile = (address, socialProfile) => {
   return resultProfile;
 }
 
-export const transformMessages = (messages, accountId, lastMessageUser) => {
+export const transformMessages = (near, messages, accountId, lastMessageUser) => {
   return messages.map((message, index) => {
+    message.isEncryptStart = message.text.indexOf("(secret-start:") !== -1;
+    message.isEncryptAccept = message.text.indexOf("(secret-accept:") !== -1;
+    message.isEncryptEnd = message.text.indexOf("(secret-end") !== -1;
     message.isFirst = lastMessageUser !== message.from_address;
     message.isMy = message.from_address === accountId;
     message.isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
     message.isTemporary = false;
+
+    // secret chat
+    if (message.from_address !== accountId) {
+      if (message.isEncryptAccept) {
+        const secretChat = new SecretChat(message.from_address);
+        if (!secretChat.exists()) {
+          secretChat.storeSecretChatKey(message.text);
+        }
+      }
+    }
 
     lastMessageUser = message.from_address;
     return message;

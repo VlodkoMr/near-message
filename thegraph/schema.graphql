@@ -25,6 +25,7 @@ type PrivateMessage @entity {
     chat_id: PrivateChat!,
     from_address: String!
     to_address: String!
+    encrypt_key: String!
     reply_to_message: PrivateMessage
     text: String!
     media: String!

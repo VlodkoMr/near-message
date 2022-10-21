@@ -8,8 +8,8 @@ dataSources:
     name: NearMessage
     network: near-testnet
     source:
-      account: "dev-1665991589931-41687102665032"
-      startBlock: 102774600
+      account: "dev-1666359784685-93393234724513"
+      startBlock: 103128900
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
