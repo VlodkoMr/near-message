@@ -26,7 +26,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
   const getMessageText = () => {
     if (message.encrypt_key) {
       const opponentAddress = message.from_address !== near.wallet.accountId ? message.from_address : message.to_address;
-      const secretChat = new SecretChat(opponentAddress);
+      const secretChat = new SecretChat(opponentAddress, near);
       const text = secretChat.decode(message.text, message.encrypt_key)
       setMessageText(text);
     } else {
@@ -93,7 +93,11 @@ export const OneMessage = ({ message, opponent, isLast }) => {
             {/*          </svg>*/}
             {/*        </button>*/}
 
-            {message.encrypt_key && (<SiLetsencrypt size={24} className={"opacity-40 mx-2"}/>)}
+            {message.encrypt_key && (
+              <img src={require("../../assets/img/lock.png")}
+                   alt=""
+                   className={"opacity-30 mx-2 w-5 h-5"}/>
+            )}
 
             <p className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
               overflow-hidden overflow-ellipsis text-base

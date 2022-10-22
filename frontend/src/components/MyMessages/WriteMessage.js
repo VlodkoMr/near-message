@@ -53,7 +53,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
       // Private Mode
       let encodeKey = "";
       if (isSecretChat) {
-        const encoded = (new SecretChat(toAddress)).encode(messageText);
+        const encoded = (new SecretChat(toAddress, near)).encode(messageText);
         messageText = encoded.secret;
         encodeKey = encoded.nonce;
       }
@@ -135,7 +135,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
 
   return (
     <div className={`chat-footer flex-non relative
-      ${isSecretChat ? "bg-red-700/30 text-red-500/80" : "text-blue-500"}`}>
+      ${isSecretChat ? "bg-red-700/20 text-red-500/70" : "text-blue-500"}`}>
 
       {/*{messageMedia && (*/}
       {/*  <div className={"p-4 absolute h-10 left-0 right-0 -bottom-10"}>*/}
@@ -146,7 +146,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
       <div className="flex flex-row items-end p-4 relative">
         {isSecretChat && (
           <div className={"absolute left-6 bottom-1 text-sm font-semibold"}>
-            <small className={"text-red-400"}>Private Mode</small>
+            <small className={"text-red-400/60"}>Private Mode</small>
           </div>
         )}
 

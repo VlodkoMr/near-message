@@ -20,7 +20,7 @@ export class SecretChat {
   generateMyKeys() {
     const newKey = KeyPairEd25519.fromRandom();
     const keys = {
-      public: newKey.publicKey.toString(),
+      public: newKey.publicKey.toString().replace("ed25519:", ""),
       private: newKey.secretKey,
     }
     localStorage.setItem(`${MY_PREFIX}:${this.near.wallet.accountId}`, JSON.stringify(keys));
@@ -54,7 +54,8 @@ export class SecretChat {
   }
 
   chatPublicKey() {
-    return localStorage.getItem(`${CHAT_PREFIX}${this.opponentAddress}`)
+    console.log(`${CHAT_PREFIX}${this.opponentAddress}`);
+    return localStorage.getItem(`${CHAT_PREFIX}:${this.opponentAddress}`)
   }
 
   decode(text, nonce) {

@@ -80,6 +80,7 @@ export const MyPrivateChat = () => {
   const updateIsSecretChat = (opponent) => {
     if (opponent) {
       const secretChat = new SecretChat(opponent);
+      console.log(`secretChat.chatKeyExists()`, secretChat.chatKeyExists());
       setIsSecretChat(secretChat.chatKeyExists());
     }
   };
