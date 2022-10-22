@@ -10,7 +10,7 @@ export const loadPrivateChatsPromise = (accountId) => {
            last_message {
              id
              text
-             media
+             image
              from_address
              to_address
              encrypt_key
@@ -43,7 +43,7 @@ export const loadGroupChatsPromise = (idList) => {
           last_message {
              id
              text
-             media
+             image
              from_address
           }
          updated_at
@@ -72,7 +72,7 @@ export const loadGroupMessages = (groupId) => {
       }) {
         id
         text
-        media
+        image
         from_address
         created_at
       }
@@ -94,7 +94,7 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
       }) {
         id
         text
-        media
+        image
         from_address
         created_at
       }
@@ -116,7 +116,7 @@ export const loadPrivateMessages = (chatId) => {
       }) {
         id
         text
-        media
+        image
         from_address
         to_address
         created_at
@@ -140,7 +140,7 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
       }) {
         id
         text
-        media
+        image
         from_address
         to_address
         created_at

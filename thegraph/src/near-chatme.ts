@@ -46,7 +46,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       const messageId = data.get('id')
       const fromUser = data.get('from_user')
       const toUser = data.get('to_user')
-      const media = data.get('media')
+      const image = data.get('image')
       const encrypt_key = data.get('encrypt_key')
       const replyToMessage = data.get('reply_to_message')
 
@@ -69,7 +69,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.from_address = fromUser.toString()
         message.to_address = toUser.toString()
         message.text = messageText.toString()
-        message.media = media ? media.toString() : ""
+        message.image = image ? image.toString() : ""
         message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
@@ -110,7 +110,7 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
     const data = jsonData.value.toObject()
     const messageText = data.get('text')
     const groupId = data.get('group_id')
-    const media = data.get('media')
+    const image = data.get('image')
     const replyToMessage = data.get('reply_to_message')
 
     if (messageText && groupId) {
@@ -132,7 +132,7 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.from_address = fromUser.toString()
         message.group_id = groupId.toString()
         message.text = messageText.toString()
-        message.media = media ? media.toString() : ""
+        message.image = image ? image.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
         message.is_removed = false

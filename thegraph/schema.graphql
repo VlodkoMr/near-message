@@ -28,7 +28,7 @@ type PrivateMessage @entity {
     encrypt_key: String!
     reply_to_message: PrivateMessage
     text: String!
-    media: String!
+    image: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!
@@ -51,7 +51,7 @@ type GroupMessage @entity {
     reply_to_message: GroupMessage
     group_id: String!
     text: String!
-    media: String!
+    image: String!
     created_at: Int!
     tx_hash: String!
     is_spam: Boolean!

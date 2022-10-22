@@ -181,13 +181,13 @@ export class PrivateMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
-  get media(): string {
-    let value = this.get("media");
+  get image(): string {
+    let value = this.get("image");
     return value!.toString();
   }
 
-  set media(value: string) {
-    this.set("media", Value.fromString(value));
+  set image(value: string) {
+    this.set("image", Value.fromString(value));
   }
 
   get created_at(): i32 {
@@ -388,13 +388,13 @@ export class GroupMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
-  get media(): string {
-    let value = this.get("media");
+  get image(): string {
+    let value = this.get("image");
     return value!.toString();
   }
 
-  set media(value: string) {
-    this.set("media", Value.fromString(value));
+  set image(value: string) {
+    this.set("image", Value.fromString(value));
   }
 
   get created_at(): i32 {

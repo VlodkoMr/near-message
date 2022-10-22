@@ -227,7 +227,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
             </div>
           ) : (
             <>
-              {messageText.length > 0 ? (
+              {messageText.length > 0 || messageMedia.length > 0 ? (
                 <BiSend size={30} onClick={() => sendMessage(messageText)}/>
               ) : (
                 <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>

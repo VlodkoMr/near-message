@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
 import { SecretChat } from "../../utils/secret-chat";
 import { Loader } from "../Loader";
+import { mediaURL } from "../../utils/transform";
 
 export const OneMessage = ({ message, opponent, isLast }) => {
   const near = useContext(NearContext);
@@ -126,6 +127,13 @@ export const OneMessage = ({ message, opponent, isLast }) => {
 
               {(!message.isEncryptStart && !message.isEncryptAccept) && (
                 <>
+                  {message.image && (
+                    <img alt=""
+                         src={mediaURL(message.image)}
+                         className={"h-[220px] min-w-[100px] rounded-lg my-2 object-contain"}
+                    />
+                  )}
+
                   {messageText === '(like)' ? (
                     <AiFillLike size={22}/>
                   ) : (

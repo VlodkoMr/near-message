@@ -69,7 +69,6 @@ export const MyPrivateChat = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log(`...`);
       let behavior = { behavior: 'auto' };
       if (reloadCounter > 0) {
         behavior = { behavior: 'smooth' };
