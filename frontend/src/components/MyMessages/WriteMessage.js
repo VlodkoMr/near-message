@@ -3,7 +3,8 @@ import { TextareaAutosize } from "@mui/material";
 import { AiFillLike, BiSend, BsImage, RiChatPrivateFill } from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
-import { SecretChat } from "../../settings/secret-chat";
+import { SecretChat } from "../../utils/secret-chat";
+import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 
 export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }) => {
   const near = useContext(NearContext);
@@ -11,6 +12,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
 
   useEffect(() => {
     // load message from local storage
@@ -21,12 +23,6 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
     } else {
       setMessageText("");
     }
-
-    // if (toAddress) {
-    //   localStorage.getItem(`secretChatKey:${toAddress}`)
-    // }
-
-
   }, [toAddress, toGroup?.id]);
 
   useEffect(() => {
@@ -36,7 +32,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
   const toggleSecretChat = async () => {
     const secretChat = new SecretChat(toAddress, near);
     setIsLoading(true);
-    if (secretChat.exists()) {
+    if (secretChat.chatKeyExists()) {
       secretChat.endChat().then(() => {
         setIsLoading(false);
       });
@@ -47,38 +43,26 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
         }, 5000);
       });
     }
-
-    // const isSecretChat = localStorage.getItem(`secretChatKey:${toAddress}`);
-    // if (isSecretChat) {
-    //   // cancel secret chat
-    //   sendMessage(`(secret-end)`, false);
-    // } else {
-    //   // start secret chat
-    //   // new SecretChat(near, toAddress).getMyPublicKey().then(pubKey => {
-    //   //   sendMessage(`(secret-start:${pubKey})`);
-    //   // });
-    // }
   }
 
-  const sendMessage = async (messageText) => {
+  const sendMessage = (messageText) => {
     let sendFunction;
     if (toAddress) {
+      // Private Mode
       let encodeKey = "";
       if (isSecretChat) {
-        const secretChat = new SecretChat(toAddress, near);
-        const encoded = await secretChat.encode(messageText);
+        const encoded = (new SecretChat(toAddress, near)).encode(messageText);
         messageText = encoded.secret;
-        encodeKey = encoded.key;
+        encodeKey = encoded.nonce;
       }
-
       sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, "", encodeKey);
     } else {
       sendFunction = near.mainContract.sendGroupMessage(messageText, messageMedia, toGroup.id, "");
     }
 
     messageText = messageText.trim();
-    if (messageText.length === 0) {
-      alert("Please provide message text");
+    if (!messageText.length && !messageMedia.length) {
+      alert("Please provide message text or upload media");
       return false;
     }
 
@@ -112,9 +96,29 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
     }
   }
 
+  const uploadMedia = (e) => {
+    setMessageMedia("");
+
+    const image = e.target.files[0];
+    resizeFileImage(image, 600, 600).then(blobData => {
+      setIsMediaLoading(true);
+      uploadMediaToIPFS(blobData).then(result => {
+        setMessageMedia(result);
+        setIsMediaLoading(false);
+      }).catch(() => setIsMediaLoading(false));
+    });
+  }
+
   return (
-    <div
-      className={`chat-footer flex-non ${isSecretChat ? "bg-red-700/30 text-red-500/80" : "text-blue-500"}`}>
+    <div className={`chat-footer flex-non 
+      ${isSecretChat ? "bg-red-700/30 text-red-500/80" : "text-blue-500"}`}>
+
+      {messageMedia && (
+        <div className={"p-4 absolute h-10 left-0 right-0 -bottom-10"}>
+          messageMedia
+        </div>
+      )}
+
       <div className="flex flex-row items-end p-4 relative">
         {isSecretChat && (
           <div className={"absolute left-6 bottom-1 text-sm font-semibold"}>
@@ -137,7 +141,19 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
                 className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-6 h-6 mb-4
                 ${isSecretChat ? "hover:text-red-600/80" : "hover:text-blue-600"}
                 `}>
-          <BsImage size={28}/>
+          <label>
+            {isMediaLoading ? (
+              <Loader size={"md"}/>
+            ) : (
+              <BsImage size={28}/>
+            )}
+
+            <input type="file"
+                   className={"hidden"}
+                   accept={"image/*"}
+                   onChange={(e) => uploadMedia(e)}
+            />
+          </label>
         </button>
 
 
@@ -151,7 +167,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
             <TextareaAutosize placeholder="Aa"
                               autoFocus
                               maxRows={10}
-                              disabled={isLoading}
+                              disabled={isLoading || isMediaLoading}
                               className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base
                               bg-gray-800/60  focus:bg-gray-900/60 focus:outline-none 
                               text-gray-100 focus:shadow-md transition duration-300 ease-in

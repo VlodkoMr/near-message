@@ -83,24 +83,13 @@ impl Contract {
         self.groups.get(&id).unwrap().into()
     }
 
+    /**
+     * Get List of Public Groups and Channels
+     */
     pub fn get_public_groups(&self) -> (Vec<Group>, Vec<Group>) {
         let page_limit = 6;
-        let groups_id_list: Vec<u32> = self.public_groups.iter()
-            // .skip(start_index as usize)
-            .take(page_limit as usize)
-            .collect();
-        let channels_id_list: Vec<u32> = self.public_channels.iter()
-            // .skip(start_index as usize)
-            .take(page_limit as usize)
-            .collect();
-
-        let groups = groups_id_list.into_iter().map(
-            |id| Group::from(self.groups.get(&id).unwrap())
-        ).collect();
-        let channels = channels_id_list.into_iter().map(
-            |id| Group::from(self.groups.get(&id).unwrap())
-        ).collect();
-
+        let groups = self.get_public_group_channel(&self.public_groups, page_limit);
+        let channels = self.get_public_group_channel(&self.public_channels, page_limit);
         (groups, channels)
     }
 
@@ -340,7 +329,7 @@ impl Contract {
      * Private Message
      */
     pub fn send_private_message(
-        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>
+        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>,
     ) -> U128 {
         self.user_validate_spam();
 
@@ -508,7 +497,7 @@ mod tests {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
 
         let message_id = contract.send_private_message(
-            "Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None, None
+            "Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None, None,
         );
         assert_eq!(message_id, U128::from(1));
     }

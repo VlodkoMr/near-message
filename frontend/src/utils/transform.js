@@ -1,4 +1,4 @@
-import { SecretChat } from "../settings/secret-chat";
+import { SecretChat } from "./secret-chat";
 
 export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
@@ -76,7 +76,7 @@ export const transformMessages = (near, messages, accountId, lastMessageUser) =>
     if (message.from_address !== accountId) {
       if (message.isEncryptAccept) {
         const secretChat = new SecretChat(message.from_address);
-        if (!secretChat.exists()) {
+        if (!secretChat.chatKeyExists()) {
           secretChat.storeSecretChatKey(message.text);
         }
       }

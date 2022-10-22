@@ -144,7 +144,7 @@ impl Contract {
 
     pub(crate) fn create_group_internal(
         &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
-        members: Vec<AccountId>, edit_members: bool
+        members: Vec<AccountId>, edit_members: bool,
     ) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
@@ -162,7 +162,7 @@ impl Contract {
             group_type: group_type.clone(),
             created_at: env::block_timestamp(),
             members: members.clone(),
-            edit_members
+            edit_members,
         };
         self.groups.insert(&group_id, &group.into());
 
@@ -196,5 +196,15 @@ impl Contract {
 
         self.remove_group_member_internal(group.members, id, false);
         self.groups.remove(&id);
+    }
+
+    pub(crate) fn get_public_group_channel(&self, source: &UnorderedSet<u32>, page_limit: u32) -> Vec<Group> {
+        let groups_id_list: Vec<u32> = source.iter()
+            // .skip(start_index as usize)
+            .take(page_limit as usize)
+            .collect();
+        groups_id_list.into_iter().map(
+            |id| Group::from(self.groups.get(&id).unwrap())
+        ).collect()
     }
 }

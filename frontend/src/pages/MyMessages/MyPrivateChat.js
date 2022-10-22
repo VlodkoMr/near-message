@@ -7,7 +7,7 @@ import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
-import { SecretChat } from "../../settings/secret-chat";
+import { SecretChat } from "../../utils/secret-chat";
 
 const fetchSecondsInterval = 5;
 
@@ -78,7 +78,7 @@ export const MyPrivateChat = () => {
   const updateIsSecretChat = (opponent) => {
     if (opponent) {
       const secretChat = new SecretChat(opponent);
-      setIsSecretChat(secretChat.exists());
+      setIsSecretChat(secretChat.chatKeyExists());
     }
   };
 

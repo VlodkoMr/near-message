@@ -5,7 +5,7 @@ import { AiFillLike, BsClockHistory, SiLetsencrypt } from "react-icons/all";
 import { PrimaryButton } from "../../assets/css/components";
 import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
-import { getMyPublicKey, SecretChat } from "../../settings/secret-chat";
+import { getMyPublicKey, SecretChat } from "../../utils/secret-chat";
 import { Loader } from "../Loader";
 
 export const OneMessage = ({ message, opponent, isLast }) => {
