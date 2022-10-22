@@ -69,11 +69,14 @@ export const MyGroupChat = () => {
   }, [reloadCounter]);
 
   useEffect(() => {
-    let behavior = { behavior: 'auto' };
-    if (reloadCounter > 0) {
-      behavior = { behavior: 'smooth' };
-    }
-    bottomRef.current?.scrollIntoView(behavior);
+    setTimeout(() => {
+      console.log(`...`);
+      let behavior = { behavior: 'auto' };
+      if (reloadCounter > 0) {
+        behavior = { behavior: 'smooth' };
+      }
+      bottomRef.current?.scrollIntoView(behavior);
+    }, 100);
   }, [messages, tmpMessages]);
 
   // Get new messages - each few seconds

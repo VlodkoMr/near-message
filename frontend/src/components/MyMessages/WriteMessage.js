@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
-import { AiFillLike, BiSend, BsImage, RiChatPrivateFill } from "react-icons/all";
+import { AiFillLike, BiSend, BsImage, IoMdCloseCircleOutline, RiChatPrivateFill } from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
 import { SecretChat } from "../../utils/secret-chat";
@@ -8,9 +8,11 @@ import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 
 export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }) => {
   const near = useContext(NearContext);
+  const inputRef = useRef(null);
   const localKey = toAddress ? `acc-${toAddress}` : `group-${toGroup.id}`;
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
+  const [messageTmpMedia, setMessageTmpMedia] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
 
@@ -51,7 +53,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
       // Private Mode
       let encodeKey = "";
       if (isSecretChat) {
-        const encoded = (new SecretChat(toAddress, near)).encode(messageText);
+        const encoded = (new SecretChat(toAddress)).encode(messageText);
         messageText = encoded.secret;
         encodeKey = encoded.nonce;
       }
@@ -69,7 +71,10 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
     setIsLoading(true);
     localStorage.setItem(localKey, "");
     sendFunction.then((result) => {
+      setMessageMedia("");
+      setMessageTmpMedia("");
       setMessageText("");
+
       let messageId = "";
       result.receipts_outcome.map(tx => {
         if (tx.outcome.logs.length > 0) {
@@ -87,6 +92,13 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
     });
   }
 
+  useEffect(() => {
+    // return input focus
+    if (!isLoading) {
+      inputRef.current.focus();
+    }
+  }, [isLoading]);
+
   const handleTextChange = (e) => {
     const value = e.target.value;
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -97,11 +109,16 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
   }
 
   const uploadMedia = (e) => {
-    setMessageMedia("");
-
     const image = e.target.files[0];
     resizeFileImage(image, 600, 600).then(blobData => {
       setIsMediaLoading(true);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(blobData);
+      reader.onloadend = () => {
+        setMessageTmpMedia(reader.result);
+      }
+
       uploadMediaToIPFS(blobData).then(result => {
         setMessageMedia(result);
         setIsMediaLoading(false);
@@ -109,15 +126,22 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
     });
   }
 
+  const removeMedia = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setMessageTmpMedia("");
+    setMessageMedia("");
+  }
+
   return (
-    <div className={`chat-footer flex-non 
+    <div className={`chat-footer flex-non relative
       ${isSecretChat ? "bg-red-700/30 text-red-500/80" : "text-blue-500"}`}>
 
-      {messageMedia && (
-        <div className={"p-4 absolute h-10 left-0 right-0 -bottom-10"}>
-          messageMedia
-        </div>
-      )}
+      {/*{messageMedia && (*/}
+      {/*  <div className={"p-4 absolute h-10 left-0 right-0 -bottom-10"}>*/}
+      {/*    messageMedia*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <div className="flex flex-row items-end p-4 relative">
         {isSecretChat && (
@@ -138,24 +162,37 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
 
         <button type="button"
                 title={"Send Image"}
-                className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-6 h-6 mb-4
+                className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block
                 ${isSecretChat ? "hover:text-red-600/80" : "hover:text-blue-600"}
+                ${!isMediaLoading && messageTmpMedia ? "w-10 h-10 mb-2" : "w-6 h-6 mb-4"}
                 `}>
-          <label>
-            {isMediaLoading ? (
-              <Loader size={"md"}/>
-            ) : (
-              <BsImage size={28}/>
-            )}
+          {!isMediaLoading && (
+            <label className={"cursor-pointer relative"}>
+              {messageTmpMedia.length > 0 ? (
+                <>
+                  <img src={messageTmpMedia} alt="" className={"w-10 h-10 object-cover rounded-md"}/>
+                  <IoMdCloseCircleOutline
+                    size={16}
+                    onClick={(e) => removeMedia(e)}
+                    className={"absolute -right-1 -top-1 text-white bg-gray-700 rounded-full"}
+                  />
+                </>
+              ) : (
+                <BsImage size={26}/>
+              )}
 
-            <input type="file"
-                   className={"hidden"}
-                   accept={"image/*"}
-                   onChange={(e) => uploadMedia(e)}
-            />
-          </label>
+              <input type="file"
+                     className={"hidden"}
+                     accept={"image/*"}
+                     onChange={(e) => uploadMedia(e)}
+              />
+            </label>
+          )}
+
+          {isMediaLoading && (
+            <Loader size={"md"}/>
+          )}
         </button>
-
 
         {/*<button type="button" border-gray-700/80 focus:border-gray-700/80 bg-gray-800/80  */}
         {/*        className="flex flex-shrink-0 focus:outline-none mx-2 block hover:text-blue-600 w-6 h-6 mr-4 mb-4">*/}
@@ -166,6 +203,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
           <label>
             <TextareaAutosize placeholder="Aa"
                               autoFocus
+                              ref={inputRef}
                               maxRows={10}
                               disabled={isLoading || isMediaLoading}
                               className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base

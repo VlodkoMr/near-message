@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { AiFillLike, BsClockHistory, SiLetsencrypt } from "react-icons/all";
-import { PrimaryButton } from "../../assets/css/components";
 import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
-import { getMyPublicKey, SecretChat } from "../../utils/secret-chat";
+import { SecretChat } from "../../utils/secret-chat";
 import { Loader } from "../Loader";
 
 export const OneMessage = ({ message, opponent, isLast }) => {
@@ -23,12 +22,11 @@ export const OneMessage = ({ message, opponent, isLast }) => {
     });
   }
 
-  const getMessageText = async () => {
+  const getMessageText = () => {
     if (message.encrypt_key) {
       const opponentAddress = message.from_address !== near.wallet.accountId ? message.from_address : message.to_address;
-      const secretChat = new SecretChat(opponentAddress, near);
-      const encryptionKey = message.encrypt_key.split("|");
-      const text = await secretChat.decode(message.text, encryptionKey[0])
+      const secretChat = new SecretChat(opponentAddress);
+      const text = secretChat.decode(message.text, message.encrypt_key)
       setMessageText(text);
     } else {
       setMessageText(message.text);
