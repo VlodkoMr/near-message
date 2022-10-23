@@ -14,7 +14,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const acceptPrivateMessage = () => {
-    const secretChat = new SecretChat(message.from_address, near);
+    const secretChat = new SecretChat(message.from_address, near.wallet.accountId, near);
     setIsLoading(true);
     secretChat.acceptChat(message.text).then(() => {
       setTimeout(() => {
@@ -26,7 +26,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
   const getMessageText = () => {
     if (message.encrypt_key) {
       const opponentAddress = message.from_address !== near.wallet.accountId ? message.from_address : message.to_address;
-      const secretChat = new SecretChat(opponentAddress, near);
+      const secretChat = new SecretChat(opponentAddress, near.wallet.accountId);
       const text = secretChat.decode(message.text, message.encrypt_key)
       setMessageText(text);
     } else {
@@ -106,7 +106,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
               ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}
-              ${message.isEncryptStart || message.isEncryptAccept ? "bg-red-700/60" : ""}
+              ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-700/60" : ""}
             `}>
               {message.isEncryptStart && (
                 <>
@@ -128,8 +128,9 @@ export const OneMessage = ({ message, opponent, isLast }) => {
                 </>
               )}
               {message.isEncryptAccept && "Private chat request accepted"}
+              {message.isEncryptEnd && "Private chat disabled"}
 
-              {(!message.isEncryptStart && !message.isEncryptAccept) && (
+              {(!message.isEncryptStart && !message.isEncryptAccept && !message.isEncryptEnd) && (
                 <>
                   {message.image && (
                     <img alt=""

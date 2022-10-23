@@ -32,9 +32,9 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
   }, [messageText]);
 
   const toggleSecretChat = async () => {
-    const secretChat = new SecretChat(toAddress, near);
+    const secretChat = new SecretChat(toAddress, near.wallet.accountId, near);
     setIsLoading(true);
-    if (secretChat.chatKeyExists()) {
+    if (secretChat.secretChatEnabled()) {
       secretChat.endChat().then(() => {
         setIsLoading(false);
       });
@@ -53,7 +53,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
       // Private Mode
       let encodeKey = "";
       if (isSecretChat) {
-        const encoded = (new SecretChat(toAddress, near)).encode(messageText);
+        const encoded = (new SecretChat(toAddress, near.wallet.accountId)).encode(messageText);
         messageText = encoded.secret;
         encodeKey = encoded.nonce;
       }

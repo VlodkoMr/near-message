@@ -1,14 +1,19 @@
 import { create, open } from "@nearfoundation/near-js-encryption-box";
 import { KeyPairEd25519 } from "near-api-js/lib/utils/key_pair";
 
-const MY_PREFIX = "my-chatme-keys";
-const CHAT_PREFIX = "chat-key";
+const MY_PREFIX = "chatme:my-keys";
+// {public, private}
+
+const CHAT_PREFIX = "chatme:chat-keys";
+
+// {account:{key, enabled}}
 
 export class SecretChat {
 
-  constructor(opponentAddress, near = null) {
+  constructor(opponentAddress, myAddress, near = null) {
     this.near = near;
     this.opponentAddress = opponentAddress;
+    this.myAddress = myAddress;
 
     if (near && !this.myKeyExists()) {
       this.generateMyKeys();
@@ -23,7 +28,7 @@ export class SecretChat {
       public: newKey.publicKey.toString().replace("ed25519:", ""),
       private: newKey.secretKey,
     }
-    localStorage.setItem(`${MY_PREFIX}:${this.near.wallet.accountId}`, JSON.stringify(keys));
+    localStorage.setItem(`${MY_PREFIX}:${this.myAddress}`, JSON.stringify(keys));
   }
 
   myKeyExists() {
@@ -32,7 +37,7 @@ export class SecretChat {
 
 
   getMyPublicKey() {
-    let myKeys = localStorage.getItem(`${MY_PREFIX}:${this.near.wallet.accountId}`);
+    let myKeys = localStorage.getItem(`${MY_PREFIX}:${this.myAddress}`);
     if (myKeys) {
       let keys = JSON.parse(myKeys);
       return keys.public;
@@ -40,7 +45,7 @@ export class SecretChat {
   }
 
   getMyPrivateKey() {
-    let myKeys = localStorage.getItem(`${MY_PREFIX}:${this.near.wallet.accountId}`);
+    let myKeys = localStorage.getItem(`${MY_PREFIX}:${this.myAddress}`);
     if (myKeys) {
       let keys = JSON.parse(myKeys);
       return keys.private;
@@ -49,13 +54,25 @@ export class SecretChat {
 
   // ----------- Chat -----------
 
-  chatKeyExists() {
-    return !!this.chatPublicKey()
+  secretChatEnabled() {
+    const chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
+    if (chat) {
+      const chatData = JSON.parse(chat);
+      if (chatData[this.opponentAddress]) {
+        return chatData[this.opponentAddress].enabled;
+      }
+    }
+    return false;
   }
 
   chatPublicKey() {
-    console.log(`${CHAT_PREFIX}${this.opponentAddress}`);
-    return localStorage.getItem(`${CHAT_PREFIX}:${this.opponentAddress}`)
+    const chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
+    if (chat) {
+      const chatData = JSON.parse(chat);
+      if (chatData[this.opponentAddress]) {
+        return chatData[this.opponentAddress].key;
+      }
+    }
   }
 
   decode(text, nonce) {
@@ -75,7 +92,17 @@ export class SecretChat {
     const keyParts = messageText.split(":");
     const chatPublicKey = keyParts[1].replace(")", "");
     if (keyParts.length) {
-      localStorage.setItem(`${CHAT_PREFIX}:${this.opponentAddress}`, chatPublicKey);
+      let currentData = {};
+      let chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
+      if (chat) {
+        currentData = JSON.parse(currentData);
+      }
+      currentData[this.opponentAddress] = {
+        key: chatPublicKey,
+        enabled: true
+      };
+
+      localStorage.setItem(`${CHAT_PREFIX}:${this.myAddress}`, JSON.stringify(currentData));
     }
   }
 
@@ -105,8 +132,17 @@ export class SecretChat {
     })
   }
 
+  disablePrivateMode() {
+    const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
+    const chat = localStorage.getItem(chatKey);
+    const chatData = JSON.parse(chat);
+    chatData[this.opponentAddress].enabled = false;
+    localStorage.setItem(chatKey, JSON.stringify(chatData));
+  }
+
   endChat() {
-    localStorage.removeItem(`${PREFIX}:${this.opponentAddress}`);
+    this.disablePrivateMode();
+
     return new Promise((resolve, reject) => {
       let message = `(secret-end)`;
       this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
@@ -116,7 +152,6 @@ export class SecretChat {
       })
     })
   }
-
 
 }
 
