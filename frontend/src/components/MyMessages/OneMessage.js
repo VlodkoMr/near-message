@@ -106,7 +106,7 @@ export const OneMessage = ({ message, opponent, isLast }) => {
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
               ${message.isMy ? "bg-sky-500/50 rounded-l-3xl" : "bg-gray-700/60 rounded-r-3xl text-gray-100"}
-              ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-700/60" : ""}
+              ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-600/40" : ""}
             `}>
               {message.isEncryptStart && (
                 <>

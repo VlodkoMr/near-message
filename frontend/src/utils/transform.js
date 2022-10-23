@@ -87,18 +87,17 @@ export const transformMessages = (near, messages, accountId, lastMessageUser) =>
   });
 }
 
-export const generateTemporaryMessage = (id, text, media, accountId, opponent) => {
+export const generateTemporaryMessage = (id, text, image, accountId, opponent) => {
   return {
     created_at: new Date() / 1000,
     from_address: accountId,
     id: id,
     to: opponent,
     isFirst: true,
-    isLast: true,
     isMy: true,
     isTemporary: true,
     text,
-    media,
+    image,
   };
 }
 

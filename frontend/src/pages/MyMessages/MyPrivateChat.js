@@ -101,8 +101,8 @@ export const MyPrivateChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, media) => {
-    let newMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, opponent);
+  const appendTemporaryMessage = (messageId, text, image) => {
+    let newMessage = generateTemporaryMessage(messageId, text, image, near.wallet.accountId, opponent);
     setTmpMessages(prev => prev.concat(newMessage));
   }
 

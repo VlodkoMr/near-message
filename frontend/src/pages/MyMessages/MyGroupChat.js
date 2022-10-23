@@ -105,8 +105,8 @@ export const MyGroupChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, media) => {
-    const tmpMessage = generateTemporaryMessage(messageId, text, media, near.wallet.accountId, id);
+  const appendTemporaryMessage = (messageId, text, image) => {
+    const tmpMessage = generateTemporaryMessage(messageId, text, image, near.wallet.accountId, id);
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 

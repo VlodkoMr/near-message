@@ -1,6 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
-import { AiFillLike, BiSend, BsImage, IoMdCloseCircleOutline, RiChatPrivateFill } from "react-icons/all";
+import {
+  AiFillLike,
+  BiSend,
+  BsImage,
+  IoMdCloseCircleOutline,
+  MdEnhancedEncryption, MdNoEncryption, MdOutlineEnhancedEncryption, MdOutlineNoEncryption,
+  RiChatPrivateFill,
+  SiLetsencrypt
+} from "react-icons/all";
 import { NearContext } from "../../context/NearContext";
 import { Loader } from "../Loader";
 import { SecretChat } from "../../utils/secret-chat";
@@ -156,7 +164,12 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
                   className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-7 h-6 mb-4
                   ${isSecretChat ? "hover:text-red-600/80" : "hover:text-blue-600"}
                   `}>
-            <RiChatPrivateFill size={28} onClick={() => toggleSecretChat()}/>
+            {isSecretChat ? (
+              <MdOutlineNoEncryption size={26} onClick={() => toggleSecretChat()}/>
+            ) : (
+              <MdOutlineEnhancedEncryption size={26} onClick={() => toggleSecretChat()}/>
+            )}
+
           </button>
         )}
 
@@ -207,9 +220,9 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
                               maxRows={10}
                               disabled={isLoading || isMediaLoading}
                               className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base
-                              bg-gray-800/60  focus:bg-gray-900/60 focus:outline-none 
+                              focus:outline-none 
                               text-gray-100 focus:shadow-md transition duration-300 ease-in
-                              ${isSecretChat ? "border-red-700/60" : "border-gray-700/60"}`}
+                              ${isSecretChat ? "border-red-700/60 bg-gray-900/40 focus:bg-gray-900/80" : "border-gray-700/60 bg-gray-800/60 focus:bg-gray-900/60"}`}
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
                               onKeyDown={handleTextChange}
