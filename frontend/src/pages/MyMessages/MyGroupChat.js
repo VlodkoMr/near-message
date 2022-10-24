@@ -3,13 +3,12 @@ import { useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
 import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
-import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
-import { SecondaryButton } from "../../assets/css/components";
+import { GroupChatBottom } from "../../components/MyMessages/MessagesBottom";
 
-const fetchSecondsInterval = 2;
+const fetchSecondsInterval = 5;
 
 export const MyGroupChat = () => {
   let { id } = useParams();
@@ -110,7 +109,7 @@ export const MyGroupChat = () => {
     });
   }
 
-  // add temporary message
+  // Add temporary message
   const appendTemporaryMessage = (text, image) => {
     const tmpMessage = generateTemporaryMessage(text, image, near.wallet.accountId, id);
     setTmpMessages(prev => prev.concat(tmpMessage));
@@ -160,10 +159,11 @@ export const MyGroupChat = () => {
             <div ref={bottomRef}/>
           </div>
 
-          <WriteMessage toGroup={group}
-                        replyToMessage={replyToMessage}
-                        setReplyToMessage={setReplyToMessage}
-                        onMessageSent={appendTemporaryMessage}/>
+          <GroupChatBottom group={group}
+                           replyToMessage={replyToMessage}
+                           setReplyToMessage={setReplyToMessage}
+                           onMessageSent={appendTemporaryMessage}
+          />
         </>
       )}
     </>

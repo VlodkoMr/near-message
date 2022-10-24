@@ -6,9 +6,8 @@ import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
 import { loadSocialProfiles, onlyUnique, transformMessageText } from "../../utils/transform";
-import { SecretChat } from "../../utils/secret-chat";
 
-const fetchSecondsInterval = 14;
+const fetchSecondsInterval = 5;
 
 export const LeftPanelChats = () => {
   const near = useContext(NearContext);

@@ -162,7 +162,6 @@ export class MainContract {
    * @returns {Promise<*>}
    */
   async editGroup(id, title, image, text, url) {
-    console.log(id, title, image, text, url);
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'edit_group',

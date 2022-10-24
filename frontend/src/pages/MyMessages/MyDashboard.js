@@ -43,7 +43,6 @@ export const MyDashboard = () => {
     });
 
     loadAccount().then(result => {
-      console.log(`acc`, result);
       setAccount(result);
       setIsAccountReady(true);
     });
