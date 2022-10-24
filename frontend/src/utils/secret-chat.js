@@ -10,12 +10,11 @@ const CHAT_PREFIX = "chatme:chat-keys";
 
 export class SecretChat {
 
-  constructor(opponentAddress, myAddress, near = null) {
-    this.near = near;
+  constructor(opponentAddress, myAddress) {
     this.opponentAddress = opponentAddress;
     this.myAddress = myAddress;
 
-    if (near && !this.myKeyExists()) {
+    if (!this.myKeyExists()) {
       this.generateMyKeys();
     }
   }
@@ -80,8 +79,7 @@ export class SecretChat {
   }
 
   decode(text, nonce) {
-    const myPrivateKey = this.getMyPrivateKey();
-    return open(text, this.chatPublicKey(), myPrivateKey, nonce);
+    return open(text, this.chatPublicKey(), this.getMyPrivateKey(), nonce);
   }
 
   encode(text) {
@@ -109,57 +107,12 @@ export class SecretChat {
     }
   }
 
-  startNewChat() {
-    return new Promise((resolve, reject) => {
-      const secretChat = this.getSecretChat();
-      if (secretChat) {
-        this.switchPrivateMode(true);
-        resolve(true);
-      } else {
-        const pubKey = this.getMyPublicKey();
-        const message = `(secret-start:${pubKey})`;
-        this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
-          resolve(true);
-        }).catch(() => {
-          reject();
-        });
-      }
-    })
-  }
-
-  acceptChat(messageText) {
-    return new Promise((resolve, reject) => {
-      this.storeSecretChatKey(messageText);
-
-      const pubKey = this.getMyPublicKey();
-      const message = `(secret-accept:${pubKey})`;
-      this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
-        resolve(true);
-      }).catch(() => {
-        reject();
-      });
-    })
-  }
-
   switchPrivateMode(isEnabled) {
     const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
     const chat = localStorage.getItem(chatKey);
     const chatData = JSON.parse(chat);
     chatData[this.opponentAddress].enabled = isEnabled;
     localStorage.setItem(chatKey, JSON.stringify(chatData));
-  }
-
-  endChat() {
-    this.switchPrivateMode(false);
-
-    return new Promise((resolve, reject) => {
-      let message = `(secret-end)`;
-      this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
-        resolve(true);
-      }).catch(() => {
-        reject();
-      })
-    })
   }
 
 }

@@ -63,21 +63,22 @@ export const transformProfile = (address, socialProfile) => {
   return resultProfile;
 }
 
-export const transformOneMessage = (message, index, accountId, isFirst, isLast) => {
+export const transformOneMessage = (message, accountId, isFirst, isLast, isTemporary) => {
   message.isEncryptStart = message.text.indexOf("(secret-start:") !== -1;
   message.isEncryptAccept = message.text.indexOf("(secret-accept:") !== -1;
   message.isEncryptEnd = message.text.indexOf("(secret-end)") !== -1;
   message.isMy = message.from_address === accountId;
-  message.isTemporary = false;
+  message.isTemporary = isTemporary;
   message.isFirst = isFirst;
   message.isLast = isLast;
 
   if (message.reply_message) {
-    message.reply_message = transformOneMessage(message.reply_message, index, accountId, false, false)
+    message.reply_message = transformOneMessage(message.reply_message, accountId, false, false, false)
   }
 
   // secret chat
-  const secretChat = new SecretChat(message.isMy ? message.to_address : message.from_address, accountId);
+  const opponentAddress = message.isMy ? message.to_address : message.from_address;
+  const secretChat = new SecretChat(opponentAddress, accountId);
   if (message.from_address !== accountId) {
     if (message.isEncryptAccept && !secretChat.isPrivateModeEnabled()) {
       secretChat.storeSecretChatKey(message.text);
@@ -99,7 +100,7 @@ export const transformMessages = (messages, accountId, lastMessageUser) => {
   return messages.map((message, index) => {
     const isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
     const isFirst = lastMessageUser !== message.from_address;
-    const result = transformOneMessage(message, index, accountId, isFirst, isLast);
+    const result = transformOneMessage(message, accountId, isFirst, isLast, false);
 
     lastMessageUser = message.from_address;
     return result;
@@ -107,23 +108,16 @@ export const transformMessages = (messages, accountId, lastMessageUser) => {
 }
 
 export const generateTemporaryMessage = (text, image, accountId, opponentAddress) => {
-  console.log(`tmp`, `${text}:${image}:${opponentAddress}`);
-
   const inner_id = base_encode(`${text}:${image}:${opponentAddress}`);
-  console.log(`tmp inner_id`, inner_id);
-
-  return {
+  const message = {
     id: inner_id,
-    created_at: new Date() / 1000,
     from_address: accountId,
     to_address: opponentAddress,
-    isFirst: true,
-    isMy: true,
-    isTemporary: true,
     text,
+    inner_id,
     image,
-    inner_id
-  };
+  }
+  return transformOneMessage(message, accountId, true, true, true);
 }
 
 export const onlyUnique = (value, index, self) => {
@@ -134,7 +128,6 @@ export const transformMessageText = (message, myAccountId) => {
   if (message.encrypt_key) {
     const opponentAddress = message.from_address !== myAccountId ? message.from_address : message.to_address;
     const secretChat = new SecretChat(opponentAddress, myAccountId);
-    // return message.text
     return secretChat.decode(message.text, message.encrypt_key)
   }
   return message.text;

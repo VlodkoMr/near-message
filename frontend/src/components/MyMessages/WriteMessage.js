@@ -22,12 +22,10 @@ export const WriteMessage = ({
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [messageTmpMedia, setMessageTmpMedia] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
 
   useEffect(() => {
     // load message from local storage
-    setIsLoading(false);
     const savedMessage = localStorage.getItem(localKey);
     if (savedMessage) {
       setMessageText(savedMessage);
@@ -40,19 +38,26 @@ export const WriteMessage = ({
     localStorage.setItem(localKey, messageText);
   }, [messageText]);
 
-  const toggleSecretChat = async () => {
-    const secretChat = new SecretChat(toAddress, near.wallet.accountId, near);
-    setIsLoading(true);
+  const toggleSecretChat = () => {
+    const secretChat = new SecretChat(toAddress, near.wallet.accountId);
+
+    let messageText;
     if (secretChat.isPrivateModeEnabled()) {
-      secretChat.endChat().then(() => {
-        setIsLoading(false);
-      });
+      messageText = "(secret-end)";
     } else {
-      secretChat.startNewChat().then(() => {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 3000);
-      });
+      const chatData = secretChat.getSecretChat();
+      if (chatData) {
+        secretChat.switchPrivateMode(true);
+        messageText = "";
+      } else {
+        let pubKey = secretChat.getMyPublicKey();
+        messageText = `(secret-start:${pubKey})`;
+      }
+    }
+
+    if (messageText) {
+      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", false);
+      onMessageSent?.(messageText, messageMedia, toAddress);
     }
   }
 
@@ -67,6 +72,7 @@ export const WriteMessage = ({
     }
 
     if (toAddress) {
+      // move here encoding
       sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, isPrivateMode);
     } else {
       sendFunction = near.mainContract.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
@@ -83,15 +89,15 @@ export const WriteMessage = ({
     setMessageMedia("");
     setMessageTmpMedia("");
     setMessageText("");
+    setReplyToMessage(null);
     localStorage.setItem(localKey, "");
   }
 
   useEffect(() => {
-    // return input focus
-    if (!isLoading) {
+    if (!isMediaLoading) {
       inputRef.current.focus();
     }
-  }, [isLoading, replyToMessage]);
+  }, [isMediaLoading, replyToMessage]);
 
   const handleTextChange = (e) => {
     const value = e.target.value;
@@ -134,7 +140,7 @@ export const WriteMessage = ({
       <div className="flex flex-row items-end p-4 relative">
         {toAddress && (
           <button type="button"
-                  disabled={isLoading || isMediaLoading}
+                  disabled={isMediaLoading}
                   title={"Start private conversation"}
                   className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-7 h-6 mb-4
                   ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
@@ -149,7 +155,7 @@ export const WriteMessage = ({
 
         <button type="button"
                 title={"Send Image"}
-                disabled={isLoading || isMediaLoading}
+                disabled={isMediaLoading}
                 className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block
                 ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                 ${!isMediaLoading && messageTmpMedia ? "w-10 h-10 mb-2" : "w-6 h-6 mb-4"}
@@ -204,7 +210,7 @@ export const WriteMessage = ({
                               autoFocus
                               ref={inputRef}
                               maxRows={10}
-                              disabled={isLoading || isMediaLoading}
+                              disabled={isMediaLoading}
                               className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base
                               focus:outline-none 
                               ${replyToMessage ? "pl-36" : ""}
@@ -226,18 +232,10 @@ export const WriteMessage = ({
                 className={`flex flex-shrink-0 focus:outline-none mx-2 ml-4 block md:w-7 md:h-7 mb-3.5
                 ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                 `}>
-          {isLoading ? (
-            <div className={"cursor-default"}>
-              <Loader/>
-            </div>
+          {messageText.length > 0 || messageMedia.length > 0 ? (
+            <BiSend size={30} onClick={() => sendMessage(messageText)}/>
           ) : (
-            <>
-              {messageText.length > 0 || messageMedia.length > 0 ? (
-                <BiSend size={30} onClick={() => sendMessage(messageText)}/>
-              ) : (
-                <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
-              )}
-            </>
+            <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
           )}
         </button>
       </div>

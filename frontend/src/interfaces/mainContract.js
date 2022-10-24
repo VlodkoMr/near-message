@@ -274,6 +274,8 @@ export class MainContract {
     }
 
     const inner_id = base_encode(`${text}:${image}:${to_address}`);
+    console.log(`new inner_id`, inner_id);
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',

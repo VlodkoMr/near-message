@@ -13,13 +13,15 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  const acceptPrivateMessage = () => {
-    const secretChat = new SecretChat(message.from_address, near.wallet.accountId, near);
+  const acceptPrivateMode = () => {
+    const secretChat = new SecretChat(message.from_address, near.wallet.accountId);
+    secretChat.storeSecretChatKey(message.text);
+
+    const pubKey = secretChat.getMyPublicKey();
+    const messageText = `(secret-accept:${pubKey})`;
     setIsLoading(true);
-    secretChat.acceptChat(message.text).then(() => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 3000);
+    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", false).then(() => {
+      setIsLoading(false);
     });
   }
 
@@ -90,7 +92,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                   {!message.isMy ? (
                     <Button disabled={isLoading}>
                       <span
-                        onClick={() => acceptPrivateMessage()}
+                        onClick={() => acceptPrivateMode()}
                         className={"text-red-300 hover:text-red-200 pl-3 ml-2 border-l border-red-300/40"}>
                         Accept
                         {isLoading && (

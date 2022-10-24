@@ -95,8 +95,12 @@ export const MyPrivateChat = () => {
       if (messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.inner_id);
+        console.log(`newMessageIds`, newMessageIds);
+
         setTmpMessages(prev => prev.filter(msg => {
           const innerId = base_encode(`${msg.text}:${msg.image}:${opponentAddress}`);
+          console.log(`new: ${msg.text}:${msg.image}:${opponentAddress}`);
+          console.log(`new innerId`, innerId);
           return newMessageIds.indexOf(innerId) === -1;
         }));
 
