@@ -112,8 +112,10 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       );
     }
 
-    promiseSave.then((result) => {
-      navigate(`/my/group/${result}`);
+    promiseSave.then((resultId) => {
+      if (!group) {
+        navigate(`/my/group/${resultId}`);
+      }
       setIsOpen(false);
       resetForm();
     }).catch(e => {
@@ -121,6 +123,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     }).finally(() => {
       setIsLoading(false);
     });
+
 
     // update members on edit
     if (group) {
