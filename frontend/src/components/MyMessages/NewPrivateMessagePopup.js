@@ -14,6 +14,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageSent, setIsMessageSent] = useState(false);
+  const [canOpenChat, setCanOpenChat] = useState(false);
   const [messageAddress, setMessageAddress] = useState("");
   const [messageText, setMessageText] = useState("");
 
@@ -36,9 +37,12 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
     }
 
     setIsLoading(true);
-    near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "")
+    near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "", "")
       .then(() => {
         setIsMessageSent(true);
+        setTimeout(() => {
+          setCanOpenChat(true);
+        }, 7000);
       })
       .catch(e => {
         console.log(e);
@@ -53,6 +57,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
   const resetForm = () => {
     setIsLoading(false);
     setIsMessageSent(false);
+    setCanOpenChat(false);
     setMessageAddress("");
     setMessageText("");
   }
@@ -80,10 +85,10 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
 
         {isMessageSent ? (
           <div className={"text-center text-gray-100 p-2"}>
-            <div className={"text-xl mb-4 font-medium"}>Message successfully sent!</div>
+            <div className={"text-xl mb-8 mt-4 font-medium"}>Message successfully sent.</div>
             <div>
-              <PrimaryButton onClick={() => openChat()}>
-                Open Chat
+              <PrimaryButton disabled={!canOpenChat} onClick={() => openChat()}>
+                {canOpenChat ? ("Open Chat") : ("Loading Chat...")}
               </PrimaryButton>
               <SecondaryButton className={"ml-4"} onClick={() => resetForm()}>
                 New Message

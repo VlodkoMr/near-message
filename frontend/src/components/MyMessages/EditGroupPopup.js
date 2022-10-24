@@ -88,7 +88,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
 
   const handleSaveGroup = () => {
     console.log(`formData.members`, formData.members);
-    console.log(`group.members`, group.members);
+    // console.log(`group.members`, group.members);
 
     if (formData.title.length < 3) {
       alert("Please provide correct group title");
@@ -199,23 +199,34 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
 
             {!group ? (
               <RadioGroup className={"mb-4"}
-                          disabled={isMediaLoading}
                           value={formData.group_type}
                           onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
                 <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
                 <RadioLabel className={"rounded-t-md"}>
-                  <FormControlLabel value="Channel" control={<Radio/>} label="Channel"/>
+                  <FormControlLabel value="Channel"
+                                    control={<Radio/>}
+                                    disabled={isMediaLoading}
+                                    label="Channel"
+                  />
                   <RadioLabelText>Broadcast messages to general public audience. <br/>
                     No limit for participants, only you can write
                     messages.</RadioLabelText>
                 </RadioLabel>
                 <RadioLabel>
-                  <FormControlLabel value="Private" control={<Radio/>} label="Private Group"/>
+                  <FormControlLabel value="Private"
+                                    control={<Radio/>}
+                                    disabled={isMediaLoading}
+                                    label="Private Group"
+                  />
                   <RadioLabelText>You manage group members, all members can write messages. <br/>
                     Limited by 1000 members.</RadioLabelText>
                 </RadioLabel>
                 <RadioLabel className={"rounded-b-md"}>
-                  <FormControlLabel value="Public" control={<Radio/>} label="Public Group"/>
+                  <FormControlLabel value="Public"
+                                    control={<Radio/>}
+                                    disabled={isMediaLoading}
+                                    label="Public Group"
+                  />
                   <RadioLabelText>Public access where anyone can join and write messages. <br/>
                     Limited by 1000 members.</RadioLabelText>
                 </RadioLabel>

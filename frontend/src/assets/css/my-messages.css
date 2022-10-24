@@ -93,3 +93,7 @@ input[type=file] {
 .MuiAutocomplete-tag {
   border: 1px solid #444 !important;
 }
+
+.MuiFormControlLabel-label.Mui-disabled {
+  color: #BBB !important;
+}

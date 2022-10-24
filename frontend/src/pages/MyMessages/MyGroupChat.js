@@ -130,7 +130,7 @@ export const MyGroupChat = () => {
             {isReady ? (
               <>
                 {/*<div className={"w-40 mx-auto text-center"}>*/}
-                {/*  <SecondaryButton small={true} className={"w-full"}>*/}
+                {/*  <SecondaryButton small className={"w-full"}>*/}
                 {/*    load previous*/}
                 {/*  </SecondaryButton>*/}
                 {/*</div>*/}

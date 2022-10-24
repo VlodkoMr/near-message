@@ -71,6 +71,7 @@ export const loadGroupMessages = (groupId) => {
         group_id: "${groupId}",
       }) {
         id
+        inner_id
         text
         image
         from_address
@@ -119,6 +120,7 @@ export const loadPrivateMessages = (chatId) => {
         chat_id: "${chatId}",
       }) {
         id
+        inner_id
         text
         image
         from_address

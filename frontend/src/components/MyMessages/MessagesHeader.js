@@ -64,7 +64,7 @@ export const MessagesHeader = ({ group, opponent }) => {
       </div>
 
       <div className="flex">
-        <Link to={"/my"} className={"mr-3 pt-0.5 font-medium"}>
+        <Link to={"/my"} className={"mr-2 pt-0.5 font-medium"}>
           <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
             <div className={"w-12 h-12 mr-3 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
@@ -86,7 +86,7 @@ export const MessagesHeader = ({ group, opponent }) => {
           </div>
         </Link>
 
-        <SecondaryButton className={"hidden md:block"} onClick={() => near.wallet.signOut()}>
+        <SecondaryButton small="true" className={"hidden md:block my-1"} onClick={() => near.wallet.signOut()}>
           <span className={"opacity-80"}>Sign Out</span>
         </SecondaryButton>
       </div>

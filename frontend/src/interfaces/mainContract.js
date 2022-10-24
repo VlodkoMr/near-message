@@ -144,7 +144,8 @@ export class MainContract {
         url,
         text,
         group_type,
-        members
+        members,
+        edit_members: true
       },
       THIRTY_TGAS,
       deposit
@@ -289,10 +290,7 @@ export class MainContract {
    * @returns {Promise<*>}
    */
   async sendGroupMessage(text, image, group_id, reply_message_id) {
-
     const inner_id = getInnerId(text, image, group_id);
-    console.log(`inner_id`, inner_id);
-
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_group_message',
