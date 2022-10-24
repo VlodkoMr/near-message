@@ -25,9 +25,9 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
   }
 
   const handleSpamReport = () => {
-    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
-      setIsLoading(false);
-    });
+    // near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
+    //   setIsLoading(false);
+    // });
   }
 
   return (
@@ -84,12 +84,37 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
               ${message.isMy ? "bg-sky-500/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
-              ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-600/40" : ""}
+              ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-600/30" : ""}
               ${message.encrypt_key && (message.isMy ? "pl-12" : "pr-12")}
             `}>
+
+              {message.reply_message && (
+                <p className={"border-b border-gray-200/20 mb-2 pb-1 text-sm opacity-50"}>
+                  <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current inline mr-1">
+                    <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
+                  </svg>
+                  <b className={"mr-2"}>{message.reply_message.from_address}</b>
+                  <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
+                        {transformMessageText(message.reply_message, near.wallet.accountId)}
+                      </span>
+                </p>
+              )}
+
+              {message.image && (
+                <img alt=""
+                     src={mediaURL(message.image)}
+                     className={"h-[220px] min-w-[100px] rounded-lg mt-2 mb-3 object-contain"}
+                />
+              )}
+
+              {transformMessageText(message, near.wallet.accountId) === '(like)' ? (
+                <AiFillLike size={22}/>
+              ) : (
+                <>{transformMessageText(message, near.wallet.accountId)}</>
+              )}
+
               {message.isEncryptStart && (
                 <>
-                  Private chat request
                   {!message.isMy ? (
                     <Button disabled={isLoading}>
                       <span
@@ -104,38 +129,6 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                       </span>
                     </Button>
                   ) : " sent"}
-                </>
-              )}
-
-              {message.isEncryptAccept && "Private chat request accepted"}
-              {message.isEncryptEnd && "Private chat disabled"}
-
-              {(!message.isEncryptStart && !message.isEncryptAccept && !message.isEncryptEnd) && (
-                <>
-                  {message.reply_message && (
-                    <p className={"border-b border-gray-200/20 mb-2 pb-1 text-sm opacity-50"}>
-                      <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current inline mr-1">
-                        <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
-                      </svg>
-                      <b className={"mr-2"}>{message.reply_message.from_address}</b>
-                      <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
-                        {transformMessageText(message.reply_message, near.wallet.accountId)}
-                      </span>
-                    </p>
-                  )}
-
-                  {message.image && (
-                    <img alt=""
-                         src={mediaURL(message.image)}
-                         className={"h-[220px] min-w-[100px] rounded-lg mt-2 mb-3 object-contain"}
-                    />
-                  )}
-
-                  {transformMessageText(message, near.wallet.accountId) === '(like)' ? (
-                    <AiFillLike size={22}/>
-                  ) : (
-                    <>{transformMessageText(message, near.wallet.accountId)}</>
-                  )}
                 </>
               )}
 

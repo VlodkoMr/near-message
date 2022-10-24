@@ -101,6 +101,15 @@ export const transformOneMessage = (message, accountId, isFirst, isLast, isTempo
     secretChat.switchPrivateMode(false);
   }
 
+  // Replace message text for secret chat events
+  if (message.isEncryptAccept) {
+    message.text = "Private chat request accepted";
+  } else if (message.isEncryptEnd) {
+    message.text = "Private chat disabled";
+  } else if (message.isEncryptStart) {
+    message.text = "Private chat request";
+  }
+
   return message;
 }
 

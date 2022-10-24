@@ -156,6 +156,7 @@ export const MyPrivateChat = () => {
                         replyToMessage={replyToMessage}
                         setReplyToMessage={setReplyToMessage}
                         isPrivateMode={isPrivateMode}
+                        setIsPrivateMode={setIsPrivateMode}
           />
         </>
       )}

@@ -14,7 +14,7 @@ import { SecretChat } from "../../utils/secret-chat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 
 export const WriteMessage = ({
-  toAddress, toGroup, onMessageSent, isPrivateMode, replyToMessage, setReplyToMessage
+  toAddress, toGroup, onMessageSent, isPrivateMode, setIsPrivateMode, replyToMessage, setReplyToMessage
 }) => {
   const near = useContext(NearContext);
   const inputRef = useRef(null);
@@ -44,6 +44,7 @@ export const WriteMessage = ({
     let messageText;
     if (secretChat.isPrivateModeEnabled()) {
       messageText = "(secret-end)";
+      secretChat.switchPrivateMode(false);
     } else {
       const chatData = secretChat.getSecretChat();
       if (chatData) {
