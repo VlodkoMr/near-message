@@ -5,9 +5,8 @@ import { Loader } from "../../components/Loader";
 import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
-import { generateTemporaryMessage, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
+import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
-import { base_encode } from "near-api-js/lib/utils/serialize";
 
 const fetchSecondsInterval = 2;
 
@@ -99,7 +98,7 @@ export const MyGroupChat = () => {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.inner_id);
         setTmpMessages(prev => prev.filter(msg => {
-          const innerId = base_encode(`${msg.text}:${msg.image}:${id}`);
+          const innerId = getInnerId(msg.text, msg.image, id);
           return newMessageIds.indexOf(innerId) === -1;
         }));
 

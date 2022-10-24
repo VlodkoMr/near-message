@@ -18,9 +18,8 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
     secretChat.storeSecretChatKey(message.text);
 
     const pubKey = secretChat.getMyPublicKey();
-    const messageText = `(secret-accept:${pubKey})`;
     setIsLoading(true);
-    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", false).then(() => {
+    near.mainContract.sendPrivateMessage(`(secret-accept:${pubKey})`, "", opponent.id, "", "").then(() => {
       setIsLoading(false);
     });
   }
@@ -117,7 +116,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                         <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                       </svg>
                       <b className={"mr-2"}>{message.reply_message.from_address}</b>
-                      <span className={"whitespace-nowrap overflow-hidden max-w-[160px] overflow-ellipsis inline-block align-bottom"}>
+                      <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
                         {transformMessageText(message.reply_message, near.wallet.accountId)}
                       </span>
                     </p>
@@ -126,7 +125,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                   {message.image && (
                     <img alt=""
                          src={mediaURL(message.image)}
-                         className={"h-[220px] min-w-[100px] rounded-lg my-2 object-contain"}
+                         className={"h-[220px] min-w-[100px] rounded-lg mt-2 mb-3 object-contain"}
                     />
                   )}
 

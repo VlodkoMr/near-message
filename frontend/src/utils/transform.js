@@ -35,6 +35,14 @@ export const loadSocialProfiles = async (addressList, near) => {
   }
 }
 
+export const getInnerId = (text, image, toAddress) => {
+  const inner_id = base_encode(`${text}:${image}:${toAddress}`);
+  if (inner_id.length > 10) {
+    return inner_id.slice(0, 10);
+  }
+  return inner_id;
+}
+
 export const transformProfile = (address, socialProfile) => {
   let resultProfile = { id: address };
   if (socialProfile && Object.keys(socialProfile).length > 0) {
@@ -107,8 +115,8 @@ export const transformMessages = (messages, accountId, lastMessageUser) => {
   });
 }
 
-export const generateTemporaryMessage = (text, image, accountId, opponentAddress) => {
-  const inner_id = base_encode(`${text}:${image}:${opponentAddress}`);
+export const generateTemporaryMessage = (text, image, accountId, opponentAddress, encryptKey) => {
+  const inner_id = getInnerId(text, image, opponentAddress);
   const message = {
     id: inner_id,
     from_address: accountId,
@@ -116,6 +124,7 @@ export const generateTemporaryMessage = (text, image, accountId, opponentAddress
     text,
     inner_id,
     image,
+    encrypt_key: encryptKey || ""
   }
   return transformOneMessage(message, accountId, true, true, true);
 }

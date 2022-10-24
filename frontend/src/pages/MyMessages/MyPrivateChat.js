@@ -6,9 +6,8 @@ import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
-import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
+import { generateTemporaryMessage, transformMessages, loadSocialProfile, getInnerId } from "../../utils/transform";
 import { SecretChat } from "../../utils/secret-chat";
-import { base_encode } from "near-api-js/lib/utils/serialize";
 
 const fetchSecondsInterval = 5;
 
@@ -95,12 +94,8 @@ export const MyPrivateChat = () => {
       if (messages.length) {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.inner_id);
-        console.log(`newMessageIds`, newMessageIds);
-
         setTmpMessages(prev => prev.filter(msg => {
-          const innerId = base_encode(`${msg.text}:${msg.image}:${opponentAddress}`);
-          console.log(`new: ${msg.text}:${msg.image}:${opponentAddress}`);
-          console.log(`new innerId`, innerId);
+          const innerId = getInnerId(msg.text, msg.image, opponentAddress);
           return newMessageIds.indexOf(innerId) === -1;
         }));
 
@@ -112,8 +107,8 @@ export const MyPrivateChat = () => {
   }
 
   // add temporary message
-  const appendTemporaryMessage = (text, image) => {
-    let newMessage = generateTemporaryMessage(text, image, near.wallet.accountId, opponentAddress);
+  const appendTemporaryMessage = (text, image, encryptKey) => {
+    let newMessage = generateTemporaryMessage(text, image, near.wallet.accountId, opponentAddress, encryptKey);
     setTmpMessages(prev => prev.concat(newMessage));
   }
 

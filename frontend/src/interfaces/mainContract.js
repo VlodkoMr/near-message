@@ -1,6 +1,5 @@
 import { utils } from 'near-api-js';
-import { base_encode } from "near-api-js/lib/utils/serialize";
-import { SecretChat } from "../utils/secret-chat";
+import { getInnerId } from "../utils/transform";
 
 const THIRTY_TGAS = '30000000000000';
 
@@ -262,20 +261,11 @@ export class MainContract {
    * @param image
    * @param to_address
    * @param reply_message_id
-   * @param isPrivateMode
+   * @param encrypt_key
    * @returns {Promise<*>}
    */
-  async sendPrivateMessage(text, image, to_address, reply_message_id, isPrivateMode) {
-    let encrypt_key = "";
-    if (isPrivateMode) {
-      const encoded = (new SecretChat(to_address, this.wallet.accountId)).encode(text);
-      text = encoded.secret;
-      encrypt_key = encoded.nonce;
-    }
-
-    const inner_id = base_encode(`${text}:${image}:${to_address}`);
-    console.log(`new inner_id`, inner_id);
-
+  async sendPrivateMessage(text, image, to_address, reply_message_id, encrypt_key) {
+    const inner_id = getInnerId(text, image, to_address);
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',
@@ -285,7 +275,7 @@ export class MainContract {
         to_address,
         encrypt_key,
         reply_message_id,
-        inner_id,
+        inner_id
       }
     })
   }
@@ -300,7 +290,7 @@ export class MainContract {
    */
   async sendGroupMessage(text, image, group_id, reply_message_id) {
 
-    const inner_id = base_encode(`${text}:${image}:${group_id}`);
+    const inner_id = getInnerId(text, image, group_id);
     console.log(`inner_id`, inner_id);
 
     return await this.wallet.callMethod({

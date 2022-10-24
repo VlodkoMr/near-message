@@ -56,8 +56,8 @@ export const WriteMessage = ({
     }
 
     if (messageText) {
-      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", false);
-      onMessageSent?.(messageText, messageMedia, toAddress);
+      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
+      onMessageSent?.(messageText, messageMedia);
     }
   }
 
@@ -71,14 +71,20 @@ export const WriteMessage = ({
       return false;
     }
 
+    let encryptKey = "";
     if (toAddress) {
-      // move here encoding
-      sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, isPrivateMode);
+      if (isPrivateMode) {
+        const encoded = (new SecretChat(toAddress, near.wallet.accountId)).encode(messageText);
+        messageText = encoded.secret;
+        encryptKey = encoded.nonce;
+      }
+
+      sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey);
     } else {
       sendFunction = near.mainContract.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
     }
 
-    onMessageSent?.(messageText, messageMedia, toAddress);
+    onMessageSent?.(messageText, messageMedia, encryptKey);
 
     sendFunction.catch(e => {
       console.log(e);
