@@ -74,11 +74,12 @@ export const transformMessages = (near, messages, accountId, lastMessageUser) =>
 
     // secret chat
     if (message.from_address !== accountId) {
-      if (message.isEncryptAccept) {
-        const secretChat = new SecretChat(message.from_address, message.to_address);
-        if (!secretChat.secretChatEnabled()) {
-          secretChat.storeSecretChatKey(message.text);
-        }
+      const secretChat = new SecretChat(message.from_address, message.to_address);
+      if (message.isEncryptAccept && !secretChat.isSecretChatEnabled()) {
+        secretChat.storeSecretChatKey(message.text);
+      }
+      if (message.isEncryptEnd && secretChat.isSecretChatEnabled()) {
+        secretChat.switchPrivateMode(false);
       }
     }
 

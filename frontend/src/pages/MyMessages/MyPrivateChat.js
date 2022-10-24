@@ -80,7 +80,7 @@ export const MyPrivateChat = () => {
   const updateIsSecretChat = (opponent) => {
     if (opponent) {
       const secretChat = new SecretChat(opponent, near.wallet.accountId);
-      setIsSecretChat(secretChat.secretChatEnabled());
+      setIsSecretChat(secretChat.isSecretChatEnabled());
     }
   };
 

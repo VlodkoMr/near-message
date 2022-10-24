@@ -42,7 +42,7 @@ export const WriteMessage = ({ toAddress, toGroup, onMessageSent, isSecretChat }
   const toggleSecretChat = async () => {
     const secretChat = new SecretChat(toAddress, near.wallet.accountId, near);
     setIsLoading(true);
-    if (secretChat.secretChatEnabled()) {
+    if (secretChat.isSecretChatEnabled()) {
       secretChat.endChat().then(() => {
         setIsLoading(false);
       });

@@ -1,12 +1,12 @@
 import { create, open } from "@nearfoundation/near-js-encryption-box";
 import { KeyPairEd25519 } from "near-api-js/lib/utils/key_pair";
 
-const MY_PREFIX = "chatme:my-keys";
 // {public, private}
-
-const CHAT_PREFIX = "chatme:chat-keys";
+const MY_PREFIX = "chatme:my-keys";
 
 // {account:{key, enabled}}
+const CHAT_PREFIX = "chatme:chat-keys";
+
 
 export class SecretChat {
 
@@ -54,24 +54,28 @@ export class SecretChat {
 
   // ----------- Chat -----------
 
-  secretChatEnabled() {
+  getSecretChat() {
     const chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
     if (chat) {
       const chatData = JSON.parse(chat);
       if (chatData[this.opponentAddress]) {
-        return chatData[this.opponentAddress].enabled;
+        return chatData[this.opponentAddress];
       }
+    }
+  }
+
+  isSecretChatEnabled() {
+    const secretChat = this.getSecretChat();
+    if (secretChat) {
+      return secretChat.enabled;
     }
     return false;
   }
 
   chatPublicKey() {
-    const chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
-    if (chat) {
-      const chatData = JSON.parse(chat);
-      if (chatData[this.opponentAddress]) {
-        return chatData[this.opponentAddress].key;
-      }
+    const secretChat = this.getSecretChat();
+    if (secretChat) {
+      return secretChat.key;
     }
   }
 
@@ -95,26 +99,31 @@ export class SecretChat {
       let currentData = {};
       let chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
       if (chat) {
-        currentData = JSON.parse(currentData);
+        currentData = JSON.parse(chat);
       }
       currentData[this.opponentAddress] = {
         key: chatPublicKey,
         enabled: true
       };
-
       localStorage.setItem(`${CHAT_PREFIX}:${this.myAddress}`, JSON.stringify(currentData));
     }
   }
 
   startNewChat() {
     return new Promise((resolve, reject) => {
-      const pubKey = this.getMyPublicKey();
-      const message = `(secret-start:${pubKey})`;
-      this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
+      const secretChat = this.getSecretChat();
+      if (secretChat) {
+        this.switchPrivateMode(true);
         resolve(true);
-      }).catch(() => {
-        reject();
-      });
+      } else {
+        const pubKey = this.getMyPublicKey();
+        const message = `(secret-start:${pubKey})`;
+        this.near.mainContract.sendPrivateMessage(message, "", this.opponentAddress, "", "").then(() => {
+          resolve(true);
+        }).catch(() => {
+          reject();
+        });
+      }
     })
   }
 
@@ -132,16 +141,16 @@ export class SecretChat {
     })
   }
 
-  disablePrivateMode() {
+  switchPrivateMode(isEnabled) {
     const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
     const chat = localStorage.getItem(chatKey);
     const chatData = JSON.parse(chat);
-    chatData[this.opponentAddress].enabled = false;
+    chatData[this.opponentAddress].enabled = isEnabled;
     localStorage.setItem(chatKey, JSON.stringify(chatData));
   }
 
   endChat() {
-    this.disablePrivateMode();
+    this.switchPrivateMode(false);
 
     return new Promise((resolve, reject) => {
       let message = `(secret-end)`;
