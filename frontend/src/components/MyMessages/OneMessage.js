@@ -17,15 +17,17 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
     const secretChat = new SecretChat(message.from_address, near.wallet.accountId);
     secretChat.storeSecretChatKey(message.text);
 
-    const pubKey = secretChat.getMyPublicKey();
     setIsLoading(true);
-    near.mainContract.sendPrivateMessage(`(secret-accept:${pubKey})`, "", opponent.id, "", "").then(() => {
+    const messageText = `(secret-accept:${secretChat.getMyPublicKey()})`;
+    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
       setIsLoading(false);
     });
   }
 
   const handleSpamReport = () => {
-
+    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
+      setIsLoading(false);
+    });
   }
 
   return (
@@ -63,11 +65,11 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
 
             {!message.isMy && (
               <>
-                <MessageAction onClick={() => handleSpamReport()}>
+                <MessageAction onClick={() => handleSpamReport()} title={"Spam Report"}>
                   <span className={"text-xl leading-4 font-semibold"}>!</span>
                 </MessageAction>
 
-                <MessageAction onClick={() => setReplyToMessage(message)}>
+                <MessageAction onClick={() => setReplyToMessage(message)} title={"Reply"}>
                   <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
                     <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                   </svg>

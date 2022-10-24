@@ -398,6 +398,25 @@ impl Contract {
     }
 
     /**
+     * Spam Report
+     */
+    pub fn spam_report(&mut self, message_id: U128, message_sender: AccountId) {
+        if self.messages_count < message_id.0 {
+            env::panic_str("Wrong message ID");
+        }
+        let user_account = self.users.get(&message_sender);
+        if user_account.is_some() {
+            let mut user_account: User = user_account.unwrap().into();
+            user_account.spam_counts += 1;
+            user_account.last_spam_report = env::block_timestamp();
+            self.users.insert(&message_sender, &user_account.into());
+        } else {
+            let spam_count = self.user_spam_counts.get(&message_sender).unwrap_or(0);
+            self.user_spam_counts.insert(&message_sender, &(spam_count + 1));
+        }
+    }
+
+    /**
      * Increase User Level
      */
     #[payable]
@@ -484,7 +503,7 @@ mod tests {
     fn create_test_group(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
         set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
         contract.create_new_group(
-            title, "".to_string(), "".to_string(), "".to_string(), group_type, members,
+            title, "".to_string(), "".to_string(), "".to_string(), group_type, members, Some(true),
         );
     }
 
@@ -499,7 +518,7 @@ mod tests {
         let mut contract = Contract::init(NEAR_ID.parse().unwrap());
 
         let message_id = contract.send_private_message(
-            "Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None, None,
+            "Test message".to_string(), "".to_string(), "test.testnet".parse().unwrap(), None, None, None,
         );
         assert_eq!(message_id, U128::from(1));
     }
@@ -608,12 +627,12 @@ mod tests {
 
         // Test owner message
         set_context(NEAR_ID, 0);
-        let message_id = contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
+        let message_id = contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None, None);
         assert_eq!(message_id, U128::from(1));
 
         // Test member message
         set_context("m1.testnet", 0);
-        let message_id = contract.send_group_message("Test message 2".to_string(), "".to_string(), 1, None);
+        let message_id = contract.send_group_message("Test message 2".to_string(), "".to_string(), 1, None, None);
         assert_eq!(message_id, U128::from(2));
     }
 
@@ -650,7 +669,7 @@ mod tests {
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
-        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
+        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None, None);
     }
 
     #[test]
@@ -661,7 +680,7 @@ mod tests {
 
         // Test guest message - error expected
         set_context("guest.testnet", 0);
-        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None);
+        contract.send_group_message("Test message 1".to_string(), "".to_string(), 1, None, None);
     }
 
     #[test]
