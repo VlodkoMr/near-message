@@ -7,6 +7,7 @@ import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
+import { SecondaryButton } from "../../assets/css/components";
 
 const fetchSecondsInterval = 2;
 
@@ -128,6 +129,12 @@ export const MyGroupChat = () => {
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (
               <>
+                {/*<div className={"w-40 mx-auto text-center"}>*/}
+                {/*  <SecondaryButton small={true} className={"w-full"}>*/}
+                {/*    load previous*/}
+                {/*  </SecondaryButton>*/}
+                {/*</div>*/}
+
                 {messages.map((message, index) => (
                     <OneMessage message={message}
                                 key={message.id}
