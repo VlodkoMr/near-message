@@ -73,7 +73,6 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
         message.reply_to_message = replyMessageId
         message.is_spam = false
-        message.is_protected = false
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;

@@ -33,7 +33,6 @@ type PrivateMessage @entity {
     tx_hash: String!
     is_spam: Boolean!
     is_removed: Boolean!
-    is_protected: Boolean!
 }
 
 type GroupChat @entity {

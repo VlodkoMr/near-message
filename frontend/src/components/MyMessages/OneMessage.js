@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
-import { AiFillLike, BsClockHistory, SiLetsencrypt } from "react-icons/all";
+import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
 import { SecretChat } from "../../utils/secret-chat";

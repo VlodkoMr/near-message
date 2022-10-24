@@ -225,15 +225,6 @@ export class PrivateMessage extends Entity {
   set is_removed(value: boolean) {
     this.set("is_removed", Value.fromBoolean(value));
   }
-
-  get is_protected(): boolean {
-    let value = this.get("is_protected");
-    return value!.toBoolean();
-  }
-
-  set is_protected(value: boolean) {
-    this.set("is_protected", Value.fromBoolean(value));
-  }
 }
 
 export class GroupChat extends Entity {
