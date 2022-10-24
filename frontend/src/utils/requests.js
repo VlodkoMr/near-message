@@ -75,9 +75,11 @@ export const loadGroupMessages = (groupId) => {
         image
         from_address
         created_at
+        reply_message {id, from_address, text, image}
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
+    console.log(`result`, result);
     resolve(result.data?.groupMessages);
   });
 }
@@ -93,10 +95,12 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
         id_num_gt: ${lastMessageId}
       }) {
         id
+        inner_id
         text
         image
         from_address
         created_at
+        reply_message {id, from_address, text, image}
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
@@ -121,6 +125,7 @@ export const loadPrivateMessages = (chatId) => {
         to_address
         created_at
         encrypt_key
+        reply_message {id, from_address, text, image, encrypt_key}
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
@@ -139,12 +144,14 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
         id_num_gt: ${lastMessageId}
       }) {
         id
+        inner_id
         text
         image
         from_address
         to_address
         created_at
         encrypt_key
+        reply_message {id, from_address, text, image, encrypt_key}
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();

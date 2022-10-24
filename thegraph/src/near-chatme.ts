@@ -44,11 +44,12 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
     if (messageText) {
       const messageId = data.get('id')
+      const innerId = data.get('inner_id')
       const fromUser = data.get('from_user')
       const toUser = data.get('to_user')
       const image = data.get('image')
       const encrypt_key = data.get('encrypt_key')
-      const replyToMessage = data.get('reply_to_message')
+      const replyToMessage = data.get('reply_message')
 
       let replyMessageId = ""
       if (replyToMessage) {
@@ -65,13 +66,14 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
         message = new PrivateMessage(messageId.toString())
         message.id_num = BigInt.fromString(messageId.toString()).toI32()
+        message.inner_id = innerId ? innerId.toString() : ""
         message.chat_id = chatId.toString()
         message.from_address = fromUser.toString()
         message.to_address = toUser.toString()
         message.text = messageText.toString()
         message.image = image ? image.toString() : ""
         message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
-        message.reply_to_message = replyMessageId
+        message.reply_message = replyMessageId
         message.is_spam = false
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
@@ -107,10 +109,11 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
+    const innerId = data.get('inner_id')
     const messageText = data.get('text')
     const groupId = data.get('group_id')
     const image = data.get('image')
-    const replyToMessage = data.get('reply_to_message')
+    const replyToMessage = data.get('reply_message')
 
     if (messageText && groupId) {
       const messageId = data.get('id')
@@ -128,11 +131,12 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       if (!message) {
         message = new GroupMessage(messageId.toString())
         message.id_num = BigInt.fromString(messageId.toString()).toI32()
+        message.inner_id = innerId ? innerId.toString() : ""
         message.from_address = fromUser.toString()
         message.group_id = groupId.toString()
         message.text = messageText.toString()
         message.image = image ? image.toString() : ""
-        message.reply_to_message = replyMessageId
+        message.reply_message = replyMessageId
         message.is_spam = false
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()

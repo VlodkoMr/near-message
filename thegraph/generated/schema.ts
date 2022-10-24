@@ -119,6 +119,15 @@ export class PrivateMessage extends Entity {
     this.set("id_num", Value.fromI32(value));
   }
 
+  get inner_id(): string {
+    let value = this.get("inner_id");
+    return value!.toString();
+  }
+
+  set inner_id(value: string) {
+    this.set("inner_id", Value.fromString(value));
+  }
+
   get chat_id(): string {
     let value = this.get("chat_id");
     return value!.toString();
@@ -155,8 +164,8 @@ export class PrivateMessage extends Entity {
     this.set("encrypt_key", Value.fromString(value));
   }
 
-  get reply_to_message(): string | null {
-    let value = this.get("reply_to_message");
+  get reply_message(): string | null {
+    let value = this.get("reply_message");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -164,11 +173,11 @@ export class PrivateMessage extends Entity {
     }
   }
 
-  set reply_to_message(value: string | null) {
+  set reply_message(value: string | null) {
     if (!value) {
-      this.unset("reply_to_message");
+      this.unset("reply_message");
     } else {
-      this.set("reply_to_message", Value.fromString(<string>value));
+      this.set("reply_message", Value.fromString(<string>value));
     }
   }
 
@@ -326,6 +335,15 @@ export class GroupMessage extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get inner_id(): string {
+    let value = this.get("inner_id");
+    return value!.toString();
+  }
+
+  set inner_id(value: string) {
+    this.set("inner_id", Value.fromString(value));
+  }
+
   get id_num(): i32 {
     let value = this.get("id_num");
     return value!.toI32();
@@ -344,8 +362,8 @@ export class GroupMessage extends Entity {
     this.set("from_address", Value.fromString(value));
   }
 
-  get reply_to_message(): string | null {
-    let value = this.get("reply_to_message");
+  get reply_message(): string | null {
+    let value = this.get("reply_message");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -353,11 +371,11 @@ export class GroupMessage extends Entity {
     }
   }
 
-  set reply_to_message(value: string | null) {
+  set reply_message(value: string | null) {
     if (!value) {
-      this.unset("reply_to_message");
+      this.unset("reply_message");
     } else {
-      this.set("reply_to_message", Value.fromString(<string>value));
+      this.set("reply_message", Value.fromString(<string>value));
     }
   }
 

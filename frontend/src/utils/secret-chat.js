@@ -64,7 +64,7 @@ export class SecretChat {
     }
   }
 
-  isSecretChatEnabled() {
+  isPrivateModeEnabled() {
     const secretChat = this.getSecretChat();
     if (secretChat) {
       return secretChat.enabled;

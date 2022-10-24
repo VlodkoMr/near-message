@@ -5,7 +5,8 @@ import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requ
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
-import { loadSocialProfiles, onlyUnique } from "../../utils/transform";
+import { loadSocialProfiles, onlyUnique, transformMessageText } from "../../utils/transform";
+import { SecretChat } from "../../utils/secret-chat";
 
 const fetchSecondsInterval = 14;
 
@@ -105,7 +106,9 @@ export const LeftPanelChats = () => {
         <p className={"font-medium text-gray-50"}>{groupsById[chat.id].title}</p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
-            <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">{chat.last_message.text}</p>
+            <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
+              {transformMessageText(chat.last_message, near.wallet.accountId)}
+            </p>
           </div>
           <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
             <p>{timestampToDate(chat.updated_at)}</p>
@@ -130,7 +133,9 @@ export const LeftPanelChats = () => {
           <p className={"font-medium text-gray-50"}>{opponent}</p>
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
-              <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">{chat.last_message.text}</p>
+              <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
+                {transformMessageText(chat.last_message, near.wallet.accountId)}
+              </p>
             </div>
             <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
               <p>{timestampToDate(chat.updated_at)}</p>

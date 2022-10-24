@@ -22,11 +22,12 @@ type PrivateChat @entity {
 type PrivateMessage @entity {
     id: ID!
     id_num: Int!
+    inner_id: String!
     chat_id: PrivateChat!,
     from_address: String!
     to_address: String!
     encrypt_key: String!
-    reply_to_message: PrivateMessage
+    reply_message: PrivateMessage
     text: String!
     image: String!
     created_at: Int!
@@ -45,9 +46,10 @@ type GroupChat @entity {
 
 type GroupMessage @entity {
     id: ID!
+    inner_id: String!
     id_num: Int!
     from_address: String!
-    reply_to_message: GroupMessage
+    reply_message: GroupMessage
     group_id: String!
     text: String!
     image: String!

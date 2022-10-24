@@ -58,6 +58,12 @@ export const RadioLabel = styled.label.attrs({
   className: `
   block bg-[#242B51]/50 px-3 py-1 mb-1 transition hover:bg-[#242B51]/70 cursor-pointer`,
 })``;
+
 export const RadioLabelText = styled.p.attrs({
   className: `text-sm text-gray-400/80 ml-8 mb-2 -mt-2`,
+})``;
+
+export const MessageAction = styled.button.attrs({
+  className: `hidden group-hover:block flex flex-shrink-0 focus:outline-none mr-2 block rounded-full text-gray-500 
+  hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2`,
 })``;

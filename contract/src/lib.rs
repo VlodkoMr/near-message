@@ -329,7 +329,7 @@ impl Contract {
      * Private Message
      */
     pub fn send_private_message(
-        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>,
+        &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>, inner_id: Option<String>,
     ) -> U128 {
         self.user_validate_spam();
 
@@ -345,9 +345,10 @@ impl Contract {
         self.messages_count += 1;
         let message = json!({
             "id": self.messages_count.to_string(),
+            "inner_id": inner_id.unwrap_or("".to_string()),
             "from_user": account.to_string(),
             "to_user": to_address.to_string(),
-            "reply_id": reply_message_id.unwrap_or("".to_string()),
+            "reply_message": reply_message_id.unwrap_or("".to_string()),
             "text": text,
             "image": image.to_string(),
             "encrypt_key": encrypt_key.unwrap_or("".to_string())
@@ -361,7 +362,7 @@ impl Contract {
      * Group Message
      */
     pub fn send_group_message(
-        &mut self, text: String, image: String, group_id: u32, reply_message_id: Option<String>,
+        &mut self, text: String, image: String, group_id: u32, reply_message_id: Option<String>, inner_id: Option<String>,
     ) -> U128 {
         let group: Group = self.groups.get(&group_id).unwrap().into();
         let account = env::predecessor_account_id();
@@ -383,9 +384,10 @@ impl Contract {
         self.messages_count += 1;
         let message = json!({
             "id": self.messages_count.to_string(),
+            "inner_id": inner_id.unwrap_or("".to_string()),
             "from_user": env::predecessor_account_id().to_string(),
             "group_id": group_id.to_string(),
-            "reply_id": reply_message_id.unwrap_or("".to_string()),
+            "reply_message": reply_message_id.unwrap_or("".to_string()),
             "text": text,
             "image": image.to_string(),
         }).to_string();

@@ -1,4 +1,5 @@
 import { SecretChat } from "./secret-chat";
+import { base_encode } from "near-api-js/lib/utils/serialize";
 
 export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
@@ -62,46 +63,79 @@ export const transformProfile = (address, socialProfile) => {
   return resultProfile;
 }
 
-export const transformMessages = (near, messages, accountId, lastMessageUser) => {
-  return messages.map((message, index) => {
-    message.isEncryptStart = message.text.indexOf("(secret-start:") !== -1;
-    message.isEncryptAccept = message.text.indexOf("(secret-accept:") !== -1;
-    message.isEncryptEnd = message.text.indexOf("(secret-end)") !== -1;
-    message.isFirst = lastMessageUser !== message.from_address;
-    message.isMy = message.from_address === accountId;
-    message.isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
-    message.isTemporary = false;
+export const transformOneMessage = (message, index, accountId, isFirst, isLast) => {
+  message.isEncryptStart = message.text.indexOf("(secret-start:") !== -1;
+  message.isEncryptAccept = message.text.indexOf("(secret-accept:") !== -1;
+  message.isEncryptEnd = message.text.indexOf("(secret-end)") !== -1;
+  message.isMy = message.from_address === accountId;
+  message.isTemporary = false;
+  message.isFirst = isFirst;
+  message.isLast = isLast;
 
-    // secret chat
-    if (message.from_address !== accountId) {
-      const secretChat = new SecretChat(message.from_address, message.to_address);
-      if (message.isEncryptAccept && !secretChat.isSecretChatEnabled()) {
-        secretChat.storeSecretChatKey(message.text);
-      }
-      if (message.isEncryptEnd && secretChat.isSecretChatEnabled()) {
-        secretChat.switchPrivateMode(false);
-      }
+  if (message.reply_message) {
+    message.reply_message = transformOneMessage(message.reply_message, index, accountId, false, false)
+  }
+
+  // secret chat
+  const secretChat = new SecretChat(message.isMy ? message.to_address : message.from_address, accountId);
+  if (message.from_address !== accountId) {
+    if (message.isEncryptAccept && !secretChat.isPrivateModeEnabled()) {
+      secretChat.storeSecretChatKey(message.text);
     }
+  }
+
+  // Activate/Deactivate secret chat on encrypted message received
+  if (message.encrypt_key && !secretChat.isPrivateModeEnabled()) {
+    secretChat.switchPrivateMode(true);
+  }
+  if (message.isEncryptEnd && secretChat.isPrivateModeEnabled()) {
+    secretChat.switchPrivateMode(false);
+  }
+
+  return message;
+}
+
+export const transformMessages = (messages, accountId, lastMessageUser) => {
+  return messages.map((message, index) => {
+    const isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
+    const isFirst = lastMessageUser !== message.from_address;
+    const result = transformOneMessage(message, index, accountId, isFirst, isLast);
 
     lastMessageUser = message.from_address;
-    return message;
+    return result;
   });
 }
 
-export const generateTemporaryMessage = (id, text, image, accountId, opponent) => {
+export const generateTemporaryMessage = (text, image, accountId, opponentAddress) => {
+  console.log(`tmp`, `${text}:${image}:${opponentAddress}`);
+
+  const inner_id = base_encode(`${text}:${image}:${opponentAddress}`);
+  console.log(`tmp inner_id`, inner_id);
+
   return {
+    id: inner_id,
     created_at: new Date() / 1000,
     from_address: accountId,
-    id: id,
-    to: opponent,
+    to_address: opponentAddress,
     isFirst: true,
     isMy: true,
     isTemporary: true,
     text,
     image,
+    inner_id
   };
 }
 
 export const onlyUnique = (value, index, self) => {
   return self.indexOf(value) === index;
+}
+
+export const transformMessageText = (message, myAccountId) => {
+  if (message.encrypt_key) {
+    const opponentAddress = message.from_address !== myAccountId ? message.from_address : message.to_address;
+    const secretChat = new SecretChat(opponentAddress, myAccountId);
+    // return message.text
+    return secretChat.decode(message.text, message.encrypt_key)
+  }
+  return message.text;
 }

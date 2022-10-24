@@ -8,6 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile } from "../../utils/transform";
 import { SecretChat } from "../../utils/secret-chat";
+import { base_encode } from "near-api-js/lib/utils/serialize";
 
 const fetchSecondsInterval = 5;
 
@@ -21,15 +22,18 @@ export const MyPrivateChat = () => {
   const [opponent, setOpponent] = useState();
   const [reloadCounter, setReloadCounter] = useState(0);
   const [opponentAddress, setOpponentAddress] = useState("");
-  const [isSecretChat, setIsSecretChat] = useState(false);
+  const [isPrivateMode, setIsPrivateMode] = useState(false);
+  const [replyToMessage, setReplyToMessage] = useState(null);
 
   useEffect(() => {
     const address = id.split("|");
     const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
     setOpponentAddress(opponentAddress);
-    updateIsSecretChat(opponentAddress);
+    updateIsPrivateMode(opponentAddress);
 
     setTmpMessages([]);
+    setReplyToMessage(null);
+
     loadSocialProfile(opponentAddress, near).then(result => {
       setOpponent(result);
     }).catch(e => {
@@ -38,7 +42,7 @@ export const MyPrivateChat = () => {
 
     // Load last messages
     loadPrivateMessages(id).then(messages => {
-      setMessages(transformMessages(near, messages, near.wallet.accountId));
+      setMessages(transformMessages(messages, near.wallet.accountId));
       setIsReady(true);
     });
 
@@ -58,13 +62,13 @@ export const MyPrivateChat = () => {
         appendNewChatMessages();
       } else {
         loadPrivateMessages(id).then(messages => {
-          setMessages(transformMessages(near, messages, near.wallet.accountId));
+          setMessages(transformMessages(messages, near.wallet.accountId));
         });
       }
     }
 
     // check is secret chat enabled
-    updateIsSecretChat(opponentAddress);
+    updateIsPrivateMode(opponentAddress);
   }, [reloadCounter]);
 
   useEffect(() => {
@@ -77,10 +81,10 @@ export const MyPrivateChat = () => {
     }, 100);
   }, [messages, tmpMessages]);
 
-  const updateIsSecretChat = (opponent) => {
+  const updateIsPrivateMode = (opponent) => {
     if (opponent) {
       const secretChat = new SecretChat(opponent, near.wallet.accountId);
-      setIsSecretChat(secretChat.isSecretChatEnabled());
+      setIsPrivateMode(secretChat.isPrivateModeEnabled());
     }
   };
 
@@ -90,19 +94,22 @@ export const MyPrivateChat = () => {
     loadNewPrivateMessages(id, lastMessage.id).then(messages => {
       if (messages.length) {
         // remove if found in temporary
-        const newMessageIds = messages.map(msg => msg.id);
-        setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
+        const newMessageIds = messages.map(msg => msg.inner_id);
+        setTmpMessages(prev => prev.filter(msg => {
+          const innerId = base_encode(`${msg.text}:${msg.image}:${opponentAddress}`);
+          return newMessageIds.indexOf(innerId) === -1;
+        }));
 
         // append new messages
-        const newMessages = transformMessages(near, messages, near.wallet.accountId, lastMessage.from_address);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, image) => {
-    let newMessage = generateTemporaryMessage(messageId, text, image, near.wallet.accountId, opponent);
+  const appendTemporaryMessage = (text, image) => {
+    let newMessage = generateTemporaryMessage(text, image, near.wallet.accountId, opponentAddress);
     setTmpMessages(prev => prev.concat(newMessage));
   }
 
@@ -123,11 +130,12 @@ export const MyPrivateChat = () => {
                     <OneMessage key={message.id}
                                 message={message}
                                 opponent={opponent}
+                                setReplyToMessage={setReplyToMessage}
                                 isLast={isLastMessage(message, index)}
                     />
                   )
                 )}
-                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to === opponent).map(tmpMessage => (
+                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to_address === opponentAddress).map(tmpMessage => (
                     <OneMessage key={tmpMessage.id}
                                 message={tmpMessage}
                                 opponent={opponent}
@@ -146,7 +154,9 @@ export const MyPrivateChat = () => {
 
           <WriteMessage toAddress={opponent.id}
                         onMessageSent={appendTemporaryMessage}
-                        isSecretChat={isSecretChat}
+                        replyToMessage={replyToMessage}
+                        setReplyToMessage={setReplyToMessage}
+                        isPrivateMode={isPrivateMode}
           />
         </>
       )}

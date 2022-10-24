@@ -7,6 +7,7 @@ import { WriteMessage } from "../../components/MyMessages/WriteMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
+import { base_encode } from "near-api-js/lib/utils/serialize";
 
 const fetchSecondsInterval = 2;
 
@@ -20,6 +21,7 @@ export const MyGroupChat = () => {
   const [reloadCounter, setReloadCounter] = useState(0);
   const [tmpMessages, setTmpMessages] = useState([]);
   const [userProfiles, setUserProfiles] = useState({});
+  const [replyToMessage, setReplyToMessage] = useState(null);
 
   const loadGroupInfo = async () => {
     return await near.mainContract.getGroupById(parseInt(id));
@@ -28,13 +30,14 @@ export const MyGroupChat = () => {
   useEffect(() => {
     setIsReady(false);
 
+    setReplyToMessage(null);
     setTmpMessages([]);
     loadGroupInfo().then(group => {
       setGroup(group);
     })
 
     loadGroupMessages(id).then(messages => {
-      setMessages(transformMessages(near, messages, near.wallet.accountId));
+      setMessages(transformMessages(messages, near.wallet.accountId));
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
       loadSocialProfiles(profiles, near).then(result => {
@@ -62,7 +65,7 @@ export const MyGroupChat = () => {
         appendNewChatMessages();
       } else {
         loadGroupMessages(id).then(messages => {
-          setMessages(transformMessages(near, messages, near.wallet.accountId));
+          setMessages(transformMessages(messages, near.wallet.accountId));
         });
       }
     }
@@ -94,19 +97,22 @@ export const MyGroupChat = () => {
         });
 
         // remove if found in temporary
-        const newMessageIds = messages.map(msg => msg.id);
-        setTmpMessages(prev => prev.filter(msg => newMessageIds.indexOf(msg.id) === -1));
+        const newMessageIds = messages.map(msg => msg.inner_id);
+        setTmpMessages(prev => prev.filter(msg => {
+          const innerId = base_encode(`${msg.text}:${msg.image}:${id}`);
+          return newMessageIds.indexOf(innerId) === -1;
+        }));
 
         // append new messages
-        const newMessages = transformMessages(near, messages, near.wallet.accountId, lastMessage.from_address, id);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });
   }
 
   // add temporary message
-  const appendTemporaryMessage = (messageId, text, image) => {
-    const tmpMessage = generateTemporaryMessage(messageId, text, image, near.wallet.accountId, id);
+  const appendTemporaryMessage = (text, image) => {
+    const tmpMessage = generateTemporaryMessage(text, image, near.wallet.accountId, id);
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 
@@ -127,11 +133,12 @@ export const MyGroupChat = () => {
                     <OneMessage message={message}
                                 key={message.id}
                                 opponent={userProfiles[message.from_address] || null}
+                                setReplyToMessage={setReplyToMessage}
                                 isLast={isLastMessage(message, index)}
                     />
                   )
                 )}
-                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to === id).map(tmpMessage => (
+                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to_address === id).map(tmpMessage => (
                     <OneMessage message={tmpMessage}
                                 key={tmpMessage.id}
                                 isLast={true}
@@ -147,7 +154,10 @@ export const MyGroupChat = () => {
             <div ref={bottomRef}/>
           </div>
 
-          <WriteMessage toGroup={group} onMessageSent={appendTemporaryMessage}/>
+          <WriteMessage toGroup={group}
+                        replyToMessage={replyToMessage}
+                        setReplyToMessage={setReplyToMessage}
+                        onMessageSent={appendTemporaryMessage}/>
         </>
       )}
     </>
