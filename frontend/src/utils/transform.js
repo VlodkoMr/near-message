@@ -106,15 +106,6 @@ export const transformOneMessage = (message, accountId, isFirst, isLast, isTempo
     secretChat.switchPrivateMode(false);
   }
 
-  // Replace message text for secret chat events
-  if (message.isEncryptAccept) {
-    message.text = "Private chat request accepted";
-  } else if (message.isEncryptEnd) {
-    message.text = "Private chat disabled";
-  } else if (message.isEncryptStart) {
-    message.text = "Private chat request";
-  }
-
   return message;
 }
 
@@ -148,9 +139,20 @@ export const onlyUnique = (value, index, self) => {
 }
 
 export const decodeMessageText = (message, myAccountId) => {
+  let result = message.text;
   if (message.encrypt_key) {
     const secretChat = new SecretChat(message.opponentAddress, myAccountId);
-    return secretChat.decode(message.text, message.encrypt_key)
+    result = secretChat.decode(message.text, message.encrypt_key)
   }
-  return message.text;
+
+  // Replace message text for secret chat events
+  if (message.isEncryptAccept) {
+    result = "Private chat request accepted";
+  } else if (message.isEncryptEnd) {
+    result = "Private chat disabled";
+  } else if (message.isEncryptStart) {
+    result = "Private chat request";
+  }
+
+  return result;
 }

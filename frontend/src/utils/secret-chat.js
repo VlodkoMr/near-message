@@ -91,6 +91,7 @@ export class SecretChat {
   }
 
   storeSecretChatKey(messageText) {
+    console.log(`messageText`, messageText);
     const keyParts = messageText.split(":");
     const chatPublicKey = keyParts[1].replace(")", "");
     if (keyParts.length) {
