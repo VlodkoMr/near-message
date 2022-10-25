@@ -8,15 +8,19 @@ import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, I
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
 import { Loader } from "../../components/Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
+import { ExportKeysPopup } from "../../components/MyMessages/ExportKeysPopup";
+import { ImportKeysPopup } from "../../components/MyMessages/ImportKeysPopup";
 
 export const MyDashboard = () => {
   const near = useContext(NearContext);
-  const [ myProfile ] = useOutletContext();
-  const [ account, setAccount ] = useState();
-  const [ isUpgradeLoading, setIsUpgradeLoading ] = useState(0);
-  const [ isAccountReady, setIsAccountReady ] = useState(false);
-  const [ isInfoHidden, setIsInfoHidden ] = useState(false);
-  const [ spamCount, setSpamCount ] = useState(0);
+  const [myProfile] = useOutletContext();
+  const [account, setAccount] = useState();
+  const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
+  const [isAccountReady, setIsAccountReady] = useState(false);
+  const [isInfoHidden, setIsInfoHidden] = useState(false);
+  const [spamCount, setSpamCount] = useState(0);
+  const [isExportPopupVisible, setIsExportPopupVisible] = useState(false);
+  const [isImportPopupVisible, setIsImportPopupVisible] = useState(false);
 
   const loadAccount = async () => {
     return await near.mainContract.getUserInfo(near.wallet.accountId);
@@ -156,22 +160,23 @@ export const MyDashboard = () => {
           </div>
 
           <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
-            <BlockTitle text={"Documentation & External Links"}/>
-            <div className={"flex flex-row pt-2"}>
-              <div className={"flex-1"}>
-                <ExternalLink text={"General Overview"} url={""}/>
-                <ExternalLink text={"Get Started"} url={""}/>
-                <ExternalLink text={"Smart-Contract Integration"} url={""}/>
-                <ExternalLink text={"NEAR-API-JS Integration"} url={""}/>
-                <ExternalLink text={"Widgets (React components)"} url={""}/>
+            <BlockTitle text={"Account Keys"}/>
+            <div className={""}>
+              <p className={"opacity-60 text-sm"}>
+                Account keys used for private conversations: each device generate it's own keys.
+                To decode private messages in another device you can export/import your private keys.
+              </p>
+              <div className={"my-4"}>
+                <SecondaryButton small="true" onClick={() => setIsExportPopupVisible(true)}>
+                  Export Key
+                </SecondaryButton>
+                <span className={"ml-4"}>
+                  <SecondaryButton small="true" onClick={() => setIsImportPopupVisible(true)}>
+                    Import Key
+                  </SecondaryButton>
+                </span>
               </div>
-              <div className={"flex-1"}>
-                <ExternalLink text={"Discord"} url={""}/>
-                <ExternalLink text={"Twitter"} url={""}/>
-                <ExternalLink text={"Telegram"} url={""}/>
-                <ExternalLink text={"Contact Us"} url={""}/>
-                <ExternalLink text={"Terms & Conditions"} url={"/terms"}/>
-              </div>
+              <p className={"text-sm"}>NOTE: Import function replace previous keys on your device.</p>
             </div>
           </div>
         </div>
@@ -181,8 +186,8 @@ export const MyDashboard = () => {
             {isAccountReady && (
               <>
                 <BlockTitle text={"My Account Level"}>
-                  <span className={"bg-gray-700 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
-                    Current: {!account ? ("Free") : account.level === 1 ? "Bronze" : "Gold"}
+                  <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
+                    Current Plan: {!account ? ("Free") : account.level === 1 ? "Bronze" : "Gold"}
                   </span>
                 </BlockTitle>
                 <div className={"flex flex-row"}>
@@ -208,7 +213,10 @@ export const MyDashboard = () => {
                       10 reports about spam lock account;
                     </p>
                     {!account && (
-                      <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
+                      <SecondaryButton small="true"
+                                       className={"mt-4 pointer-events-none opacity-50"}>
+                        Current Plan
+                      </SecondaryButton>
                     )}
                   </AccountLevel>
                   <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={account && account.level === 1}
@@ -234,7 +242,10 @@ export const MyDashboard = () => {
                       Temporary lock on spam (up to 1 hour);
                     </p>
                     {!account && (
-                      <PrimaryButton className={"mt-3"} disabled={isUpgradeLoading > 0} onClick={() => activateLevel(1)}>
+                      <PrimaryButton small="true"
+                                     className={"mt-4"}
+                                     disabled={isUpgradeLoading > 0}
+                                     onClick={() => activateLevel(1)}>
                         Activate <small>({getLevelPrice(1)} NEAR)</small>
                         {isUpgradeLoading === 1 && (
                           <span className={"ml-2"}>
@@ -270,7 +281,10 @@ export const MyDashboard = () => {
                     </p>
 
                     {(!account || account.level === 1) && (
-                      <PrimaryButton className={"mt-3"} disabled={isUpgradeLoading > 0} onClick={() => activateLevel(2)}>
+                      <PrimaryButton small="true"
+                                     className={"mt-4"}
+                                     disabled={isUpgradeLoading > 0}
+                                     onClick={() => activateLevel(2)}>
                         Activate <small>({getLevelPrice(2)} NEAR)</small>
                         {isUpgradeLoading === 2 && (
                           <span className={"ml-2"}>
@@ -280,7 +294,9 @@ export const MyDashboard = () => {
                       </PrimaryButton>
                     )}
                     {(account && account.level === 2) && (
-                      <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
+                      <SecondaryButton small="true" className={"mt-4 pointer-events-none opacity-50"}>
+                        Current Plan
+                      </SecondaryButton>
                     )}
                   </AccountLevel>
                 </div>
@@ -289,8 +305,22 @@ export const MyDashboard = () => {
           </div>
         </div>
 
-        <div className={"mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
+        {!isInfoHidden && (
+          <div className={"mb-6"}>
+            <div className={"bg-red-600/40 py-4 px-6 flex-1 rounded-lg text-sm"}>
+              <BlockTitle text={"Important Information"} isRed={true}>
+                <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardInfo()}/>
+              </BlockTitle>
+              <p>
+                All blockchain data is publicly available! Do not send private information, passwords or other important information. <br/>
+                For private conversations, you can use "Private Mode", but we recommend not to send any personal/sensitive content.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className={"mb-6 flex flex-row gap-6"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
             {isAccountReady && (
               <>
                 <BlockTitle text={"Account Spam Level"}/>
@@ -307,8 +337,9 @@ export const MyDashboard = () => {
                           <span className={"ml-4 text-lg"}>{spamCount}/10</span>
                         </p>
                       )}
-                      <p className={"opacity-60"}>
-                        Account limit: 10 reports about spam in your messages. You can upgrade Account Level to avoid complete lock.
+                      <p className={"opacity-60 text-sm mt-2"}>
+                        Account limit: 10 reports about spam in your messages. <br/>
+                        You can upgrade Account Level to avoid complete lock.
                       </p>
                     </div>
                   ) : (
@@ -318,7 +349,7 @@ export const MyDashboard = () => {
                         <span className={"ml-4 text-lg"}>{0} reports</span>
                       </p>
 
-                      <p className={"opacity-60"}>
+                      <p className={"opacity-60 text-sm mt-2"}>
                         Account limit: +{spamTimeLimit(account.level)} lock after each spam report in your messages.
                         Lock start after each spam report, up to {spamMaxLimit(account.level)}.
                       </p>
@@ -336,21 +367,28 @@ export const MyDashboard = () => {
               </>
             )}
           </div>
-        </div>
 
-        {!isInfoHidden && (
-          <div className={"mb-6"}>
-            <div className={"bg-red-600/40 py-4 px-6 flex-1 rounded-lg text-sm"}>
-              <BlockTitle text={"Important Information"} isRed={true}>
-                <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardInfo()}/>
-              </BlockTitle>
-              <p>All blockchain data is publically visible!</p>
-              <p>Do not send private information, passwords or other important information. </p>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
+            <BlockTitle text={"Documentation & External Links"}/>
+            <div className={"flex flex-row pt-2"}>
+              <div className={"flex-1"}>
+                <ExternalLink text={"General Overview"} url={""}/>
+                <ExternalLink text={"Smart-Contract Integration"} url={""}/>
+                <ExternalLink text={"Widgets (React components)"} url={""}/>
+              </div>
+              <div className={"flex-1"}>
+                <ExternalLink text={"Discord"} url={""}/>
+                <ExternalLink text={"Twitter"} url={""}/>
+                <ExternalLink text={"Telegram"} url={""}/>
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
       </div>
+
+      <ExportKeysPopup isOpen={isExportPopupVisible} setIsOpen={setIsExportPopupVisible}/>
+      <ImportKeysPopup isOpen={isImportPopupVisible} setIsOpen={setIsImportPopupVisible}/>
     </>
   );
 };

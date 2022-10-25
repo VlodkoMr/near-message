@@ -115,5 +115,36 @@ export class SecretChat {
     localStorage.setItem(chatKey, JSON.stringify(chatData));
   }
 
+  // Export keys
+  static getKeysForExport(myAddress) {
+    const myKeys = localStorage.getItem(`${MY_PREFIX}:${myAddress}`);
+    const chatKeys = localStorage.getItem(`${CHAT_PREFIX}:${myAddress}`);
+    if (myKeys) {
+      return btoa(`${myKeys}|${chatKeys}`);
+    } else {
+      alert("Private keys not found");
+    }
+  }
+
+  static importKeys(myAddress, importData) {
+    let keyData;
+    try {
+      keyData = atob(importData);
+    } catch (e) {
+      alert(`Unable to decode your key, make sure the key text imported entirety`)
+    }
+    const keys = keyData.split("|");
+    if (keys.length === 2) {
+      const myKey = JSON.parse(keys[0]);
+      const chatsKey = JSON.parse(keys[1]);
+      localStorage.setItem(`${MY_PREFIX}:${myAddress}`, JSON.stringify(myKey));
+      localStorage.setItem(`${CHAT_PREFIX}:${myAddress}`, JSON.stringify(chatsKey));
+      return true;
+    } else {
+      alert(`Unable to decode your key, invalid data`)
+    }
+    return false;
+  }
+
 }
 

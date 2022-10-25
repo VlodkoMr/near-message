@@ -25,9 +25,11 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
   }
 
   const handleSpamReport = () => {
-    // near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
-    //   setIsLoading(false);
-    // });
+    if (confirm("Do you want to Report Spam on this message?")) {
+      near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
+        setIsLoading(false);
+      });
+    }
   }
 
   return (
@@ -66,19 +68,21 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
             {!message.isMy && (
               <>
                 <MessageAction onClick={() => handleSpamReport()} title={"Spam Report"}>
-                  <span className={"text-xl leading-4 font-semibold"}>!</span>
+                  <div className={"text-xl leading-4 font-semibold transition w-full h-full"}>!</div>
+                  <small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>spam</small>
                 </MessageAction>
 
                 <MessageAction onClick={() => setReplyToMessage(message)} title={"Reply"}>
                   <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
                     <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                   </svg>
+                  <small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>reply</small>
                 </MessageAction>
               </>
             )}
 
             <div className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
-              overflow-hidden overflow-ellipsis text-base relative
+              overflow-hidden overflow-ellipsis text-base relative min-h-[46px]
               ${message.text === '(like)' ? "py-2.5" : "py-3"}
               ${message.isFirst && message.isMy ? "rounded-t-3xl" : ""}
               ${isLast ? "rounded-b-3xl" : ""}
@@ -95,8 +99,8 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                   </svg>
                   <b className={"mr-2"}>{message.reply_message.from_address}</b>
                   <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
-                        {transformMessageText(message.reply_message, near.wallet.accountId)}
-                      </span>
+                    {transformMessageText(message.reply_message, near.wallet.accountId)}
+                  </span>
                 </p>
               )}
 

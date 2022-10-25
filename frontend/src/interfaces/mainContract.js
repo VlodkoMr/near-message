@@ -1,7 +1,5 @@
 import { utils } from 'near-api-js';
-import { getInnerId } from "../utils/transform";
-
-const THIRTY_TGAS = '30000000000000';
+import { convertToTera, getInnerId } from "../utils/transform";
 
 export class MainContract {
   constructor({ contractId, walletToUse }) {
@@ -76,10 +74,11 @@ export class MainContract {
   async userAccountLevelUp(depositNEAR) {
     const deposit = utils.format.parseNearAmount(depositNEAR.toString());
     try {
+      const gas = convertToTera(30);
       return await this.wallet.callMethod({
         contractId: this.contractId,
         method: 'user_account_level_up',
-        THIRTY_TGAS,
+        gas,
         deposit
       });
     } catch (e) {
@@ -135,6 +134,8 @@ export class MainContract {
    */
   async createNewGroup(title, image, text, url, group_type, members) {
     const deposit = utils.format.parseNearAmount("0.25");
+    const gas = convertToTera(30);
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'create_new_group',
@@ -147,7 +148,7 @@ export class MainContract {
         members,
         edit_members: true
       },
-      THIRTY_TGAS,
+      gas,
       deposit
     })
   }
@@ -253,6 +254,25 @@ export class MainContract {
       args: {
         id,
       }
+    })
+  }
+
+  /**
+   * Report spam
+   * @param message_id
+   * @param message_sender
+   * @returns {Promise<*>}
+   */
+  async spamReport(message_id, message_sender) {
+    const gas = convertToTera(250);
+    return await this.wallet.callMethod({
+      contractId: this.contractId,
+      method: 'spam_report',
+      args: {
+        message_id,
+        message_sender
+      },
+      gas
     })
   }
 

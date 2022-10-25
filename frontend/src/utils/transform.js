@@ -1,5 +1,6 @@
 import { SecretChat } from "./secret-chat";
 import { base_encode } from "near-api-js/lib/utils/serialize";
+import { utils } from "near-api-js";
 
 export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
@@ -18,6 +19,10 @@ export const loadSocialProfile = async (address, near) => {
     return transformProfile(address, profileData[address]);
   }
 }
+
+export const convertToTera = (amount) => {
+  return utils.format.parseNearAmount(`${amount}000000000000`);
+};
 
 export const loadSocialProfiles = async (addressList, near) => {
   let userList = [];
