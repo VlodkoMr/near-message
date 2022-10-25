@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
-import { AiOutlineUsergroupAdd, BsPencilSquare } from "react-icons/all";
+import { AiOutlineUsergroupAdd, BsPencilSquare, IoCloseOutline } from "react-icons/all";
 import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
 import { CircleButton } from "../../assets/css/components";
 import { EditGroupPopup } from "./EditGroupPopup";
@@ -31,16 +31,24 @@ export const LeftPanel = () => {
           <div className="relative">
             <label>
               <input
+                value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value.toLowerCase())}
                 className="rounded-full py-2 pr-6 pl-10 w-full border border-gray-800 focus:border-gray-700 bg-gray-800 focus:bg-gray-900
                  focus:outline-none text-gray-100 focus:shadow-md transition duration-300 ease-in"
                 type="text" placeholder="Search"/>
               <span className="absolute top-0 left-0 mt-2 ml-3 inline-block">
-                  <svg viewBox="0 0 24 24" className="w-6 h-6">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 opacity-50">
                       <path fill="#bbb"
                             d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/>
                   </svg>
               </span>
+
+              {searchFilter.length > 0 && (
+                <span onClick={() => setSearchFilter("")}
+                      className="absolute top-0 right-0 mt-2.5 mr-3 inline-block text-gray-100 opacity-40 hover:opacity-60 cursor-pointer">
+                  <IoCloseOutline size={22}/>
+                </span>
+              )}
             </label>
           </div>
         </form>
