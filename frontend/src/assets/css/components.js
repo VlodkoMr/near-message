@@ -16,7 +16,8 @@ export const FooterScrollLink = styled(Scroll.Link).attrs({
 
 export const CircleButton = styled.section.attrs({
   className: `
-  block rounded-full hover:bg-gray-700 bg-gray-700/60 w-10 h-10 group-hover:block cursor-pointer transition`,
+  block rounded-full hover:bg-gray-700 bg-gray-700/60 w-10 h-10 group-hover:block cursor-pointer transition 
+  text-gray-400 hover:text-gray-300`,
 })``;
 
 export const Button = styled(Link).attrs(props => ({

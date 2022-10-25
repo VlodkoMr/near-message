@@ -38,7 +38,6 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
         members: [...group?.members || []],
       });
       setDefaultMembers([...group?.members || []]);
-      console.log(`group`, group);
     }
   }, [isOpen]);
 
@@ -192,16 +191,9 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                             onChange={(e) => setFormData({ ...formData, text: e.target.value })}
               />
             </div>
-            <div className={"mb-4"}>
-              <PrimaryInput placeholder={"Website / Group URL"}
-                            disabled={isMediaLoading}
-                            value={formData.url}
-                            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-              />
-            </div>
 
             {!group ? (
-              <RadioGroup className={"mb-4"}
+              <RadioGroup className={"mb-4 mt-4"}
                           value={formData.group_type}
                           onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
                 <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
@@ -235,10 +227,19 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                 </RadioLabel>
               </RadioGroup>
             ) : (
-              <div className={"mb-6"}>
-                Group type: {formData.group_type}
-                <small className={"opacity-60 ml-2"}>(can't be changed)</small>
-              </div>
+              <>
+                <div className={"mb-4"}>
+                  <PrimaryInput placeholder={"Website / Group URL"}
+                                disabled={isMediaLoading}
+                                value={formData.url}
+                                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                  />
+                </div>
+                <div className={"mb-6 mt-4"}>
+                  Group type: {formData.group_type}
+                  <small className={"opacity-60 ml-2"}>(can't be changed)</small>
+                </div>
+              </>
             )}
 
             {formData.group_type && formData.group_type !== "Channel" && (

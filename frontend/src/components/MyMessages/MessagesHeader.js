@@ -3,8 +3,18 @@ import { NearContext } from "../../context/NearContext";
 import { Avatar } from "./Avatar";
 import { formatAddress } from "../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
-import { SecondaryButton } from "../../assets/css/components";
+import { CircleButton, SecondaryButton } from "../../assets/css/components";
 import { EditGroupPopup } from "./EditGroupPopup";
+import {
+  AiOutlineInfo,
+  AiOutlineShareAlt,
+  AiOutlineUsergroupAdd, BsInfo,
+  FaInfo, HiOutlineInformationCircle,
+  IoIosInformation,
+  IoIosShareAlt,
+  MdEdit,
+  TiInfoLarge, TiInfoLargeOutline
+} from "react-icons/all";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
@@ -30,28 +40,40 @@ export const MessagesHeader = ({ group, opponent }) => {
                       textSize={"text-3xl"}
               />
             </div>
-            <div className="text-sm">
-              <p className="font-medium text-base mt-0.5">{getTitle()}</p>
-              {group ? (
-                <p>
-                  {group.owner === near.wallet.accountId && (
-                    <span onClick={() => setEditGroupPopupVisible(true)}
-                          className={"mr-2 pr-2 text-blue-400 border-r border-gray-400/60 hover:text-blue-300 cursor-pointer"}>
-                      edit group
-                    </span>
-                  )}
-
-                  <span className={"text-gray-400/80"}>
+            <div className="text-sm flex flex-row">
+              <div>
+                <p className="font-medium text-base mt-0.5">{getTitle()}</p>
+                {group ? (
+                  <span className={"text-gray-400/80 mr-4"}>
                     {group.members_count} members
                   </span>
-                </p>
-              ) : (
-                <a className={"text-gray-400/80"}
-                   href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
-                   target={"_blank"}>
-                  {opponent.name ? opponent.id : "view account"}
-                </a>
+                ) : (
+                  <a className={"text-gray-400/80"}
+                     href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
+                     target={"_blank"}>
+                    {opponent.name ? opponent.id : "view account"}
+                  </a>
+                )}
+              </div>
+
+              {group && (
+                <div className={"flex flex-row gap-2 ml-10 mt-1"}>
+                  <CircleButton className={"p-1 mx-auto md:mx-0"}>
+                    <BsInfo size={32}/>
+                  </CircleButton>
+
+                  {group.owner === near.wallet.accountId && (
+                    <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setEditGroupPopupVisible(true)}>
+                      <MdEdit size={23}/>
+                    </CircleButton>
+                  )}
+
+                  <CircleButton className={"p-2 mx-auto md:mx-0"}>
+                    <IoIosShareAlt size={24}/>
+                  </CircleButton>
+                </div>
               )}
+
             </div>
           </>
         ) : (
@@ -65,7 +87,7 @@ export const MessagesHeader = ({ group, opponent }) => {
       </div>
 
       <div className="flex">
-        <Link to={"/my"} className={"mr-2 pt-0.5 font-medium"}>
+        <Link to={"/my"} className={"mr-2 pt-0.5 font-medium hover:opacity-80 transition"}>
           <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
             <div className={"w-12 h-12 mr-3 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
