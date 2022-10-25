@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { WriteMessage } from "./WriteMessage";
 import { NearContext } from "../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
+import { Loader } from "../Loader";
 
 export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent }) => {
   const near = useContext(NearContext);
   const [isJoined, setIsJoined] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadGroupsIdList = async () => {
     return await near.mainContract.getUserGroups(near.wallet.accountId);
@@ -23,39 +25,36 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
     }
   }, [group.id]);
 
+  const isChannel = () => {
+    return group.group_type === "Channel";
+  }
+
   const joinChannel = () => {
-    if (group.group_type === "Channel") {
-      near.mainContract.joinPublicChannel(group.id).then(result => {
-        console.log(`join Channel`);
-        setIsJoined(true);
-      });
-    } else {
-      near.mainContract.joinPublicGroup(group.id).then(result => {
-        console.log(`join`);
-        setIsJoined(true);
-      });
-    }
+    setIsLoading(true);
+    const promise = isChannel() ? near.mainContract.joinPublicChannel(group.id) : near.mainContract.joinPublicGroup(group.id);
+
+    promise.then(result => {
+      console.log(`join`);
+      setIsJoined(true);
+      setIsLoading(false);
+    });
   }
 
   const leaveChannel = () => {
-    if (group.group_type === "Channel") {
-      near.mainContract.leaveChannel(group.id).then(result => {
-        console.log(`leaveChannel`);
-        setIsJoined(false);
-      });
-    } else {
-      near.mainContract.leaveGroup(group.id).then(result => {
-        console.log(`leaveGroup`);
-        setIsJoined(false);
-      });
-    }
+    setIsLoading(true);
+    const promise = isChannel() ? near.mainContract.leaveChannel(group.id) : near.mainContract.leaveGroup(group.id);
+    promise.then(result => {
+      console.log(`leave`);
+      setIsJoined(false);
+      setIsLoading(false);
+    });
   }
 
   const canWriteMessages = () => {
     if (group.owner === near.wallet.accountId) {
       return true;
     }
-    if (group.group_type !== "Channel") {
+    if (!isChannel()) {
       return isJoined;
     }
     return false;
@@ -77,14 +76,16 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <SecondaryButton small="true" onClick={() => leaveChannel()}>
-                    Leave {group.group_type === "Channel" ? "Channel" : "Group"}
+                    Leave {isChannel() ? "Channel" : "Group"}
+                    {isLoading && (<span><Loader size={"sm"}/></span>)}
                   </SecondaryButton>
                 </>
               ) : (
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <PrimaryButton small="true" onClick={() => joinChannel()}>
-                    Join {group.group_type === "Channel" ? "Channel" : "Group"}
+                    Join {isChannel() ? "Channel" : "Group"}
+                    {isLoading && (<span><Loader size={"sm"}/></span>)}
                   </PrimaryButton>
                 </>
               )}
@@ -92,29 +93,6 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
           )}
         </>
       )}
-      {/*{group.owner === near.wallet.accountId ? (*/}
-      {/*  <div class={"flex flex-row justify-between p-4"}>*/}
-      {/*    OWNER*/}
-      {/*  </div>*/}
-      {/*) : isJoined ? (*/}
-      {/*  <>*/}
-      {/*    {canWriteMessages() ? (*/}
-      {/*      <WriteMessage toGroup={group}*/}
-      {/*                    replyToMessage={replyToMessage}*/}
-      {/*                    setReplyToMessage={setReplyToMessage}*/}
-      {/*                    onMessageSent={onMessageSent}*/}
-      {/*      />*/}
-      {/*    ) : (*/}
-      {/*      <>*/}
-      {/*        can't write*/}
-      {/*      </>*/}
-      {/*    )}*/}
-      {/*  </>*/}
-      {/*) : (*/}
-      {/*  <>*/}
-      {/*    JOIN*/}
-      {/*  </>*/}
-      {/*)}*/}
     </>
   );
 }

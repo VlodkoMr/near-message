@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
 import { SecretChat } from "../../utils/secret-chat";
 import { Loader } from "../Loader";
-import { mediaURL, transformMessageText } from "../../utils/transform";
+import { decodeMessageText, mediaURL, transformMessageText } from "../../utils/transform";
 import { MessageAction } from "../../assets/css/components";
 
 export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
@@ -99,7 +99,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                   </svg>
                   <b className={"mr-2"}>{message.reply_message.from_address}</b>
                   <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
-                    {transformMessageText(message.reply_message, near.wallet.accountId)}
+                    {decodeMessageText(message.reply_message, near.wallet.accountId)}
                   </span>
                 </p>
               )}
@@ -111,10 +111,10 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                 />
               )}
 
-              {transformMessageText(message, near.wallet.accountId) === '(like)' ? (
+              {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
                 <AiFillLike size={22}/>
               ) : (
-                <>{transformMessageText(message, near.wallet.accountId)}</>
+                <>{decodeMessageText(message, near.wallet.accountId)}</>
               )}
 
               {message.isEncryptStart && (

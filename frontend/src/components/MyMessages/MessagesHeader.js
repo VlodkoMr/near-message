@@ -27,7 +27,8 @@ export const MessagesHeader = ({ group, opponent }) => {
             <div className="w-12 h-12 mr-4 relative flex flex-shrink-0 hidden md:block">
               <Avatar media={group ? group.image : opponent.image}
                       title={group ? group.title : opponent.id}
-                      textSize={"text-3xl"}/>
+                      textSize={"text-3xl"}
+              />
             </div>
             <div className="text-sm">
               <p className="font-medium text-base mt-0.5">{getTitle()}</p>

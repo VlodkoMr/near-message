@@ -84,14 +84,14 @@ export const transformOneMessage = (message, accountId, isFirst, isLast, isTempo
   message.isTemporary = isTemporary;
   message.isFirst = isFirst;
   message.isLast = isLast;
+  message.opponentAddress = message.isMy ? message.to_address : message.from_address;
 
   if (message.reply_message) {
     message.reply_message = transformOneMessage(message.reply_message, accountId, false, false, false)
   }
 
   // secret chat
-  const opponentAddress = message.isMy ? message.to_address : message.from_address;
-  const secretChat = new SecretChat(opponentAddress, accountId);
+  const secretChat = new SecretChat(message.opponentAddress, accountId);
   if (message.from_address !== accountId) {
     if (message.isEncryptAccept && !secretChat.isPrivateModeEnabled()) {
       secretChat.storeSecretChatKey(message.text);
@@ -147,10 +147,9 @@ export const onlyUnique = (value, index, self) => {
   return self.indexOf(value) === index;
 }
 
-export const transformMessageText = (message, myAccountId) => {
+export const decodeMessageText = (message, myAccountId) => {
   if (message.encrypt_key) {
-    const opponentAddress = message.from_address !== myAccountId ? message.from_address : message.to_address;
-    const secretChat = new SecretChat(opponentAddress, myAccountId);
+    const secretChat = new SecretChat(message.opponentAddress, myAccountId);
     return secretChat.decode(message.text, message.encrypt_key)
   }
   return message.text;

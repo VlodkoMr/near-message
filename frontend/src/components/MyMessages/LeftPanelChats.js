@@ -5,7 +5,7 @@ import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requ
 import { Loader } from "../Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
-import { loadSocialProfiles, onlyUnique, transformMessageText } from "../../utils/transform";
+import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../utils/transform";
 
 const fetchSecondsInterval = 7;
 
@@ -46,28 +46,28 @@ export const LeftPanelChats = ({ searchFilter }) => {
       }
 
       Promise.all(promiseList).then(result => {
-        let privateChats = result[0] || [];
+        const privateChats = result[0] || [];
         const groupChats = result[1] || [];
-
-        privateChats = privateChats.map(chat => {
-          chat.opponent = chat.last_message.from_address === near.wallet.accountId ? chat.last_message.to_address : chat.last_message.from_address;
-          return chat;
-        })
-
-        let allChats = privateChats.concat(groupChats);
-        allChats.sort((a, b) => b.updated_at - a.updated_at);
-        setChatList(allChats);
-        setIsReady(true);
-
         let profiles = [];
+        let allChats = privateChats.concat(groupChats);
+
         allChats.map(chat => {
+          // assign to profiles list
           if (Object.keys(chat.last_message).length) {
+            chat.last_message = transformOneMessage(chat.last_message, near.wallet.accountId, false, false, false)
+
             profiles.push(chat.last_message.from_address);
             if (chat.last_message.to_address) {
               profiles.push(chat.last_message.to_address);
             }
           }
-        });
+
+          return chat;
+        }).sort((a, b) => b.updated_at - a.updated_at);
+
+        setChatList(allChats);
+        setIsReady(true);
+
         loadSocialProfiles(profiles.filter(onlyUnique), near).then(result => {
           if (result) {
             setProfileList(result);
@@ -111,7 +111,7 @@ export const LeftPanelChats = ({ searchFilter }) => {
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
-              {transformMessageText(chat.last_message, near.wallet.accountId)}
+              {decodeMessageText(chat.last_message, near.wallet.accountId)}
             </p>
           </div>
           <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
@@ -127,16 +127,18 @@ export const LeftPanelChats = ({ searchFilter }) => {
     return (
       <>
         <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
-          <Avatar media={profileList[chat.opponent]?.image || ""}
-                  title={chat.opponent}
+          <Avatar media={profileList[chat.last_message.opponentAddress]?.image || ""}
+                  title={chat.last_message.opponentAddress}
                   textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium text-gray-50"}>{chat.opponent}</p>
+          <p className={"font-medium text-gray-50"}>
+            {profileList[chat.last_message.opponentAddress]?.name || chat.last_message.opponentAddress}
+          </p>
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
               <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
-                {transformMessageText(chat.last_message, near.wallet.accountId)}
+                {decodeMessageText(chat.last_message, near.wallet.accountId)}
               </p>
             </div>
             <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
@@ -158,7 +160,7 @@ export const LeftPanelChats = ({ searchFilter }) => {
               if (isGroupChat(chat)) {
                 return groupsById[chat.id].title.toLowerCase().indexOf(searchFilter) !== -1;
               } else {
-                return chat.opponent.toLowerCase().indexOf(searchFilter) !== -1;
+                return chat.last_message.opponentAddress.toLowerCase().indexOf(searchFilter) !== -1;
               }
             }
             return true;
