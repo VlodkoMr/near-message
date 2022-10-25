@@ -17,7 +17,7 @@ export const MyDashboard = () => {
   const [account, setAccount] = useState();
   const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
   const [isAccountReady, setIsAccountReady] = useState(false);
-  const [isInfoHidden, setIsInfoHidden] = useState(false);
+  const [isInfoHidden, setIsInfoHidden] = useState(true);
   const [spamCount, setSpamCount] = useState(0);
   const [isExportPopupVisible, setIsExportPopupVisible] = useState(false);
   const [isImportPopupVisible, setIsImportPopupVisible] = useState(false);
@@ -37,12 +37,11 @@ export const MyDashboard = () => {
 
   useEffect(() => {
     let isHidden = localStorage.getItem('hideDashboardInfo');
-    if (isHidden) {
-      setIsInfoHidden(true);
+    if (!isHidden) {
+      setIsInfoHidden(false);
     }
 
     loadSpamCount().then(result => {
-      console.log(`spam result`, result);
       setSpamCount(parseInt(result));
     });
 

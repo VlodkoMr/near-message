@@ -9,7 +9,7 @@ import { loadSocialProfiles, onlyUnique, transformMessageText } from "../../util
 
 const fetchSecondsInterval = 5;
 
-export const LeftPanelChats = () => {
+export const LeftPanelChats = ({ searchFilter }) => {
   const near = useContext(NearContext);
   let { id } = useParams();
   const [isReady, setIsReady] = useState(false);
@@ -46,8 +46,15 @@ export const LeftPanelChats = () => {
       }
 
       Promise.all(promiseList).then(result => {
-        const privateChats = result[0] || [];
+        let privateChats = result[0] || [];
         const groupChats = result[1] || [];
+
+        privateChats = privateChats.map(chat => {
+          chat.opponent = chat.last_message.from_address === near.wallet.accountId ? chat.last_message.to_address : chat.last_message.from_address;
+          return chat;
+        })
+
+        console.log(`privateChats`, privateChats);
 
         let allChats = privateChats.concat(groupChats);
         allChats.sort((a, b) => b.updated_at - a.updated_at);
@@ -119,17 +126,15 @@ export const LeftPanelChats = () => {
   )
 
   const LastPrivateMessage = ({ chat }) => {
-    const opponent = chat.last_message.from_address === near.wallet.accountId ? chat.last_message.to_address : chat.last_message.from_address;
-
     return (
       <>
         <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
-          <Avatar media={profileList[opponent]?.image || ""}
-                  title={opponent}
+          <Avatar media={profileList[chat.opponent]?.image || ""}
+                  title={chat.opponent}
                   textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium text-gray-50"}>{opponent}</p>
+          <p className={"font-medium text-gray-50"}>{chat.opponent}</p>
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
               <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
@@ -150,7 +155,16 @@ export const LeftPanelChats = () => {
     <>
       {isReady ? (
         <>
-          {chatList.length > 0 ? chatList.map(chat => (
+          {chatList.length > 0 ? chatList.filter(chat => {
+            if (searchFilter.length) {
+              if (isGroupChat(chat)) {
+                return groupsById[chat.id].title.toLowerCase().indexOf(searchFilter) !== -1;
+              } else {
+                return chat.opponent.toLowerCase().indexOf(searchFilter) !== -1;
+              }
+            }
+            return true;
+          }).map(chat => (
             <Link to={`/my/${isGroupChat(chat) ? "group" : "account"}/${chat.id}`}
                   key={chat.id}
                   className={`flex justify-between items-center p-2 rounded-lg relative mb-1

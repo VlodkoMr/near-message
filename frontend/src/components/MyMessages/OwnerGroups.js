@@ -4,7 +4,7 @@ import logoImage from "../../assets/img/user-group.png";
 import { Link, useParams } from "react-router-dom";
 import { mediaURL } from "../../utils/transform";
 
-export const OwnerGroups = () => {
+export const OwnerGroups = ({ searchFilter }) => {
   let { id } = useParams();
   const near = useContext(NearContext);
   const [ownerGroup, setOwnerGroups] = useState([]);
@@ -22,7 +22,12 @@ export const OwnerGroups = () => {
 
   return ownerGroup && ownerGroup.length > 0 && (
     <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">
-      {ownerGroup.map(group => (
+      {ownerGroup.filter(group => {
+        if (searchFilter.length) {
+          return group.title.toLowerCase().indexOf(searchFilter) !== -1;
+        }
+        return true;
+      }).map(group => (
         <Link className="text-sm text-center mr-2"
               to={`/my/group/${group.id}`}
               key={group.id}>
@@ -36,7 +41,7 @@ export const OwnerGroups = () => {
               ) : (
                 <div
                   className="shadow-md w-full h-full bg-gradient-to-b from-indigo-300/90 to-blue-500/90 flex items-center justify-center rounded-full">
-                  <img src={logoImage} alt="" className={"object-cover w-full h-full p-3 opacity-80"}/>
+                  <img src={logoImage} alt="" className={"object-cover w-full h-full p-3 opacity-60"}/>
                 </div>
               )}
             </div>
