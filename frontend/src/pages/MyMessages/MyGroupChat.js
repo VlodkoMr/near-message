@@ -6,7 +6,7 @@ import { OneMessage } from "../../components/MyMessages/OneMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
-import { GroupChatBottom } from "../../components/MyMessages/MessagesBottom";
+import { GroupChatBottom } from "../../components/MyMessages/GroupChatBottom";
 
 const fetchSecondsInterval = 5;
 
