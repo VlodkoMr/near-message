@@ -41,7 +41,7 @@ export const MessagesHeader = ({ group, opponent }) => {
                   )}
 
                   <span className={"text-gray-400/80"}>
-                    {group.members.length} members
+                    {group.members_count} members
                   </span>
                 </p>
               ) : (

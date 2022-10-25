@@ -7,7 +7,7 @@ import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import { Avatar } from "./Avatar";
 import { loadSocialProfiles, onlyUnique, transformMessageText } from "../../utils/transform";
 
-const fetchSecondsInterval = 5;
+const fetchSecondsInterval = 7;
 
 export const LeftPanelChats = ({ searchFilter }) => {
   const near = useContext(NearContext);
@@ -53,8 +53,6 @@ export const LeftPanelChats = ({ searchFilter }) => {
           chat.opponent = chat.last_message.from_address === near.wallet.accountId ? chat.last_message.to_address : chat.last_message.from_address;
           return chat;
         })
-
-        console.log(`privateChats`, privateChats);
 
         let allChats = privateChats.concat(groupChats);
         allChats.sort((a, b) => b.updated_at - a.updated_at);

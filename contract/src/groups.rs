@@ -20,6 +20,7 @@ pub struct Group {
     pub group_type: GroupType,
     pub created_at: Timestamp,
     pub members: Vec<AccountId>,
+    pub members_count: u32,
     pub edit_members: bool,
 }
 
@@ -109,6 +110,7 @@ impl Contract {
             if change_group && !group.members.contains(&member_address) {
                 if !group.members.contains(&member_address) {
                     group.members.push(member_address.clone());
+                    group.members_count += 1;
                 }
             }
         }
@@ -133,6 +135,7 @@ impl Contract {
                 let member_index = group.members.iter().position(|member| &member_address == member);
                 if member_index.is_some() {
                     group.members.remove(member_index.unwrap());
+                    group.members_count -= 1;
                 }
             }
         }
@@ -144,13 +147,18 @@ impl Contract {
 
     pub(crate) fn create_group_internal(
         &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
-        members: Vec<AccountId>, edit_members: bool,
+        mut members: Vec<AccountId>, edit_members: bool,
     ) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
 
         self.groups_count += 1;
         let group_id = self.groups_count;
+
+        // channel don't use members internal list
+        if group_type == GroupType::Channel {
+            members = vec![];
+        }
 
         let group = Group {
             id: group_id,
@@ -162,6 +170,7 @@ impl Contract {
             group_type: group_type.clone(),
             created_at: env::block_timestamp(),
             members: members.clone(),
+            members_count: members.len() as u32,
             edit_members,
         };
         self.groups.insert(&group_id, &group.into());

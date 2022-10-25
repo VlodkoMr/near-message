@@ -235,12 +235,37 @@ export class MainContract {
    * @returns {Promise<*>}
    */
   async joinPublicGroup(id) {
+    const deposit = utils.format.parseNearAmount("0.01");
+    const gas = convertToTera(150);
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'join_public_group',
       args: {
         id,
-      }
+      },
+      gas,
+      deposit
+    })
+  }
+
+  /**
+   * Join Public channel
+   * @param id
+   * @returns {Promise<*>}
+   */
+  async joinPublicChannel(id) {
+    const deposit = utils.format.parseNearAmount("0.00001");
+    const gas = convertToTera(150);
+
+    return await this.wallet.callMethod({
+      contractId: this.contractId,
+      method: 'join_public_channel',
+      args: {
+        id,
+      },
+      gas,
+      deposit
     })
   }
 
@@ -253,6 +278,21 @@ export class MainContract {
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'leave_group',
+      args: {
+        id,
+      }
+    })
+  }
+
+  /**
+   * Leave channel
+   * @param id
+   * @returns {Promise<*>}
+   */
+  async leaveChannel(id) {
+    return await this.wallet.callMethod({
+      contractId: this.contractId,
+      method: 'leave_channel',
       args: {
         id,
       }

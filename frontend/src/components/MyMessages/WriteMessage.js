@@ -104,7 +104,7 @@ export const WriteMessage = ({
     if (!isMediaLoading) {
       inputRef.current.focus();
     }
-  }, [isMediaLoading, replyToMessage]);
+  }, [isMediaLoading, replyToMessage, toAddress, toGroup?.id]);
 
   const handleTextChange = (e) => {
     const value = e.target.value;
