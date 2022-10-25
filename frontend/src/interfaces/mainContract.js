@@ -134,7 +134,7 @@ export class MainContract {
    */
   async createNewGroup(title, image, text, url, group_type, members) {
     const deposit = utils.format.parseNearAmount("0.25");
-    const gas = convertToTera(30);
+    const gas = convertToTera(80);
 
     return await this.wallet.callMethod({
       contractId: this.contractId,
@@ -163,6 +163,7 @@ export class MainContract {
    * @returns {Promise<*>}
    */
   async editGroup(id, title, image, text, url) {
+    const gas = convertToTera(50);
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'edit_group',
@@ -172,7 +173,8 @@ export class MainContract {
         image,
         text,
         url
-      }
+      },
+      gas
     })
   }
 

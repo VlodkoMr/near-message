@@ -21,7 +21,7 @@ export const loadSocialProfile = async (address, near) => {
 }
 
 export const convertToTera = (amount) => {
-  return utils.format.parseNearAmount(`${amount}000000000000`);
+  return `${amount}000000000000`;
 };
 
 export const loadSocialProfiles = async (addressList, near) => {
