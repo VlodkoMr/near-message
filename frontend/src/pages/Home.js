@@ -16,7 +16,7 @@ import { OnePublicChat } from "../components/Home/OnePublicChat";
 
 export const Home = () => {
   const location = useLocation();
-  const [ zoomTechDetails, setZoomTechDetails ] = useState(false);
+  const [zoomTechDetails, setZoomTechDetails] = useState(false);
 
   useEffect(() => {
     if (location.hash) {
@@ -85,7 +85,7 @@ export const Home = () => {
                   All-in-One solution: direct messages, channels, public and private chats. <br/>
                   You can integrate our features into your NEAR project by follow simple instructions
                   with pre-build components or call smart-contract directly
-                  to send private messages, create your chats and channels.
+                  to send private messages, create your own chats and channels.
                 </p>
                 <div>
 
@@ -366,7 +366,7 @@ export const Home = () => {
                         text={"Write encrypted private message to any account: all your messages will be visible and decoded only for recipient account."}/>
             <OneFeature title={"Simple Integration"}
                         icon={<MdChromeReaderMode size={36}/>}
-                        text={"Use ChatMe in your NEAR project and get all benefits in your application. Read documentation for more details about integration."}/>
+                        text={"Use ChatMe in your project to get all benefits in your application. Read documentation for more details about integration."}/>
           </div>
         </div>
       </section>
