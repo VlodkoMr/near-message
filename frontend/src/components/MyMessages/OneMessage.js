@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { NearContext } from "../../context/NearContext";
 import { SecretChat } from "../../utils/secret-chat";
 import { Loader } from "../Loader";
-import { decodeMessageText, mediaURL, transformMessageText } from "../../utils/transform";
+import { decodeMessageText, mediaURL } from "../../utils/transform";
 import { MessageAction } from "../../assets/css/components";
 
 export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
