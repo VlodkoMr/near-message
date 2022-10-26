@@ -371,14 +371,16 @@ export const MyDashboard = () => {
             <BlockTitle text={"Documentation & External Links"}/>
             <div className={"flex flex-row pt-2"}>
               <div className={"flex-1"}>
-                <ExternalLink text={"General Overview"} url={""}/>
-                <ExternalLink text={"Smart-Contract Integration"} url={""}/>
-                <ExternalLink text={"Widgets (React components)"} url={""}/>
+                <ExternalLink text={"Introduction"} url={"https://chatme.gitbook.io/chatme/"}/>
+                <ExternalLink text={"Web Interface"} url={"https://chatme.gitbook.io/chatme/chatme-web-interface/get-started"}/>
+                <ExternalLink text={"Get Started Integration"} url={"https://chatme.gitbook.io/chatme/documentation/get-started"}/>
+                <ExternalLink text={"Widgets (React components)"} url={"https://chatme.gitbook.io/chatme/documentation/frontend-widgets"}/>
               </div>
               <div className={"flex-1"}>
                 <ExternalLink text={"Discord"} url={""}/>
                 <ExternalLink text={"Twitter"} url={""}/>
                 <ExternalLink text={"Telegram"} url={""}/>
+                <ExternalLink text={"Contact Us"} url={"email:vlodkow@gmail.com"}/>
               </div>
             </div>
           </div>

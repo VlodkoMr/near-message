@@ -99,13 +99,13 @@ export const Footer = () => {
               </h2>
               <ul>
                 <li>
-                  <ExternalLink title={"Get Started"} url={""}/>
+                  <ExternalLink title={"Overview"} url={"https://chatme.gitbook.io/chatme/"}/>
                 </li>
                 <li>
-                  <ExternalLink title={"Smart-Contract"} url={""}/>
+                  <ExternalLink title={"Get Started"} url={"https://chatme.gitbook.io/chatme/documentation/get-started"}/>
                 </li>
                 <li>
-                  <ExternalLink title={"NEAR-API-JS"} url={""}/>
+                  <ExternalLink title={"Widgets"} url={"https://chatme.gitbook.io/chatme/documentation/frontend-widgets"}/>
                 </li>
               </ul>
             </div>
