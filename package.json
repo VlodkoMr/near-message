@@ -4,6 +4,7 @@
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
     "start": "cd frontend && npm run start",
+    "dev:start": "cd frontend && npm run dev:start",
     "deploy": "cd contract && ./deploy.sh",
     "data:seed": "cd contract && ./data_seed.sh",
     "build": "npm run build:contract && npm run build:web",
