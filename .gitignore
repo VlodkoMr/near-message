@@ -29,8 +29,8 @@ build/
 .env.development.local
 .env.testnet
 .env.production.local
+.env*
 /.cache
-frontend/.env.*
 
 .cargo
 contract/target
