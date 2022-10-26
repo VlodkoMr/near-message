@@ -32,7 +32,7 @@ type PrivateMessage @entity {
     image: String!
     created_at: Int!
     tx_hash: String!
-    is_spam: Boolean!
+    spam_reports: Int!
     is_removed: Boolean!
 }
 
@@ -55,6 +55,6 @@ type GroupMessage @entity {
     image: String!
     created_at: Int!
     tx_hash: String!
-    is_spam: Boolean!
+    spam_reports: Int!
     is_removed: Boolean!
 }

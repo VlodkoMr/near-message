@@ -15,11 +15,13 @@ import {
   MdEdit,
   TiInfoLarge, TiInfoLargeOutline
 } from "react-icons/all";
+import { SharePopup } from "./SharePopup";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
   const [myProfile] = useOutletContext();
   const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
+  const [sharePopupVisible, setSharePopupVisible] = useState(false);
 
   const getTitle = () => {
     if (group) {
@@ -58,9 +60,9 @@ export const MessagesHeader = ({ group, opponent }) => {
 
               {group && (
                 <div className={"flex flex-row gap-2 ml-10 mt-1"}>
-                  <CircleButton className={"p-1 mx-auto md:mx-0"}>
-                    <BsInfo size={32}/>
-                  </CircleButton>
+                  {/*<CircleButton className={"p-1 mx-auto md:mx-0"}>*/}
+                  {/*  <BsInfo size={32}/>*/}
+                  {/*</CircleButton>*/}
 
                   {group.owner === near.wallet.accountId && (
                     <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setEditGroupPopupVisible(true)}>
@@ -68,7 +70,7 @@ export const MessagesHeader = ({ group, opponent }) => {
                     </CircleButton>
                   )}
 
-                  <CircleButton className={"p-2 mx-auto md:mx-0"}>
+                  <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setSharePopupVisible(true)}>
                     <IoIosShareAlt size={24}/>
                   </CircleButton>
                 </div>
@@ -114,13 +116,24 @@ export const MessagesHeader = ({ group, opponent }) => {
         </SecondaryButton>
       </div>
 
-      {(group && group.owner === near.wallet.accountId) && (
-        <EditGroupPopup
-          isOpen={editGroupPopupVisible}
-          setIsOpen={setEditGroupPopupVisible}
-          group={group}
-        />
+      {group && (
+        <>
+          {group.owner === near.wallet.accountId && (
+            <EditGroupPopup
+              isOpen={editGroupPopupVisible}
+              setIsOpen={setEditGroupPopupVisible}
+              group={group}
+            />
+          )}
+
+          <SharePopup
+            isOpen={sharePopupVisible}
+            setIsOpen={setSharePopupVisible}
+            group={group}
+          />
+        </>
       )}
+
     </div>
   )
 }

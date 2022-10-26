@@ -217,13 +217,13 @@ export class PrivateMessage extends Entity {
     this.set("tx_hash", Value.fromString(value));
   }
 
-  get is_spam(): boolean {
-    let value = this.get("is_spam");
-    return value!.toBoolean();
+  get spam_reports(): i32 {
+    let value = this.get("spam_reports");
+    return value!.toI32();
   }
 
-  set is_spam(value: boolean) {
-    this.set("is_spam", Value.fromBoolean(value));
+  set spam_reports(value: i32) {
+    this.set("spam_reports", Value.fromI32(value));
   }
 
   get is_removed(): boolean {
@@ -424,13 +424,13 @@ export class GroupMessage extends Entity {
     this.set("tx_hash", Value.fromString(value));
   }
 
-  get is_spam(): boolean {
-    let value = this.get("is_spam");
-    return value!.toBoolean();
+  get spam_reports(): i32 {
+    let value = this.get("spam_reports");
+    return value!.toI32();
   }
 
-  set is_spam(value: boolean) {
-    this.set("is_spam", Value.fromBoolean(value));
+  set spam_reports(value: i32) {
+    this.set("spam_reports", Value.fromI32(value));
   }
 
   get is_removed(): boolean {

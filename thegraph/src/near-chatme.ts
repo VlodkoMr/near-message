@@ -24,6 +24,8 @@ function handleAction(
     savePrivateMessage(receiptWithOutcome);
   } else if (functionCall.methodName == 'send_group_message') {
     saveGroupMessage(receiptWithOutcome);
+  } else if (functionCall.methodName == 'spam_report') {
+    updateMessageSpam(receiptWithOutcome);
   }
 }
 
@@ -35,8 +37,6 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
   for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
     const outcomeLog = outcome.logs[logIndex].toString();
-
-    log.info('savePrivateMessage {}', [outcomeLog])
 
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
@@ -74,7 +74,7 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.image = image ? image.toString() : ""
         message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
         message.reply_message = replyMessageId
-        message.is_spam = false
+        message.spam_reports = 0
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;
@@ -104,8 +104,6 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
 
   for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
     const outcomeLog = outcome.logs[logIndex].toString();
-
-    log.info('saveGroupMessage {}', [outcomeLog])
 
     const jsonData = json.try_fromString(outcomeLog)
     const data = jsonData.value.toObject()
@@ -137,7 +135,7 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.text = messageText.toString()
         message.image = image ? image.toString() : ""
         message.reply_message = replyMessageId
-        message.is_spam = false
+        message.spam_reports = 0
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;
@@ -153,6 +151,33 @@ function saveGroupMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         chat.updated_at = message.created_at
         chat.save()
 
+        message.save()
+      }
+    }
+  }
+}
+
+function updateMessageSpam(receiptWithOutcome: near.ReceiptWithOutcome): void {
+  const outcome = receiptWithOutcome.outcome;
+  for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
+    const outcomeLog = outcome.logs[logIndex].toString();
+
+    const jsonData = json.try_fromString(outcomeLog)
+    const data = jsonData.value.toObject()
+    const messageId = data.get('id')
+    const isGroup = data.get('is_group')
+
+    if (!messageId) return;
+    if (isGroup) {
+      let message = GroupMessage.load(messageId.toString())
+      if (message) {
+        message.spam_reports += 1
+        message.save()
+      }
+    } else {
+      let message = PrivateMessage.load(messageId.toString())
+      if (message) {
+        message.spam_reports += 1
         message.save()
       }
     }

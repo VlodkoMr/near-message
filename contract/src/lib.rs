@@ -16,7 +16,7 @@ mod groups;
 
 const CREATE_GROUP_PRICE: &str = "0.25";
 const JOIN_PUBLIC_PRICE: &str = "0.01";
-const JOIN_CHANNEL_PRICE: &str = "0.00001";
+const JOIN_CHANNEL_PRICE: &str = "0.0001";
 
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKeys {
@@ -400,7 +400,7 @@ impl Contract {
     /**
      * Spam Report
      */
-    pub fn spam_report(&mut self, message_id: U128, message_sender: AccountId) {
+    pub fn spam_report(&mut self, message_id: U128, message_sender: AccountId, is_group: bool) {
         if self.messages_count < message_id.0 {
             env::panic_str("Wrong message ID");
         }
@@ -414,6 +414,13 @@ impl Contract {
             let spam_count = self.user_spam_counts.get(&message_sender).unwrap_or(0);
             self.user_spam_counts.insert(&message_sender, &(spam_count + 1));
         }
+
+        let report_text = json!({
+            "id": message_id,
+            "is_group": is_group,
+            "sender": message_sender
+        }).to_string();
+        env::log_str(&report_text);
     }
 
     /**

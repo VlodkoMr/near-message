@@ -255,7 +255,7 @@ export class MainContract {
    * @returns {Promise<*>}
    */
   async joinPublicChannel(id) {
-    const deposit = utils.format.parseNearAmount("0.00001");
+    const deposit = utils.format.parseNearAmount("0.0001");
     const gas = convertToTera(150);
 
     return await this.wallet.callMethod({

@@ -25,9 +25,9 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
   }
 
   const handleSpamReport = () => {
-    if (confirm("Do you want to Report Spam on this message?")) {
+    if (confirm("Do you want to Report Spam in this message?")) {
       near.mainContract.spamReport(message.id, message.from_address).then(() => {
-        message.text = "Spam report sent"
+        message.text = "*Spam report sent"
       });
     }
   }
@@ -65,7 +65,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               </div>
             )}
 
-            {!message.isMy && (
+            {!message.isMy && !message.isEncryptStart && !message.isEncryptAccept && !message.isEncryptEnd && (
               <>
                 <MessageAction onClick={() => handleSpamReport()} title={"Spam Report"}>
                   <div className={"text-xl leading-4 font-semibold transition w-full h-full"}>!</div>
