@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { NearContext } from "../../context/NearContext";
-import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../utils/requests";
-import { Loader } from "../Loader";
-import { timestampToDate, timestampToTime } from "../../utils/datetime";
-import { Avatar } from "./Avatar";
-import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../utils/transform";
+import { NearContext } from "../../../context/NearContext";
+import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../../utils/requests";
+import { Loader } from "../../Loader";
+import { timestampToDate, timestampToTime } from "../../../utils/datetime";
+import { Avatar } from "../../Common/Avatar";
+import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../../utils/transform";
 
 const fetchSecondsInterval = 7;
 

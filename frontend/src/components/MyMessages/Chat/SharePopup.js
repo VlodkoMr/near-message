@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { PrimaryButton } from "../../assets/css/components";
+import { PrimaryButton } from "../../../assets/css/components";
 
 export const SharePopup = ({ isOpen, setIsOpen, group }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -11,7 +11,7 @@ export const SharePopup = ({ isOpen, setIsOpen, group }) => {
 
   useEffect(() => {
     if (isOpen) {
-      setUrl(`${process.env.APP_URL}/my/group/${group.id}`);
+      setUrl(`${process.env.APP_URL}my/group/${group.id}`);
     }
   }, [isOpen]);
 

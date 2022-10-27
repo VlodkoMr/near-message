@@ -283,7 +283,12 @@ impl Contract {
             env::panic_str("Wrong payment amount");
         }
 
-        self.add_group_member_internal(vec![member], id, false);
+        let is_changed = self.add_group_member_internal(vec![member], id, false);
+
+        // update members counter
+        if is_changed {
+            self.update_members_count_internal(id, 1);
+        }
     }
 
     /**
@@ -318,7 +323,12 @@ impl Contract {
             env::panic_str("This group is not channel, please use 'leave_group' method");
         }
 
-        self.remove_group_member_internal(vec![member], id, false);
+        let is_changed = self.remove_group_member_internal(vec![member], id, false);
+
+        // update members counter
+        if is_changed {
+            self.update_members_count_internal(id, -1);
+        }
     }
 
     /**
@@ -364,16 +374,16 @@ impl Contract {
         let account = env::predecessor_account_id();
         self.user_validate_spam();
 
-        if group.group_type == GroupType::Channel && group.owner != account {
-            env::panic_str("No access to this group");
-        }
-        if group.group_type == GroupType::Private && group.owner != account {
-            if !group.members.contains(&account) {
-                env::panic_str("No access to this group");
+        if group.owner != account {
+            if group.group_type == GroupType::Channel {
+                env::panic_str("No access to post messages in channel");
+            } else if !group.members.contains(&account) {
+                if group.group_type == GroupType::Private {
+                    env::panic_str("No access to this group");
+                } else {
+                    env::panic_str("Please join public group before sending messages");
+                }
             }
-        }
-        if group.group_type == GroupType::Public && !group.members.contains(&account) {
-            env::panic_str("Please join public group before sending messages");
         }
 
         // send message

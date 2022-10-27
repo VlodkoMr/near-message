@@ -15,6 +15,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [membersLimit, setMembersLimit] = useState(500);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
   const [tmpImageData, setTmpImageData] = useState(null);
   const [defaultMembers, setDefaultMembers] = useState([]);
@@ -28,16 +29,26 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   });
 
   useEffect(() => {
-    if (isOpen && group) {
-      setFormData({
-        title: group?.title || "",
-        logo: group?.image || "",
-        text: group?.text || "",
-        url: group?.url || "",
-        group_type: group?.group_type || "",
-        members: [...group?.members || []],
-      });
-      setDefaultMembers([...group?.members || []]);
+    if (isOpen) {
+      if (near.account) {
+        if (near.account.level === 1) {
+          setMembersLimit(2000);
+        } else {
+          setMembersLimit(5000);
+        }
+      }
+
+      if (group) {
+        setFormData({
+          title: group?.title || "",
+          logo: group?.image || "",
+          text: group?.text || "",
+          url: group?.url || "",
+          group_type: group?.group_type || "",
+          members: [...group?.members || []],
+        });
+        setDefaultMembers([...group?.members || []]);
+      }
     }
   }, [isOpen]);
 
@@ -85,9 +96,12 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     setFormData({ ...formData, members: inputs });
   }
 
-  const handleSaveGroup = () => {
-    console.log(`formData.members`, formData.members);
-    // console.log(`group.members`, group.members);
+  const handleSaveGroup = (e) => {
+    e.preventDefault();
+
+    const groupExistMembers = group?.members || [];
+    const newMembers = formData.members.filter(x => !groupExistMembers.includes(x));
+    const removeMembers = groupExistMembers.filter(x => !formData.members.includes(x));
 
     if (formData.title.length < 3) {
       alert("Please provide correct group title");
@@ -105,6 +119,19 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       promiseSave = near.mainContract.editGroup(
         group.id, formData.title, formData.logo, formData.text, formData.url
       );
+
+      if (removeMembers.length > 0) {
+        console.log(`removeMembers`, removeMembers);
+        near.mainContract.ownerRemoveGroupMembers(group.id, removeMembers).then(result => {
+          console.log(`result`, result);
+        });
+      }
+      if (newMembers.length > 0) {
+        console.log(`newMembers`, newMembers);
+        near.mainContract.ownerAddGroupMembers(group.id, newMembers).then(result => {
+          console.log(`result`, result);
+        });
+      }
     } else {
       promiseSave = near.mainContract.createNewGroup(
         formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members
@@ -122,13 +149,6 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     }).finally(() => {
       setIsLoading(false);
     });
-
-
-    // update members on edit
-    if (group) {
-      // ownerAddGroupMembers(group.id, [])
-      // ownerRemoveGroupMembers(group.id, [])
-    }
   }
 
   return (
@@ -214,7 +234,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                                     label="Private Group"
                   />
                   <RadioLabelText>You manage group members, all members can write messages. <br/>
-                    Limited by 1000 members.</RadioLabelText>
+                    Limited by {membersLimit} members.</RadioLabelText>
                 </RadioLabel>
                 <RadioLabel className={"rounded-b-md"}>
                   <FormControlLabel value="Public"
@@ -223,7 +243,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                                     label="Public Group"
                   />
                   <RadioLabelText>Public access where anyone can join and write messages. <br/>
-                    Limited by 1000 members.</RadioLabelText>
+                    Limited by {membersLimit} members.</RadioLabelText>
                 </RadioLabel>
               </RadioGroup>
             ) : (

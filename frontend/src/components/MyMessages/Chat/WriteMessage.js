@@ -8,10 +8,10 @@ import {
   MdOutlineEnhancedEncryption,
   MdOutlineNoEncryption,
 } from "react-icons/all";
-import { NearContext } from "../../context/NearContext";
-import { Loader } from "../Loader";
-import { SecretChat } from "../../utils/secret-chat";
-import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
+import { NearContext } from "../../../context/NearContext";
+import { Loader } from "../../Loader";
+import { SecretChat } from "../../../utils/secret-chat";
+import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 
 export const WriteMessage = ({
   toAddress, toGroup, onMessageSent, isPrivateMode, replyToMessage, setReplyToMessage

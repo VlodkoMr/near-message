@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { NearContext } from "../../context/NearContext";
-import logoImage from "../../assets/img/user-group.png";
+import { NearContext } from "../../../context/NearContext";
+import logoImage from "../../../assets/img/user-group.png";
 import { Link, useParams } from "react-router-dom";
-import { mediaURL } from "../../utils/transform";
-import { AvatarGroup } from "./AvatarGroup";
+import { mediaURL } from "../../../utils/transform";
+import { AvatarGroup } from "../../Common/AvatarGroup";
 
 export const OwnerGroups = ({ searchFilter }) => {
   let { id } = useParams();

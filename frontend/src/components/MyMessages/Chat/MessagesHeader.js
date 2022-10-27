@@ -1,21 +1,13 @@
 import React, { useContext, useState } from "react";
-import { NearContext } from "../../context/NearContext";
-import { Avatar } from "./Avatar";
-import { formatAddress } from "../../utils/transform";
+import { NearContext } from "../../../context/NearContext";
+import { Avatar } from "../../Common/Avatar";
+import { formatAddress } from "../../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
-import { CircleButton, SecondaryButton } from "../../assets/css/components";
-import { EditGroupPopup } from "./EditGroupPopup";
-import {
-  AiOutlineInfo,
-  AiOutlineShareAlt,
-  AiOutlineUsergroupAdd, BsInfo,
-  FaInfo, HiOutlineInformationCircle,
-  IoIosInformation,
-  IoIosShareAlt,
-  MdEdit,
-  TiInfoLarge, TiInfoLargeOutline
-} from "react-icons/all";
+import { CircleButton, SecondaryButton } from "../../../assets/css/components";
+import { EditGroupPopup } from "../EditGroupPopup";
+import { IoIosShareAlt, MdEdit } from "react-icons/all";
 import { SharePopup } from "./SharePopup";
+import { AvatarGroup } from "../../Common/AvatarGroup";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
@@ -37,17 +29,21 @@ export const MessagesHeader = ({ group, opponent }) => {
         {group || opponent ? (
           <>
             <div className="w-12 h-12 mr-4 relative flex flex-shrink-0 hidden md:block">
-              <Avatar media={group ? group.image : opponent.image}
-                      title={group ? group.title : opponent.id}
-                      textSize={"text-3xl"}
-              />
+              {group ? (
+                <AvatarGroup group={group} size={14}/>
+              ) : (
+                <Avatar media={opponent.image}
+                        title={opponent.id}
+                        textSize={"text-3xl"}
+                />
+              )}
             </div>
             <div className="text-sm flex flex-row">
               <div>
                 <p className="font-medium text-base mt-0.5">{getTitle()}</p>
                 {group ? (
                   <span className={"text-gray-400/80 mr-4"}>
-                    {group.members_count} members
+                    {group.members_count || "no"} member{group.members_count > 1 ? "s" : ""}
                   </span>
                 ) : (
                   <a className={"text-gray-400/80"}

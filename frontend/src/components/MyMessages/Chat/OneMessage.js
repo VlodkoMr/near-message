@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Avatar } from "./Avatar";
-import { timestampToDate, timestampToTime } from "../../utils/datetime";
+import { Avatar } from "../../Common/Avatar";
+import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
-import { NearContext } from "../../context/NearContext";
-import { SecretChat } from "../../utils/secret-chat";
-import { Loader } from "../Loader";
-import { decodeMessageText, mediaURL } from "../../utils/transform";
-import { MessageAction } from "../../assets/css/components";
+import { NearContext } from "../../../context/NearContext";
+import { SecretChat } from "../../../utils/secret-chat";
+import { Loader } from "../../Loader";
+import { decodeMessageText, mediaURL } from "../../../utils/transform";
+import { MessageAction } from "../../../assets/css/components";
 
 export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
   const near = useContext(NearContext);
@@ -136,7 +136,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               )}
 
               {message.encrypt_key && (
-                <img src={require("../../assets/img/lock.png")}
+                <img src={require("../../../assets/img/lock.png")}
                      alt=""
                      className={`absolute w-4 h-4 top-0 ${message.isMy ? "-left-1" : "-right-1"}`}/>
               )}

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { WriteMessage } from "./WriteMessage";
-import { NearContext } from "../../context/NearContext";
-import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
-import { Loader } from "../Loader";
+import { NearContext } from "../../../context/NearContext";
+import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
+import { Loader } from "../../Loader";
 
 export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent }) => {
   const near = useContext(NearContext);
@@ -14,6 +14,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
   }
 
   useEffect(() => {
+    console.log(`group`, group);
     if (group.members.length) {
       setIsJoined(group.members.indexOf(near.wallet.accountId) !== -1);
     } else {
@@ -69,14 +70,14 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
         />
       ) : (
         <>
-          {group.edit_members && (
+          {(group.edit_members && group.group_type !== "Private") && (
             <div className={"px-6 py-4 border-t-2 border-gray-700/30 flex flex-row justify-between"}>
               {isJoined ? (
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <SecondaryButton small="true" onClick={() => leaveChannel()}>
                     Leave {isChannel() ? "Channel" : "Group"}
-                    {isLoading && (<span><Loader size={"sm"}/></span>)}
+                    {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </SecondaryButton>
                 </>
               ) : (
@@ -84,7 +85,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <PrimaryButton small="true" onClick={() => joinChannel()}>
                     Join {isChannel() ? "Channel" : "Group"}
-                    {isLoading && (<span><Loader size={"sm"}/></span>)}
+                    {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </PrimaryButton>
                 </>
               )}

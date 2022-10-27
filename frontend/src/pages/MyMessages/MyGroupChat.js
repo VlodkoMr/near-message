@@ -1,24 +1,28 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
+import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { Loader } from "../../components/Loader";
-import { OneMessage } from "../../components/MyMessages/OneMessage";
+import { OneMessage } from "../../components/MyMessages/Chat/OneMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
-import { GroupChatBottom } from "../../components/MyMessages/GroupChatBottom";
+import { GroupChatBottom } from "../../components/MyMessages/Chat/GroupChatBottom";
+import { SecondaryButton } from "../../assets/css/components";
+import { MessagesList } from "../../components/MyMessages/Chat/MessagesList";
 
 const fetchSecondsInterval = 5;
+const messagesPerPage = 100;
 
 export const MyGroupChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
   const bottomRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [historyMessages, setHistoryMessages] = useState([]);
+  const [tmpMessages, setTmpMessages] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [group, setGroup] = useState();
   const [reloadCounter, setReloadCounter] = useState(0);
-  const [tmpMessages, setTmpMessages] = useState([]);
   const [userProfiles, setUserProfiles] = useState({});
   const [replyToMessage, setReplyToMessage] = useState(null);
 
@@ -35,7 +39,7 @@ export const MyGroupChat = () => {
       setGroup(group);
     })
 
-    loadGroupMessages(id).then(messages => {
+    loadGroupMessages(id, messagesPerPage).then(messages => {
       setMessages(transformMessages(messages, near.wallet.accountId));
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
@@ -60,13 +64,7 @@ export const MyGroupChat = () => {
 
   useEffect(() => {
     if (reloadCounter) {
-      if (messages.length > 0) {
-        appendNewChatMessages();
-      } else {
-        loadGroupMessages(id).then(messages => {
-          setMessages(transformMessages(messages, near.wallet.accountId));
-        });
-      }
+      appendNewChatMessages();
     }
   }, [reloadCounter]);
 
@@ -82,8 +80,10 @@ export const MyGroupChat = () => {
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
-    const lastMessage = messages[messages.length - 1];
-    loadNewGroupMessages(id, lastMessage.id).then(messages => {
+    const lastMessage = messages[messages.length - 1] || null;
+    const lastMessageId = lastMessage?.id || 0;
+
+    loadNewGroupMessages(id, lastMessageId).then(messages => {
       if (messages && messages.length) {
         // load new user profiles
         const profiles = messages.filter(message => !userProfiles[message.from_address]).map(message => message.from_address).filter(onlyUnique);
@@ -103,7 +103,7 @@ export const MyGroupChat = () => {
         }));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage.from_address);
+        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage?.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
     });
@@ -115,9 +115,6 @@ export const MyGroupChat = () => {
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 
-  const isLastMessage = (message, index) => {
-    return !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
-  }
 
   return (
     <>
@@ -128,27 +125,19 @@ export const MyGroupChat = () => {
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (
               <>
-                {/*<div className={"w-40 mx-auto text-center"}>*/}
-                {/*  <SecondaryButton small className={"w-full"}>*/}
-                {/*    load previous*/}
-                {/*  </SecondaryButton>*/}
-                {/*</div>*/}
-
-                {messages.map((message, index) => (
-                    <OneMessage message={message}
-                                key={message.id}
-                                opponent={userProfiles[message.from_address] || null}
+                {(messages.length || tmpMessages.length) ? (
+                  <MessagesList messages={messages}
+                                historyMessages={historyMessages}
+                                tmpMessages={tmpMessages}
+                                messagesPerPage={messagesPerPage}
                                 setReplyToMessage={setReplyToMessage}
-                                isLast={isLastMessage(message, index)}
-                    />
-                  )
-                )}
-                {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to_address === id).map(tmpMessage => (
-                    <OneMessage message={tmpMessage}
-                                key={tmpMessage.id}
-                                isLast={true}
-                    />
-                  )
+                                userProfiles={userProfiles}
+                                opponentAddress={id}
+                  />
+                ) : (
+                  <div className={"text-center text-sm opacity-60 pt-2"}>
+                    *No Messages
+                  </div>
                 )}
               </>
             ) : (

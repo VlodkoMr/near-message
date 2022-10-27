@@ -98,11 +98,13 @@ impl Contract {
     }
 
     // Add new members to group
-    pub(crate) fn add_group_member_internal(&mut self, members: Vec<AccountId>, group_id: u32, change_group: bool) {
+    pub(crate) fn add_group_member_internal(&mut self, members: Vec<AccountId>, group_id: u32, change_group: bool) -> bool {
+        let mut changed = false;
         let mut group: Group = self.groups.get(&group_id).unwrap().into();
         for member_address in members.into_iter() {
             let mut user_groups = self.user_groups.get(&member_address).unwrap_or(vec![]);
             if !user_groups.contains(&group.id) {
+                changed = true;
                 user_groups.push(group.id);
                 self.user_groups.insert(&member_address, &user_groups);
             }
@@ -118,15 +120,19 @@ impl Contract {
         if change_group {
             self.groups.insert(&group_id, &group.into());
         }
+
+        changed
     }
 
     // Remove members from group
-    pub(crate) fn remove_group_member_internal(&mut self, members: Vec<AccountId>, group_id: u32, change_group: bool) {
+    pub(crate) fn remove_group_member_internal(&mut self, members: Vec<AccountId>, group_id: u32, change_group: bool) -> bool {
+        let mut changed = false;
         let mut group: Group = self.groups.get(&group_id).unwrap().into();
         for member_address in members.into_iter() {
             let mut user_groups = self.user_groups.get(&member_address).unwrap_or(vec![]);
             let index = user_groups.iter().position(|inner_id| &group.id == inner_id);
             if index.is_some() {
+                changed = true;
                 user_groups.remove(index.unwrap());
                 self.user_groups.insert(&member_address, &user_groups);
             }
@@ -143,6 +149,14 @@ impl Contract {
         if change_group {
             self.groups.insert(&group_id, &group.into());
         }
+
+        changed
+    }
+
+    pub(crate) fn update_members_count_internal(&mut self, group_id: u32, change: i8) {
+        let mut group: Group = self.groups.get(&group_id).unwrap().into();
+        group.members_count += change as u32;
+        self.groups.insert(&group_id, &group.into());
     }
 
     pub(crate) fn create_group_internal(

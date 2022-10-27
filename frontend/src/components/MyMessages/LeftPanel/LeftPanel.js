@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { AiOutlineUsergroupAdd, BsPencilSquare, IoCloseOutline } from "react-icons/all";
-import { NewPrivateMessagePopup } from "./NewPrivateMessagePopup";
-import { CircleButton } from "../../assets/css/components";
-import { EditGroupPopup } from "./EditGroupPopup";
+import { NewPrivateMessagePopup } from "../NewPrivateMessagePopup";
+import { CircleButton } from "../../../assets/css/components";
+import { EditGroupPopup } from "../EditGroupPopup";
 import { LeftPanelChats } from "./LeftPanelChats";
 
 export const LeftPanel = () => {
@@ -20,7 +20,7 @@ export const LeftPanel = () => {
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
-          <img src={require("../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
+          <img src={require("../../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
         <CircleButton className={"p-2.5 mx-auto md:mx-0 mt-2 md:mt-0"} onClick={() => setNewMessagePopupVisible(true)}>
           <BsPencilSquare size={20}/>

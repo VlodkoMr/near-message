@@ -1,30 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useOutletContext } from 'react-router-dom';
-import { MessagesHeader } from "../../components/MyMessages/MessagesHeader";
-import { Avatar } from "../../components/MyMessages/Avatar";
+import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
+import { Avatar } from "../../components/Common/Avatar";
 import { formatAddress } from "../../utils/transform";
 import { NearContext } from "../../context/NearContext";
 import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, IoClose } from "react-icons/all";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
 import { Loader } from "../../components/Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
-import { ExportKeysPopup } from "../../components/MyMessages/ExportKeysPopup";
-import { ImportKeysPopup } from "../../components/MyMessages/ImportKeysPopup";
+import { ExportKeysPopup } from "../../components/MyMessages/Dashboard/ExportKeysPopup";
+import { ImportKeysPopup } from "../../components/MyMessages/Dashboard/ImportKeysPopup";
 
 export const MyDashboard = () => {
   const near = useContext(NearContext);
   const [myProfile] = useOutletContext();
-  const [account, setAccount] = useState();
   const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
-  const [isAccountReady, setIsAccountReady] = useState(false);
   const [isInfoHidden, setIsInfoHidden] = useState(true);
   const [spamCount, setSpamCount] = useState(0);
   const [isExportPopupVisible, setIsExportPopupVisible] = useState(false);
   const [isImportPopupVisible, setIsImportPopupVisible] = useState(false);
-
-  const loadAccount = async () => {
-    return await near.mainContract.getUserInfo(near.wallet.accountId);
-  }
 
   const loadSpamCount = async () => {
     return await near.mainContract.getSpamCount(near.wallet.accountId);
@@ -44,16 +38,11 @@ export const MyDashboard = () => {
     loadSpamCount().then(result => {
       setSpamCount(parseInt(result));
     });
-
-    loadAccount().then(result => {
-      setAccount(result);
-      setIsAccountReady(true);
-    });
   }, []);
 
   const getLevelPrice = (level) => {
     if (level === 2) {
-      if (!account) {
+      if (!near.account) {
         return 14;
       }
     }
@@ -182,125 +171,120 @@ export const MyDashboard = () => {
 
         <div className={"mb-6"}>
           <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
-            {isAccountReady && (
-              <>
-                <BlockTitle text={"My Account Level"}>
-                  <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
-                    Current Plan: {!account ? ("Free") : account.level === 1 ? "Bronze" : "Gold"}
-                  </span>
-                </BlockTitle>
-                <div className={"flex flex-row"}>
-                  <AccountLevel level={"Free"} price={""} isCurrent={!account} className={"border-r border-gray-700/50 px-6"}>
-                    <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Up to 5 groups or channels;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Up to 500 group members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Unlimited channels members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      No Private messages encryption;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <CgDanger size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      10 reports about spam lock account;
-                    </p>
-                    {!account && (
-                      <SecondaryButton small="true"
-                                       className={"mt-4 pointer-events-none opacity-50"}>
-                        Current Plan
-                      </SecondaryButton>
+            <BlockTitle text={"My Account Level"}>
+                <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
+                  Current Plan: {!near.account ? ("Free") : near.account.level === 1 ? "Bronze" : "Gold"}
+                </span>
+            </BlockTitle>
+            <div className={"flex flex-row"}>
+              <AccountLevel level={"Free"} price={""} isCurrent={!near.account} className={"border-r border-gray-700/50 px-6"}>
+                <p className={"mb-1 mt-2 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Up to 5 groups or channels;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Up to 500 group members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Unlimited channels members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  No Private messages encryption;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <CgDanger size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  10 reports about spam lock account;
+                </p>
+                {!near.account && (
+                  <SecondaryButton small="true" className={"mt-4 pointer-events-none opacity-50"}>
+                    Current Plan
+                  </SecondaryButton>
+                )}
+              </AccountLevel>
+              <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={near.account && near.account.level === 1}
+                            className={"border-r border-gray-700/50 px-6"}>
+                <p className={"mb-1 mt-2 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Up to 50 groups or channels;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Up to 2000 group members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Unlimited channels members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Private messages encryption;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Temporary lock on spam (up to 1 hour);
+                </p>
+                {!near.account && (
+                  <PrimaryButton small="true"
+                                 className={"mt-4"}
+                                 disabled={isUpgradeLoading > 0}
+                                 onClick={() => activateLevel(1)}>
+                    Activate <small>({getLevelPrice(1)} NEAR)</small>
+                    {isUpgradeLoading === 1 && (
+                      <span className={"ml-2"}>
+                        <Loader size={"sm"}/>
+                      </span>
                     )}
-                  </AccountLevel>
-                  <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={account && account.level === 1}
-                                className={"border-r border-gray-700/50 px-6"}>
-                    <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Up to 50 groups or channels;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Up to 2000 group members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Unlimited channels members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Private messages encryption;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Temporary lock on spam (up to 1 hour);
-                    </p>
-                    {!account && (
-                      <PrimaryButton small="true"
-                                     className={"mt-4"}
-                                     disabled={isUpgradeLoading > 0}
-                                     onClick={() => activateLevel(1)}>
-                        Activate <small>({getLevelPrice(1)} NEAR)</small>
-                        {isUpgradeLoading === 1 && (
-                          <span className={"ml-2"}>
-                            <Loader size={"sm"}/>
-                          </span>
-                        )}
-                      </PrimaryButton>
-                    )}
-                    {(account && account.level === 1) && (
-                      <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
-                    )}
-                  </AccountLevel>
-                  <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={account && account.level === 2} className={`px-6`}>
-                    <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Unlimited groups and channels;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Up to 5000 group members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Unlimited channels members;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Private messages encryption;
-                    </p>
-                    <p className={"mb-1 text-sm opacity-60"}>
-                      <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                      Temporary lock on spam (up to 15 min);
-                    </p>
+                  </PrimaryButton>
+                )}
+                {(near.account && near.account.level === 1) && (
+                  <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
+                )}
+              </AccountLevel>
+              <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={near.account && near.account.level === 2} className={`px-6`}>
+                <p className={"mb-1 mt-2 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Unlimited groups and channels;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Up to 5000 group members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Unlimited channels members;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Private messages encryption;
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Temporary lock on spam (up to 15 min);
+                </p>
 
-                    {(!account || account.level === 1) && (
-                      <PrimaryButton small="true"
-                                     className={"mt-4"}
-                                     disabled={isUpgradeLoading > 0}
-                                     onClick={() => activateLevel(2)}>
-                        Activate <small>({getLevelPrice(2)} NEAR)</small>
-                        {isUpgradeLoading === 2 && (
-                          <span className={"ml-2"}>
-                            <Loader size={"sm"}/>
-                          </span>
-                        )}
-                      </PrimaryButton>
+                {(!near.account || near.account.level === 1) && (
+                  <PrimaryButton small="true"
+                                 className={"mt-4"}
+                                 disabled={isUpgradeLoading > 0}
+                                 onClick={() => activateLevel(2)}>
+                    Activate <small>({getLevelPrice(2)} NEAR)</small>
+                    {isUpgradeLoading === 2 && (
+                      <span className={"ml-2"}>
+                        <Loader size={"sm"}/>
+                      </span>
                     )}
-                    {(account && account.level === 2) && (
-                      <SecondaryButton small="true" className={"mt-4 pointer-events-none opacity-50"}>
-                        Current Plan
-                      </SecondaryButton>
-                    )}
-                  </AccountLevel>
-                </div>
-              </>
-            )}
+                  </PrimaryButton>
+                )}
+                {(near.account && near.account.level === 2) && (
+                  <SecondaryButton small="true" className={"mt-4 pointer-events-none opacity-50"}>
+                    Current Plan
+                  </SecondaryButton>
+                )}
+              </AccountLevel>
+            </div>
           </div>
         </div>
 
@@ -320,51 +304,47 @@ export const MyDashboard = () => {
 
         <div className={"mb-6 flex flex-row gap-6"}>
           <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
-            {isAccountReady && (
-              <>
-                <BlockTitle text={"Account Spam Level"}/>
-                <div className={"flex flex-row"}>
-                  {!account ? (
-                    <div>
-                      {spamCount >= 10 ? (
-                        <p className={"text-red-500 font-semibold text-xl"}>
-                          Account Locked! We receive more than 10 spam reports in your messages.
-                        </p>
-                      ) : (
-                        <p>
-                          <b>Spam Level:</b>
-                          <span className={"ml-4 text-lg"}>{spamCount}/10</span>
-                        </p>
-                      )}
-                      <p className={"opacity-60 text-sm mt-2"}>
-                        Account limit: 10 reports about spam in your messages. <br/>
-                        You can upgrade Account Level to avoid complete lock.
-                      </p>
-                    </div>
+            <BlockTitle text={"Account Spam Level"}/>
+            <div className={"flex flex-row"}>
+              {!near.account ? (
+                <div>
+                  {spamCount >= 10 ? (
+                    <p className={"text-red-500 font-semibold text-xl"}>
+                      Account Locked! We receive more than 10 spam reports in your messages.
+                    </p>
                   ) : (
-                    <div>
-                      <p>
-                        <b>Spam Level:</b>
-                        <span className={"ml-4 text-lg"}>{0} reports</span>
-                      </p>
+                    <p>
+                      <b>Spam Level:</b>
+                      <span className={"ml-4 text-lg"}>{spamCount}/10</span>
+                    </p>
+                  )}
+                  <p className={"opacity-60 text-sm mt-2"}>
+                    Account limit: 10 reports about spam in your messages. <br/>
+                    You can upgrade Account Level to avoid complete lock.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p>
+                    <b>Spam Level:</b>
+                    <span className={"ml-4 text-lg"}>{0} reports</span>
+                  </p>
 
-                      <p className={"opacity-60 text-sm mt-2"}>
-                        Account limit: +{spamTimeLimit(account.level)} lock after each spam report in your messages.
-                        Lock start after each spam report, up to {spamMaxLimit(account.level)}.
-                      </p>
-                      {account.last_spam_report > 0 && (
-                        <p className={"opacity-60"}>
-                          Last spam report:
-                          <span className={"ml-2"}>
-                            {timestampToDate(account.last_spam_report / 1000000)} {timestampToTime(account.last_spam_report / 1000000)}
-                          </span>
-                        </p>
-                      )}
-                    </div>
+                  <p className={"opacity-60 text-sm mt-2"}>
+                    Account limit: +{spamTimeLimit(near.account.level)} lock after each spam report in your messages.
+                    Lock start after each spam report, up to {spamMaxLimit(near.account.level)}.
+                  </p>
+                  {near.account.last_spam_report > 0 && (
+                    <p className={"opacity-60"}>
+                      Last spam report:
+                      <span className={"ml-2"}>
+                        {timestampToDate(near.account.last_spam_report / 1000000)} {timestampToTime(near.account.last_spam_report / 1000000)}
+                      </span>
+                    </p>
                   )}
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
 
           <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>

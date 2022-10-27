@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { LeftPanel } from "../../components/MyMessages/LeftPanel";
+import { LeftPanel } from "../../components/MyMessages/LeftPanel/LeftPanel";
 import { NearContext } from "../../context/NearContext";
 import { loadSocialProfile } from "../../utils/transform";
 import { Outlet } from 'react-router-dom';

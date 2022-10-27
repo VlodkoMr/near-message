@@ -3,9 +3,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { NearContext } from "../../context/NearContext";
-import { SecretChat } from "../../utils/secret-chat";
-import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
+import { NearContext } from "../../../context/NearContext";
+import { SecretChat } from "../../../utils/secret-chat";
+import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 
 export const ImportKeysPopup = ({ isOpen, setIsOpen }) => {
   const near = useContext(NearContext);

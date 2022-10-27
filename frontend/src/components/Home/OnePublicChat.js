@@ -1,4 +1,4 @@
-import { AvatarGroup } from "../MyMessages/AvatarGroup";
+import { AvatarGroup } from "../Common/AvatarGroup";
 import React from "react";
 
 export const OnePublicChat = ({ group }) => (
