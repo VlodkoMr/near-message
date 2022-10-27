@@ -14,11 +14,6 @@ export const MyMessagesLayout = () => {
     loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
       setMyProfile(myProfile);
     });
-
-    // load my groups
-    near.mainContract.getUserGroups(near.wallet.accountId).then(groups => {
-      console.log(`groups`, groups);
-    })
   }, []);
 
   return (

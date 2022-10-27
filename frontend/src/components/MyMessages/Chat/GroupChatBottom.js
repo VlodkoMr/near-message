@@ -14,8 +14,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
   }
 
   useEffect(() => {
-    console.log(`group`, group);
-    if (group.members.length) {
+    if (!isChannel()) {
       setIsJoined(group.members.indexOf(near.wallet.accountId) !== -1);
     } else {
       loadGroupsIdList().then(myGroups => {

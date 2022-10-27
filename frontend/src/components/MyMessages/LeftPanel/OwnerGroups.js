@@ -1,25 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NearContext } from "../../../context/NearContext";
-import logoImage from "../../../assets/img/user-group.png";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { mediaURL } from "../../../utils/transform";
 import { AvatarGroup } from "../../Common/AvatarGroup";
 
-export const OwnerGroups = ({ searchFilter }) => {
+export const OwnerGroups = ({ searchFilter, ownerGroup }) => {
   let { id } = useParams();
-  const near = useContext(NearContext);
-  const [ownerGroup, setOwnerGroups] = useState([]);
-
-  const loadOwnerGroups = async () => {
-    const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
-    if (groups) {
-      setOwnerGroups(groups.reverse());
-    }
-  }
-
-  useEffect(() => {
-    loadOwnerGroups();
-  }, []);
 
   return ownerGroup && ownerGroup.length > 0 && (
     <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">

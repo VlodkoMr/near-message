@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { OwnerGroups } from "./OwnerGroups";
 import { AiOutlineUsergroupAdd, BsPencilSquare, IoCloseOutline } from "react-icons/all";
@@ -6,17 +6,58 @@ import { NewPrivateMessagePopup } from "../NewPrivateMessagePopup";
 import { CircleButton } from "../../../assets/css/components";
 import { EditGroupPopup } from "../EditGroupPopup";
 import { LeftPanelChats } from "./LeftPanelChats";
+import { NearContext } from "../../../context/NearContext";
 
 export const LeftPanel = () => {
+  const near = useContext(NearContext);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+  const [ownerGroup, setOwnerGroups] = useState([]);
+
   const [newMessagePopupVisible, setNewMessagePopupVisible] = useState(false);
   const [newGroupPopupVisible, setNewGroupPopupVisible] = useState(false);
   const [reloadChatList, setReloadChatList] = useState(0);
   const [searchFilter, setSearchFilter] = useState("");
 
+  useEffect(() => {
+    loadOwnerGroups().then(groups => {
+      let groupsLimit = 5;
+      if (near.account) {
+        if (near.account.level === 1) {
+          groupsLimit = 50;
+        } else {
+          // unlimited
+          groupsLimit = 0;
+        }
+      }
+
+      if (groupsLimit > 0) {
+        if (groups.length >= groupsLimit) {
+          setIsLimitReached(true);
+        }
+      }
+    });
+  }, []);
+
+  const loadOwnerGroups = async () => {
+    const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
+    if (groups) {
+      setOwnerGroups(groups.reverse());
+    }
+    return groups;
+  }
+
+  const openNewGroupPopup = () => {
+    if (isLimitReached) {
+      alert("Groups limit reached, please update Account Level");
+    } else {
+      setNewGroupPopupVisible(true);
+    }
+  }
+
   return (
     <>
       <div className="header p-4 md:flex md:flex-row justify-between items-center flex-none">
-        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setNewGroupPopupVisible(true)}>
+        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => openNewGroupPopup()}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
         <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
@@ -55,7 +96,9 @@ export const LeftPanel = () => {
         </form>
       </div>
 
-      <OwnerGroups searchFilter={searchFilter}/>
+      {ownerGroup.length > 0 && (
+        <OwnerGroups searchFilter={searchFilter} ownerGroup={ownerGroup}/>
+      )}
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
         <LeftPanelChats

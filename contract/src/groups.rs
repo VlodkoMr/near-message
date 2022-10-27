@@ -155,7 +155,12 @@ impl Contract {
 
     pub(crate) fn update_members_count_internal(&mut self, group_id: u32, change: i8) {
         let mut group: Group = self.groups.get(&group_id).unwrap().into();
-        group.members_count += change as u32;
+        if change > 0 {
+            group.members_count += 1;
+        } else {
+            group.members_count -= 1;
+        }
+
         self.groups.insert(&group_id, &group.into());
     }
 
@@ -172,6 +177,10 @@ impl Contract {
         // channel don't use members internal list
         if group_type == GroupType::Channel {
             members = vec![];
+        }
+
+        if !members.contains(&owner) {
+            members.push(owner.clone());
         }
 
         let group = Group {

@@ -39,26 +39,30 @@ export const WriteMessage = ({
   }, [messageText]);
 
   const toggleSecretChat = () => {
-    const secretChat = new SecretChat(toAddress, near.wallet.accountId);
+    if (near.account) {
+      const secretChat = new SecretChat(toAddress, near.wallet.accountId);
 
-    let messageText;
-    if (secretChat.isPrivateModeEnabled()) {
-      messageText = "(secret-end)";
-      secretChat.switchPrivateMode(false);
-    } else {
-      const chatData = secretChat.getSecretChat();
-      if (chatData) {
-        secretChat.switchPrivateMode(true);
-        messageText = "";
+      let messageText;
+      if (secretChat.isPrivateModeEnabled()) {
+        messageText = "(secret-end)";
+        secretChat.switchPrivateMode(false);
       } else {
-        let pubKey = secretChat.getMyPublicKey();
-        messageText = `(secret-start:${pubKey})`;
+        const chatData = secretChat.getSecretChat();
+        if (chatData) {
+          secretChat.switchPrivateMode(true);
+          messageText = "";
+        } else {
+          let pubKey = secretChat.getMyPublicKey();
+          messageText = `(secret-start:${pubKey})`;
+        }
       }
-    }
 
-    if (messageText) {
-      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
-      onMessageSent?.(messageText, messageMedia);
+      if (messageText) {
+        near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
+        onMessageSent?.(messageText, messageMedia);
+      }
+    } else {
+      alert("Update your Account Level to use encoded messages");
     }
   }
 

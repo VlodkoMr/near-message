@@ -36,7 +36,6 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
 
   useEffect(() => {
     loadGroupsIdList().then(groups => {
-      console.log(`groups`, groups);
       setIsBlockchainError(false);
       let promiseList = [loadPrivateChatsPromise(near.wallet.accountId)];
       if (groups.length) {
@@ -62,9 +61,10 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
               profiles.push(chat.last_message.to_address);
             }
           }
-
           return chat;
-        }).sort((a, b) => b.updated_at - a.updated_at);
+        });
+
+        allChats.sort((a, b) => b.updated_at - a.updated_at);
 
         setChatList(allChats);
         setIsReady(true);
