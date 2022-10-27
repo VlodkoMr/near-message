@@ -28,11 +28,15 @@ export class MainContract {
     }
   }
 
-  async getPublicGroups() {
+  async getPublicGroups(page_limit, skip = 0) {
     try {
       return await this.wallet.viewMethod({
         contractId: this.contractId,
         method: 'get_public_groups',
+        args: {
+          page_limit,
+          skip
+        }
       });
     } catch (e) {
       console.log(`blockchain error`, e);

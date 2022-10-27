@@ -180,12 +180,7 @@ impl Contract {
         self.owner_groups.insert(&owner, &owner_groups);
 
         // add to public/channels list
-        if group_type == GroupType::Public {
-            self.public_groups.insert(&group_id);
-        }
-        if group_type == GroupType::Channel {
-            self.public_channels.insert(&group_id);
-        }
+        self.public_groups.insert(&group_id);
 
         // add to user groups
         if members.len() > 0 {
@@ -196,20 +191,15 @@ impl Contract {
 
     pub(crate) fn remove_group_internal(&mut self, id: u32, group: Group) {
         // remove from public/channels list
-        if group.group_type == GroupType::Public {
-            self.public_groups.remove(&id);
-        }
-        if group.group_type == GroupType::Channel {
-            self.public_channels.remove(&id);
-        }
+        self.public_groups.remove(&id);
 
         self.remove_group_member_internal(group.members, id, false);
         self.groups.remove(&id);
     }
 
-    pub(crate) fn get_public_group_channel(&self, source: &UnorderedSet<u32>, page_limit: u32) -> Vec<Group> {
-        let groups_id_list: Vec<u32> = source.iter()
-            // .skip(start_index as usize)
+    pub(crate) fn get_public_group_channel(&self, page_limit: u32, skip_index: u32) -> Vec<Group> {
+        let groups_id_list: Vec<u32> = self.public_groups.iter()
+            .skip(skip_index as usize)
             .take(page_limit as usize)
             .collect();
         groups_id_list.into_iter().map(

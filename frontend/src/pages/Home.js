@@ -20,15 +20,14 @@ export const Home = () => {
   const [zoomTechDetails, setZoomTechDetails] = useState(false);
   const [publicGroups, setPublicGroups] = useState([]);
 
-  const loadPublicChats = async () => {
-    return await near.mainContract.getPublicGroups();
+  const loadLastPublicChats = async () => {
+    return await near.mainContract.getPublicGroups(6);
   }
 
   useEffect(() => {
-    loadPublicChats().then(result => {
-      const allGroups = result[0].concat(result[1]);
-      console.log(`allGroups`, allGroups);
-      setPublicGroups(allGroups);
+    loadLastPublicChats().then(result => {
+      console.log(`result`, result);
+      setPublicGroups(result);
     });
 
     if (location.hash) {

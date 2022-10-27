@@ -37,7 +37,6 @@ pub struct Contract {
     users: LookupMap<AccountId, UserVersion>,
     groups: LookupMap<u32, GroupVersion>,
     public_groups: UnorderedSet<u32>,
-    public_channels: UnorderedSet<u32>,
     user_groups: LookupMap<AccountId, Vec<u32>>,
     owner_groups: LookupMap<AccountId, Vec<u32>>,
     groups_count: u32,
@@ -54,7 +53,6 @@ impl Contract {
             users: LookupMap::new(StorageKeys::Users),
             groups: LookupMap::new(StorageKeys::Groups),
             public_groups: UnorderedSet::new(StorageKeys::PublicGroups),
-            public_channels: UnorderedSet::new(StorageKeys::PublicChannels),
             user_groups: LookupMap::new(StorageKeys::UserGroups),
             owner_groups: LookupMap::new(StorageKeys::OwnerGroups),
             groups_count: 0,
@@ -84,13 +82,11 @@ impl Contract {
     }
 
     /**
-     * Get List of Public Groups and Channels
+     * Get List of latest Public Groups and Channels
      */
-    pub fn get_public_groups(&self) -> (Vec<Group>, Vec<Group>) {
-        let page_limit = 6;
-        let groups = self.get_public_group_channel(&self.public_groups, page_limit);
-        let channels = self.get_public_group_channel(&self.public_channels, page_limit);
-        (groups, channels)
+    pub fn get_public_groups(&self, page_limit: u32, skip: Option<u32>) -> Vec<Group> {
+        let skip_index = skip.unwrap_or(0);
+        self.get_public_group_channel(page_limit, skip_index)
     }
 
     /**

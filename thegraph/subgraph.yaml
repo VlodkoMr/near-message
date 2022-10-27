@@ -5,11 +5,12 @@ features:
   - fullTextSearch
 dataSources:
   - kind: near
-    name: NearMessage
+    name: ChatMe
     network: near-testnet
     source:
       account: "near-message.testnet"
-      startBlock: 103540900
+#      account: "chatme.testnet"
+      startBlock: 103598900
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
