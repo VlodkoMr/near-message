@@ -76,7 +76,6 @@ export class SecretChat {
   chatPublicKey() {
     const secretChat = this.getSecretChat();
     if (secretChat) {
-      console.log(`secretChat.key`, secretChat.key);
       return secretChat.key;
     }
     return "";
@@ -95,7 +94,6 @@ export class SecretChat {
   }
 
   storeSecretChatKey(messageText) {
-    console.log(`messageText`, messageText);
     const keyParts = messageText.split(":");
     const chatPublicKey = keyParts[1].replace(")", "");
     if (keyParts.length) {
