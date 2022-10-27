@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
+    "cleanup": "rm -rf .parcel-cache && rm -rf ./dist",
     "start": "NODE_ENV=localhost ./start.sh",
     "dev:start": "NODE_ENV=testnet parcel index.html --open",
-    "build": "NODE_ENV=localhost parcel build index.html --public-url ./",
-    "dev:build": "NODE_ENV=testnet parcel build index.html --public-url ./"
+    "build": "npm run cleanup && NODE_ENV=localhost parcel build index.html --public-url ./",
+    "dev:build": "npm run cleanup && NODE_ENV=testnet parcel build index.html --public-url ./"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
