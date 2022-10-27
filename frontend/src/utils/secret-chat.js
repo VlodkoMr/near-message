@@ -41,6 +41,7 @@ export class SecretChat {
       let keys = JSON.parse(myKeys);
       return keys.public;
     }
+    return "";
   }
 
   getMyPrivateKey() {
@@ -49,6 +50,7 @@ export class SecretChat {
       let keys = JSON.parse(myKeys);
       return keys.private;
     }
+    return "";
   }
 
   // ----------- Chat -----------
@@ -74,8 +76,10 @@ export class SecretChat {
   chatPublicKey() {
     const secretChat = this.getSecretChat();
     if (secretChat) {
+      console.log(`secretChat.key`, secretChat.key);
       return secretChat.key;
     }
+    return "";
   }
 
   decode(text, nonce) {

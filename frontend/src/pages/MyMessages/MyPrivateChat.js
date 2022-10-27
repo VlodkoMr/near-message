@@ -139,7 +139,7 @@ export const MyPrivateChat = () => {
                         onMessageSent={appendTemporaryMessage}
                         replyToMessage={replyToMessage}
                         setReplyToMessage={setReplyToMessage}
-                        isPrivateMode={isPrivateMode}
+                        changePrivateMode={isPrivateMode}
           />
         </>
       )}

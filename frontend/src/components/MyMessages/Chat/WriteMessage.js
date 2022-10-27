@@ -12,29 +12,15 @@ import { SecretChat } from "../../../utils/secret-chat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 
 export const WriteMessage = ({
-  toAddress, toGroup, onMessageSent, isPrivateMode, replyToMessage, setReplyToMessage
+  toAddress, toGroup, onMessageSent, changePrivateMode, replyToMessage, setReplyToMessage
 }) => {
   const near = useContext(NearContext);
   const inputRef = useRef(null);
-  // const localKey = toAddress ? `chatme:acc-${toAddress}` : `chatme:group-${toGroup.id}`;
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [messageTmpMedia, setMessageTmpMedia] = useState("");
   const [isMediaLoading, setIsMediaLoading] = useState(false);
-
-  // useEffect(() => {
-  //   // load message from local storage
-  //   const savedMessage = localStorage.getItem(localKey);
-  //   if (savedMessage) {
-  //     setMessageText(savedMessage);
-  //   } else {
-  //     setMessageText("");
-  //   }
-  // }, [toAddress, toGroup?.id]);
-
-  // useEffect(() => {
-  //   localStorage.setItem(localKey, messageText);
-  // }, [messageText]);
+  const [isPrivateMode, setIsPrivateMode] = useState(false);
 
   const toggleSecretChat = () => {
     if (near.account) {
@@ -42,11 +28,13 @@ export const WriteMessage = ({
 
       let messageText;
       if (secretChat.isPrivateModeEnabled()) {
+        setIsPrivateMode(false);
         messageText = "(secret-end)";
         secretChat.switchPrivateMode(false);
       } else {
         const chatData = secretChat.getSecretChat();
         if (chatData) {
+          setIsPrivateMode(true);
           secretChat.switchPrivateMode(true);
           messageText = "";
         } else {
@@ -108,6 +96,13 @@ export const WriteMessage = ({
     }
   }, [isMediaLoading, replyToMessage, toAddress, toGroup?.id]);
 
+  useEffect(() => {
+    if (changePrivateMode !== undefined) {
+      console.log(`changePrivateMode`, changePrivateMode);
+      setIsPrivateMode(changePrivateMode);
+    }
+  }, [changePrivateMode]);
+
   const handleTextChange = (e) => {
     const value = e.target.value;
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -151,7 +146,7 @@ export const WriteMessage = ({
           <button type="button"
                   disabled={isMediaLoading}
                   onClick={() => toggleSecretChat()}
-                  title={"Start private conversation"}
+                  title={`${isPrivateMode ? "Disable" : "Start"} Private Mode`}
                   className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-7 h-6 mb-4
                   ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                   `}>
@@ -232,7 +227,9 @@ export const WriteMessage = ({
           <label>
             {replyToMessage && (
               <div onClick={() => setReplyToMessage(null)}
-                   className={"absolute left-1 top-1 w-32 bg-gray-700 rounded-full p-[6px] flex flex-row text-sm text-gray-200"}>
+                   className={`absolute left-1 top-1 w-32 rounded-full p-[6px] flex flex-row text-sm text-gray-200
+                      ${isPrivateMode ? "bg-red-800/40" : "bg-gray-700/80"}
+                   `}>
                 <svg viewBox="0 0 20 20" className="w-5 h-5 fill-current opacity-50 ml-1 mt-0.5">
                   <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                 </svg>
@@ -241,6 +238,7 @@ export const WriteMessage = ({
                 </span>
               </div>
             )}
+
             <TextareaAutosize placeholder="Aa"
                               autoFocus
                               ref={inputRef}
@@ -258,7 +256,7 @@ export const WriteMessage = ({
           </label>
           {isPrivateMode && (
             <div className={"absolute left-4 -bottom-3.5 text-sm font-semibold"}>
-              <small className={"text-red-400/60"}>Private Mode</small>
+              <small className={"text-red-500/80"}>Private Mode</small>
             </div>
           )}
         </div>

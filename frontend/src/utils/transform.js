@@ -1,6 +1,5 @@
 import { SecretChat } from "./secret-chat";
 import { base_encode } from "near-api-js/lib/utils/serialize";
-import { utils } from "near-api-js";
 
 export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
@@ -98,12 +97,14 @@ export const transformOneMessage = (message, accountId, isFirst, isLast, isTempo
     }
   }
 
-  // Activate/Deactivate secret chat on encrypted message received
-  if (message.encrypt_key && !secretChat.isPrivateModeEnabled()) {
-    secretChat.switchPrivateMode(true);
-  }
-  if (message.isEncryptEnd && secretChat.isPrivateModeEnabled()) {
-    secretChat.switchPrivateMode(false);
+  if (isLast) {
+    // Activate/Deactivate secret chat on encrypted message received
+    if (message.encrypt_key && !secretChat.isPrivateModeEnabled()) {
+      secretChat.switchPrivateMode(true);
+    }
+    if (message.isEncryptEnd && secretChat.isPrivateModeEnabled()) {
+      secretChat.switchPrivateMode(false);
+    }
   }
 
   return message;
