@@ -1,9 +1,8 @@
 import { createClient } from "urql";
-import { API_URL } from "../settings/config";
 
 export const loadPrivateChatsPromise = (accountId) => {
   return new Promise(async (resolve, reject) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
            id
@@ -31,7 +30,7 @@ export const loadPrivateChatsPromise = (accountId) => {
 
 export const loadGroupChatsPromise = (idList) => {
   return new Promise(async (resolve, reject) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const groupChatListQuery = `{
         groupChats(
            orderBy: updated_at, 
@@ -62,7 +61,7 @@ export const loadGroupChatsPromise = (idList) => {
 
 export const loadGroupMessages = (groupId, messagesCount) => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     groupMessages(
       last: ${messagesCount}, 
@@ -86,7 +85,7 @@ export const loadGroupMessages = (groupId, messagesCount) => {
 
 export const loadNewGroupMessages = (groupId, lastMessageId) => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     groupMessages(
       orderBy: created_at, 
@@ -110,7 +109,7 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
 
 export const loadPrivateMessages = (chatId, messagesCount) => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     privateMessages(
       last: ${messagesCount}, 
@@ -136,7 +135,7 @@ export const loadPrivateMessages = (chatId, messagesCount) => {
 
 export const loadNewPrivateMessages = (chatId, lastMessageId) => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: API_URL });
+    const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     privateMessages(
       orderBy: created_at, 

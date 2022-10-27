@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { lazy, useContext, Suspense } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { Home, MyDashboard, MyGroupChat, MyMessagesLayout, MyPrivateChat, Error404, Privacy, Terms } from "./pages";
+import { Home, Error404, Privacy, Terms, MyDashboard, MyPrivateChat, MyGroupChat } from "./pages";
 import { NearContext } from "./context/NearContext";
 
 export const App = () => {
@@ -13,24 +13,32 @@ export const App = () => {
     return <Outlet/>;
   };
 
+  const MyMessagesLayout = lazy(() => import("./pages/MyMessages/MyMessagesLayout"))
+
+  const loadingFallback = () => (
+    <small>...</small>
+  )
+
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Home/>}/>
+        <Suspense fallback={loadingFallback()}>
+          <Routes>
+            <Route exact path="/" element={<Home/>}/>
 
-          <Route element={<ProtectedRoute/>}>
-            <Route exact path="/my" element={<MyMessagesLayout/>}>
-              <Route exact path="" element={<MyDashboard/>}/>
-              <Route exact path="account/:id" element={<MyPrivateChat/>}/>
-              <Route exact path="group/:id" element={<MyGroupChat/>}/>
+            <Route element={<ProtectedRoute/>}>
+              <Route exact path="/my" element={<MyMessagesLayout/>}>
+                <Route exact path="" element={<MyDashboard/>}/>
+                <Route exact path="account/:id" element={<MyPrivateChat/>}/>
+                <Route exact path="group/:id" element={<MyGroupChat/>}/>
+              </Route>
             </Route>
-          </Route>
 
-          <Route exact path="/terms" element={<Terms/>}/>
-          <Route exact path="/privacy" element={<Privacy/>}/>
-          <Route path='*' element={<Error404/>}/>
-        </Routes>
+            <Route exact path="/terms" element={<Terms/>}/>
+            <Route exact path="/privacy" element={<Privacy/>}/>
+            <Route path='*' element={<Error404/>}/>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );

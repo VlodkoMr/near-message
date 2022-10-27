@@ -398,6 +398,7 @@ export const Home = () => {
               <PriceBlockItem text={"Up to 500 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"No Private messages encryption"} isOk={false}/>
+              <PriceBlockItem text={"No sending NEAR tokens with message"} isOk={false}/>
               <PriceBlockItem text={"10 reports about spam in your messages lock account from sending messages"} isOk={false}/>
             </PriceBlock>
             <PriceBlock plan={"Bronze"} price={"7 NEAR"}
@@ -406,6 +407,7 @@ export const Home = () => {
               <PriceBlockItem text={"Up to 2000 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"Private messages encryption"} isOk={true}/>
+              <PriceBlockItem text={"No sending NEAR tokens with message"} isOk={false}/>
               <PriceBlockItem text={"Temporary lock on spam detection: 1 minute per each spam report (up to 1 hour)"} isOk={true}/>
             </PriceBlock>
             <PriceBlock plan={"Gold"} price={"14 NEAR"}
@@ -414,6 +416,7 @@ export const Home = () => {
               <PriceBlockItem text={"Up to 5000 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
               <PriceBlockItem text={"Private messages encryption"} isOk={true}/>
+              <PriceBlockItem text={"Send NEAR tokens with message"} isOk={true}/>
               <PriceBlockItem text={"Temporary lock on spam detection: 15 sec. per each spam report (up to 15 minutes) **"} isOk={true}/>
             </PriceBlock>
           </div>

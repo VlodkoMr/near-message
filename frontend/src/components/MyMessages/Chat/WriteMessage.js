@@ -5,8 +5,6 @@ import {
   BiSend,
   BsImage,
   IoMdCloseCircleOutline,
-  MdOutlineEnhancedEncryption,
-  MdOutlineNoEncryption,
 } from "react-icons/all";
 import { NearContext } from "../../../context/NearContext";
 import { Loader } from "../../Loader";
@@ -18,25 +16,25 @@ export const WriteMessage = ({
 }) => {
   const near = useContext(NearContext);
   const inputRef = useRef(null);
-  const localKey = toAddress ? `chatme:acc-${toAddress}` : `chatme:group-${toGroup.id}`;
+  // const localKey = toAddress ? `chatme:acc-${toAddress}` : `chatme:group-${toGroup.id}`;
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [messageTmpMedia, setMessageTmpMedia] = useState("");
   const [isMediaLoading, setIsMediaLoading] = useState(false);
 
-  useEffect(() => {
-    // load message from local storage
-    const savedMessage = localStorage.getItem(localKey);
-    if (savedMessage) {
-      setMessageText(savedMessage);
-    } else {
-      setMessageText("");
-    }
-  }, [toAddress, toGroup?.id]);
+  // useEffect(() => {
+  //   // load message from local storage
+  //   const savedMessage = localStorage.getItem(localKey);
+  //   if (savedMessage) {
+  //     setMessageText(savedMessage);
+  //   } else {
+  //     setMessageText("");
+  //   }
+  // }, [toAddress, toGroup?.id]);
 
-  useEffect(() => {
-    localStorage.setItem(localKey, messageText);
-  }, [messageText]);
+  // useEffect(() => {
+  //   localStorage.setItem(localKey, messageText);
+  // }, [messageText]);
 
   const toggleSecretChat = () => {
     if (near.account) {
@@ -101,7 +99,7 @@ export const WriteMessage = ({
     setMessageTmpMedia("");
     setMessageText("");
     setReplyToMessage(null);
-    localStorage.setItem(localKey, "");
+    // localStorage.setItem(localKey, "");
   }
 
   useEffect(() => {
@@ -152,14 +150,40 @@ export const WriteMessage = ({
         {toAddress && (
           <button type="button"
                   disabled={isMediaLoading}
+                  onClick={() => toggleSecretChat()}
                   title={"Start private conversation"}
                   className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-7 h-6 mb-4
                   ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                   `}>
             {isPrivateMode ? (
-              <MdOutlineNoEncryption size={26} onClick={() => toggleSecretChat()}/>
+              <svg width="40"
+                   height="48"
+                   viewBox="0 0 40 48"
+                   fill="none"
+                   xmlns="http://www.w3.org/2000/svg"
+                   className="w-6 h-6 mt-0.5 fill-current">
+                <path
+                  d="M10.9091 21.8182H28.3636V15.2727C28.3636 12.8636 27.5114 10.8068 25.8068 9.10227C24.1023 7.39773 22.0455 6.54545 19.6364 6.54545C17.2273 6.54545 15.1705 7.39773 13.4659 9.10227C11.7614 10.8068 10.9091 12.8636 10.9091 15.2727V21.8182ZM39.2727 25.0909V44.7273C39.2727 45.6364 38.9545 46.4091 38.3182 47.0455C37.6818 47.6818 36.9091 48 36 48H3.27273C2.36364 48 1.59091 47.6818 0.954545 47.0455C0.318182 46.4091 0 45.6364 0 44.7273V25.0909C0 24.1818 0.318182 23.4091 0.954545 22.7727C1.59091 22.1364 2.36364 21.8182 3.27273 21.8182H4.36364V15.2727C4.36364 11.0909 5.86364 7.5 8.86364 4.5C11.8636 1.5 15.4545 0 19.6364 0C23.8182 0 27.4091 1.5 30.4091 4.5C33.4091 7.5 34.9091 11.0909 34.9091 15.2727V21.8182H36C36.9091 21.8182 37.6818 22.1364 38.3182 22.7727C38.9545 23.4091 39.2727 24.1818 39.2727 25.0909Z"
+                />
+              </svg>
             ) : (
-              <MdOutlineEnhancedEncryption size={26} onClick={() => toggleSecretChat()}/>
+              <svg width="36"
+                   height="48"
+                   viewBox="0 0 36 48"
+                   fill="none"
+                   className="w-6 h-6 mt-0.5 fill-current"
+                   xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_1_7)">
+                  <path
+                    d="M33 24C33.8334 24 34.5416 24.2917 35.125 24.875C35.7084 25.4583 36 26.1667 36 27V45C36 45.8334 35.7084 46.5416 35.125 47.125C34.5416 47.7084 33.8334 48 33 48H3C2.16667 48 1.45833 47.7084 0.875 47.125C0.291667 46.5416 0 45.8334 0 45V27C0 26.1667 0.291667 25.4583 0.875 24.875C1.45833 24.2917 2.16667 24 3 24H4V14C4 10.1458 5.36978 6.84897 8.10938 4.10938C10.849 1.36979 14.1458 0 18 0C21.8542 0 25.151 1.36979 27.8906 4.10938C30.6302 6.84897 32 10.1458 32 14C32 14.5417 31.8022 15.0104 31.4062 15.4062C31.0104 15.8021 30.5417 16 30 16H28C27.4583 16 26.9896 15.8021 26.5938 15.4062C26.1979 15.0104 26 14.5417 26 14C26 11.7917 25.2188 9.90625 23.6562 8.34375C22.0938 6.78125 20.2083 6 18 6C15.7917 6 13.9062 6.78125 12.3438 8.34375C10.7812 9.90625 10 11.7917 10 14V24H33Z"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1_7">
+                    <rect width="36" height="48" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
             )}
           </button>
         )}

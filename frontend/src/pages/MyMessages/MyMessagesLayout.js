@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 
 import "../../assets/css/my-messages.css"
 
-export const MyMessagesLayout = () => {
+const MyMessagesLayout = () => {
   const near = useContext(NearContext);
   const [myProfile, setMyProfile] = useState({});
 
@@ -37,3 +37,5 @@ export const MyMessagesLayout = () => {
     </div>
   );
 };
+
+export default MyMessagesLayout;

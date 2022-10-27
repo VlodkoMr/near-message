@@ -181,23 +181,27 @@ export const MyDashboard = () => {
               <AccountLevel level={"Free"} price={""} isCurrent={!near.account} className={"border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Up to 5 groups or channels;
+                  Up to 5 groups or channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Up to 500 group members;
+                  Up to 500 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Unlimited channels members;
+                  Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  No Private messages encryption;
+                  No Private messages encryption.
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  No sending NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <CgDanger size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  10 reports about spam lock account;
+                  10 reports about spam lock account.
                 </p>
                 {!near.account && (
                   <SecondaryButton small="true" className={"mt-4 pointer-events-none opacity-50"}>
@@ -209,23 +213,27 @@ export const MyDashboard = () => {
                             className={"border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Up to 50 groups or channels;
+                  Up to 50 groups or channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Up to 2000 group members;
+                  Up to 2000 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Unlimited channels members;
+                  Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Private messages encryption;
+                  Private messages encryption.
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  No sending NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Temporary lock on spam (up to 1 hour);
+                  Temporary lock on spam (up to 1 hour).
                 </p>
                 {!near.account && (
                   <PrimaryButton small="true"
@@ -247,23 +255,27 @@ export const MyDashboard = () => {
               <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={near.account && near.account.level === 2} className={`px-6`}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Unlimited groups and channels;
+                  Unlimited groups and channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Up to 5000 group members;
+                  Up to 5000 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Unlimited channels members;
+                  Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Private messages encryption;
+                  Private messages encryption.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Temporary lock on spam (up to 15 min);
+                  Send NEAR tokens with message.
+                </p>
+                <p className={"mb-1 text-sm opacity-60"}>
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Temporary lock on spam (up to 15 min).
                 </p>
 
                 {(!near.account || near.account.level === 1) && (

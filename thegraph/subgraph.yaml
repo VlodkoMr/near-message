@@ -9,8 +9,8 @@ dataSources:
     network: near-testnet
     source:
       account: "near-message.testnet"
-#      account: "chatme.testnet"
-      startBlock: 103598900
+      #      account: "chatme.testnet"
+      startBlock: 103625000
     mapping:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
