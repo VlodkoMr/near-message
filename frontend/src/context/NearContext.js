@@ -1,8 +1,10 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const NearContext = createContext({});
 
 export const NearProvider = ({ children, wallet, isSigned, mainContract, socialDBContract }) => {
+  const [account, setAccount] = useState();
+
   const loadAccount = async () => {
     return await mainContract.getUserInfo(wallet.accountId);
   }
@@ -10,14 +12,7 @@ export const NearProvider = ({ children, wallet, isSigned, mainContract, socialD
   useEffect(() => {
     if (wallet.accountId) {
       loadAccount().then(account => {
-        console.log(`init account`, account);
-        // if (account) {
-        //   if (account.level === 1) {
-        //     setMembersLimit(2000);
-        //   } else {
-        //     setMembersLimit(5000);
-        //   }
-        // }
+        setAccount(account);
       });
     }
   }, [wallet.accountId])
@@ -28,6 +23,7 @@ export const NearProvider = ({ children, wallet, isSigned, mainContract, socialD
       mainContract,
       socialDBContract,
       isSigned,
+      account
     }}>
       {children}
     </NearContext.Provider>

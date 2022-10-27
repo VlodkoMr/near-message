@@ -4,7 +4,7 @@ import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader"
 import { Avatar } from "../../components/Common/Avatar";
 import { formatAddress } from "../../utils/transform";
 import { NearContext } from "../../context/NearContext";
-import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, IoClose } from "react-icons/all";
+import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, GoChevronDown, IoClose } from "react-icons/all";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
 import { Loader } from "../../components/Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
@@ -15,7 +15,8 @@ export const MyDashboard = () => {
   const near = useContext(NearContext);
   const [myProfile] = useOutletContext();
   const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
-  const [isInfoHidden, setIsInfoHidden] = useState(true);
+  const [isMoreInfoHidden, setIsMoreInfoHidden] = useState(true);
+  const [isWarningHidden, setIsWarningHidden] = useState(true);
   const [spamCount, setSpamCount] = useState(0);
   const [isExportPopupVisible, setIsExportPopupVisible] = useState(false);
   const [isImportPopupVisible, setIsImportPopupVisible] = useState(false);
@@ -24,15 +25,15 @@ export const MyDashboard = () => {
     return await near.mainContract.getSpamCount(near.wallet.accountId);
   }
 
-  const hideDashboardInfo = () => {
-    setIsInfoHidden(true);
+  const hideDashboardWarning = () => {
+    setIsWarningHidden(true);
     localStorage.setItem('hideDashboardInfo', "true")
   }
 
   useEffect(() => {
-    let isHidden = localStorage.getItem('hideDashboardInfo');
+    let isHidden = localStorage.getItem('chatme:hideDashboardWarning');
     if (!isHidden) {
-      setIsInfoHidden(false);
+      setIsWarningHidden(false);
     }
 
     loadSpamCount().then(result => {
@@ -288,11 +289,11 @@ export const MyDashboard = () => {
           </div>
         </div>
 
-        {!isInfoHidden && (
+        {!isWarningHidden && (
           <div className={"mb-6"}>
             <div className={"bg-red-600/40 py-4 px-6 flex-1 rounded-lg text-sm"}>
               <BlockTitle text={"Important Information"} isRed={true}>
-                <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardInfo()}/>
+                <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardWarning()}/>
               </BlockTitle>
               <p>
                 All blockchain data is publicly available! Do not send private information, passwords or other important information. <br/>
@@ -302,70 +303,82 @@ export const MyDashboard = () => {
           </div>
         )}
 
-        <div className={"mb-6 flex flex-row gap-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
-            <BlockTitle text={"Account Spam Level"}/>
-            <div className={"flex flex-row"}>
-              {!near.account ? (
-                <div>
-                  {spamCount >= 10 ? (
-                    <p className={"text-red-500 font-semibold text-xl"}>
-                      Account Locked! We receive more than 10 spam reports in your messages.
-                    </p>
+        {!isMoreInfoHidden ? (
+          <>
+            <div className={"mb-6 flex flex-row gap-6"}>
+              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
+                <BlockTitle text={"Account Spam Level"}/>
+                <div className={"flex flex-row"}>
+                  {!near.account ? (
+                    <div>
+                      {spamCount >= 10 ? (
+                        <p className={"text-red-500 font-semibold text-xl"}>
+                          Account Locked! We receive more than 10 spam reports in your messages.
+                        </p>
+                      ) : (
+                        <p>
+                          <b>Spam Level:</b>
+                          <span className={"ml-4 text-lg"}>{spamCount}/10</span>
+                        </p>
+                      )}
+                      <p className={"opacity-60 text-sm mt-2"}>
+                        Account limit: 10 reports about spam in your messages. <br/>
+                        You can upgrade Account Level to avoid complete lock.
+                      </p>
+                    </div>
                   ) : (
-                    <p>
-                      <b>Spam Level:</b>
-                      <span className={"ml-4 text-lg"}>{spamCount}/10</span>
-                    </p>
-                  )}
-                  <p className={"opacity-60 text-sm mt-2"}>
-                    Account limit: 10 reports about spam in your messages. <br/>
-                    You can upgrade Account Level to avoid complete lock.
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <p>
-                    <b>Spam Level:</b>
-                    <span className={"ml-4 text-lg"}>{0} reports</span>
-                  </p>
+                    <div>
+                      <p>
+                        <b>Spam Level:</b>
+                        <span className={"ml-4 text-lg"}>{0} reports</span>
+                      </p>
 
-                  <p className={"opacity-60 text-sm mt-2"}>
-                    Account limit: +{spamTimeLimit(near.account.level)} lock after each spam report in your messages.
-                    Lock start after each spam report, up to {spamMaxLimit(near.account.level)}.
-                  </p>
-                  {near.account.last_spam_report > 0 && (
-                    <p className={"opacity-60"}>
-                      Last spam report:
-                      <span className={"ml-2"}>
+                      <p className={"opacity-60 text-sm mt-2"}>
+                        Account limit: +{spamTimeLimit(near.account.level)} lock after each spam report in your messages.
+                        Lock start after each spam report, up to {spamMaxLimit(near.account.level)}.
+                      </p>
+                      {near.account.last_spam_report > 0 && (
+                        <p className={"opacity-60"}>
+                          Last spam report:
+                          <span className={"ml-2"}>
                         {timestampToDate(near.account.last_spam_report / 1000000)} {timestampToTime(near.account.last_spam_report / 1000000)}
                       </span>
-                    </p>
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
+              </div>
+
+              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
+                <BlockTitle text={"Documentation & External Links"}/>
+                <div className={"flex flex-row pt-2"}>
+                  <div className={"flex-1"}>
+                    <ExternalLink text={"Introduction"} url={"https://chatme.gitbook.io/chatme/"}/>
+                    <ExternalLink text={"Web Interface"} url={"https://chatme.gitbook.io/chatme/chatme-web-interface/get-started"}/>
+                    <ExternalLink text={"Get Started Integration"} url={"https://chatme.gitbook.io/chatme/documentation/get-started"}/>
+                    <ExternalLink text={"Widgets (React components)"}
+                                  url={"https://chatme.gitbook.io/chatme/documentation/frontend-widgets"}/>
+                  </div>
+                  <div className={"flex-1"}>
+                    <ExternalLink text={"Discord"} url={""}/>
+                    <ExternalLink text={"Twitter"} url={""}/>
+                    <ExternalLink text={"Telegram"} url={""}/>
+                    <ExternalLink text={"Contact Us"} url={"email:vlodkow@gmail.com"}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className={"border-t-2 border-gray-400/10 mt-8"}>
+            <div onClick={() => setIsMoreInfoHidden(false)}
+                 className={"-mt-3.5 bg-gray-800 hover:text-gray-400 text-gray-300 w-32 text-sm mx-auto text-center py-1 pl-3 pr-1 rounded-full cursor-pointer"}>
+              <span className={"mr-2"}>Show More</span>
+              <GoChevronDown className={"inline"} size={16}/>
             </div>
           </div>
-
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
-            <BlockTitle text={"Documentation & External Links"}/>
-            <div className={"flex flex-row pt-2"}>
-              <div className={"flex-1"}>
-                <ExternalLink text={"Introduction"} url={"https://chatme.gitbook.io/chatme/"}/>
-                <ExternalLink text={"Web Interface"} url={"https://chatme.gitbook.io/chatme/chatme-web-interface/get-started"}/>
-                <ExternalLink text={"Get Started Integration"} url={"https://chatme.gitbook.io/chatme/documentation/get-started"}/>
-                <ExternalLink text={"Widgets (React components)"} url={"https://chatme.gitbook.io/chatme/documentation/frontend-widgets"}/>
-              </div>
-              <div className={"flex-1"}>
-                <ExternalLink text={"Discord"} url={""}/>
-                <ExternalLink text={"Twitter"} url={""}/>
-                <ExternalLink text={"Telegram"} url={""}/>
-                <ExternalLink text={"Contact Us"} url={"email:vlodkow@gmail.com"}/>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        )}
       </div>
 
       <ExportKeysPopup isOpen={isExportPopupVisible} setIsOpen={setIsExportPopupVisible}/>

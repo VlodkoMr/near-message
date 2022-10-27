@@ -401,7 +401,9 @@ export const Home = () => {
           </div>
 
           <div className={"text-center mb-8"}>
-            <SecondaryButton>All Public Communities &raquo;</SecondaryButton>
+            <SecondaryButton onClick={() => alert("Coming soon...")}>
+              <span className={"text-gray-400"}>All Public Communities</span>
+            </SecondaryButton>
           </div>
 
           <div className={"text-gray-300/60 text-center mb-10"}>
