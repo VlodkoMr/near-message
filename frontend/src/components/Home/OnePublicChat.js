@@ -1,5 +1,3 @@
-import { mediaURL } from "../../utils/transform";
-import logoImage from "../../assets/img/user-group.png";
 import { AvatarGroup } from "../MyMessages/AvatarGroup";
 import React from "react";
 
@@ -12,7 +10,6 @@ export const OnePublicChat = ({ group }) => (
       dark:border-opacity-10 pb-4 mb-4`}>
         <div className="flex items-center">
           <AvatarGroup group={group}/>
-          {/*<img src={group.image ? mediaURL(group.image) : logoImage} alt=""/>*/}
         </div>
         <div className="text-base text-body-color dark:text-white leading-relaxed ml-4">
           <p>{group.title}</p>

@@ -9,6 +9,7 @@ https://github.com/NEARFoundation/near-js-encryption-box
 
 Requirements
 ===========
+
 - nodeJS
 - npm
 - The Graph: @graphprotocol/graph-cli package
@@ -35,6 +36,7 @@ Spam detection
 ===============
 
 We lock message sending for spam accounts based on account type:
+
 - Free: up to 10 spam reports till account will be locked forever.
 - Bronze: lock after last spam report. Lock time based on spam count reports (up to 1 hour).
 - Gold: lock after last spam report. Lock time based on spam count reports divided by 6 (up to 10 minutes).
@@ -83,3 +85,9 @@ ACCESS_TOKEN=
 graph auth https://api.thegraph.com/deploy/ $ACCESS_TOKEN
 yarn deploy
 ```
+
+##### Contracts
+
+near-message.testnet - Local
+chatme.testnet - TestNet
+chatme.near - MainNet

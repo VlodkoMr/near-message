@@ -10,6 +10,7 @@ import { LeftPanelChats } from "./LeftPanelChats";
 export const LeftPanel = () => {
   const [newMessagePopupVisible, setNewMessagePopupVisible] = useState(false);
   const [newGroupPopupVisible, setNewGroupPopupVisible] = useState(false);
+  const [reloadChatList, setReloadChatList] = useState(0);
   const [searchFilter, setSearchFilter] = useState("");
 
   return (
@@ -57,12 +58,17 @@ export const LeftPanel = () => {
       <OwnerGroups searchFilter={searchFilter}/>
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
-        <LeftPanelChats searchFilter={searchFilter}/>
+        <LeftPanelChats
+          searchFilter={searchFilter}
+          reloadChatList={reloadChatList}
+          setNewMessagePopupVisible={setNewMessagePopupVisible}
+        />
       </div>
 
       <NewPrivateMessagePopup
         isOpen={newMessagePopupVisible}
         setIsOpen={setNewMessagePopupVisible}
+        reloadChatList={setReloadChatList}
       />
       <EditGroupPopup
         isOpen={newGroupPopupVisible}

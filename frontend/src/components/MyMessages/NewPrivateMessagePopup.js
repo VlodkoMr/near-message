@@ -9,7 +9,7 @@ import { NearContext } from "../../context/NearContext";
 import { useNavigate } from "react-router-dom";
 import { getPrivateChatId } from "../../utils/requests";
 
-export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
+export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList }) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,9 +40,11 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
     near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "", "")
       .then(() => {
         setIsMessageSent(true);
+
         setTimeout(() => {
           setCanOpenChat(true);
-        }, 7000);
+          setReloadChatList(+new Date());
+        }, 3000);
       })
       .catch(e => {
         console.log(e);
@@ -64,7 +66,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
 
   const openChat = () => {
     let chatId = getPrivateChatId(near.wallet.accountId, messageAddress);
-    navigate(`/my/account/${chatId}`);
+    navigate(`my/account/${chatId}`);
     setIsOpen(false);
   }
 
@@ -88,7 +90,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen }) => {
             <div className={"text-xl mb-8 mt-4 font-medium"}>Message successfully sent.</div>
             <div>
               <PrimaryButton disabled={!canOpenChat} onClick={() => openChat()}>
-                {canOpenChat ? ("Open Chat") : ("Loading Chat...")}
+                {canOpenChat ? ("Open Chat") : ("Loading Chats...")}
               </PrimaryButton>
               <SecondaryButton className={"ml-4"} onClick={() => resetForm()}>
                 New Message

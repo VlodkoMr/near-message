@@ -9,7 +9,7 @@ import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage 
 
 const fetchSecondsInterval = 7;
 
-export const LeftPanelChats = ({ searchFilter }) => {
+export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reloadChatList }) => {
   const near = useContext(NearContext);
   let { id } = useParams();
   const [isReady, setIsReady] = useState(false);
@@ -78,7 +78,7 @@ export const LeftPanelChats = ({ searchFilter }) => {
       console.log(`Fetch error`, e);
       setIsBlockchainError(true);
     });
-  }, [reloadCounter]);
+  }, [reloadCounter, reloadChatList]);
 
   const setGroupListById = (groups) => {
     let groupsById = {};
@@ -177,7 +177,14 @@ export const LeftPanelChats = ({ searchFilter }) => {
             </Link>
           )) : (
             <div className={"text-center text-gray-500"}>
-              *no messages
+              <p className={"mb-1 mt-2"}>*no chats & messages</p>
+              <p>
+                You can
+                <span onClick={() => setNewMessagePopupVisible(true)}
+                      className={"ml-1 text-blue-400 cursor-pointer hover:text-blue-300"}>
+                  Send new Message
+                </span>
+              </p>
             </div>
           )}
         </>
