@@ -36,7 +36,7 @@ export const OnePublicChat = ({ group }) => {
         <div className="flex items-center">
           <div className="w-full flex flex-row justify-between">
             <p className="text-sm text-body-color">
-              {group.members_count} members
+              {group.members_count || "no"} members
             </p>
             <p className={"text-sm text-body-color"}>
               {near.wallet.accountId ? (
