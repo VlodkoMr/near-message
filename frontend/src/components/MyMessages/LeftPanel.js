@@ -68,7 +68,7 @@ export const LeftPanel = () => {
       <NewPrivateMessagePopup
         isOpen={newMessagePopupVisible}
         setIsOpen={setNewMessagePopupVisible}
-        reloadChatList={setReloadChatList}
+        setReloadChatList={setReloadChatList}
       />
       <EditGroupPopup
         isOpen={newGroupPopupVisible}

@@ -64,9 +64,10 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     setMessageText("");
   }
 
-  const openChat = () => {
+  const openChat = (e) => {
+    e.preventDefault();
     let chatId = getPrivateChatId(near.wallet.accountId, messageAddress);
-    navigate(`my/account/${chatId}`);
+    navigate(`/my/account/${chatId}`);
     setIsOpen(false);
   }
 
@@ -89,7 +90,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
           <div className={"text-center text-gray-100 p-2"}>
             <div className={"text-xl mb-8 mt-4 font-medium"}>Message successfully sent.</div>
             <div>
-              <PrimaryButton disabled={!canOpenChat} onClick={() => openChat()}>
+              <PrimaryButton disabled={!canOpenChat} onClick={(e) => openChat(e)}>
                 {canOpenChat ? ("Open Chat") : ("Loading Chats...")}
               </PrimaryButton>
               <SecondaryButton className={"ml-4"} onClick={() => resetForm()}>

@@ -5,8 +5,6 @@ export class MainContract {
   constructor({ contractId, walletToUse }) {
     this.contractId = contractId;
     this.wallet = walletToUse;
-
-    console.log(`this.wallet`, this.wallet);
   }
 
   /**

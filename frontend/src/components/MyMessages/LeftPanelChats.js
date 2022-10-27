@@ -36,6 +36,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
 
   useEffect(() => {
     loadGroupsIdList().then(groups => {
+      console.log(`groups`, groups);
       setIsBlockchainError(false);
       let promiseList = [loadPrivateChatsPromise(near.wallet.accountId)];
       if (groups.length) {
