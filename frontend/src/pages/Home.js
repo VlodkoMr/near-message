@@ -102,9 +102,13 @@ export const Home = () => {
                   <PrimaryButton to={"/my"}>
                     My Messages
                   </PrimaryButton>
-                  <SecondaryButton to={"/my"} className={"ml-4"}>
+                  <a href="https://chatme.gitbook.io/chatme/"
+                     target={"_blank"}
+                     className={`ml-4 py-3 px-7 text-base font-medium text-dark dark:text-white hover:opacity-70 rounded-full transition ease-in-up 
+                     duration-300 cursor-pointer inline-block text-black bg-black bg-opacity-10 dark:text-white dark:bg-white dark:bg-opacity-10 
+                     hover:bg-opacity-20 dark:hover:bg-opacity-20`}>
                     Documentation
-                  </SecondaryButton>
+                  </a>
                 </div>
               </div>
 

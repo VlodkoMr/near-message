@@ -60,7 +60,7 @@ export const LeftPanel = () => {
         <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => openNewGroupPopup()}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
-        <Link to={"/my"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
+        <Link to={"/"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
           <img src={require("../../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
         <CircleButton className={"p-2.5 mx-auto md:mx-0 mt-2 md:mt-0"} onClick={() => setNewMessagePopupVisible(true)}>
