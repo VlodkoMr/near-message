@@ -16,9 +16,21 @@ import { OnePublicChat } from "../components/Home/OnePublicChat";
 
 export const Home = () => {
   const location = useLocation();
+  const near = useContext(NearContext);
   const [zoomTechDetails, setZoomTechDetails] = useState(false);
+  const [publicGroups, setPublicGroups] = useState([]);
+
+  const loadPublicChats = async () => {
+    return await near.mainContract.getPublicGroups();
+  }
 
   useEffect(() => {
+    loadPublicChats().then(result => {
+      const allGroups = result[0].concat(result[1]);
+      console.log(`allGroups`, allGroups);
+      setPublicGroups(allGroups);
+    });
+
     if (location.hash) {
       const path = location.hash.replace('#', '');
       const element = document.getElementById(path);
@@ -385,12 +397,9 @@ export const Home = () => {
                         text={`Review the list of all our public communities - chats and channels.`}/>
 
           <div className="flex flex-wrap mx-[-16px]">
-            <OnePublicChat/>
-            <OnePublicChat/>
-            <OnePublicChat/>
-            <OnePublicChat/>
-            <OnePublicChat/>
-            <OnePublicChat/>
+            {publicGroups.map(group => (
+              <OnePublicChat key={group.id} group={group}/>
+            ))}
           </div>
 
           <div className={"text-center mb-8"}>
