@@ -23,33 +23,33 @@ export const WriteMessage = ({
   const [isPrivateMode, setIsPrivateMode] = useState(false);
 
   const toggleSecretChat = () => {
-    if (near.account) {
-      const secretChat = new SecretChat(toAddress, near.wallet.accountId);
+    // if (near.account) {
+    const secretChat = new SecretChat(toAddress, near.wallet.accountId);
 
-      let messageText;
-      if (secretChat.isPrivateModeEnabled()) {
-        setIsPrivateMode(false);
-        messageText = "(secret-end)";
-        secretChat.switchPrivateMode(false);
-      } else {
-        const chatData = secretChat.getSecretChat();
-        if (chatData) {
-          setIsPrivateMode(true);
-          secretChat.switchPrivateMode(true);
-          messageText = "";
-        } else {
-          let pubKey = secretChat.getMyPublicKey();
-          messageText = `(secret-start:${pubKey})`;
-        }
-      }
-
-      if (messageText) {
-        near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
-        onMessageSent?.(messageText, messageMedia);
-      }
+    let messageText;
+    if (secretChat.isPrivateModeEnabled()) {
+      setIsPrivateMode(false);
+      messageText = "(secret-end)";
+      secretChat.switchPrivateMode(false);
     } else {
-      alert("Update your Account Level to use encoded messages");
+      const chatData = secretChat.getSecretChat();
+      if (chatData) {
+        setIsPrivateMode(true);
+        secretChat.switchPrivateMode(true);
+        messageText = "";
+      } else {
+        let pubKey = secretChat.getMyPublicKey();
+        messageText = `(secret-start:${pubKey})`;
+      }
     }
+
+    if (messageText) {
+      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
+      onMessageSent?.(messageText, messageMedia);
+    }
+    // } else {
+    //   alert("Update your Account Level to use encoded messages");
+    // }
   }
 
   const sendMessage = (messageText) => {
@@ -87,7 +87,6 @@ export const WriteMessage = ({
     setMessageTmpMedia("");
     setMessageText("");
     setReplyToMessage(null);
-    // localStorage.setItem(localKey, "");
   }
 
   useEffect(() => {

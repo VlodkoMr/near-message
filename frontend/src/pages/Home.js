@@ -265,6 +265,7 @@ export const Home = () => {
                 <TechLogo title={"NEAR"} image={require("../assets/img/logo/near.png")}/>
                 <TechLogo title={"Rust"} image={require("../assets/img/logo/rust.png")}/>
                 <TechLogo title={"The Graph"} image={require("../assets/img/logo/thegraph.png")}/>
+                <TechLogo title={"IPFS"} image={require("../assets/img/logo/IPFS.png")}/>
                 <TechLogo title={"React"} image={require("../assets/img/logo/react.png")}/>
               </div>
             </div>
