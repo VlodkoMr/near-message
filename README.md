@@ -1,11 +1,7 @@
 NEAR ChatMe
 ==================
 
-Chat & Messages on NEAR Blockchain.
-
-Protect messages:
-https://github.com/NEARFoundation/near-js-encryption-box
-
+Chats & Messages service for NEAR Blockchain.
 
 Requirements
 ===========
@@ -19,42 +15,24 @@ Quick Start
 
 If you haven't installed dependencies during setup:
 
-    npm install
+```
+npm install
+```
 
 Build and deploy your contract to TestNet with a temporary dev account:
 
-    npm run deploy
+```
+npm run deploy
+```
 
 Test your contract:
 
-    npm test
+```
+npm test
+```
 
 If you have a frontend, run `npm start`. This will run a dev server.
 
-
-Spam detection
-===============
-
-We lock message sending for spam accounts based on account type:
-
-- Free: up to 10 spam reports till account will be locked forever.
-- Bronze: lock after last spam report. Lock time based on spam count reports (up to 1 hour).
-- Gold: lock after last spam report. Lock time based on spam count reports divided by 6 (up to 10 minutes).
-
-Accounts that send spam from Bronze or Gold account can receive additional locks when account is used for spam.
-
-
-Contract Iteraction
-===============
-
-##### Send new Message
-
-``` 
-CONTRACT_ID=$(<contract/neardev/dev-account)
-NEAR_ID=vlodkow.testnet
-
-near call $CONTRACT_ID send_message '{"text": "Hello world text! My first message.", "toUser": "vlodkow2.testnet"}' --accountId $NEAR_ID
-```
 
 The Graph
 ===============
@@ -66,11 +44,11 @@ graph init
 ```
 
 ? Protocol › near
-? Subgraph name › vlodkomr/nearmessage
+? Subgraph name › vlodkomr/chatme
 ? Directory to create the subgraph in › thegraph
 ? NEAR network › near-testnet
 ? Contract account › .... contract address....
-? Contract Name · NearMessage
+? Contract Name · ChatMe
 
 ##### Build
 
@@ -91,3 +69,11 @@ yarn deploy
 near-message.testnet - Local
 chatme.testnet - TestNet
 chatme.near - MainNet
+
+##### Links
+
+Testnet: https://test.chatme.page/
+Mainnet: https://chatme.page/
+
+Package used for message encryption: https://github.com/NEARFoundation/near-js-encryption-box
+Documentation: https://chatme.gitbook.io/chatme
