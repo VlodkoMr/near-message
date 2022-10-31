@@ -150,7 +150,7 @@ impl Contract {
             env::panic_str("Wrong group text length");
         }
 
-        let user_account = self.users.get(&message_sender);
+        let user_account = self.users.get(&account);
         let mut price_group_create = Contract::convert_to_yocto(CREATE_GROUP_PRICE);
 
         // free groups for verified
