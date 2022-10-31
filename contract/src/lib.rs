@@ -150,16 +150,15 @@ impl Contract {
             env::panic_str("Wrong group text length");
         }
 
-        let user_account = self.users.get(&account);
-        let mut price_group_create = Contract::convert_to_yocto(CREATE_GROUP_PRICE);
-
+        let price_group_create = Contract::convert_to_yocto(CREATE_GROUP_PRICE);
+        // let user_account = self.users.get(&account);
         // free groups for verified
-        if user_account.is_some() {
-            let user_account: User = user_account.unwrap().into();
-            if user_account.verified {
-                price_group_create = 0;
-            }
-        }
+        // if user_account.is_some() {
+        //     let user_account: User = user_account.unwrap().into();
+        //     if user_account.verified {
+        //         price_group_create = 0;
+        //     }
+        // }
 
         if env::attached_deposit() < price_group_create {
             env::panic_str("Wrong payment amount");
