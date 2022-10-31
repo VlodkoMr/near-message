@@ -51,53 +51,13 @@ export const Header = () => {
           </div>
           <div className="flex px-4 ml-16 justify-between items-center w-full">
             <div>
-              {/*<button*/}
-              {/*  id="navbarToggler" aria-label="Mobile Menu"*/}
-              {/*  className="*/}
-              {/*    block*/}
-              {/*    absolute*/}
-              {/*    right-4*/}
-              {/*    top-1/2*/}
-              {/*    translate-y-[-50%]*/}
-              {/*    lg:hidden*/}
-              {/*    focus:ring-2*/}
-              {/*    ring-primary px-3 py-[6px] rounded-lg*/}
-              {/*  "*/}
-              {/*>*/}
-              {/*  <span*/}
-              {/*    className="*/}
-              {/*      relative*/}
-              {/*      w-[30px]*/}
-              {/*      h-[2px]*/}
-              {/*      my-[6px]*/}
-              {/*      block*/}
-              {/*      bg-dark*/}
-              {/*      dark:bg-white*/}
-              {/*    "*/}
-              {/*  ></span>*/}
-              {/*  <span*/}
-              {/*    className="*/}
-              {/*      relative*/}
-              {/*      w-[30px]*/}
-              {/*      h-[2px]*/}
-              {/*      my-[6px]*/}
-              {/*      block*/}
-              {/*      bg-dark*/}
-              {/*      dark:bg-white*/}
-              {/*    "*/}
-              {/*  ></span>*/}
-              {/*  <span*/}
-              {/*    className="*/}
-              {/*      relative*/}
-              {/*      w-[30px]*/}
-              {/*      h-[2px]*/}
-              {/*      my-[6px]*/}
-              {/*      block*/}
-              {/*      bg-dark*/}
-              {/*      dark:bg-white*/}
-              {/*    "*/}
-              {/*  ></span>*/}
-              {/*</button>*/}
+              <button id="navbarToggler" aria-label="Mobile Menu"
+                      className="block absolute right-4 top-1/2 translate-y-[-50%] lg:hidden focus:ring-2 ring-primary px-3 py-[6px] rounded-lg">
+                <span className="relative w-[30px] h-[2px] my-[6px] block bg-dark dark:bg-white"></span>
+                <span className="relative w-[30px] h-[2px] my-[6px] block bg-dark dark:bg-white"></span>
+                <span className="relative w-[30px] h-[2px] my-[6px] block bg-dark dark:bg-white"></span>
+              </button>
+
               <nav id="navbarCollapse" className="absolute py-5 lg:py-0 lg:px-4 xl:px-6 bg-white
                   dark:bg-dark lg:dark:bg-transparent lg:bg-transparent shadow-lg rounded-lg max-w-[250px] w-full
                   lg:max-w-full lg:w-full right-4 top-full hidden lg:block lg:static lg:shadow-none">
@@ -131,7 +91,7 @@ export const Header = () => {
               </nav>
             </div>
             <div
-              className="flex justify-end items-center pr-16 lg:pr-0"
+              className="hidden md:flex justify-end items-center pr-16 lg:pr-0"
             >
               {!near.isSigned ? (
                 <PrimaryButton onClick={() => near.wallet.signIn()}>Connect Wallet</PrimaryButton>

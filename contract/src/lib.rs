@@ -140,9 +140,6 @@ impl Contract {
         if owner_groups_count + 1 > self.get_owner_groups_limit(&account) as usize {
             env::panic_str("Groups limit reached");
         }
-        if env::attached_deposit() < Contract::convert_to_yocto(CREATE_GROUP_PRICE) {
-            env::panic_str("Wrong payment amount");
-        }
         if members.len() > self.get_group_members_limit() as usize {
             env::panic_str("You can't add so much group members");
         }
@@ -151,6 +148,21 @@ impl Contract {
         }
         if text.len() > 300 as usize {
             env::panic_str("Wrong group text length");
+        }
+
+        let user_account = self.users.get(&message_sender);
+        let mut price_group_create = Contract::convert_to_yocto(CREATE_GROUP_PRICE);
+
+        // free groups for verified
+        if user_account.is_some() {
+            let user_account: User = user_account.unwrap().into();
+            if user_account.verified {
+                price_group_create = 0;
+            }
+        }
+
+        if env::attached_deposit() < price_group_create {
+            env::panic_str("Wrong payment amount");
         }
 
         // Ability to manage users in chatMe interface (default = true)

@@ -113,7 +113,7 @@ export const Home = () => {
               </div>
 
               <div
-                className="w-full wow fadeInUp text-right"
+                className="w-full wow fadeInUp text-right hidden md:block"
                 data-wow-delay=".2s"
               >
                 <img src={require("../assets/img/top-img.png")} alt="" className={"h-[350px] inline opacity-90"}/>
@@ -168,10 +168,15 @@ export const Home = () => {
 
           <div className="flex flex-wrap mx-[-16px]">
             <div className="w-full px-4">
-              <div className="mx-auto max-w-[770px] h-96 bg-gray-900 rounded-md overflow-hidden wow fadeInUp text-white text-center"
+              <div className="mx-auto max-w-[770px] h-[436px] bg-gray-900 rounded-md overflow-hidden wow fadeInUp text-white text-center"
                    data-wow-delay=".15s"
               >
-                ___video___
+                <iframe width="770" height="436"
+                        src="https://www.youtube.com/embed/UY8hJbn9Jw8"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen>
+                </iframe>
               </div>
             </div>
           </div>
