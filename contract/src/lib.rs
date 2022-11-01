@@ -358,7 +358,7 @@ impl Contract {
             "text": text,
             "image": image.to_string(),
             "encrypt_key": encrypt_key.unwrap_or("".to_string()),
-            "deposit": env::attached_deposit(),
+            "deposit": env::attached_deposit().to_string(),
             "deposit_token": "NEAR"
         }).to_string();
 
