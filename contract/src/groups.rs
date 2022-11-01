@@ -22,6 +22,7 @@ pub struct Group {
     pub members: Vec<AccountId>,
     pub members_count: u32,
     pub edit_members: bool,
+    pub moderator: Option<AccountId>,
 }
 
 #[derive(BorshSerialize, BorshDeserialize)]
@@ -166,7 +167,7 @@ impl Contract {
 
     pub(crate) fn create_group_internal(
         &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
-        mut members: Vec<AccountId>, edit_members: bool,
+        mut members: Vec<AccountId>, edit_members: bool, moderator: Option<AccountId>,
     ) -> u32 {
         let owner = env::predecessor_account_id();
         let mut owner_groups = self.owner_groups.get(&owner).unwrap_or(vec![]);
@@ -195,6 +196,7 @@ impl Contract {
             members: members.clone(),
             members_count: members.len() as u32,
             edit_members,
+            moderator,
         };
         self.groups.insert(&group_id, &group.into());
 
@@ -228,5 +230,13 @@ impl Contract {
         groups_id_list.into_iter().map(
             |id| Group::from(self.groups.get(&id).unwrap())
         ).collect()
+    }
+
+    pub(crate) fn check_group_owner_moderator(&self, group: &Group) {
+        if group.owner != env::predecessor_account_id() {
+            if !group.moderator.is_some() || group.moderator.as_ref().unwrap() != &env::predecessor_account_id() {
+                env::panic_str("No access to group modification");
+            }
+        }
     }
 }

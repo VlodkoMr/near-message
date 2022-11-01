@@ -48,6 +48,8 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
       const fromUser = data.get('from_user')
       const toUser = data.get('to_user')
       const image = data.get('image')
+      const deposit = data.get('deposit')
+      const deposit_token = data.get('deposit_token')
       const encrypt_key = data.get('encrypt_key')
       const replyToMessage = data.get('reply_message')
 
@@ -75,6 +77,8 @@ function savePrivateMessage(receiptWithOutcome: near.ReceiptWithOutcome): void {
         message.encrypt_key = encrypt_key ? encrypt_key.toString() : ""
         message.reply_message = replyMessageId
         message.spam_reports = 0
+        message.deposit = deposit ? deposit.toString() : ""
+        message.deposit_token = deposit_token ? deposit_token.toString() : ""
         message.is_removed = false
         message.tx_hash = outcome.blockHash.toHexString()
         message.created_at = timestampSeconds as i32;
