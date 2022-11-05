@@ -105,7 +105,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               )}
 
               {message.deposit > 0 && (
-                <div className={`text-sm bg-lime-600 whitespace-nowrap rounded-lg py-1 px-3 font-semibold mb-2`}>
+                <div className={`text-sm bg-lime-600 whitespace-nowrap rounded-lg py-1 px-3 font-semibold mt-1 mb-2`}>
                   Deposit: {utils.format.formatNearAmount(message.deposit)} NEAR
                 </div>
               )}
