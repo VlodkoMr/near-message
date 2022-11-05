@@ -224,12 +224,12 @@ export const MyDashboard = () => {
                   Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  Private messages encryption.
+                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  No Private messages encryption.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
-                  No sending NEAR tokens with message.
+                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  Send NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>

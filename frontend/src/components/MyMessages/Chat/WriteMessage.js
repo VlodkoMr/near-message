@@ -10,6 +10,7 @@ import { NearContext } from "../../../context/NearContext";
 import { Loader } from "../../Loader";
 import { SecretChat } from "../../../utils/secret-chat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
+import { AttachTokenPopup } from "./AttachTokenPopup";
 
 export const WriteMessage = ({
   toAddress, toGroup, onMessageSent, changePrivateMode, replyToMessage, setReplyToMessage
@@ -19,10 +20,13 @@ export const WriteMessage = ({
   const [messageText, setMessageText] = useState("");
   const [messageMedia, setMessageMedia] = useState("");
   const [messageTmpMedia, setMessageTmpMedia] = useState("");
+  const [attachedTokens, setAttachedTokens] = useState(0);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
   const [isPrivateMode, setIsPrivateMode] = useState(false);
+  const [isAttachPopupVisible, setIsAttachPopupVisible] = useState(false);
 
   const toggleSecretChat = () => {
+    // temporary disable limitations for testing
     // if (near.account) {
     const secretChat = new SecretChat(toAddress, near.wallet.accountId);
 
@@ -44,7 +48,7 @@ export const WriteMessage = ({
     }
 
     if (messageText) {
-      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "");
+      near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "", 0);
       onMessageSent?.(messageText, messageMedia);
     }
     // } else {
@@ -70,7 +74,7 @@ export const WriteMessage = ({
         encryptKey = encoded.nonce;
       }
 
-      sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey);
+      sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey, attachedTokens);
     } else {
       sendFunction = near.mainContract.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
     }
@@ -129,6 +133,10 @@ export const WriteMessage = ({
     });
   }
 
+  const attachNEAR = () => {
+    setIsAttachPopupVisible(true);
+  }
+
   const removeMedia = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -181,6 +189,38 @@ export const WriteMessage = ({
             )}
           </button>
         )}
+
+        <button type="button"
+                disabled={isMediaLoading}
+                onClick={() => attachNEAR()}
+                title={`Attach NEAR tokens`}
+                className={`hidden md:flex flex-shrink-0 focus:outline-none ml-2 mr-3.5 block w-6 h-6 mb-4 relative
+                  ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
+                `}>
+
+          {attachedTokens > 0 && (
+            <span className={"absolute left-0 right-0 text-center -bottom-5 text-sm text-gray-400 font-semibold"}>
+              <small>{attachedTokens}</small>
+            </span>
+          )}
+
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="40"
+               height="40"
+               className="w-6 h-6 mt-0.5 fill-current"
+               viewBox="0 0 40 40">
+            <g clipPath="url(#a)">
+              <path
+                d="M32.0533 2.04444 23.707 14.4444c-.5771.8445.5327 1.8667 1.3318 1.1556l8.2131-7.15556c.222-.17777.5328-.04444.5328.26667V31.0667c0 .3111-.3996.4444-.5772.2222L8.34628 1.51111C7.54717.533333 6.3929 0 5.10544 0h-.8879C1.90899 0 0 1.91111 0 4.26667V35.7333C0 38.0889 1.90899 40 4.26193 40c1.46504 0 2.84129-.7556 3.6404-2.0444l8.34627-12.4c.5771-.8445-.5327-1.8667-1.3318-1.1556l-8.21314 7.1111c-.22197.1778-.53274.0445-.53274-.2667V8.93333c0-.31111.39956-.44444.57714-.22222L31.6093 38.4889C32.4084 39.4667 33.6071 40 34.8502 40h.8879C38.091 40 40 38.0889 40 35.7333V4.26667C40 1.91111 38.091 0 35.7381 0c-1.5095 0-2.8857.755555-3.6848 2.04444Z"
+              />
+            </g>
+            <defs>
+              <clipPath id="a">
+                <path d="M0 0h40v40H0z"/>
+              </clipPath>
+            </defs>
+          </svg>
+        </button>
 
         <button type="button"
                 title={"Send Image"}
@@ -271,6 +311,12 @@ export const WriteMessage = ({
           )}
         </button>
       </div>
+
+      <AttachTokenPopup setAttachedTokens={setAttachedTokens}
+                        isOpen={isAttachPopupVisible}
+                        setIsOpen={setIsAttachPopupVisible}
+      />
+
     </div>
   );
 }

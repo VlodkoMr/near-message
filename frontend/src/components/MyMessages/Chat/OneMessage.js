@@ -19,7 +19,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
 
     setIsLoading(true);
     const messageText = `(secret-accept:${secretChat.getMyPublicKey()})`;
-    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
+    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "", 0).then(() => {
       setIsLoading(false);
     });
   }
