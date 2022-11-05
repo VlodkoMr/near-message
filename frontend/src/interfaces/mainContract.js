@@ -356,8 +356,10 @@ export class MainContract {
         encrypt_key,
         reply_message_id,
         inner_id
-      }
-    }, gas, deposit)
+      },
+      gas,
+      deposit
+    })
   }
 
   /**
