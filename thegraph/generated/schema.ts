@@ -190,6 +190,24 @@ export class PrivateMessage extends Entity {
     this.set("text", Value.fromString(value));
   }
 
+  get deposit(): string {
+    let value = this.get("deposit");
+    return value!.toString();
+  }
+
+  set deposit(value: string) {
+    this.set("deposit", Value.fromString(value));
+  }
+
+  get deposit_token(): string {
+    let value = this.get("deposit_token");
+    return value!.toString();
+  }
+
+  set deposit_token(value: string) {
+    this.set("deposit_token", Value.fromString(value));
+  }
+
   get image(): string {
     let value = this.get("image");
     return value!.toString();

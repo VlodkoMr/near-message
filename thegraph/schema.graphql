@@ -29,6 +29,8 @@ type PrivateMessage @entity {
     encrypt_key: String!
     reply_message: PrivateMessage
     text: String!
+    deposit: String!
+    deposit_token: String!
     image: String!
     created_at: Int!
     tx_hash: String!

@@ -1,9 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{
-    AccountId, env, Balance, near_bindgen, serde_json::json, PanicOnDefault, Timestamp,
-    BorshStorageKey, assert_one_yocto,
-};
+use near_sdk::{AccountId, env, Balance, near_bindgen, serde_json::json, PanicOnDefault, Timestamp, BorshStorageKey, assert_one_yocto, Promise};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
 
@@ -131,7 +128,7 @@ impl Contract {
     #[payable]
     pub fn create_new_group(
         &mut self, title: String, image: String, text: String, url: String, group_type: GroupType,
-        members: Vec<AccountId>, edit_members: Option<bool>,
+        members: Vec<AccountId>, edit_members: Option<bool>, moderator: Option<AccountId>
     ) -> u32 {
         let account = env::predecessor_account_id();
         let owner_groups_count = self.owner_groups.get(&account).unwrap_or(vec![]).len();
@@ -151,15 +148,6 @@ impl Contract {
         }
 
         let price_group_create = Contract::convert_to_yocto(CREATE_GROUP_PRICE);
-        // let user_account = self.users.get(&account);
-        // free groups for verified
-        // if user_account.is_some() {
-        //     let user_account: User = user_account.unwrap().into();
-        //     if user_account.verified {
-        //         price_group_create = 0;
-        //     }
-        // }
-
         if env::attached_deposit() < price_group_create {
             env::panic_str("Wrong payment amount");
         }
@@ -169,7 +157,7 @@ impl Contract {
         if edit_members.is_some() && edit_members.unwrap() == false {
             members_list_edit = false;
         }
-        self.create_group_internal(title, image, text, url, group_type, members, members_list_edit)
+        self.create_group_internal(title, image, text, url, group_type, members, members_list_edit, moderator)
     }
 
     /**
@@ -178,9 +166,9 @@ impl Contract {
      */
     pub fn edit_group(&mut self, id: u32, title: String, image: String, text: String, url: String) {
         let mut group: Group = self.groups.get(&id).unwrap().into();
-        if group.owner != env::predecessor_account_id() {
-            env::panic_str("No access to group modification");
-        }
+
+        self.check_group_owner_moderator(&group);
+
         if title.len() < 3 as usize || title.len() >= 160 as usize {
             env::panic_str("Wrong group title length");
         }
@@ -202,9 +190,9 @@ impl Contract {
      */
     pub fn owner_add_group_members(&mut self, id: u32, members: Vec<AccountId>) {
         let group: Group = self.groups.get(&id).unwrap().into();
-        if group.owner != env::predecessor_account_id() {
-            env::panic_str("No access to group modification");
-        }
+
+        self.check_group_owner_moderator(&group);
+
         if group.members.len() + members.len() > self.get_group_members_limit() as usize {
             env::panic_str("Group members limit reached");
         }
@@ -224,9 +212,9 @@ impl Contract {
      */
     pub fn owner_remove_group_members(&mut self, id: u32, members: Vec<AccountId>) {
         let group: Group = self.groups.get(&id).unwrap().into();
-        if group.owner != env::predecessor_account_id() {
-            env::panic_str("No access to group modification");
-        }
+
+        self.check_group_owner_moderator(&group);
+
         if members.len() == 0 {
             env::panic_str("Please provide members for removal");
         }
@@ -243,9 +231,9 @@ impl Contract {
      */
     pub fn owner_remove_group(&mut self, id: u32, confirm_title: String) {
         let group: Group = self.groups.get(&id).unwrap().into();
-        if group.owner != env::predecessor_account_id() {
-            env::panic_str("No access to group modification");
-        }
+
+        self.check_group_owner_moderator(&group);
+
         if confirm_title != group.title {
             env::panic_str("Wrong approval for remove");
         }
@@ -345,6 +333,7 @@ impl Contract {
     /**
      * Private Message
      */
+    #[payable]
     pub fn send_private_message(
         &mut self, text: String, image: String, to_address: AccountId, reply_message_id: Option<String>, encrypt_key: Option<String>, inner_id: Option<String>,
     ) -> U128 {
@@ -368,10 +357,18 @@ impl Contract {
             "reply_message": reply_message_id.unwrap_or("".to_string()),
             "text": text,
             "image": image.to_string(),
-            "encrypt_key": encrypt_key.unwrap_or("".to_string())
+            "encrypt_key": encrypt_key.unwrap_or("".to_string()),
+            "deposit": env::attached_deposit().to_string(),
+            "deposit_token": "NEAR"
         }).to_string();
 
         env::log_str(&message[..]);
+
+        // send tokens
+        if env::attached_deposit() > 0 {
+            Promise::new(to_address).transfer(env::attached_deposit());
+        }
+
         self.messages_count.into()
     }
 
@@ -527,7 +524,7 @@ mod tests {
     fn create_test_group(contract: &mut Contract, title: String, group_type: GroupType, members: Vec<AccountId>) {
         set_context(NEAR_ID, Contract::convert_to_yocto(CREATE_GROUP_PRICE));
         contract.create_new_group(
-            title, "".to_string(), "".to_string(), "".to_string(), group_type, members, Some(true),
+            title, "".to_string(), "".to_string(), "".to_string(), group_type, members, Some(true), None
         );
     }
 
