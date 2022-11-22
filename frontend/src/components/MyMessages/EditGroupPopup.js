@@ -133,13 +133,11 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       );
 
       if (removeMembers.length > 0) {
-        console.log(`removeMembers`, removeMembers);
         near.mainContract.ownerRemoveGroupMembers(group.id, removeMembers).then(result => {
           console.log(`result`, result);
         });
       }
       if (newMembers.length > 0) {
-        console.log(`newMembers`, newMembers);
         near.mainContract.ownerAddGroupMembers(group.id, newMembers).then(result => {
           console.log(`result`, result);
         });
@@ -166,9 +164,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
   const removeGroup = () => {
     if (confirm("Are you sure? All data and messages will be removed!")) {
       near.mainContract.ownerRemoveGroup(group.id, group.title).then(result => {
-        navigate(`/my`);
         setIsOpen(false);
-        resetForm();
+        window.document.location.href = "/my";
       });
     }
   }
@@ -339,10 +336,14 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
             <div className={"flex justify-between"}>
               <div className={"text-red-400/90 text-sm pt-4"}>
                 {!group ? ("Payment 0.25 NEAR required") : (
-                  <span onClick={() => removeGroup()}
-                        className={"cursor-pointer hover:text-red-400"}>
-                    Remove {(group.group_type !== "Channel") ? "Group" : "Channel"}
-                  </span>
+                  <>
+                    {group.owner === near.wallet.accountId && (
+                      <span onClick={() => removeGroup()}
+                            className={"cursor-pointer hover:text-red-400"}>
+                        Remove {(group.group_type !== "Channel") ? "Group" : "Channel"}
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
               <div className={"text-right"}>

@@ -37,7 +37,6 @@ export const MyGroupChat = () => {
     setReplyToMessage(null);
     setTmpMessages([]);
     loadGroupInfo().then(group => {
-      console.log(`group`, group);
       setGroup(group);
     })
 

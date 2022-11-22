@@ -78,7 +78,7 @@ export class Wallet {
   signOut() {
     this.wallet.signOut();
     this.wallet = this.accountId = this.createAccessKeyFor = null;
-    // window.location.replace(window.location.origin + window.location.pathname);
+    window.location.replace(window.location.origin + window.location.pathname);
   }
 
   // Make a read-only call to retrieve information from the network

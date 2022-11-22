@@ -60,7 +60,7 @@ export const MessagesHeader = ({ group, opponent }) => {
                   {/*  <BsInfo size={32}/>*/}
                   {/*</CircleButton>*/}
 
-                  {group.owner === near.wallet.accountId && (
+                  {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) && (
                     <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setEditGroupPopupVisible(true)}>
                       <MdEdit size={23}/>
                     </CircleButton>
@@ -114,7 +114,7 @@ export const MessagesHeader = ({ group, opponent }) => {
 
       {group && (
         <>
-          {group.owner === near.wallet.accountId && (
+          {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) && (
             <EditGroupPopup
               isOpen={editGroupPopupVisible}
               setIsOpen={setEditGroupPopupVisible}

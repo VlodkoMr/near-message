@@ -150,22 +150,27 @@ export class MainContract {
     const deposit = utils.format.parseNearAmount("0.25");
     const gas = convertToTera(80);
 
+    let args = {
+      title,
+      image,
+      url,
+      text,
+      group_type,
+      members,
+      edit_members: true,
+    };
+
+    if (moderator.length) {
+      args['moderator'] = moderator;
+    }
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'create_new_group',
-      args: {
-        title,
-        image,
-        url,
-        text,
-        group_type,
-        members,
-        edit_members: true,
-        moderator
-      },
+      args,
       gas,
       deposit
-    })
+    });
   }
 
   /**
