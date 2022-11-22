@@ -5,6 +5,7 @@ import '@near-wallet-selector/modal-ui/styles.css';
 import { setupModal } from '@near-wallet-selector/modal-ui';
 import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
 import NearIconUrl from '@near-wallet-selector/near-wallet/assets/near-wallet-icon.png';
+import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
 import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
 import WalletConnectIconUrl from '@near-wallet-selector/wallet-connect/assets/wallet-connect-icon.png';
 import HereWalletIconUrl from '@near-wallet-selector/here-wallet/assets/here-wallet-icon.png';
@@ -16,6 +17,8 @@ import { setupNearWallet } from '@near-wallet-selector/near-wallet';
 import { setupSender } from '@near-wallet-selector/sender';
 import { setupWalletConnect } from '@near-wallet-selector/wallet-connect';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+
 
 const THIRTY_TGAS = '30000000000000';
 const NO_DEPOSIT = '0';
@@ -28,10 +31,6 @@ export class Wallet {
   createAccessKeyFor;
 
   constructor({ createAccessKeyFor = undefined, network = 'testnet' }) {
-    // Login to a wallet passing a contractId will create a local
-    // key, so the user skips signing non-payable transactions.
-    // Omitting the accountId will result in the user being
-    // asked to sign all transactions.
     this.createAccessKeyFor = createAccessKeyFor
     this.network = network
   }
@@ -42,7 +41,8 @@ export class Wallet {
       network: this.network,
       modules: [
         setupNearWallet({ iconUrl: NearIconUrl }),
-        setupSender({ iconUrl: SenderIconUrl }),
+        setupMyNearWallet({ iconUrl: MyNearIconUrl }),
+        // setupSender({ iconUrl: SenderIconUrl }),
         setupLedger({ iconUrl: LedgerIconUrl }),
         setupHereWallet({ iconUrl: HereWalletIconUrl }),
         setupWalletConnect({ iconUrl: WalletConnectIconUrl })
