@@ -124,6 +124,7 @@ export const loadPrivateMessages = (chatId, messagesCount) => {
         from_address
         to_address
         created_at
+        deposit
         encrypt_key
         reply_message {id, from_address, text, image, encrypt_key}
       }
@@ -150,6 +151,7 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
         from_address
         to_address
         created_at
+        deposit
         encrypt_key
         reply_message {id, from_address, text, image, encrypt_key}
       }

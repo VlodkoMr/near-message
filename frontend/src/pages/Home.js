@@ -412,8 +412,8 @@ export const Home = () => {
               <PriceBlockItem text={"Create up to 50 groups or channels"} isOk={true}/>
               <PriceBlockItem text={"Up to 2000 group members"} isOk={true}/>
               <PriceBlockItem text={"Unlimited members for your channels"} isOk={true}/>
-              <PriceBlockItem text={"Private messages encryption"} isOk={true}/>
-              <PriceBlockItem text={"No sending NEAR tokens with message"} isOk={false}/>
+              <PriceBlockItem text={"No Private messages encryption"} isOk={false}/>
+              <PriceBlockItem text={"Send NEAR tokens with message"} isOk={true}/>
               <PriceBlockItem text={"Temporary lock on spam detection: 1 minute per each spam report (up to 1 hour)"} isOk={true}/>
             </PriceBlock>
             <PriceBlock plan={"Gold"} price={"14 NEAR"}

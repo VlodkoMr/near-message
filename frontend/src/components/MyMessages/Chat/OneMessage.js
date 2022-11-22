@@ -8,6 +8,7 @@ import { SecretChat } from "../../../utils/secret-chat";
 import { Loader } from "../../Loader";
 import { decodeMessageText, mediaURL } from "../../../utils/transform";
 import { MessageAction } from "../../../assets/css/components";
+import { utils } from "near-api-js";
 
 export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
   const near = useContext(NearContext);
@@ -19,7 +20,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
 
     setIsLoading(true);
     const messageText = `(secret-accept:${secretChat.getMyPublicKey()})`;
-    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "").then(() => {
+    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "", 0).then(() => {
       setIsLoading(false);
     });
   }
@@ -101,6 +102,13 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                     {decodeMessageText(message.reply_message, near.wallet.accountId)}
                   </span>
                 </p>
+              )}
+
+              {message.deposit > 0 && (
+                <div className={`text-sm whitespace-nowrap rounded-lg py-2 px-3 font-semibold mt-1 mb-2
+                ${message.isMy ? "bg-sky-600" : "bg-red-800"}`}>
+                  Deposit: {utils.format.formatNearAmount(message.deposit)} NEAR
+                </div>
               )}
 
               {message.image && (

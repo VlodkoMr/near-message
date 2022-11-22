@@ -345,10 +345,14 @@ export class MainContract {
    * @param to_address
    * @param reply_message_id
    * @param encrypt_key
+   * @param attached_tokens
    * @returns {Promise<*>}
    */
-  async sendPrivateMessage(text, image, to_address, reply_message_id, encrypt_key) {
+  async sendPrivateMessage(text, image, to_address, reply_message_id, encrypt_key, attached_tokens) {
     const inner_id = getInnerId(text, image, to_address);
+    const gas = convertToTera(30);
+    const deposit = utils.format.parseNearAmount(attached_tokens.toString());
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',
@@ -359,7 +363,9 @@ export class MainContract {
         encrypt_key,
         reply_message_id,
         inner_id
-      }
+      },
+      gas,
+      deposit
     })
   }
 

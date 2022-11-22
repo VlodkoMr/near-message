@@ -37,7 +37,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     }
 
     setIsLoading(true);
-    near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "", "")
+    near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "", "", 0)
       .then(() => {
         setIsMessageSent(true);
 
