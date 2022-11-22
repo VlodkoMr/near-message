@@ -59,12 +59,13 @@ export const loadGroupChatsPromise = (idList) => {
   });
 }
 
-export const loadGroupMessages = (groupId, messagesCount) => {
+export const loadGroupMessages = (groupId, messagesCount, skip = 0) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     groupMessages(
-      last: ${messagesCount}, 
+      last: ${messagesCount},
+      skip: ${skip},
       orderBy: created_at,
       orderDirection: desc,
       where: {
@@ -117,12 +118,13 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
   });
 }
 
-export const loadPrivateMessages = (chatId, messagesCount) => {
+export const loadPrivateMessages = (chatId, messagesCount, skip = 0) => {
   return new Promise(async (resolve) => {
     const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     privateMessages(
       last: ${messagesCount}, 
+      skip: ${skip},
       orderBy: created_at,
       orderDirection: desc,
       where: {

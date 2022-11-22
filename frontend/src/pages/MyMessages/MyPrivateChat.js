@@ -21,6 +21,7 @@ export const MyPrivateChat = () => {
   const [messages, setMessages] = useState([]);
   const [tmpMessages, setTmpMessages] = useState([]);
   const [historyMessages, setHistoryMessages] = useState([]);
+  const [historyPage, setHistoryPage] = useState(0);
   const [opponent, setOpponent] = useState();
   const [reloadCounter, setReloadCounter] = useState(0);
   const [opponentAddress, setOpponentAddress] = useState("");
@@ -112,7 +113,15 @@ export const MyPrivateChat = () => {
   }
 
   const loadHistoryMessages = () => {
-    console.log(`loadHistoryMessages`);
+    setHistoryPage(prev => prev + 1);
+    const skipMessages = messagesPerPage * (historyPage + 1);
+    loadPrivateMessages(id, messagesPerPage, skipMessages).then(messages => {
+      const newMessages = transformMessages(messages, near.wallet.accountId);
+      setHistoryMessages(prev => {
+        prev.unshift(...newMessages);
+        return prev;
+      });
+    });
   }
 
   return (

@@ -2,12 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { Loader } from "../../components/Loader";
-import { OneMessage } from "../../components/MyMessages/Chat/OneMessage";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 import { GroupChatBottom } from "../../components/MyMessages/Chat/GroupChatBottom";
-import { SecondaryButton } from "../../assets/css/components";
 import { MessagesList } from "../../components/MyMessages/Chat/MessagesList";
 
 const fetchSecondsInterval = 5;
@@ -19,6 +17,7 @@ export const MyGroupChat = () => {
   const bottomRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [historyMessages, setHistoryMessages] = useState([]);
+  const [historyPage, setHistoryPage] = useState(0);
   const [tmpMessages, setTmpMessages] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [group, setGroup] = useState();
@@ -116,7 +115,15 @@ export const MyGroupChat = () => {
   }
 
   const loadHistoryMessages = () => {
-    console.log(`loadHistoryMessages`);
+    setHistoryPage(prev => prev + 1);
+    const skipMessages = messagesPerPage * (historyPage + 1);
+    loadGroupMessages(id, messagesPerPage, skipMessages).then(messages => {
+      const newMessages = transformMessages(messages, near.wallet.accountId);
+      setHistoryMessages(prev => {
+        prev.unshift(...newMessages);
+        return prev;
+      });
+    });
   }
 
   return (
