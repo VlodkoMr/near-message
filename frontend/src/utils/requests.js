@@ -52,7 +52,7 @@ export const loadGroupChatsPromise = (idList) => {
       }`;
     const result = await client.query(groupChatListQuery).toPromise();
     if (result.data) {
-      resolve(result.data.groupChats.filter(chat => !chat.is_removed));
+      resolve(result.data.groupChats.filter(chat => !chat.is_removed).reverse());
     } else {
       reject();
     }
@@ -65,7 +65,8 @@ export const loadGroupMessages = (groupId, messagesCount) => {
     const messagesQuery = `{
     groupMessages(
       last: ${messagesCount}, 
-      orderBy: created_at, 
+      orderBy: created_at,
+      orderDirection: desc,
       where: {
         group_id: "${groupId}",
       }) {
@@ -79,7 +80,11 @@ export const loadGroupMessages = (groupId, messagesCount) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.groupMessages);
+    if (result.data) {
+      resolve(result.data.groupMessages.reverse());
+    } else {
+      resolve([]);
+    }
   });
 }
 
@@ -88,7 +93,8 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
     const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     groupMessages(
-      orderBy: created_at, 
+      orderBy: created_at,
+      orderDirection: desc,
       where: {
         group_id: "${groupId}",
         id_num_gt: ${lastMessageId}
@@ -103,7 +109,11 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.groupMessages);
+    if (result.data) {
+      resolve(result.data.groupMessages.reverse());
+    } else {
+      resolve([]);
+    }
   });
 }
 
@@ -113,7 +123,8 @@ export const loadPrivateMessages = (chatId, messagesCount) => {
     const messagesQuery = `{
     privateMessages(
       last: ${messagesCount}, 
-      orderBy: created_at, 
+      orderBy: created_at,
+      orderDirection: desc,
       where: {
         chat_id: "${chatId}",
       }) {
@@ -130,7 +141,11 @@ export const loadPrivateMessages = (chatId, messagesCount) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.privateMessages);
+    if (result.data) {
+      resolve(result.data.privateMessages.reverse());
+    } else {
+      resolve([]);
+    }
   });
 }
 
@@ -139,7 +154,8 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
     const client = new createClient({ url: process.env.GRAPH_API_URL });
     const messagesQuery = `{
     privateMessages(
-      orderBy: created_at, 
+      orderBy: created_at,
+      orderDirection: desc,
       where: {
         chat_id: "${chatId}",
         id_num_gt: ${lastMessageId}
@@ -157,7 +173,11 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
       }
     }`;
     const result = await client.query(messagesQuery).toPromise();
-    resolve(result.data?.privateMessages);
+    if (result.data) {
+      resolve(result.data.privateMessages.reverse());
+    } else {
+      resolve([]);
+    }
   });
 }
 
