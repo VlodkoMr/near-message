@@ -1,21 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NearContext } from "../../../context/NearContext";
-import { Avatar } from "../../Common/Avatar";
-import { formatAddress } from "../../../utils/transform";
-import { Link, useOutletContext } from "react-router-dom";
-import { CircleButton, SecondaryButton } from "../../../assets/css/components";
-import { EditGroupPopup } from "../EditGroupPopup";
-import {
-  AiOutlineInfo,
-  AiOutlineShareAlt,
-  AiOutlineUsergroupAdd, BsInfo,
-  FaInfo, HiOutlineInformationCircle,
-  IoIosInformation,
-  IoIosShareAlt,
-  MdEdit,
-  TiInfoLarge, TiInfoLargeOutline
-} from "react-icons/all";
-import { SharePopup } from "./SharePopup";
+import React from "react";
+import { SecondaryButton } from "../../../assets/css/components";
 import { OneMessage } from "./OneMessage";
 
 export const MessagesList = ({
@@ -26,22 +10,19 @@ export const MessagesList = ({
   setReplyToMessage,
   opponent,
   opponentAddress,
-  userProfiles
+  userProfiles,
+  loadHistoryMessages
 }) => {
 
   const isLastMessage = (message, index) => {
     return !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
   }
 
-  useEffect(() => {
-    console.log(`opponent`, opponent);
-  }, []);
-
   return (
     <>
       {messages.length >= messagesPerPage && (
         <div className={"w-40 mx-auto text-center"}>
-          <SecondaryButton small className={"w-full"}>
+          <SecondaryButton small="true" className={"w-full"} onClick={() => loadHistoryMessages()}>
             load previous
           </SecondaryButton>
         </div>

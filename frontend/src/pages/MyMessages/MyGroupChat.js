@@ -27,7 +27,6 @@ export const MyGroupChat = () => {
   const [replyToMessage, setReplyToMessage] = useState(null);
 
   const loadGroupInfo = async () => {
-    console.log(`parseInt(id)`, parseInt(id));
     return await near.mainContract.getGroupById(parseInt(id));
   }
 
@@ -116,6 +115,9 @@ export const MyGroupChat = () => {
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 
+  const loadHistoryMessages = () => {
+    console.log(`loadHistoryMessages`);
+  }
 
   return (
     <>
@@ -134,6 +136,7 @@ export const MyGroupChat = () => {
                                 setReplyToMessage={setReplyToMessage}
                                 userProfiles={userProfiles}
                                 opponentAddress={id}
+                                loadHistoryMessages={loadHistoryMessages}
                   />
                 ) : (
                   <div className={"text-center text-sm opacity-60 pt-2"}>

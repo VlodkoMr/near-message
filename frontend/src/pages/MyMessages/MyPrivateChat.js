@@ -111,6 +111,10 @@ export const MyPrivateChat = () => {
     setTmpMessages(prev => prev.concat(newMessage));
   }
 
+  const loadHistoryMessages = () => {
+    console.log(`loadHistoryMessages`);
+  }
+
   return (
     <>
       {opponent && (
@@ -126,6 +130,7 @@ export const MyPrivateChat = () => {
                             setReplyToMessage={setReplyToMessage}
                             opponent={opponent}
                             opponentAddress={opponentAddress}
+                            loadHistoryMessages={loadHistoryMessages}
               />
             ) : (
               <div className={"mx-auto w-8 pt-2"}>
