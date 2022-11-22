@@ -27,6 +27,7 @@ export const MyGroupChat = () => {
   const [replyToMessage, setReplyToMessage] = useState(null);
 
   const loadGroupInfo = async () => {
+    console.log(`parseInt(id)`, parseInt(id));
     return await near.mainContract.getGroupById(parseInt(id));
   }
 
@@ -36,6 +37,7 @@ export const MyGroupChat = () => {
     setReplyToMessage(null);
     setTmpMessages([]);
     loadGroupInfo().then(group => {
+      console.log(`group`, group);
       setGroup(group);
     })
 

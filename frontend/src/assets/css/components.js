@@ -57,11 +57,11 @@ export const PrimaryTextField = styled(TextField).attrs({
 
 export const RadioLabel = styled.label.attrs({
   className: `
-  block bg-[#242B51]/50 px-3 py-1 mb-1 transition hover:bg-[#242B51]/70 cursor-pointer`,
+  block bg-[#242B51]/50 px-4 py-1 mb-1 transition hover:bg-[#242B51]/70 cursor-pointer`,
 })``;
 
 export const RadioLabelText = styled.p.attrs({
-  className: `text-sm text-gray-400/80 ml-8 mb-2 -mt-2`,
+  className: `text-sm text-gray-400/80 mb-2`,
 })``;
 
 export const MessageAction = styled.button.attrs({

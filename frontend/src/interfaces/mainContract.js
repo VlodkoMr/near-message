@@ -143,9 +143,10 @@ export class MainContract {
    * @param url
    * @param group_type
    * @param members
+   * @param moderator
    * @returns {Promise<*>}
    */
-  async createNewGroup(title, image, text, url, group_type, members) {
+  async createNewGroup(title, image, text, url, group_type, members, moderator) {
     const deposit = utils.format.parseNearAmount("0.25");
     const gas = convertToTera(80);
 
@@ -159,7 +160,8 @@ export class MainContract {
         text,
         group_type,
         members,
-        edit_members: true
+        edit_members: true,
+        moderator
       },
       gas,
       deposit
@@ -236,7 +238,7 @@ export class MainContract {
       contractId: this.contractId,
       method: 'owner_remove_group',
       args: {
-        group_id,
+        id: group_id,
         confirm_title
       }
     })

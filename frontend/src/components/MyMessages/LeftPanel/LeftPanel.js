@@ -40,6 +40,7 @@ export const LeftPanel = () => {
 
   const loadOwnerGroups = async () => {
     const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
+    console.log(`groups`, groups);
     if (groups) {
       setOwnerGroups(groups.reverse());
     }

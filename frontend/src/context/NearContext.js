@@ -10,12 +10,13 @@ export const NearProvider = ({ children, wallet, isSigned, mainContract, socialD
   }
 
   useEffect(() => {
+    console.log(`wallet.accountId`, wallet.accountId);
     if (wallet.accountId) {
       loadAccount().then(account => {
         setAccount(account);
       });
     }
-  }, [wallet.accountId])
+  }, [wallet.accountId]);
 
   return (
     <NearContext.Provider value={{

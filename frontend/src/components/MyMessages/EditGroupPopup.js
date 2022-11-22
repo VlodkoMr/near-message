@@ -24,6 +24,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     logo: "",
     text: "",
     url: "",
+    owner: "",
+    moderator: "",
     group_type: "",
     members: [],
   });
@@ -44,6 +46,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
           logo: group?.image || "",
           text: group?.text || "",
           url: group?.url || "",
+          owner: group?.owner || "",
+          moderator: group?.moderator || "",
           group_type: group?.group_type || "",
           members: [...group?.members || []],
         });
@@ -61,6 +65,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       logo: "",
       text: "",
       url: "",
+      owner: "",
+      moderator: "",
       group_type: "",
       members: [],
     });
@@ -112,6 +118,12 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       return;
     }
 
+    const owner = group ? group.owner : near.wallet.accountId;
+    if (formData.moderator === owner) {
+      alert("Don't need to add owner as moderator, it can be another account or empty field");
+      return;
+    }
+
     setIsLoading(true);
 
     let promiseSave;
@@ -134,7 +146,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       }
     } else {
       promiseSave = near.mainContract.createNewGroup(
-        formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members
+        formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members, formData.moderator
       );
     }
 
@@ -149,6 +161,16 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     }).finally(() => {
       setIsLoading(false);
     });
+  }
+
+  const removeGroup = () => {
+    if (confirm("Are you sure? All data and messages will be removed!")) {
+      near.mainContract.ownerRemoveGroup(group.id, group.title).then(result => {
+        navigate(`/my`);
+        setIsOpen(false);
+        resetForm();
+      });
+    }
   }
 
   return (
@@ -169,36 +191,39 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
       </DialogTitle>
       <DialogContent className={"mx-2 mt-6 mb-2"}>
         <div className={"p-2 flex flex-row gap-8 text-gray-100"}>
-          <label
-            className={`flex w-40 h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
-            hover:bg-gray-700/60 transition overflow-hidden shadow-lg`}>
-            <PrimaryInput placeholder={"Logo"}
-                          type={"file"}
-                          accept={"image/*"}
-                          className={"hidden"}
-                          onChange={(e) => resizeImage(e)}
-            />
+          <div>
+            <label
+              className={`flex w-40 h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
+              hover:bg-gray-700/60 transition overflow-hidden shadow-lg`}>
+              <PrimaryInput placeholder={"Logo"}
+                            type={"file"}
+                            accept={"image/*"}
+                            className={"hidden"}
+                            onChange={(e) => resizeImage(e)}
+              />
 
-            {formData.logo ? (
-              <img src={tmpImageData ? tmpImageData : mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
-            ) : (
-              <>
-                {isMediaLoading ? (
-                  <div className={"w-full text-center"}>
-                    <div className={"mx-auto w-8"}>
-                      <Loader size={"sm"}/>
+              {formData.logo ? (
+                <img src={tmpImageData ? tmpImageData : mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
+              ) : (
+                <>
+                  {isMediaLoading ? (
+                    <div className={"w-full text-center"}>
+                      <div className={"mx-auto w-8"}>
+                        <Loader size={"sm"}/>
+                      </div>
+                      uploading
                     </div>
-                    uploading
-                  </div>
-                ) : (
-                  <div className={"w-full text-center"}>Upload Logo</div>
-                )}
-              </>
-            )}
-          </label>
+                  ) : (
+                    <div className={"w-full text-center"}>Upload Logo</div>
+                  )}
+                </>
+              )}
+            </label>
+          </div>
+
           <div className={"flex-1"}>
             <div className={"mb-2"}>
-              <PrimaryInput placeholder={"Group Title*"}
+              <PrimaryInput placeholder={`${formData.group_type !== "Channel" ? "Group" : "Channel"} Title*`}
                             disabled={isMediaLoading}
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -217,34 +242,41 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                           value={formData.group_type}
                           onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
                 <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
-                <RadioLabel className={"rounded-t-md"}>
-                  <FormControlLabel value="Channel"
-                                    control={<Radio/>}
-                                    disabled={isMediaLoading}
-                                    label="Channel"
-                  />
-                  <RadioLabelText>Broadcast messages to general public audience. <br/>
-                    No limit for participants, only you can write
-                    messages.</RadioLabelText>
-                </RadioLabel>
-                <RadioLabel>
-                  <FormControlLabel value="Private"
-                                    control={<Radio/>}
-                                    disabled={isMediaLoading}
-                                    label="Private Group"
-                  />
-                  <RadioLabelText>You manage group members, all members can write messages. <br/>
-                    Limited by {membersLimit} members.</RadioLabelText>
-                </RadioLabel>
-                <RadioLabel className={"rounded-b-md"}>
-                  <FormControlLabel value="Public"
-                                    control={<Radio/>}
-                                    disabled={isMediaLoading}
-                                    label="Public Group"
-                  />
-                  <RadioLabelText>Public access where anyone can join and write messages. <br/>
-                    Limited by {membersLimit} members.</RadioLabelText>
-                </RadioLabel>
+                <div className={"flex flex-row gap-4"}>
+                  <RadioLabel className={"rounded-t-md w-1/3"}>
+                    <FormControlLabel value="Channel"
+                                      control={<Radio/>}
+                                      disabled={isMediaLoading}
+                                      label="Channel"
+                    />
+                    <RadioLabelText>
+                      Broadcast messages to general public audience.
+                      No participants limit, only owners write messages.
+                    </RadioLabelText>
+                  </RadioLabel>
+                  <RadioLabel className={"w-1/3"}>
+                    <FormControlLabel value="Private"
+                                      control={<Radio/>}
+                                      disabled={isMediaLoading}
+                                      label="Private Group"
+                    />
+                    <RadioLabelText>
+                      You manage group members, all members can write messages. <br/>
+                      Limited by {membersLimit} members.
+                    </RadioLabelText>
+                  </RadioLabel>
+                  <RadioLabel className={"rounded-b-md w-1/3"}>
+                    <FormControlLabel value="Public"
+                                      control={<Radio/>}
+                                      disabled={isMediaLoading}
+                                      label="Public Group"
+                    />
+                    <RadioLabelText>
+                      Public access where anyone can join and write messages. <br/>
+                      Limited by {membersLimit} members.
+                    </RadioLabelText>
+                  </RadioLabel>
+                </div>
               </RadioGroup>
             ) : (
               <>
@@ -282,9 +314,36 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
               </div>
             )}
 
+            {!group && (
+              <div className={"mb-4 flex flex-row gap-4"}>
+                <div className={"flex-1"}>
+                <span className={"text-gray-500 font-medium text-sm"}>
+                  {(formData.group_type !== "Channel") ? "Group" : "Channel"} Owner
+                </span>
+                  <PrimaryInput disabled={true}
+                                className={"text-gray-300/70"}
+                                value={group ? group.owner : near.wallet.accountId}
+                  />
+                </div>
+                <div className={"flex-1"}>
+                  <span className={"text-gray-500 font-medium text-sm"}>Moderator</span>
+                  <PrimaryInput placeholder={"NEAR Address"}
+                                disabled={isMediaLoading}
+                                value={group ? group.moderator : formData.moderator}
+                                onChange={(e) => setFormData({ ...formData, moderator: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className={"flex justify-between"}>
               <div className={"text-red-400/90 text-sm pt-4"}>
-                {!group && ("Payment 0.25 NEAR required")}
+                {!group ? ("Payment 0.25 NEAR required") : (
+                  <span onClick={() => removeGroup()}
+                        className={"cursor-pointer hover:text-red-400"}>
+                    Remove {(group.group_type !== "Channel") ? "Group" : "Channel"}
+                  </span>
+                )}
               </div>
               <div className={"text-right"}>
                 <PrimaryButton onClick={handleSaveGroup} disabled={isLoading || isMediaLoading}>

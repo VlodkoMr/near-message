@@ -56,6 +56,14 @@ export class Wallet {
       this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
     }
 
+    // this.walletSelector.on("signIn", () => {
+    //   console.log("User signed in!");
+    // });
+    //
+    // this.walletSelector.on("signOut", () => {
+    //   console.log("User signed out!");
+    // });
+
     return isSignedIn;
   }
 
@@ -70,7 +78,7 @@ export class Wallet {
   signOut() {
     this.wallet.signOut();
     this.wallet = this.accountId = this.createAccessKeyFor = null;
-    window.location.replace(window.location.origin + window.location.pathname);
+    // window.location.replace(window.location.origin + window.location.pathname);
   }
 
   // Make a read-only call to retrieve information from the network

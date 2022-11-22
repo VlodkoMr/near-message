@@ -183,6 +183,9 @@ impl Contract {
         if !members.contains(&owner) {
             members.push(owner.clone());
         }
+        if moderator.is_some() && !members.contains(moderator.as_ref().unwrap()) {
+            members.push(moderator.clone().unwrap());
+        }
 
         let group = Group {
             id: group_id,
@@ -218,7 +221,16 @@ impl Contract {
         // remove from public/channels list
         self.public_groups.remove(&id);
 
+        // remove from owner_groups
+        let mut owner_groups = self.owner_groups.get(&group.owner).unwrap();
+        let index = owner_groups.iter().position(|inner_id| &id == inner_id);
+        if index.is_some() {
+            owner_groups.remove(index.unwrap());
+            self.owner_groups.insert(&group.owner, &owner_groups);
+        }
+
         self.remove_group_member_internal(group.members, id, false);
+
         self.groups.remove(&id);
     }
 
