@@ -23,8 +23,5 @@
   },
   "devDependencies": {
     "near-cli": "^3.0.0"
-  },
-  "dependencies": {
-    "@near-wallet-selector/my-near-wallet": "^7.2.1"
   }
 }
