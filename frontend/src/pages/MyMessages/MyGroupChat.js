@@ -117,12 +117,14 @@ export const MyGroupChat = () => {
 
   // load previous messages
   const loadHistoryMessages = () => {
+    setHideHistoryButton(true);
     setHistoryPage(prev => prev + 1);
+
     const skipMessages = messagesPerPage * (historyPage + 1);
     loadGroupMessages(id, messagesPerPage, skipMessages).then(messages => {
       const newMessages = transformMessages(messages, near.wallet.accountId);
-      if (newMessages.length < messagesPerPage) {
-        setHideHistoryButton(true);
+      if (newMessages.length === messagesPerPage) {
+        setHideHistoryButton(false);
       }
 
       setHistoryMessages(prev => {
