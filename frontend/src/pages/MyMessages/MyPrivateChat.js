@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { WriteMessage } from "../../components/MyMessages/Chat/WriteMessage";
-import { OneMessage } from "../../components/MyMessages/Chat/OneMessage";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
@@ -22,6 +21,7 @@ export const MyPrivateChat = () => {
   const [tmpMessages, setTmpMessages] = useState([]);
   const [historyMessages, setHistoryMessages] = useState([]);
   const [historyPage, setHistoryPage] = useState(0);
+  const [hideHistoryButton, setHideHistoryButton] = useState(false);
   const [opponent, setOpponent] = useState();
   const [reloadCounter, setReloadCounter] = useState(0);
   const [opponentAddress, setOpponentAddress] = useState("");
@@ -112,11 +112,16 @@ export const MyPrivateChat = () => {
     setTmpMessages(prev => prev.concat(newMessage));
   }
 
+  // load previous messages
   const loadHistoryMessages = () => {
     setHistoryPage(prev => prev + 1);
     const skipMessages = messagesPerPage * (historyPage + 1);
     loadPrivateMessages(id, messagesPerPage, skipMessages).then(messages => {
       const newMessages = transformMessages(messages, near.wallet.accountId);
+      if (newMessages.length < messagesPerPage) {
+        setHideHistoryButton(true);
+      }
+
       setHistoryMessages(prev => {
         prev.unshift(...newMessages);
         return prev;
@@ -140,6 +145,7 @@ export const MyPrivateChat = () => {
                             opponent={opponent}
                             opponentAddress={opponentAddress}
                             loadHistoryMessages={loadHistoryMessages}
+                            hideHistoryButton={hideHistoryButton}
               />
             ) : (
               <div className={"mx-auto w-8 pt-2"}>

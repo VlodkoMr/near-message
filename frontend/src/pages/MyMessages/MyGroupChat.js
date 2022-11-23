@@ -18,6 +18,7 @@ export const MyGroupChat = () => {
   const [messages, setMessages] = useState([]);
   const [historyMessages, setHistoryMessages] = useState([]);
   const [historyPage, setHistoryPage] = useState(0);
+  const [hideHistoryButton, setHideHistoryButton] = useState(false);
   const [tmpMessages, setTmpMessages] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [group, setGroup] = useState();
@@ -114,11 +115,16 @@ export const MyGroupChat = () => {
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 
+  // load previous messages
   const loadHistoryMessages = () => {
     setHistoryPage(prev => prev + 1);
     const skipMessages = messagesPerPage * (historyPage + 1);
     loadGroupMessages(id, messagesPerPage, skipMessages).then(messages => {
       const newMessages = transformMessages(messages, near.wallet.accountId);
+      if (newMessages.length < messagesPerPage) {
+        setHideHistoryButton(true);
+      }
+
       setHistoryMessages(prev => {
         prev.unshift(...newMessages);
         return prev;
@@ -144,6 +150,7 @@ export const MyGroupChat = () => {
                                 userProfiles={userProfiles}
                                 opponentAddress={id}
                                 loadHistoryMessages={loadHistoryMessages}
+                                hideHistoryButton={hideHistoryButton}
                   />
                 ) : (
                   <div className={"text-center text-sm opacity-60 pt-2"}>
