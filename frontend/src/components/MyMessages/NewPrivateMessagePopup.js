@@ -51,7 +51,6 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
         alert('Error: Message not sent');
       })
       .finally(() => {
-        console.log(`finally`);
         setIsLoading(false);
       });
   }

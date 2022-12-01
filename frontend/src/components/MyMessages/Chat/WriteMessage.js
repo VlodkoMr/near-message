@@ -101,7 +101,6 @@ export const WriteMessage = ({
 
   useEffect(() => {
     if (changePrivateMode !== undefined) {
-      console.log(`changePrivateMode`, changePrivateMode);
       setIsPrivateMode(changePrivateMode);
     }
   }, [changePrivateMode]);

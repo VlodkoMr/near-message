@@ -26,7 +26,9 @@ export const Home = () => {
 
   useEffect(() => {
     loadLastPublicChats().then(result => {
-      setPublicGroups(result);
+      if (result) {
+        setPublicGroups(result);
+      }
     });
 
     if (location.hash) {

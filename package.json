@@ -13,13 +13,16 @@
     "build:contract": "cd contract && ./build.sh",
     "update:contract": "npm run build:contract && npm run deploy",
     "dev:build:web": "cd frontend && npm run dev:build",
+    "prod:build:web": "cd frontend && npm run prod:build",
     "dev:deploy": "CONTRACT_ID=chatme.testnet && near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/near_chatme.wasm --accountId $CONTRACT_ID",
+    "prod:deploy": "CONTRACT_ID=chatme.near && NEAR_ENV=mainnet near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/near_chatme.wasm --accountId $CONTRACT_ID",
     "test": "npm run test:unit",
     "test:unit": "cd contract && cargo test",
     "postinstall": "cd frontend && npm install && cd .. && echo rs tests && echo rs contract",
     "graph:build": "cd thegraph && graph codegen && graph build",
-    "graph:deploy": "cd thegraph && npm run deploy",
-    "dev:graph:deploy": "cd thegraph && npm run dev:deploy"
+    "local:graph:deploy": "cd thegraph && npm run deploy",
+    "dev:graph:deploy": "cd thegraph && npm run dev:deploy",
+    "prod:graph:deploy": "cd thegraph && npm run prod:deploy"
   },
   "devDependencies": {
     "near-cli": "^3.0.0"

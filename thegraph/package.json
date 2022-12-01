@@ -6,6 +6,7 @@
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ vlodkomr/nearmessage",
     "dev:deploy": "graph deploy --node https://api.thegraph.com/deploy/ vlodkomr/chatme",
+    "prod:deploy": "graph deploy --node https://api.thegraph.com/deploy/ vlodkomr/chatme-main",
     "create-local": "graph create --node http://localhost:8020/ vlodkomr/nearmessage",
     "remove-local": "graph remove --node http://localhost:8020/ vlodkomr/nearmessage",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 vlodkomr/nearmessage",

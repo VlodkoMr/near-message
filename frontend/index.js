@@ -8,7 +8,7 @@ import { SocialDBContract } from "./src/interfaces/socialDBContract";
 import { SOCIAL_DB_CONTRACT } from "./src/settings/config";
 import { App } from './src/App';
 
-const wallet = new Wallet({ createAccessKeyFor: process.env.CONTRACT_NAME })
+const wallet = new Wallet({ createAccessKeyFor: process.env.CONTRACT_NAME, network: process.env.NEAR_NETWORK })
 const mainContract = new MainContract({ contractId: process.env.CONTRACT_NAME, walletToUse: wallet })
 const socialDBContract = new SocialDBContract({ contractId: SOCIAL_DB_CONTRACT, walletToUse: wallet })
 
