@@ -108,7 +108,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-        <p className={"font-medium text-gray-50"}>{groupsById[chat.id].title}</p>
+        <p className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>{groupsById[chat.id].title}</p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">

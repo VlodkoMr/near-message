@@ -55,7 +55,8 @@ export const Home = () => {
       <section
         id="home"
         className="
-        relative z-10 pt-[120px] pb-[110px]
+        relative z-10
+        pt-[120px] pb-[60px]
         md:pt-[150px] md:pb-[120px]
         xl:pt-[180px] xl:pb-[160px]
         2xl:pt-[210px] 2xl:pb-[200px]
@@ -63,7 +64,7 @@ export const Home = () => {
       >
         <div className="container">
           <div className="flex flex-wrap mx-[-16px]">
-            <div className="w-full px-4 flex flex-row gap-10">
+            <div className="w-full px-6 sm:px-4 flex flex-row gap-10">
               <div
                 className="max-w-[620px] wow fadeInUp"
                 data-wow-delay=".2s"
@@ -80,7 +81,7 @@ export const Home = () => {
                   mb-5
                 "
                 >
-                  <span className={"text-sky-500 mr-3"}>Chats & Messages</span>
+                  <span className={"text-sky-500 mr-3"}>Chats & Messages</span>{" "}
                   service for NEAR Blockchain
                 </h1>
                 <p
@@ -94,11 +95,11 @@ export const Home = () => {
                   mb-12
                 "
                 >
-                  All-in-One solution: direct messages, channels, public and private chats. <br/>
+                  All-in-One solution: direct messages, channels, public and private chats.
                   We combine the best user experience, blockchain security, fast and cheap transactions with new web3 possibilities.
-                  All our features is open-source and documented to simplify integration our features into your NEAR project.
+                  <span className={"hidden md:inline ml-1"}>All our features is open-source and documented to simplify integration our features into your NEAR project.</span>
                 </p>
-                <div>
+                <div className={"text-center sm:text-left"}>
 
                   <PrimaryButton to={"/my"}>
                     My Messages
@@ -133,7 +134,7 @@ export const Home = () => {
 
       </section>
 
-      <section className="bg-primary bg-opacity-[3%] pt-[100px] pb-[50px]">
+      <section className="bg-primary bg-opacity-[3%] pt-[60px] pb-[30px] md:pt-[100px] md:pb-[50px]">
         <div className="container" id="features">
           <SectionTitle title={"Main Features"}
                         text={`Best features implemented in our service for NEAR blockchain - fast, 
@@ -163,7 +164,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="relative z-10 py-[100px]">
+      <section className="relative z-10 py-[50px] md:py-[100px]">
         <div className="container" id={"overview"}>
           <SectionTitle title={"Video Overview"} text={``}/>
 
@@ -172,7 +173,7 @@ export const Home = () => {
               <div className="mx-auto max-w-[770px] h-[436px] bg-gray-900 rounded-md overflow-hidden wow fadeInUp text-white text-center"
                    data-wow-delay=".15s"
               >
-                <iframe width="770" height="436"
+                <iframe width="100%" height="436"
                         src="https://www.youtube.com/embed/UY8hJbn9Jw8"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -184,7 +185,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="relative z-10 pt-[100px] pb-20 bg-primary bg-opacity-[3%]">
+      <section className="relative z-10 pt-[50px] md:pt-[100px] pb-10 md:pb-20 bg-primary bg-opacity-[3%]">
         <div className="container" id="chats">
           <SectionTitle title={"Public Chats & Channels"}
                         text={`Review the list of all our public communities - chats and channels.`}/>
@@ -216,7 +217,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section id="about" className="py-[100px]">
+      <section id="about" className="py-[50px] md:py-[100px]">
         <div className="container">
           <div>
             <div className="flex flex-wrap items-center mx-[-16px]">
@@ -391,7 +392,7 @@ export const Home = () => {
       {/*  </div>*/}
       {/*</section>*/}
 
-      <section className="relative z-10 pt-[100px] pb-20 bg-primary bg-opacity-5">
+      <section className="relative z-10 pt-[50px] md:pt-[100px] pb-10 md:pb-20 bg-primary bg-opacity-5">
         <div className="container" id="accounts">
           <SectionTitle title={"Account Levels"}
                         text={`You can use our service for free or increase your Account Level by your needs. 
@@ -439,7 +440,7 @@ export const Home = () => {
         </div>
       </section>
 
-      <section className="pt-[100px] pb-20">
+      <section className="pt-[50px] pb-10 md:pt-[100px] md:pb-20">
         <div className="container" id="documentation">
           <SectionTitle title={"Documentation"}
                         text={`Technical documentation for developers: integrate our service in your application. 

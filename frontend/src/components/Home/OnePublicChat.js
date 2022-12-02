@@ -8,7 +8,7 @@ export const OnePublicChat = ({ group }) => {
 
   return (
     <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-      <div className="shadow-one bg-white dark:bg-[#1D2144] rounded-md px-8 py-6 mb-8 wow fadeInUp"
+      <div className="shadow-one bg-white dark:bg-[#1D2144] rounded-md px-8 py-6 mb-4 md:mb-8 wow fadeInUp"
            data-wow-delay=".1s"
       >
         <div className={`flex flex-row border-b border-body-color dark:border-white border-opacity-10 

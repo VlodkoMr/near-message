@@ -1,9 +1,9 @@
 export const OneFeature = ({ title, icon, text }) => (
   <div className="w-full md:w-1/2 lg:w-1/3 px-4">
-    <div className="mb-[70px] wow fadeInUp text-center" data-wow-delay=".15s">
+    <div className="mb-[36px] md:mb-[70px] wow fadeInUp text-center" data-wow-delay=".15s">
       <div
         className="w-[80px] h-[80px] flex items-center justify-center mx-auto rounded-full bg-primary
-          bg-opacity-10 mb-6 text-primary"
+          bg-opacity-10 mb-4 md:mb-6 text-primary"
       >
         {icon}
       </div>

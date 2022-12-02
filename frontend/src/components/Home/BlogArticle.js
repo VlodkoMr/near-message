@@ -1,6 +1,6 @@
 export const BlogArticle = ({ title, text, url }) => (
   <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
-    <div className="relative bg-white dark:bg-dark shadow-one rounded-md overflow-hidden mb-10 wow fadeInUp"
+    <div className="relative bg-white dark:bg-dark shadow-one rounded-md overflow-hidden mb-5 md:mb-10 wow fadeInUp"
          data-wow-delay=".1s">
       <div className="p-6 sm:p-8 md:py-8 md:px-6 lg:p-8 xl:py-8 xl:px-5 2xl:p-8">
         <h3>

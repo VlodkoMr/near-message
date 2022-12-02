@@ -30,17 +30,17 @@ export const Footer = () => {
 
   return (
     <footer
-      className="relative z-10 bg-primary bg-opacity-5 pt-[100px] wow fadeInUp"
+      className="relative z-10 bg-primary bg-opacity-5 pt-[50px] md:pt-[100px] wow fadeInUp"
       data-wow-delay=".1s"
     >
       <div className="container">
         <div className="flex flex-wrap mx-[-16px]">
           <div className="w-full md:w-1/2 lg:w-4/12 xl:w-5/12 px-4">
             <div className="mb-16 max-w-[360px]">
-              <Link to="/" className="inline-block mb-8">
+              <Link to="/" className="inline-block mb-2 md:mb-8">
                 <img src={require("../assets/img/logo.png")} className={"h-8"} alt="logo"/>
               </Link>
-              <p className="text-body-color text-base font-medium leading-relaxed mb-9">
+              <p className="text-body-color text-base font-medium leading-relaxed mb-4 md:mb-9">
                 Chats & Messages service for NEAR Blockchain.
                 Direct messages, channels, private and public chats.
               </p>
@@ -51,7 +51,7 @@ export const Footer = () => {
                   target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
-                  <FaTwitter size={18}/>
+                  <FaTwitter size={22}/>
                 </a>
                 <a
                   aria-label="social-link"
@@ -59,7 +59,7 @@ export const Footer = () => {
                   target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
-                  <FaDiscord size={20}/>
+                  <FaDiscord size={24}/>
                 </a>
                 <a
                   aria-label="social-link"
@@ -67,13 +67,13 @@ export const Footer = () => {
                   target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
-                  <FaTelegramPlane size={18}/>
+                  <FaTelegramPlane size={23}/>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="w-full sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12 pl-4">
+          <div className="w-1/2 lg:w-2/12 xl:w-2/12 pl-4">
             <div className="mb-16">
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">
                 Links
@@ -98,7 +98,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="w-full sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12 px-4 mr-6">
+          <div className="w-1/2 lg:w-2/12 xl:w-2/12 px-4 lg:mr-6">
             <div className="mb-16">
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">
                 Documentation
@@ -117,7 +117,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="w-full sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12 px-4">
+          <div className="hidden lg:block lg:w-2/12 xl:w-2/12 px-4">
             <div className="mb-16">
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">Support & Terms</h2>
               <ul>
@@ -141,6 +141,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
+
       <div className="py-8 bg-primary bg-opacity-10">
         <div className="container">
           <p className="text-gray-400 text-sm text-center">
