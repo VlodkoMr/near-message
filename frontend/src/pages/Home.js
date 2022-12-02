@@ -56,7 +56,7 @@ export const Home = () => {
         id="home"
         className="
         relative z-10
-        pt-[120px] pb-[60px]
+        pt-[160px] pb-[80px]
         md:pt-[150px] md:pb-[120px]
         xl:pt-[180px] xl:pb-[160px]
         2xl:pt-[210px] 2xl:pb-[200px]

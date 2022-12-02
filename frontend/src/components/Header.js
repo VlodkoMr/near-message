@@ -105,9 +105,17 @@ export const Header = () => {
                       Documentation
                     </NavScrollLink>
                   </li>
-                  <li className={"visible md:hidden"}>
+                  {near.isSigned && (
+                    <li className={"md:hidden"}>
+                      <NavScrollLink to="documentation" onClick={() => {
+                        near.wallet.signOut();
+                        setMobileMenuVisible(false)
+                      }}>
+                        Sign Out
+                      </NavScrollLink>
+                    </li>
+                  )}
 
-                  </li>
                 </ul>
               </nav>
             </div>
