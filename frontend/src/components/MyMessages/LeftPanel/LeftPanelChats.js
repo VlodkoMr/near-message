@@ -133,7 +133,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
                   textSize={"text-4xl"}/>
         </div>
         <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium text-gray-50"}>
+          <p className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>
             {profileList[chat.last_message.opponentAddress]?.name || chat.last_message.opponentAddress}
           </p>
           <div className="flex items-center text-sm">
