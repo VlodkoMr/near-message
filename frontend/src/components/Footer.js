@@ -47,18 +47,24 @@ export const Footer = () => {
               <div className="flex items-center">
                 <a
                   aria-label="social-link"
+                  href={"https://twitter.com/chatme_near"}
+                  target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
                   <FaTwitter size={18}/>
                 </a>
                 <a
                   aria-label="social-link"
+                  href={"https://discord.gg/pcvvn4EJpa"}
+                  target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
                   <FaDiscord size={20}/>
                 </a>
                 <a
                   aria-label="social-link"
+                  href={"https://t.me/chatme_near"}
+                  target={"_blank"}
                   className="text-[#CED3F6] hover:text-primary mr-6"
                 >
                   <FaTelegramPlane size={18}/>

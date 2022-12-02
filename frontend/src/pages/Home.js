@@ -95,9 +95,8 @@ export const Home = () => {
                 "
                 >
                   All-in-One solution: direct messages, channels, public and private chats. <br/>
-                  You can integrate our features into your NEAR project by follow simple instructions
-                  with pre-build components or call smart-contract directly
-                  to send private messages, create your own chats and channels.
+                  We combine the best user experience, blockchain security, fast and cheap transactions with new web3 possibilities.
+                  All our features is open-source and documented to simplify integration our features into your NEAR project.
                 </p>
                 <div>
 
