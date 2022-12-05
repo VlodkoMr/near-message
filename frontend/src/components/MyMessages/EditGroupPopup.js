@@ -187,10 +187,10 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
         </div>
       </DialogTitle>
       <DialogContent className={"mx-2 mt-6 mb-2"}>
-        <div className={"p-2 flex flex-row gap-8 text-gray-100"}>
-          <div>
+        <div className={"p-2 md:flex md:flex-row md:gap-8 text-gray-100"}>
+          <div className={"mb-4"}>
             <label
-              className={`flex w-40 h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
+              className={`flex w-32 h-32 md:w-40 md:h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
               hover:bg-gray-700/60 transition overflow-hidden shadow-lg`}>
               <PrimaryInput placeholder={"Logo"}
                             type={"file"}
@@ -239,8 +239,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                           value={formData.group_type}
                           onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
                 <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
-                <div className={"flex flex-row gap-4"}>
-                  <RadioLabel className={"rounded-t-md w-1/3"}>
+                <div className={"md:flex md:flex-row md:gap-4"}>
+                  <RadioLabel className={"rounded-t-md md:w-1/3"}>
                     <FormControlLabel value="Channel"
                                       control={<Radio/>}
                                       disabled={isMediaLoading}
@@ -251,7 +251,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                       No participants limit, only owners write messages.
                     </RadioLabelText>
                   </RadioLabel>
-                  <RadioLabel className={"w-1/3"}>
+                  <RadioLabel className={"md:w-1/3"}>
                     <FormControlLabel value="Private"
                                       control={<Radio/>}
                                       disabled={isMediaLoading}
@@ -262,7 +262,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                       Limited by {membersLimit} members.
                     </RadioLabelText>
                   </RadioLabel>
-                  <RadioLabel className={"rounded-b-md w-1/3"}>
+                  <RadioLabel className={"rounded-b-md md:w-1/3"}>
                     <FormControlLabel value="Public"
                                       control={<Radio/>}
                                       disabled={isMediaLoading}
@@ -312,7 +312,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
             )}
 
             {!group && (
-              <div className={"mb-4 flex flex-row gap-4"}>
+              <div className={"mb-4 md:flex md:flex-row md:gap-4"}>
                 <div className={"flex-1"}>
                 <span className={"text-gray-500 font-medium text-sm"}>
                   {(formData.group_type !== "Channel") ? "Group" : "Channel"} Owner
@@ -333,8 +333,8 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
               </div>
             )}
 
-            <div className={"flex justify-between"}>
-              <div className={"text-red-400/90 text-sm pt-4"}>
+            <div className={"md:flex justify-between"}>
+              <div className={"text-red-400/90 text-sm md:pt-4"}>
                 {!group ? ("Payment 0.25 NEAR required") : (
                   <>
                     {group.owner === near.wallet.accountId && (
@@ -346,7 +346,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                   </>
                 )}
               </div>
-              <div className={"text-right"}>
+              <div className={"text-right mt-4 md:mt-0"}>
                 <PrimaryButton onClick={handleSaveGroup} disabled={isLoading || isMediaLoading}>
                   {!group ? ("Create") : ("Save")}{" "}
                   {(!formData.group_type || formData.group_type !== "Channel") ? "Group" : "Channel"}

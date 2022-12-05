@@ -102,10 +102,6 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     setIsOpen(false);
   }
 
-  const selectRecipient = (event, input) => {
-    setMessageAddress(input);
-  }
-
   return (
     <Dialog
       open={isOpen}
@@ -138,7 +134,8 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
             <div className={"mb-3"}>
               <Autocomplete
                 options={contactsList}
-                onChange={selectRecipient}
+                onChange={(event, input) => setMessageAddress(input)}
+                onKeyUp={(event) => setMessageAddress(event.target.value)}
                 freeSolo
                 renderInput={(params) => (
                   <PrimaryTextField
