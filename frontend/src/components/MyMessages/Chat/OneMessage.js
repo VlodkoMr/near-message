@@ -9,6 +9,7 @@ import { Loader } from "../../Loader";
 import { decodeMessageText, mediaURL } from "../../../utils/transform";
 import { MessageAction } from "../../../assets/css/components";
 import { utils } from "near-api-js";
+import { LinkItUrl } from "react-linkify-it";
 
 export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
   const near = useContext(NearContext);
@@ -88,7 +89,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               ${message.isFirst && message.isMy ? "rounded-t-3xl" : ""}
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
-              ${message.isMy ? "bg-sky-500/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
+              ${message.isMy ? "bg-sky-600/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
               ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-600/30" : ""}
             `}>
 
@@ -121,7 +122,9 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
                 <AiFillLike size={22}/>
               ) : (
-                <>{decodeMessageText(message, near.wallet.accountId)}</>
+                <LinkItUrl className={`text-blue-300 hover:underline`}>
+                  {decodeMessageText(message, near.wallet.accountId)}
+                </LinkItUrl>
               )}
 
               {message.isEncryptStart && (
