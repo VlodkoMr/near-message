@@ -3,11 +3,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { PrimaryButton, PrimaryInput, PrimaryTextarea, SecondaryButton } from "../../assets/css/components";
+import { PrimaryButton, PrimaryInput, PrimaryTextarea, PrimaryTextField, SecondaryButton } from "../../assets/css/components";
 import { Loader } from "../Loader";
 import { NearContext } from "../../context/NearContext";
 import { useNavigate } from "react-router-dom";
-import { getPrivateChatId } from "../../utils/requests";
+import { getPrivateChatId, postRequest } from "../../utils/requests";
+import { loadSocialProfiles } from "../../utils/transform";
+import { Autocomplete } from "@mui/material";
 
 export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList }) => {
   const navigate = useNavigate();
@@ -17,9 +19,35 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
   const [canOpenChat, setCanOpenChat] = useState(false);
   const [messageAddress, setMessageAddress] = useState("");
   const [messageText, setMessageText] = useState("");
+  const [contactsList, setContactsList] = useState([]);
+
+  const loadFollowingList = () => {
+    const accountId = near.wallet.accountId;
+    postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
+      keys: [`*/graph/follow/${accountId}`]
+    }).then(contacts => {
+      let addressList = Object.keys(contacts);
+      if (addressList.length) {
+        loadSocialProfiles(addressList, near).then(profiles => {
+          let profileResults = Object.values(profiles).map(p => {
+            if (p.name) {
+              return `${p.name} (${p.id})`;
+            } else {
+              return p.id;
+            }
+          });
+          profileResults.sort();
+          setContactsList(profileResults);
+        });
+      }
+    });
+  }
 
   useEffect(() => {
     resetForm();
+    if (isOpen) {
+      loadFollowingList();
+    }
   }, [isOpen]);
 
   const handleClose = () => {
@@ -70,6 +98,10 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     setIsOpen(false);
   }
 
+  const selectRecipient = (event, input) => {
+    setMessageAddress(input);
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -100,9 +132,21 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
         ) : (
           <div className={"p-2"}>
             <div className={"mb-3"}>
-              <PrimaryInput placeholder={"NEAR Address"}
-                            value={messageAddress}
-                            onChange={(e) => setMessageAddress(e.target.value)}/>
+              <Autocomplete
+                options={contactsList}
+                onChange={selectRecipient}
+                freeSolo
+                renderInput={(params) => (
+                  <PrimaryTextField
+                    {...params}
+                    label="Recipient"
+                    placeholder="NEAR Address"
+                  />
+                )}
+              />
+              {/*<PrimaryInput placeholder={"NEAR Address"}*/}
+              {/*              value={messageAddress}*/}
+              {/*              onChange={(e) => setMessageAddress(e.target.value)}/>*/}
             </div>
             <div className={"mb-3"}>
               <PrimaryTextarea placeholder="Message text"

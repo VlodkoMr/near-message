@@ -1,5 +1,21 @@
 import { createClient } from "urql";
 
+export const postRequest = async (url = '', data = {}) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify(data)
+  });
+  return response.json();
+}
+
 export const loadPrivateChatsPromise = (accountId) => {
   return new Promise(async (resolve, reject) => {
     const client = new createClient({ url: process.env.GRAPH_API_URL });
