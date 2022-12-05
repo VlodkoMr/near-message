@@ -24,9 +24,9 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
   const loadFollowingList = () => {
     const accountId = near.wallet.accountId;
     postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
-      keys: [`*/graph/follow/${accountId}`]
-    }).then(contacts => {
-      let addressList = Object.keys(contacts);
+      keys: [`${accountId}/graph/follow/*`]
+    }).then(result => {
+      const addressList = Object.keys(result[accountId]?.graph?.follow);
       if (addressList.length) {
         loadSocialProfiles(addressList, near).then(profiles => {
           let profileResults = Object.values(profiles).map(p => {
