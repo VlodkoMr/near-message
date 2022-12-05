@@ -22,8 +22,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
   const [contactsList, setContactsList] = useState([]);
 
   const loadFollowingList = () => {
-    // const accountId = near.wallet.accountId;
-    const accountId = "vlodkow.near";
+    const accountId = near.wallet.accountId;
     try {
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
         keys: [`${accountId}/graph/follow/*`]
@@ -35,7 +34,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
               if (p.name) {
                 return `${p.name} (${p.id})`;
               } else {
-                return `test (${p.id})`;
+                return p.id;
               }
             });
             console.log(`profileResults`, profileResults);
