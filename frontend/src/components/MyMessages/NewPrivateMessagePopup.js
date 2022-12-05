@@ -23,24 +23,28 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
 
   const loadFollowingList = () => {
     const accountId = near.wallet.accountId;
-    postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
-      keys: [`*/graph/follow/${accountId}`]
-    }).then(contacts => {
-      let addressList = Object.keys(contacts);
-      if (addressList.length) {
-        loadSocialProfiles(addressList, near).then(profiles => {
-          let profileResults = Object.values(profiles).map(p => {
-            if (p.name) {
-              return `${p.name} (${p.id})`;
-            } else {
-              return p.id;
-            }
+    try {
+      postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
+        keys: [`*/graph/follow/${accountId}`]
+      }).then(contacts => {
+        let addressList = Object.keys(contacts);
+        if (addressList.length) {
+          loadSocialProfiles(addressList, near).then(profiles => {
+            let profileResults = Object.values(profiles).map(p => {
+              if (p.name) {
+                return `${p.name} (${p.id})`;
+              } else {
+                return p.id;
+              }
+            });
+            profileResults.sort();
+            setContactsList(profileResults);
           });
-          profileResults.sort();
-          setContactsList(profileResults);
-        });
-      }
-    });
+        }
+      });
+    } catch (e) {
+      console.log(`NEAR_SOCIAL_API Error`, e);
+    }
   }
 
   useEffect(() => {

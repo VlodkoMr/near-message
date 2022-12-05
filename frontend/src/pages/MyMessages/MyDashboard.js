@@ -99,26 +99,31 @@ export const MyDashboard = () => {
   return (
     <>
       <MessagesHeader title={""} media={""}/>
-      <div className={"p-6 mb-auto max-w-[1600px] overflow-y-scroll"}>
-        <div className={"flex flex-row gap-6 mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
+      <div className={"p-2 md:p-6 mb-auto lg:max-w-[1600px] overflow-y-scroll"}>
+        <div className={"md:flex md:flex-row md:gap-6 mb-6"}>
+          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg mb-6 md:mb-0"}>
             <BlockTitle text={"My Account"}>
               <a href={process.env.NEAR_SOCIAL_PROFILE_URL}
                  target={"_blank"}
                  className={"text-sm pt-1 text-blue-400 hover:text-blue-300"}>
-                <span>Open NEAR Social</span>
+                <span>
+                  <span className={"hidden md:visible"}>Open</span> NEAR Social
+                </span>
                 <BiLinkExternal size={16} className={"inline ml-2 align-text-top"}/>
               </a>
             </BlockTitle>
 
-            <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
+            <div className={"flex flex-row md:mr-4 text-left"}>
               <div className={"w-20 h-20 mr-6 hidden md:block mt-2"}>
                 <Avatar media={myProfile?.image} title={near.wallet.accountId} textSize={"text-3xl"}/>
               </div>
               <div className={"mt-1 flex flex-col"}>
                 <div>
                   <span className={"w-20 inline-block opacity-60"}>Address:</span>
-                  {formatAddress(near.wallet.accountId)}
+                  <span
+                    className={"whitespace-nowrap overflow-hidden w-40 overflow-ellipsis align-bottom inline-block ml-1"}>
+                    {near.wallet.accountId}
+                  </span>
                 </div>
                 <div>
                   <span className={"w-20 inline-block opacity-60"}>Name:</span>
@@ -148,7 +153,7 @@ export const MyDashboard = () => {
             </div>
           </div>
 
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"Account Keys"}/>
             <div className={""}>
               <p className={"opacity-60 text-sm"}>
@@ -171,13 +176,13 @@ export const MyDashboard = () => {
         </div>
 
         <div className={"mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"My Account Level"}>
                 <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
                   Current Plan: {!near.account ? ("Free") : near.account.level === 1 ? "Bronze" : "Gold"}
                 </span>
             </BlockTitle>
-            <div className={"flex flex-row"}>
+            <div className={"md:flex md:flex-row"}>
               <AccountLevel level={"Free"} price={""} isCurrent={!near.account} className={"border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
@@ -317,8 +322,8 @@ export const MyDashboard = () => {
 
         {!isMoreInfoHidden ? (
           <>
-            <div className={"mb-6 flex flex-row gap-6"}>
-              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
+            <div className={"mb-6 md:flex md:flex-row md:gap-6"}>
+              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg md:w-1/2 mb-6 md:mb-0"}>
                 <BlockTitle text={"Account Spam Level"}/>
                 <div className={"flex flex-row"}>
                   {!near.account ? (
@@ -362,9 +367,9 @@ export const MyDashboard = () => {
                 </div>
               </div>
 
-              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg w-1/2"}>
+              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg md:w-1/2"}>
                 <BlockTitle text={"Documentation & External Links"}/>
-                <div className={"flex flex-row pt-2"}>
+                <div className={"md:flex md:flex-row pt-2"}>
                   <div className={"flex-1"}>
                     <ExternalLink text={"Introduction"} url={"https://chatme.gitbook.io/chatme/"}/>
                     <ExternalLink text={"Web Interface"} url={"https://chatme.gitbook.io/chatme/chatme-web-interface/get-started"}/>

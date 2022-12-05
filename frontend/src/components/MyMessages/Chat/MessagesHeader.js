@@ -77,7 +77,7 @@ export const MessagesHeader = ({ group, opponent }) => {
         ) : (
           <div className="text-sm">
             <p className="font-bold text-base mt-0.5">My Dashboard</p>
-            <p className={"text-gray-400"}>
+            <p className={"text-gray-400 hidden md:block"}>
               account settings & overview
             </p>
           </div>
@@ -86,7 +86,7 @@ export const MessagesHeader = ({ group, opponent }) => {
 
       <div className="flex">
         <Link to={"/my"} className={"mr-2 pt-0.5 font-medium hover:opacity-80 transition"}>
-          <div className={"flex flex-row md:mr-4 text-right md:text-left"}>
+          <div className={"md:flex md:flex-row md:mr-4 text-right md:text-left"}>
             <div className={"w-12 h-12 mr-3 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
@@ -94,16 +94,17 @@ export const MessagesHeader = ({ group, opponent }) => {
               {myProfile?.name ? (
                 <>
                   <p className={"text-gray-100 font-medium"}>{myProfile?.name}</p>
-                  <small className={"block text-gray-400/80"}>
-                    {formatAddress(near.wallet.accountId)}
+                  <small className={"block text-gray-400/80 w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
+                    {near.wallet.accountId}
                   </small>
                 </>
               ) : (
-                <p className={"block text-gray-400/80 text-sm font-semibold"}>
-                  {formatAddress(near.wallet.accountId)}
+                <p className={"block text-gray-400/80 text-sm font-semibold w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
+                  {near.wallet.accountId}
                 </p>
               )}
             </div>
+            <div className={"md:hidden text-red-400 text-sm"}>Sign Out</div>
           </div>
         </Link>
 

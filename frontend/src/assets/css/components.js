@@ -24,7 +24,7 @@ export const Button = styled(Link).attrs(props => ({
   className: `text-base font-medium text-dark dark:text-white hover:opacity-70 rounded-full transition 
    ease-in-up duration-300 cursor-pointer inline-block whitespace-nowrap
    ${props.disabled && "opacity-60 pointer-events-none"}
-   ${props.small ? "py-2 px-5" : "py-3 px-7"}
+   ${props.small ? "py-1.5 px-4 md:py-2 md:px-5" : "py-2 px-5 md:py-3 md:px-7"}
    `,
 }))``;
 
