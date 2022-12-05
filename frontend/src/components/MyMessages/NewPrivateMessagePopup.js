@@ -22,21 +22,23 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
   const [contactsList, setContactsList] = useState([]);
 
   const loadFollowingList = () => {
-    const accountId = near.wallet.accountId;
+    // const accountId = near.wallet.accountId;
+    const accountId = "vlodkow.near";
     try {
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
         keys: [`${accountId}/graph/follow/*`]
-      }).then(contacts => {
-        let addressList = Object.keys(contacts);
+      }).then(result => {
+        const addressList = Object.keys(result[accountId]?.graph?.follow);
         if (addressList.length) {
           loadSocialProfiles(addressList, near).then(profiles => {
             let profileResults = Object.values(profiles).map(p => {
               if (p.name) {
                 return `${p.name} (${p.id})`;
               } else {
-                return p.id;
+                return `test (${p.id})`;
               }
             });
+            console.log(`profileResults`, profileResults);
             profileResults.sort();
             setContactsList(profileResults);
           });
@@ -102,6 +104,18 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     setIsOpen(false);
   }
 
+  const setRecipientAddress = (address) => {
+    if (address.indexOf("(") === -1) {
+      setMessageAddress(address);
+    } else {
+      // parse address
+      const result = address.match(/\(([^)]+)\)/);
+      if (result.length > 1) {
+        setMessageAddress(result[1]);
+      }
+    }
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -134,8 +148,8 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
             <div className={"mb-3"}>
               <Autocomplete
                 options={contactsList}
-                onChange={(event, input) => setMessageAddress(input)}
-                onKeyUp={(event) => setMessageAddress(event.target.value)}
+                onChange={(event, input) => setRecipientAddress(input)}
+                onKeyUp={(event) => setRecipientAddress(event.target.value)}
                 freeSolo
                 renderInput={(params) => (
                   <PrimaryTextField
