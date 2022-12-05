@@ -25,7 +25,7 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
     const accountId = near.wallet.accountId;
     try {
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
-        keys: [`*/graph/follow/${accountId}`]
+        keys: [`${accountId}/graph/follow/*`]
       }).then(contacts => {
         let addressList = Object.keys(contacts);
         if (addressList.length) {
