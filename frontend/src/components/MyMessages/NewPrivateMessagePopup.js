@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { PrimaryButton, PrimaryInput, PrimaryTextarea, PrimaryTextField, SecondaryButton } from "../../assets/css/components";
+import { PrimaryButton, PrimaryTextarea, PrimaryTextField, SecondaryButton } from "../../assets/css/components";
 import { Loader } from "../Loader";
 import { NearContext } from "../../context/NearContext";
 import { useNavigate } from "react-router-dom";
@@ -144,9 +144,6 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
                   />
                 )}
               />
-              {/*<PrimaryInput placeholder={"NEAR Address"}*/}
-              {/*              value={messageAddress}*/}
-              {/*              onChange={(e) => setMessageAddress(e.target.value)}/>*/}
             </div>
             <div className={"mb-3"}>
               <PrimaryTextarea placeholder="Message text"
