@@ -381,7 +381,6 @@ export const MyDashboard = () => {
                     <ExternalLink text={"Discord"} url={"https://discord.gg/pcvvn4EJpa"}/>
                     <ExternalLink text={"Twitter"} url={"https://twitter.com/chatme_near"}/>
                     <ExternalLink text={"Telegram"} url={"https://t.me/chatme_near"}/>
-                    <ExternalLink text={"Contact Us"} url={"email:vlodkow@gmail.com"}/>
                   </div>
                 </div>
               </div>

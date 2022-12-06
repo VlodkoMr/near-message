@@ -1,11 +1,8 @@
 import React from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Layout } from "./Layout";
 
 export const Terms = () => {
-  const navigate = useNavigate();
-
-
   return (
     <Layout>
 
@@ -98,9 +95,7 @@ export const Terms = () => {
               2.2 Gas Fees. Every transaction on the NEAR Network requires the payment of a transaction fee (each, a “Gas Fee”).
               The Gas Fees fund the network of computers that run the decentralized NEAR Network. This means that you will need to pay a Gas
               Fee for each transaction that you instigate via the App. Except as otherwise expressly set forth in these Terms, you will be
-              solely responsible to pay any Gas Fee for any transaction that you instigate via the App. If enabled in the future,
-              transactions in Collectibles on the NEAR Network may be subject to additional fees, including fees payable to some or all of
-              the Collectible Parties, which amounts will be deducted from transaction proceeds before payment to the selling party.
+              solely responsible to pay any Gas Fee for any transaction that you instigate via the App.
             </li>
             <li>2.3 Responsibility for Taxes. You will be solely responsible to pay any and all sales, use, value-added and other taxes,
               duties, and assessments (except taxes on our net income) now or hereafter claimed or imposed by any governmental authority
@@ -118,12 +113,6 @@ export const Terms = () => {
 
           <p className={"text-xl font-semibold mt-6"}>3. OWNERSHIP, LICENSE, AND OWNERSHIP RESTRICTIONS</p>
 
-          <p>
-            YOUR OWNERSHIP OF COLLECTIBLES WILL ONLY BE RECOGNIZED BY THE COLLECTIBLE PARTIES IF YOU HAVE PURCHASED OR OTHERWISE RIGHTFULLY
-            ACQUIRED SUCH COLLECTIBLES FROM A LEGITIMATE SOURCE AND NOT THROUGH ANY OF THE CATEGORY B PROHIBITED ACTIVITIES (AS DEFINED
-            BELOW).
-          </p>
-
           <p>For the purposes of this Section, the following capitalized terms will have the following meanings:</p>
 
           <p>
@@ -132,16 +121,10 @@ export const Terms = () => {
           </p>
 
           <p>
-            “Own” means, with respect to a Collectible, a Collectible that you have purchased or otherwise rightfully acquired from a
-            legitimate source (and not through any of the Category B Prohibited Activities (as defined below)), where proof of such purchase
-            is recorded on the NEAR Network.
+            "User Account" means free or one of paid account plans that can provide external features and functionality for your NEAR
+            wallet Address.
           </p>
 
-          <p>
-            “Purchased Collectible” means a Collectible that you Own. “Third Party IP” means any third party patent rights (including,
-            without limitation, patent applications and disclosures), copyrights, trade secrets, trademarks, know-how or any other
-            intellectual property rights recognized in any country or jurisdiction in the world.
-          </p>
           <br/>
           <ul>
             <li className={"mb-2"}>
@@ -161,12 +144,12 @@ export const Terms = () => {
             </li>
             <li className={"mb-2"}>
               3.3 Further User Ownership Acknowledgements. For the sake of clarity, you understand and agree: (a) that your purchase of a
-              Collectible, whether via the App or otherwise, does not give you any rights or licenses in or to the App Materials (including,
-              without limitation, our copyright in and to the associated messages) other than those expressly contained in these Terms; (b)
-              that you do not have the right, except as otherwise set forth in these Terms, to reproduce, distribute, or otherwise
-              commercialize any elements of the App Materials (including, without limitation) without our prior written consent in each
-              case, which consent we may withhold in our sole and absolute discretion; and (c) that you will not apply for, register, or
-              otherwise use or attempt to use any of our trademarks or service marks, or any confusingly similar marks, anywhere in the
+              User Account, whether via the App or otherwise, does not give you any rights or licenses in or to the App Materials
+              (including, without limitation, our copyright in and to the associated messages) other than those expressly contained in these
+              Terms; (b) that you do not have the right, except as otherwise set forth in these Terms, to reproduce, distribute, or
+              otherwise commercialize any elements of the App Materials (including, without limitation) without our prior written consent in
+              each case, which consent we may withhold in our sole and absolute discretion; and (c) that you will not apply for, register,
+              or otherwise use or attempt to use any of our trademarks or service marks, or any confusingly similar marks, anywhere in the
               world without our prior written consent in each case, which consent we may withhold at our sole and absolute discretion.
             </li>
             <li>
@@ -238,18 +221,12 @@ export const Terms = () => {
             <li>- involve using, employing, operating, or creating a computer program to simulate the human behavior of a user (“Bots”);
             </li>
             <li>- involve using, employing, or operating Bots or other similar forms of automation to engage in any activity or transaction
-              on the App (including, without limitation, purchases of Packs, or of Collectibles on the Marketplace);
-            </li>
-            <li>- involve acquiring Collectibles through inappropriate or illegal means (including, among other things, using a payment
-              mechanism that you do not have the right to use, or purchasing a Collectible and then attempting to charge the cost back to
-              your payment method while still maintaining ownership or control of the Collectible or selling, gifting or trading the
-              Collectible to someone else);
+              on the App;
             </li>
             <li>- involve the purchasing, selling or facilitating the purchase and sale of any user’s account(s) to other users or third
-              parties
-              for cash or cryptocurrency consideration outside of the App;
+              parties for cash or cryptocurrency consideration outside of the App;
             </li>
-            <li>- otherwise involve or result in the wrongful seizure or receipt of any Collectibles or other digital assets (each, a
+            <li>- otherwise involve or result in the wrongful seizure or other digital assets (each, a
               “Category B Prohibited Activity” and, together with Category A Prohibited Activity, the “Prohibited Activities”).
               Effect of Your Breaches. If you engage in any of the Prohibited Activities, we may, at our sole and absolute discretion,
               without notice or liability to you, and without limiting any of our other rights or remedies at law or in equity, immediately
@@ -260,13 +237,13 @@ export const Terms = () => {
           <p className={"text-xl font-semibold mt-6"}>5. DISCLAIMERS</p>
 
           <p>
-            YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR ACCESS TO AND USE OF THE APP IS AT YOUR SOLE RISK, AND THAT THE APP AND ALL
-            COLLECTIBLES ON THE APP ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. TO
-            THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, THE COLLECTIBLE PARTIES AND THEIR RESPECTIVE PARENTS, SUBSIDIARIES,
+            YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR ACCESS TO AND USE OF THE APP IS AT YOUR SOLE RISK, AND THAT THE APP PROVIDED
+            "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED.
+            TO THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, THE ATOMICLAB AND THEIR RESPECTIVE PARENTS, SUBSIDIARIES,
             AFFILIATES, AND LICENSORS MAKE NO EXPRESS WARRANTIES AND HEREBY DISCLAIM ALL IMPLIED WARRANTIES REGARDING THE APP AND ANY PART
-            OF IT, OR ANY COLLECTIBLE INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
-            NON-INFRINGEMENT, CORRECTNESS, ACCURACY, OR RELIABILITY. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE COLLECTIBLE
-            PARTIES AND THEIR PARENTS, SUBSIDIARIES, AFFILIATES, AND LICENSORS DO NOT REPRESENT OR WARRANT TO YOU THAT: (I) YOUR ACCESS TO
+            OF IT INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+            NON-INFRINGEMENT, CORRECTNESS, ACCURACY, OR RELIABILITY. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, ATOMICLAB
+            AND THEIR PARENTS, SUBSIDIARIES, AFFILIATES, AND LICENSORS DO NOT REPRESENT OR WARRANT TO YOU THAT: (I) YOUR ACCESS TO
             OR USE OF THE APP WILL MEET YOUR REQUIREMENTS; (II) YOUR ACCESS TO OR USE OF THE APP WILL BE UNINTERRUPTED, TIMELY, SECURE OR
             FREE FROM ERROR; (III) USAGE DATA PROVIDED THROUGH THE APP WILL BE ACCURATE; (IV) THE APP OR ANY CONTENT, SERVICES, OR FEATURES
             MADE AVAILABLE ON OR THROUGH THE APP ARE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS; OR (V) THAT ANY DATA THAT YOU DISCLOSE
@@ -275,28 +252,22 @@ export const Terms = () => {
           </p>
           <br/>
           <p>
-            YOU ACCEPT THE INHERENT SECURITY RISKS OF PROVIDING INFORMATION AND DEALING ONLINE OVER THE INTERNET AND AGREE THAT THE
-            COLLECTIBLE PARTIES HAVE NO LIABILITY OR RESPONSIBILITY FOR ANY BREACH OF SECURITY UNLESS IT IS DUE TO THEIR GROSS
+            YOU ACCEPT THE INHERENT SECURITY RISKS OF PROVIDING INFORMATION AND DEALING ONLINE OVER THE INTERNET AND AGREE THAT
+            ATOMICLAB HAVE NO LIABILITY OR RESPONSIBILITY FOR ANY BREACH OF SECURITY UNLESS IT IS DUE TO THEIR GROSS
             NEGLIGENCE.
           </p>
           <br/>
           <p>
-            THE COLLECTIBLE PARTIES WILL NOT BE RESPONSIBLE OR LIABLE TO YOU FOR ANY LOSSES YOU INCUR AS THE RESULT OF YOUR USE OF THE NEAR
+            ATOMICLAB WILL NOT BE RESPONSIBLE OR LIABLE TO YOU FOR ANY LOSSES YOU INCUR AS THE RESULT OF YOUR USE OF THE NEAR
             NETWORK, OR YOUR ELECTRONIC WALLET, INCLUDING BUT NOT LIMITED TO ANY LOSSES, DAMAGES OR CLAIMS ARISING FROM: (I) USER ERROR,
             SUCH AS FORGOTTEN PASSWORDS OR INCORRECTLY CONSTRUED SMART CONTRACTS OR OTHER TRANSACTIONS; (II) SERVER FAILURE OR DATA LOSS;
             (III) CORRUPTED WALLET FILES; (IV) UNAUTHORIZED ACCESS OR ACTIVITIES BY THIRD PARTIES, INCLUDING, BUT NOT LIMITED TO, THE USE OF
             VIRUSES, PHISHING, BRUTE-FORCING OR OTHER MEANS OF ATTACK AGAINST THE APP, THE NEAR NETWORK, OR ANY ELECTRONIC WALLET OR (V)
-            INCOMPLETE, SLOWED OR DISRUPTED TRANSACTIONS INVOLVING COLLECTIBLES.
+            INCOMPLETE, SLOWED OR DISRUPTED TRANSACTIONS.
           </p>
           <br/>
           <p>
-            COLLECTIBLES ARE INTANGIBLE DIGITAL ASSETS THAT EXIST ONLY BY VIRTUE OF THE OWNERSHIP RECORD MAINTAINED IN THE NEAR NETWORK. ALL
-            SMART CONTRACTS ARE CONDUCTED AND OCCUR ON THE DECENTRALIZED LEDGER WITHIN THE NEAR NETWORK. THE COLLECTIBLE PARTIES HAVE NO
-            CONTROL OVER AND MAKE NO GUARANTEES OR PROMISES WITH RESPECT TO SMART CONTRACTS.
-          </p>
-          <br/>
-          <p>
-            THE COLLECTIBLE PARTIES ARE NOT RESPONSIBLE FOR LOSSES DUE TO BLOCKCHAINS OR ANY OTHER FEATURES OF THE NEAR NETWORK, OR ANY
+            ATOMICLAB ARE NOT RESPONSIBLE FOR LOSSES DUE TO BLOCKCHAINS OR ANY OTHER FEATURES OF THE NEAR NETWORK, OR ANY
             ELECTRONIC WALLET, INCLUDING BUT NOT LIMITED TO LATE REPORT BY DEVELOPERS OR REPRESENTATIVES (OR NO REPORT AT ALL) OF ANY ISSUES
             WITH THE BLOCKCHAIN SUPPORTING THE NEAR NETWORK, INCLUDING FORKS, TECHNICAL NODE ISSUES, OR ANY OTHER ISSUES HAVING FUND LOSSES
             AS A RESULT.</p>
@@ -304,22 +275,20 @@ export const Terms = () => {
           <p className={"text-xl font-semibold mt-6"}>6. LIMITATION OF LIABILITY</p>
 
           <p>
-            IN NO EVENT SHALL THE COLLECTIBLE PARTIES BE LIABLE TO YOU FOR ANY PERSONAL INJURY, PROPERTY DAMAGE, LOST PROFITS, COST OF
+            IN NO EVENT SHALL ATOMICLAB BE LIABLE TO YOU FOR ANY PERSONAL INJURY, PROPERTY DAMAGE, LOST PROFITS, COST OF
             SUBSTITUTE GOODS OR SERVICES, LOSS OF DATA, LOSS OF GOODWILL, WORK STOPPAGE, DIMINUTION OF VALUE OR ANY OTHER INTANGIBLE LOSS,
             COMPUTER AND/OR DEVICE OR TECHNOLOGY FAILURE OR MALFUNCTION, OR FOR ANY FORM OF DIRECT OR INDIRECT DAMAGES, AND/OR ANY SPECIAL,
-            INCIDENTAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES BASED ON ANY CAUSES OF ACTION WHATSOEVER RELATED TO THE APP OR ANY
-            COLLECTIBLE. YOU AGREE THAT THIS LIMITATION OF LIABILITY APPLIES WHETHER SUCH ALLEGATIONS ARE FOR BREACH OF CONTRACT, TORTIOUS
-            BEHAVIOR, NEGLIGENCE, OR FALL UNDER ANY OTHER CAUSE OF ACTION, REGARDLESS OF THE BASIS UPON WHICH LIABILITY IS CLAIMED AND EVEN
-            IF
+            INCIDENTAL, CONSEQUENTIAL, EXEMPLARY OR PUNITIVE DAMAGES BASED ON ANY CAUSES OF ACTION WHATSOEVER RELATED TO THE APP. YOU AGREE
+            THAT THIS LIMITATION OF LIABILITY APPLIES WHETHER SUCH ALLEGATIONS ARE FOR BREACH OF CONTRACT, TORTIOUS BEHAVIOR, NEGLIGENCE,
+            OR FALL UNDER ANY OTHER CAUSE OF ACTION, REGARDLESS OF THE BASIS UPON WHICH LIABILITY IS CLAIMED AND EVEN IF
             A DISCLAIMING PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGE.
           </p>
           <br/>
           <p>
             YOU AGREE THAT THE TOTAL, AGGREGATE LIABILITY TO YOU FOR ANY AND ALL CLAIMS ARISING OUT OF OR RELATING TO THESE TERMS OR YOUR
-            ACCESS TO OR USE OF (OR YOUR INABILITY TO ACCESS OR USE) ANY PORTION OF THE APP OR ANY COLLECTIBLE, WHETHER IN CONTRACT, TORT,
+            ACCESS TO OR USE OF (OR YOUR INABILITY TO ACCESS OR USE) ANY PORTION OF THE APP, WHETHER IN CONTRACT, TORT,
             STRICT LIABILITY, OR ANY OTHER LEGAL THEORY, IS LIMITED TO THE GREATER OF THE AMOUNTS YOU HAVE ACTUALLY AND LAWFULLY PAID US
-            UNDER
-            THESE TERMS IN THE TWO (2) MONTH PERIOD PRECEDING THE DATE THE CLAIM AROSE.
+            UNDER THESE TERMS IN THE TWO (2) MONTH PERIOD PRECEDING THE DATE THE CLAIM AROSE.
           </p>
           <br/>
           <p>
@@ -365,13 +334,12 @@ export const Terms = () => {
           <p className={"text-xl font-semibold mt-6"}>8. INDEMNIFICATION</p>
 
           <p>
-            You agree to hold harmless and indemnify each of the Collectible Parties and each of their respective parents, subsidiaries,
+            You agree to hold harmless and indemnify each of AtomicLab and each of their respective parents, subsidiaries,
             affiliates, officers, agents, employees, advertisers, licensors, suppliers or partners from and against any claim, liability,
             loss, damage (actual and consequential) of any kind or nature, suit, judgment, litigation cost and attorneys' fees arising out
             of or in any way related to: (i) your breach of these Terms; (ii) your misuse of the App; (iii) your violation of applicable
             laws, rules or regulations in connection with your access to or use of the App or (iv) any other of your activities in
-            connection with a Collectible or Purchased Collectible. You agree that we will have control of the defense or settlement of any
-            such claims.
+            connection with App. You agree that we will have control of the defense or settlement of any such claims.
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>9. EXTERNAL SITES</p>
@@ -389,7 +357,7 @@ export const Terms = () => {
           <p className={"text-xl font-semibold mt-6"}>10. FORCE MAJEURE</p>
 
           <p className={"mb-2"}>
-            10.1 Force Majeure Events. The Collectible Parties will not be liable or responsible to the you, nor be deemed to have defaulted
+            10.1 Force Majeure Events. AtomicLab will not be liable or responsible to the you, nor be deemed to have defaulted
             under or breached these Terms, for any failure or delay in fulfilling or performing any of these Terms, when and to the extent
             such failure or delay is caused by or results from the following force majeure events (“Force Majeure Event(s)”): (a) flood,
             fire, earthquake, epidemics, pandemics, including the 2019 novel coronavirus pandemic (COVID-19), tsunami, explosion; (b) war,
@@ -433,6 +401,7 @@ export const Terms = () => {
             data in accordance with our Privacy Policy.
           </p>
 
+          <br/>
           <p>Last Updated Date: 01 December 2022.</p>
         </div>
       </div>

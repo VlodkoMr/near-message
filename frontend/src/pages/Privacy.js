@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from "./Layout";
 
 export const Privacy = () => {
@@ -79,7 +79,7 @@ export const Privacy = () => {
           <p>3.1 We use the information provided by you in connection with providing our Services:</p>
 
           <ul>
-            <li>1. To provide the Website, Materials and Services in connection with our Terms of Use;</li>
+            <li>1. To provide the Website, Materials and Services in connection with our <Link to={"terms"}>Terms of Use</Link>;</li>
             <li>2. To verify your identity and verify that your User Account is not being used by others;</li>
             <li>3. To respond to communications from you.</li>
           </ul>

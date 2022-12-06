@@ -134,7 +134,7 @@ export const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <ExternalLink title={"Contact Us"} url={"email:vlodkow@gmail.com"}/>
+                  <ExternalLink title={"Contact Us"} url={"mailto:vlodkow@gmail.com"}/>
                 </li>
               </ul>
             </div>
