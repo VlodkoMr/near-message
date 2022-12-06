@@ -180,17 +180,19 @@ export const Terms = () => {
 
           <p>4. CONDITIONS OF USE AND PROHIBITED ACTIVITIES</p>
 
-          <p>YOU AGREE THAT YOU ARE RESPONSIBLE FOR YOUR OWN CONDUCT WHILE ACCESSING OR USING THE APP, AND FOR ANY CONSEQUENCES THEREOF. YOU
+          <p>
+            YOU AGREE THAT YOU ARE RESPONSIBLE FOR YOUR OWN CONDUCT WHILE ACCESSING OR USING THE APP, AND FOR ANY CONSEQUENCES THEREOF. YOU
             AGREE TO USE THE APP ONLY FOR PURPOSES THAT ARE LEGAL, PROPER AND IN ACCORDANCE WITH THESE TERMS AND ANY APPLICABLE LAWS OR
-            REGULATIONS.</p>
+            REGULATIONS.
+          </p>
 
-          <p>User Warranties. Without limiting the foregoing, you warrant and agree that your use of the App will not (and will not allow
-            any
-            third party to):(a) in any manner:</p>
+          <p>
+            User Warranties. Without limiting the foregoing, you warrant and agree that your use of the App will not (and will not allow
+            any third party to):(a) in any manner:
+          </p>
           <ul>
             <li>- involve the sending, uploading, distributing or disseminating any unlawful, defamatory, harassing, abusive, fraudulent,
-              obscene,
-              or otherwise objectionable content;
+              obscene, or otherwise objectionable content;
             </li>
             <li>- involve the distribution of any viruses, worms, defects, Trojan horses, corrupted files, hoaxes, or any other items of a
               destructive or deceptive nature;
@@ -208,24 +210,19 @@ export const Terms = () => {
             </li>
             <li>- involve reformatting or framing any portion of the App;</li>
             <li>- involve displaying any content on the App that contains any hate-related or violent content or contains any other
-              material,
-              products or services that violate or encourage conduct that would violate any criminal laws, any other applicable laws, or any
-              third party rights;
+              material, products or services that violate or encourage conduct that would violate any criminal laws, any other applicable
+              laws, or any third party rights;
             </li>
             <li>- involve using any spider, site search/retrieval application, or other device to retrieve or index any portion of the App
-              or the
-              content posted on the App, or to collect information about its users for any unauthorized purpose;
+              or the content posted on the App, or to collect information about its users for any unauthorized purpose;
             </li>
             <li>- involve accessing or using the App for the purpose of creating a product or service that is competitive with any of our
-              products
-              or services;
+              products or services;
             </li>
             <li>- involve abusing, harassing, or threatening another user of the App or any of our authorized representatives, customer
-              service
-              personnel, chat board moderators, or volunteers (including, without limitation, filing support tickets with false information,
-              sending excessive emails or support tickets, obstructing our employees from doing their jobs, refusing to follow the
-              instructions
-              of our employees, or publicly disparaging us by implying favoritism by a our employees or otherwise);
+              service personnel, chat board moderators, or volunteers (including, without limitation, filing support tickets with false
+              information, sending excessive emails or support tickets, obstructing our employees from doing their jobs, refusing to follow
+              the instructions of our employees, or publicly disparaging us by implying favoritism by a our employees or otherwise);
             </li>
             <li>- involve using any abusive, defamatory, ethnically or racially offensive, harassing, harmful, hateful, obscene, offensive,
               sexually explicit, threatening or vulgar language when communicating with another user of the App or any of our authorized
@@ -241,28 +238,22 @@ export const Terms = () => {
             <li>- involve using, employing, operating, or creating a computer program to simulate the human behavior of a user (“Bots”);
             </li>
             <li>- involve using, employing, or operating Bots or other similar forms of automation to engage in any activity or transaction
-              on the
-              App (including, without limitation, purchases of Packs, or of Collectibles on the Marketplace);
+              on the App (including, without limitation, purchases of Packs, or of Collectibles on the Marketplace);
             </li>
             <li>- involve acquiring Collectibles through inappropriate or illegal means (including, among other things, using a payment
-              mechanism
-              that you do not have the right to use, or purchasing a Collectible and then attempting to charge the cost back to your payment
-              method while still maintaining ownership or control of the Collectible or selling, gifting or trading the Collectible to
-              someone
-              else);
+              mechanism that you do not have the right to use, or purchasing a Collectible and then attempting to charge the cost back to
+              your payment method while still maintaining ownership or control of the Collectible or selling, gifting or trading the
+              Collectible to someone else);
             </li>
             <li>- involve the purchasing, selling or facilitating the purchase and sale of any user’s account(s) to other users or third
               parties
               for cash or cryptocurrency consideration outside of the App;
             </li>
             <li>- otherwise involve or result in the wrongful seizure or receipt of any Collectibles or other digital assets (each, a
-              “Category B
-              Prohibited Activity” and, together with Category A Prohibited Activity, the “Prohibited Activities”).
+              “Category B Prohibited Activity” and, together with Category A Prohibited Activity, the “Prohibited Activities”).
               Effect of Your Breaches. If you engage in any of the Prohibited Activities, we may, at our sole and absolute discretion,
-              without
-              notice or liability to you, and without limiting any of our other rights or remedies at law or in equity, immediately suspend
-              or
-              terminate your user account.
+              without notice or liability to you, and without limiting any of our other rights or remedies at law or in equity, immediately
+              suspend or terminate your user account.
             </li>
           </ul>
 
@@ -271,26 +262,23 @@ export const Terms = () => {
           <p>
             YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR ACCESS TO AND USE OF THE APP IS AT YOUR SOLE RISK, AND THAT THE APP AND ALL
             COLLECTIBLES ON THE APP ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. TO
-            THE
-            FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, THE COLLECTIBLE PARTIES AND THEIR RESPECTIVE PARENTS, SUBSIDIARIES,
+            THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, THE COLLECTIBLE PARTIES AND THEIR RESPECTIVE PARENTS, SUBSIDIARIES,
             AFFILIATES, AND LICENSORS MAKE NO EXPRESS WARRANTIES AND HEREBY DISCLAIM ALL IMPLIED WARRANTIES REGARDING THE APP AND ANY PART
-            OF
-            IT, OR ANY COLLECTIBLE INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT,
-            CORRECTNESS, ACCURACY, OR RELIABILITY. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE COLLECTIBLE PARTIES AND THEIR
-            PARENTS, SUBSIDIARIES, AFFILIATES, AND LICENSORS DO NOT REPRESENT OR WARRANT TO YOU THAT: (I) YOUR ACCESS TO OR USE OF THE APP
-            WILL MEET YOUR REQUIREMENTS; (II) YOUR ACCESS TO OR USE OF THE APP WILL BE UNINTERRUPTED, TIMELY, SECURE OR FREE FROM ERROR;
-            (III)
-            USAGE DATA PROVIDED THROUGH THE APP WILL BE ACCURATE; (IV) THE APP OR ANY CONTENT, SERVICES, OR FEATURES MADE AVAILABLE ON OR
-            THROUGH THE APP ARE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS; OR (V) THAT ANY DATA THAT YOU DISCLOSE WHEN YOU USE THE APP
-            WILL
-            BE SECURE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES IN CONTRACTS WITH CONSUMERS, SO SOME OR ALL OF
-            THE
-            ABOVE EXCLUSIONS MAY NOT APPLY TO YOU.</p>
+            OF IT, OR ANY COLLECTIBLE INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+            NON-INFRINGEMENT, CORRECTNESS, ACCURACY, OR RELIABILITY. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE COLLECTIBLE
+            PARTIES AND THEIR PARENTS, SUBSIDIARIES, AFFILIATES, AND LICENSORS DO NOT REPRESENT OR WARRANT TO YOU THAT: (I) YOUR ACCESS TO
+            OR USE OF THE APP WILL MEET YOUR REQUIREMENTS; (II) YOUR ACCESS TO OR USE OF THE APP WILL BE UNINTERRUPTED, TIMELY, SECURE OR
+            FREE FROM ERROR; (III) USAGE DATA PROVIDED THROUGH THE APP WILL BE ACCURATE; (IV) THE APP OR ANY CONTENT, SERVICES, OR FEATURES
+            MADE AVAILABLE ON OR THROUGH THE APP ARE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS; OR (V) THAT ANY DATA THAT YOU DISCLOSE
+            WHEN YOU USE THE APP WILL BE SECURE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES IN CONTRACTS WITH
+            CONSUMERS, SO SOME OR ALL OF THE ABOVE EXCLUSIONS MAY NOT APPLY TO YOU.
+          </p>
 
           <p>
             YOU ACCEPT THE INHERENT SECURITY RISKS OF PROVIDING INFORMATION AND DEALING ONLINE OVER THE INTERNET AND AGREE THAT THE
             COLLECTIBLE PARTIES HAVE NO LIABILITY OR RESPONSIBILITY FOR ANY BREACH OF SECURITY UNLESS IT IS DUE TO THEIR GROSS
-            NEGLIGENCE.</p>
+            NEGLIGENCE.
+          </p>
 
           <p>
             THE COLLECTIBLE PARTIES WILL NOT BE RESPONSIBLE OR LIABLE TO YOU FOR ANY LOSSES YOU INCUR AS THE RESULT OF YOUR USE OF THE NEAR
