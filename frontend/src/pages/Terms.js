@@ -20,7 +20,7 @@ export const Terms = () => {
             ChatMe team making this App available to you. Before you use the App, however, you will need to agree to these
             Terms of Use and any terms and conditions incorporated herein by reference (collectively, these “Terms").
           </p>
-
+          <br/>
           <p>
             PLEASE READ THESE TERMS CAREFULLY BEFORE USING THE APP. THESE TERMS GOVERN YOUR USE OF THE APP, UNLESS WE HAVE EXECUTED A
             SEPARATE WRITTEN AGREEMENT WITH YOU FOR THAT PURPOSE. WE ARE ONLY WILLING TO MAKE THE APP AVAILABLE TO YOU IF YOU ACCEPT ALL OF
@@ -30,14 +30,14 @@ export const Terms = () => {
             DO NOT HAVE SUCH AUTHORITY, OR IF YOU DO NOT ACCEPT ALL OF THESE TERMS, THEN WE ARE UNWILLING TO MAKE THE APP AVAILABLE TO
             YOU.
           </p>
-
+          <br/>
           <p>
             ANY PURCHASE OR SALE YOU MAKE, ACCEPT OR FACILITATE OUTSIDE OF THIS APP (AS DEFINED BELOW) OF A COLLECTIBLE WILL BE ENTIRELY AT
             YOUR RISK. WE DO NOT CONTROL OR ENDORSE PURCHASES OR SALES OF COLLECTIBLES OUTSIDE OF THIS APP. WE EXPRESSLY DENY ANY OBLIGATION
             TO INDEMNIFY YOU OR HOLD YOU HARMLESS FOR ANY LOSSES YOU MAY INCUR BY TRANSACTING, OR FACILITATING TRANSACTIONS INVOLVING
             COLLECTIBLES.
           </p>
-
+          <br/>
           <p>
             BY USING THE APP OR ANY PART OF IT OR INDICATING YOUR ACCEPTANCE IN AN ADJOINING BOX, YOU ARE
             CONFIRMING THAT YOU UNDERSTAND AND AGREE TO BE BOUND BY ALL OF THESE TERMS.
@@ -54,24 +54,24 @@ export const Terms = () => {
 
           <p>By using this App, you affirm that you are of legal age to enter into these Terms, and you accept and are bound by these Terms.
           </p>
-
+          <br/>
           <p>You may not use this App if you: (i) do not agree to these Terms; (ii) are not of the age of majority in your jurisdiction of
             residence; or (iii) are prohibited from accessing or using this App or any of this App’s contents, products or services by
             applicable law.
           </p>
 
-          <p>1. USE OF THE APP; ACCOUNT SET-UP AND SECURITY</p>
+          <p className={"text-xl font-semibold mt-6"}>1. USE OF THE APP; ACCOUNT SET-UP AND SECURITY</p>
 
           <ul>
-            <li>
+            <li className={"mb-2"}>
               1.1 Account and Wallet Set-Up. To most easily use the App, you should first install a web browser (such as the Google Chrome
               web browser). You will also need register to establish an account affiliated with an electronic wallet, which will enable you
               to store information in blockchain via the App.
             </li>
-            <li>
+            <li className={"mb-2"}>
               1.2 Account Registration. You Account will be register automatically after login using your NEAR Wallet.
             </li>
-            <li>
+            <li className={"mb-2"}>
               1.3 Account Security. You are responsible for the security of your account for the App and for your electronic wallets. If
               you become aware of any unauthorized use of your password or of your account with us, you agree to notify us immediately at
               insert email address.
@@ -84,17 +84,17 @@ export const Terms = () => {
             </li>
           </ul>
 
-          <p>2. PAYMENT, GAS FEES AND TAXES</p>
+          <p className={"text-xl font-semibold mt-6"}>2. PAYMENT, GAS FEES AND TAXES</p>
 
           <ul>
-            <li>
+            <li className={"mb-2"}>
               2.1 Financial Transactions on App. Any payments or financial transactions that you engage in via the App will be conducted
               solely through the NEAR Network. We have no control over these payments or transactions, nor do we have the ability to reverse
               any payments or transactions. We have no liability to you or to any third party for any claims or damages that may arise as a
               result of any payments or transactions that you engage in via the App, or any other payment or transactions that you conduct
               via the NEAR Network. We do not provide refunds for any token transfer or purchases that you might make on or through the App.
             </li>
-            <li>
+            <li className={"mb-2"}>
               2.2 Gas Fees. Every transaction on the NEAR Network requires the payment of a transaction fee (each, a “Gas Fee”).
               The Gas Fees fund the network of computers that run the decentralized NEAR Network. This means that you will need to pay a Gas
               Fee for each transaction that you instigate via the App. Except as otherwise expressly set forth in these Terms, you will be
@@ -116,7 +116,7 @@ export const Terms = () => {
             </li>
           </ul>
 
-          <p>3. OWNERSHIP, LICENSE, AND OWNERSHIP RESTRICTIONS</p>
+          <p className={"text-xl font-semibold mt-6"}>3. OWNERSHIP, LICENSE, AND OWNERSHIP RESTRICTIONS</p>
 
           <p>
             YOUR OWNERSHIP OF COLLECTIBLES WILL ONLY BE RECOGNIZED BY THE COLLECTIBLE PARTIES IF YOU HAVE PURCHASED OR OTHERWISE RIGHTFULLY
@@ -142,9 +142,9 @@ export const Terms = () => {
             without limitation, patent applications and disclosures), copyrights, trade secrets, trademarks, know-how or any other
             intellectual property rights recognized in any country or jurisdiction in the world.
           </p>
-
+          <br/>
           <ul>
-            <li>
+            <li className={"mb-2"}>
               3.1 We Own the App. You acknowledge and agree that we (or, as applicable, our licensors) owns all legal right, title and
               interest in and to all other elements of the App, and all intellectual property rights therein (including, without limitation,
               all media files, designs, systems, methods, information, computer code, software, services, “look and feel”, organization,
@@ -154,12 +154,12 @@ export const Terms = () => {
               copyrighted property of us or our licensors, and all trademarks, service marks, and trade names associated with the App or
               otherwise contained in the App Materials are proprietary to us or our licensors.
             </li>
-            <li>
+            <li className={"mb-2"}>
               3.2 No User License or Ownership of App Materials. Except as expressly set forth herein, your use of the App does not grant
               you ownership of or any other rights with respect to any content, code, data, or other App Materials that you may access on or
               through the App. We reserve all rights in and to the App Materials that are not expressly granted to you in these Terms.
             </li>
-            <li>
+            <li className={"mb-2"}>
               3.3 Further User Ownership Acknowledgements. For the sake of clarity, you understand and agree: (a) that your purchase of a
               Collectible, whether via the App or otherwise, does not give you any rights or licenses in or to the App Materials (including,
               without limitation, our copyright in and to the associated messages) other than those expressly contained in these Terms; (b)
@@ -178,14 +178,14 @@ export const Terms = () => {
             </li>
           </ul>
 
-          <p>4. CONDITIONS OF USE AND PROHIBITED ACTIVITIES</p>
+          <p className={"text-xl font-semibold mt-6"}>4. CONDITIONS OF USE AND PROHIBITED ACTIVITIES</p>
 
           <p>
             YOU AGREE THAT YOU ARE RESPONSIBLE FOR YOUR OWN CONDUCT WHILE ACCESSING OR USING THE APP, AND FOR ANY CONSEQUENCES THEREOF. YOU
             AGREE TO USE THE APP ONLY FOR PURPOSES THAT ARE LEGAL, PROPER AND IN ACCORDANCE WITH THESE TERMS AND ANY APPLICABLE LAWS OR
             REGULATIONS.
           </p>
-
+          <br/>
           <p>
             User Warranties. Without limiting the foregoing, you warrant and agree that your use of the App will not (and will not allow
             any third party to):(a) in any manner:
@@ -229,7 +229,7 @@ export const Terms = () => {
               representatives, customer service personnel, chat board moderators, or volunteers
             </li>
           </ul>
-
+          <br/>
           <p>In any manner:</p>
 
           <ul>
@@ -257,7 +257,7 @@ export const Terms = () => {
             </li>
           </ul>
 
-          <p>5. DISCLAIMERS</p>
+          <p className={"text-xl font-semibold mt-6"}>5. DISCLAIMERS</p>
 
           <p>
             YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR ACCESS TO AND USE OF THE APP IS AT YOUR SOLE RISK, AND THAT THE APP AND ALL
@@ -273,13 +273,13 @@ export const Terms = () => {
             WHEN YOU USE THE APP WILL BE SECURE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES IN CONTRACTS WITH
             CONSUMERS, SO SOME OR ALL OF THE ABOVE EXCLUSIONS MAY NOT APPLY TO YOU.
           </p>
-
+          <br/>
           <p>
             YOU ACCEPT THE INHERENT SECURITY RISKS OF PROVIDING INFORMATION AND DEALING ONLINE OVER THE INTERNET AND AGREE THAT THE
             COLLECTIBLE PARTIES HAVE NO LIABILITY OR RESPONSIBILITY FOR ANY BREACH OF SECURITY UNLESS IT IS DUE TO THEIR GROSS
             NEGLIGENCE.
           </p>
-
+          <br/>
           <p>
             THE COLLECTIBLE PARTIES WILL NOT BE RESPONSIBLE OR LIABLE TO YOU FOR ANY LOSSES YOU INCUR AS THE RESULT OF YOUR USE OF THE NEAR
             NETWORK, OR YOUR ELECTRONIC WALLET, INCLUDING BUT NOT LIMITED TO ANY LOSSES, DAMAGES OR CLAIMS ARISING FROM: (I) USER ERROR,
@@ -288,20 +288,20 @@ export const Terms = () => {
             VIRUSES, PHISHING, BRUTE-FORCING OR OTHER MEANS OF ATTACK AGAINST THE APP, THE NEAR NETWORK, OR ANY ELECTRONIC WALLET OR (V)
             INCOMPLETE, SLOWED OR DISRUPTED TRANSACTIONS INVOLVING COLLECTIBLES.
           </p>
-
+          <br/>
           <p>
             COLLECTIBLES ARE INTANGIBLE DIGITAL ASSETS THAT EXIST ONLY BY VIRTUE OF THE OWNERSHIP RECORD MAINTAINED IN THE NEAR NETWORK. ALL
             SMART CONTRACTS ARE CONDUCTED AND OCCUR ON THE DECENTRALIZED LEDGER WITHIN THE NEAR NETWORK. THE COLLECTIBLE PARTIES HAVE NO
             CONTROL OVER AND MAKE NO GUARANTEES OR PROMISES WITH RESPECT TO SMART CONTRACTS.
           </p>
-
+          <br/>
           <p>
             THE COLLECTIBLE PARTIES ARE NOT RESPONSIBLE FOR LOSSES DUE TO BLOCKCHAINS OR ANY OTHER FEATURES OF THE NEAR NETWORK, OR ANY
             ELECTRONIC WALLET, INCLUDING BUT NOT LIMITED TO LATE REPORT BY DEVELOPERS OR REPRESENTATIVES (OR NO REPORT AT ALL) OF ANY ISSUES
             WITH THE BLOCKCHAIN SUPPORTING THE NEAR NETWORK, INCLUDING FORKS, TECHNICAL NODE ISSUES, OR ANY OTHER ISSUES HAVING FUND LOSSES
             AS A RESULT.</p>
 
-          <p>6. LIMITATION OF LIABILITY</p>
+          <p className={"text-xl font-semibold mt-6"}>6. LIMITATION OF LIABILITY</p>
 
           <p>
             IN NO EVENT SHALL THE COLLECTIBLE PARTIES BE LIABLE TO YOU FOR ANY PERSONAL INJURY, PROPERTY DAMAGE, LOST PROFITS, COST OF
@@ -313,7 +313,7 @@ export const Terms = () => {
             IF
             A DISCLAIMING PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGE.
           </p>
-
+          <br/>
           <p>
             YOU AGREE THAT THE TOTAL, AGGREGATE LIABILITY TO YOU FOR ANY AND ALL CLAIMS ARISING OUT OF OR RELATING TO THESE TERMS OR YOUR
             ACCESS TO OR USE OF (OR YOUR INABILITY TO ACCESS OR USE) ANY PORTION OF THE APP OR ANY COLLECTIBLE, WHETHER IN CONTRACT, TORT,
@@ -321,7 +321,7 @@ export const Terms = () => {
             UNDER
             THESE TERMS IN THE TWO (2) MONTH PERIOD PRECEDING THE DATE THE CLAIM AROSE.
           </p>
-
+          <br/>
           <p>
             YOU ACKNOWLEDGE AND AGREE THAT WE HAVE MADE THE APP AVAILABLE TO YOU AND ENTERED INTO THESE TERMS IN RELIANCE UPON THE
             REPRESENTATIONS AND WARRANTIES, DISCLAIMERS AND LIMITATIONS OF LIABILITY SET FORTH HEREIN, WHICH REFLECT A REASONABLE AND FAIR
@@ -329,122 +329,103 @@ export const Terms = () => {
             PROVIDE THE APP TO YOU WITHOUT THESE LIMITATIONS.
           </p>
 
-          <p>7. ASSUMPTION OF RISK</p>
+          <p className={"text-xl font-semibold mt-6"}>7. ASSUMPTION OF RISK</p>
           <ul>
-            <li>
+            <li className={"mb-2"}>
               7.1 Value and Volatility. The rights provided to you are for entertainment purposes only. Without limiting the foregoing, the
               prices of collectible blockchain assets are extremely volatile and subjective and collectible blockchain assets have no
-              inherent
-              or intrinsic value.
+              inherent or intrinsic value.
             </li>
-            <li>
+            <li className={"mb-2"}>
               7.2 Tax Calculations. You are solely responsible for determining what, if any, taxes apply to your Collectible-related
               transactions. We are not responsible for determining the taxes that apply to your transactions on the App.
             </li>
-            <li>
+            <li className={"mb-2"}>
               7.3 Use of Blockchain. The App store all information in NEAR Blockchain. This information can't be removed or changed after
               creation. All blockchain transaction indexed by The Graph to delivery messages for end users.
             </li>
-            <li>
+            <li className={"mb-2"}>
               7.4 Inherent Risks with Internet Currency. There are risks associated with using an Internet-based currency, including, but
-              not
-              limited to, the risk of hardware, software and Internet connections, the risk of malicious software introduction, and the risk
-              that third parties may obtain unauthorized access to information stored within your electronic wallet. You accept and
-              acknowledge
-              that we will not be responsible for any communication failures, disruptions, errors, distortions or delays you may experience
-              when
-              using the NEAR Network, however caused.
+              not limited to, the risk of hardware, software and Internet connections, the risk of malicious software introduction, and the
+              risk that third parties may obtain unauthorized access to information stored within your electronic wallet. You accept and
+              acknowledge that we will not be responsible for any communication failures, disruptions, errors, distortions or delays you may
+              experience when using the NEAR Network, however caused.
             </li>
-            <li>
+            <li className={"mb-2"}>
               7.5 Regulatory Uncertainty. The regulatory regime governing blockchain technologies, cryptocurrencies and tokens is uncertain,
-              and
-              new regulations or policies may materially adversely affect the development of NEAR ecosystem or ChatMe service.
+              and new regulations or policies may materially adversely affect the development of NEAR ecosystem or ChatMe service.
             </li>
             <li>
               7.6 Software Risks. Upgrades to the NEAR Network, a hard fork in the NEAR Network, or a change in how transactions are
-              confirmed
-              on the NEAR Network may have unintended, adverse effects on all blockchains using the NEAR Network’s standard, including the
-              ChatMe service.
+              confirmed on the NEAR Network may have unintended, adverse effects on all blockchains using the NEAR Network’s standard,
+              including the ChatMe service.
             </li>
           </ul>
 
-          <p>8. INDEMNIFICATION</p>
+          <p className={"text-xl font-semibold mt-6"}>8. INDEMNIFICATION</p>
 
           <p>
             You agree to hold harmless and indemnify each of the Collectible Parties and each of their respective parents, subsidiaries,
             affiliates, officers, agents, employees, advertisers, licensors, suppliers or partners from and against any claim, liability,
             loss, damage (actual and consequential) of any kind or nature, suit, judgment, litigation cost and attorneys' fees arising out
-            of
-            or in any way related to: (i) your breach of these Terms; (ii) your misuse of the App; (iii) your violation of applicable laws,
-            rules or regulations in connection with your access to or use of the App or (iv) any other of your activities in connection with
-            a
-            Collectible or Purchased Collectible. You agree that we will have control of the defense or settlement of any such claims.
+            of or in any way related to: (i) your breach of these Terms; (ii) your misuse of the App; (iii) your violation of applicable
+            laws, rules or regulations in connection with your access to or use of the App or (iv) any other of your activities in
+            connection with a Collectible or Purchased Collectible. You agree that we will have control of the defense or settlement of any
+            such claims.
           </p>
 
-          <p>9. EXTERNAL SITES</p>
+          <p className={"text-xl font-semibold mt-6"}>9. EXTERNAL SITES</p>
 
           <p>
             The App may include hyperlinks to other websites or resources (collectively, the “External Sites”), which are provided solely as
-            a
-            convenience to our users. We have no control over any External Sites. You acknowledge and agree that we are not responsible for
-            the availability of any External Sites, and that we do not endorse any advertising, products or other materials on or made
+            a convenience to our users. We have no control over any External Sites. You acknowledge and agree that we are not responsible
+            for the availability of any External Sites, and that we do not endorse any advertising, products or other materials on or made
             available from or through any External Sites. Furthermore, you acknowledge and agree that we are not liable for any loss or
-            damage
-            which may be incurred as a result of the availability or unavailability of the External Sites, or as a result of any reliance
-            placed by you upon the completeness, accuracy or existence of any advertising, products or other materials on, or made available
-            from, any External Sites.
+            damage which may be incurred as a result of the availability or unavailability of the External Sites, or as a result of any
+            reliance placed by you upon the completeness, accuracy or existence of any advertising, products or other materials on, or made
+            available from, any External Sites.
           </p>
 
-          <p>10. FORCE MAJEURE</p>
+          <p className={"text-xl font-semibold mt-6"}>10. FORCE MAJEURE</p>
 
-          <p>
+          <p className={"mb-2"}>
             10.1 Force Majeure Events. The Collectible Parties will not be liable or responsible to the you, nor be deemed to have defaulted
             under or breached these Terms, for any failure or delay in fulfilling or performing any of these Terms, when and to the extent
             such failure or delay is caused by or results from the following force majeure events (“Force Majeure Event(s)”): (a) flood,
-            fire,
-            earthquake, epidemics, pandemics, including the 2019 novel coronavirus pandemic (COVID-19), tsunami, explosion; (b) war,
-            invasion,
-            hostilities (whether war is declared or not), terrorist threats or acts, riot or other civil unrest; (c) government order, law,
-            or
-            action; (d) embargoes or blockades in effect on or after the date of this agreement; (e) strikes, labor stoppages or slowdowns
-            or
-            other industrial disturbances; (f) shortage of adequate or suitable Internet connectivity, telecommunication breakdown or
-            shortage
-            of adequate power or electricity; and (g) other similar events beyond our control.
+            fire, earthquake, epidemics, pandemics, including the 2019 novel coronavirus pandemic (COVID-19), tsunami, explosion; (b) war,
+            invasion, hostilities (whether war is declared or not), terrorist threats or acts, riot or other civil unrest; (c) government
+            order, law, or action; (d) embargoes or blockades in effect on or after the date of this agreement; (e) strikes, labor stoppages
+            or slowdowns or other industrial disturbances; (f) shortage of adequate or suitable Internet connectivity, telecommunication
+            breakdown or shortage of adequate power or electricity; and (g) other similar events beyond our control.
           </p>
           <p>
             10.2 Performance During Force Majeure Events. If we suffer a Force Majeure Event, we will use reasonable efforts to promptly
             notify you of the Force Majeure Event, stating the period of time the occurrence is expected to continue. We will use diligent
             efforts to end the failure or delay and ensure the effects of such Force Majeure Event are minimized. We will resume the
             performance of our obligations as soon as reasonably practicable after the removal of the cause. In the event that our failure
-            or
-            delay remains uncured for a period of forty-five (45) consecutive days following written notice given by us under this Section
-            12,
-            we may thereafter terminate these Terms upon fifteen (15) days' written notice.
+            or delay remains uncured for a period of forty-five (45) consecutive days following written notice given by us under this
+            Section 11, we may thereafter terminate these Terms upon fifteen (15) days' written notice.
           </p>
 
-          <p>11. CHANGES TO THE APP</p>
+          <p className={"text-xl font-semibold mt-6"}>11. CHANGES TO THE APP</p>
 
           <p>
             We are constantly innovating the App to help provide the best possible experience. You acknowledge and agree that the form and
             nature of the App, and any part of it, may change from time to time without prior notice to you, and that we may add new
-            features
-            and change any part of the App at any time without notice.
+            features and change any part of the App at any time without notice.
           </p>
 
-          <p>12. CHILDREN</p>
+          <p className={"text-xl font-semibold mt-6"}>12. CHILDREN</p>
 
           <p>
             You affirm that you are over the age of 18. The App is not intended for children under 18. If you are under the age of 18, you
-            may
-            not use the App. We do not knowingly collect information from or direct any of our content specifically to children under the
-            age
-            of 18. If we learn or have reason to suspect that you are a user who is under the age of 18, we will unfortunately have to close
-            your account. Other countries may have different minimum age limits, and if you are below the minimum age for providing consent
-            for data collection in your country, you may not use the App.
+            may not use the App. We do not knowingly collect information from or direct any of our content specifically to children under
+            the age of 18. If we learn or have reason to suspect that you are a user who is under the age of 18, we will unfortunately have
+            to close your account. Other countries may have different minimum age limits, and if you are below the minimum age for providing
+            consent for data collection in your country, you may not use the App.
           </p>
 
-          <p>13. PRIVACY POLICY</p>
+          <p className={"text-xl font-semibold mt-6"}>13. PRIVACY POLICY</p>
 
           <p>
             Our <Link to={"privacy"}>Privacy Policy</Link> describes the ways we collect, use, store and disclose your personal information,
