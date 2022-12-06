@@ -2,10 +2,12 @@ import React from "react";
 import { FaDiscord, FaTelegramPlane, FaTwitter } from "react-icons/all";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FooterScrollLink } from "../assets/css/components";
+import Scroll from "react-scroll";
 
 export const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const scroll = Scroll.animateScroll;
 
   const ExternalLink = ({ title, url }) => (
     <a target={"_blank"}
@@ -123,12 +125,14 @@ export const Footer = () => {
               <ul>
                 <li>
                   <Link to={"/privacy"}
+                        onClick={() => scroll.scrollToTop()}
                         className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
                   <Link to={"/terms"}
+                        onClick={() => scroll.scrollToTop()}
                         className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
                     Terms & Conditions
                   </Link>

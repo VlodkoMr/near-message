@@ -2,6 +2,7 @@ import { lazy, useContext, Suspense } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Home, Error404, Privacy, Terms, MyDashboard, MyPrivateChat, MyGroupChat } from "./pages";
 import { NearContext } from "./context/NearContext";
+import { PublicCommunities } from "./pages/PublicCommunities";
 
 export const App = () => {
   const near = useContext(NearContext);
@@ -34,6 +35,7 @@ export const App = () => {
               </Route>
             </Route>
 
+            <Route exact path="/public-communities" element={<PublicCommunities/>}/>
             <Route exact path="/terms" element={<Terms/>}/>
             <Route exact path="/privacy" element={<Privacy/>}/>
             <Route path='*' element={<Error404/>}/>

@@ -81,7 +81,7 @@ export const Header = () => {
                   ${mobileMenuVisible ? "" : "hidden"}`} ref={ref}>
                 <ul className="block lg:flex">
                   <li className="relative group">
-                    <NavScrollLink to="home" onClick={() => setMobileMenuVisible(false)} {...scrollProps}>
+                    <NavScrollLink to="home" onClick={() => navigateToHome('home')} {...scrollProps}>
                       Home
                     </NavScrollLink>
                   </li>
@@ -92,7 +92,7 @@ export const Header = () => {
                   </li>
                   <li className="relative group">
                     <NavScrollLink to="chats" onClick={() => navigateToHome('chats')} {...scrollProps}>
-                      Chats & Channels
+                      Our Communities
                     </NavScrollLink>
                   </li>
                   <li className="relative group">

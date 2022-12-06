@@ -10,7 +10,7 @@ import { TechLogo } from "../components/Home/TechLogo";
 import { PriceBlock } from "../components/Home/PriceBlock";
 import { PriceBlockItem } from "../components/Home/PriceBlockItem";
 import { BlogArticle } from "../components/Home/BlogArticle";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { animateScroll } from "react-scroll";
 import { OnePublicChat } from "../components/Home/OnePublicChat";
 
@@ -187,8 +187,9 @@ export const Home = () => {
 
       <section className="relative z-10 pt-[50px] md:pt-[100px] pb-10 md:pb-20 bg-primary bg-opacity-[3%]">
         <div className="container" id="chats">
-          <SectionTitle title={"Public Chats & Channels"}
-                        text={`Review the list of all our public communities - chats and channels.`}/>
+          <SectionTitle title={"Public Communities"}
+                        text={`Review the list of our public communities - chats and channels. 
+                        Join community to get latest news and messages in chatMe application.`}/>
 
           <div className="flex flex-wrap mx-[-16px]">
             {publicGroups.map(group => (
@@ -197,9 +198,11 @@ export const Home = () => {
           </div>
 
           <div className={"text-center mb-8"}>
-            <SecondaryButton onClick={() => alert("Coming soon...")}>
+            <Link to={"public-communities"}
+                  className={`inline-block rounded-full px-6 py-3 text-black bg-black bg-opacity-10 dark:text-white dark:bg-white 
+                  dark:bg-opacity-10 hover:bg-opacity-20 dark:hover:bg-opacity-20 transition`}>
               <span className={"text-gray-400"}>All Public Communities</span>
-            </SecondaryButton>
+            </Link>
           </div>
 
           <div className={"text-gray-300/60 text-center mb-10"}>

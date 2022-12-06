@@ -329,6 +329,10 @@ export const Terms = () => {
               confirmed on the NEAR Network may have unintended, adverse effects on all blockchains using the NEAR Network’s standard,
               including the ChatMe service.
             </li>
+            <li>7.7 App chats and messages. The information presented in chats and direct messages has been provided by third parties
+              and is made available solely for general information purposes. ChatMe does not warrant the accuracy of this information.
+              The information should not be construed as professional or financial advice of any kind.
+            </li>
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>8. INDEMNIFICATION</p>
