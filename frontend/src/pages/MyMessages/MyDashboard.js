@@ -72,7 +72,7 @@ export const MyDashboard = () => {
   const BlockTitle = ({ text, children, isRed }) => (
     <div
       className={`text-lg pb-2 mb-4 font-medium border-b flex justify-between 
-        ${isRed ? "border-red-600/20 text-red-200/60" : "border-gray-700/50 text-gray-400"}`}>
+        ${isRed ? "border-red-600/20 text-red-200/70" : "border-gray-700/50 text-gray-400"}`}>
       <span>{text}</span>
       {children}
     </div>
@@ -313,8 +313,21 @@ export const MyDashboard = () => {
                 <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardWarning()}/>
               </BlockTitle>
               <p>
-                All blockchain data is publicly available! Do not send private information, passwords or other important information. <br/>
-                For private conversations, you can use "Private Mode", but we recommend not to send any personal/sensitive content.
+                <b>Do not send private information, passwords or other important information.</b> <br/>
+                For private conversations, you can enable "Private Mode", but we recommend not to send any personal/sensitive content.<br/>
+              </p>
+              <p className={"mt-3"}>
+                <span className={"mr-2"}>Read more:</span>
+                <a target={"_blank"}
+                   className={"text-red-100 underline"}
+                   href="https://app.gitbook.com/o/ZWL77oAzm0TY0jaGJVeN/s/MDX44NNqtBur20016Wmc/chatme-web-interface/direct-messages#how-does-the-encryption-work">
+                  How does the encryption work
+                </a>
+                <a target={"_blank"}
+                   className={"ml-2 text-red-100 underline"}
+                   href="https://github.com/NEARFoundation/near-js-encryption-box/issues/4">
+                  Data encryption security
+                </a>
               </p>
             </div>
           </div>

@@ -77,3 +77,11 @@ Mainnet: https://chatme.page/
 
 Package used for message encryption: https://github.com/NEARFoundation/near-js-encryption-box
 Documentation: https://chatme.gitbook.io/chatme
+
+## Call methods
+``` 
+CONTRACT_ID=chatme.near
+CONTRACT_OWNER_ID=vlodkow.near
+ACCOUNT_ID=
+NEAR_ENV=mainnet near call $CONTRACT_ID admin_set_user_level '{"account":"'$ACCOUNT_ID'", "level":2}' --accountId $CONTRACT_OWNER_ID --depositYocto 1
+```
