@@ -906,3 +906,7 @@ input#checkboxLabel:checked ~ .box span {
 .nws-modal-overlay {
   background: rgba(9, 13, 52, 0.7) !important;
 }
+
+.nws-modal-wrapper .nws-modal .modal-left {
+  padding-bottom: 0;
+}

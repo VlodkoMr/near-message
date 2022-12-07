@@ -114,7 +114,9 @@ export class SecretChat {
     const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
     const chat = localStorage.getItem(chatKey);
     const chatData = JSON.parse(chat);
-    chatData[this.opponentAddress].enabled = isEnabled;
+    if (chatData[this.opponentAddress]) {
+      chatData[this.opponentAddress].enabled = isEnabled;
+    }
     localStorage.setItem(chatKey, JSON.stringify(chatData));
   }
 

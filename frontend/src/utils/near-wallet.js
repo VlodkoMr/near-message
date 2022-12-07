@@ -6,15 +6,18 @@ import { setupModal } from '@near-wallet-selector/modal-ui';
 import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
 import NearIconUrl from '@near-wallet-selector/near-wallet/assets/near-wallet-icon.png';
 import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
-// import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
 import WalletConnectIconUrl from '@near-wallet-selector/wallet-connect/assets/wallet-connect-icon.png';
 import HereWalletIconUrl from '@near-wallet-selector/here-wallet/assets/here-wallet-icon.png';
+import MeteorWalletIconUrl from '@near-wallet-selector/meteor-wallet/assets/meteor-icon.png';
+// import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
 
 // wallet selector options
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupNearWallet } from '@near-wallet-selector/near-wallet';
+import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
 // import { setupSender } from '@near-wallet-selector/sender';
+
 import { setupWalletConnect } from '@near-wallet-selector/wallet-connect';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
@@ -25,6 +28,7 @@ const NO_DEPOSIT = '0';
 
 // Wallet that simplifies using the wallet selector
 export class Wallet {
+  accountId;
   walletSelector;
   wallet;
   network;
@@ -43,8 +47,9 @@ export class Wallet {
         setupNearWallet({ iconUrl: NearIconUrl }),
         setupMyNearWallet({ iconUrl: MyNearIconUrl }),
         // setupSender({ iconUrl: SenderIconUrl }),
-        setupLedger({ iconUrl: LedgerIconUrl }),
         setupHereWallet({ iconUrl: HereWalletIconUrl }),
+        setupMeteorWallet({ iconUrl: MeteorWalletIconUrl }),
+        setupLedger({ iconUrl: LedgerIconUrl }),
         setupWalletConnect({ iconUrl: WalletConnectIconUrl })
       ],
     });
@@ -55,14 +60,6 @@ export class Wallet {
       this.wallet = await this.walletSelector.wallet();
       this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
     }
-
-    // this.walletSelector.on("signIn", () => {
-    //   console.log("User signed in!");
-    // });
-    //
-    // this.walletSelector.on("signOut", () => {
-    //   console.log("User signed out!");
-    // });
 
     return isSignedIn;
   }
@@ -76,9 +73,14 @@ export class Wallet {
 
   // Sign-out method
   signOut() {
+    console.log(`this.wallet`, this.wallet);
+    const walletId = this.wallet.id;
+
     this.wallet.signOut();
     this.wallet = this.accountId = this.createAccessKeyFor = null;
-    window.location.replace(window.location.origin + window.location.pathname);
+    if (walletId === "near-wallet" || walletId === "my-near-wallet") {
+      window.location.replace(window.location.origin + window.location.pathname);
+    }
   }
 
   // Make a read-only call to retrieve information from the network

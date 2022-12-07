@@ -37,6 +37,7 @@
     "@near-wallet-selector/core": "^7.2.1",
     "@near-wallet-selector/here-wallet": "^7.2.1",
     "@near-wallet-selector/ledger": "^7.2.1",
+    "@near-wallet-selector/meteor-wallet": "^7.3.0",
     "@near-wallet-selector/modal-ui": "^7.2.1",
     "@near-wallet-selector/my-near-wallet": "^7.2.1",
     "@near-wallet-selector/near-wallet": "^7.2.1",
