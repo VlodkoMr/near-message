@@ -13,7 +13,7 @@ export const NearProvider = ({ children, wallet, mainContract, socialDBContract 
   useEffect(() => {
     const subscription = wallet.walletSelector.store.observable.subscribe(async (nextAccounts) => {
       if (nextAccounts.accounts.length) {
-        wallet.accountId = nextAccounts.accounts[0].accountId;
+        await wallet.onAccountChange(nextAccounts.accounts[0].accountId);
         setIsSigned(true);
 
         loadAccount().then(account => {
@@ -24,6 +24,7 @@ export const NearProvider = ({ children, wallet, mainContract, socialDBContract 
         setAccount(null);
       }
     });
+
     return () => subscription.unsubscribe();
   }, []);
 

@@ -53,15 +53,11 @@ export class Wallet {
         setupWalletConnect({ iconUrl: WalletConnectIconUrl })
       ],
     });
+  }
 
-    const isSignedIn = this.walletSelector.isSignedIn();
-
-    if (isSignedIn) {
-      this.wallet = await this.walletSelector.wallet();
-      this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
-    }
-
-    return isSignedIn;
+  async onAccountChange(accountId) {
+    this.wallet = await this.walletSelector.wallet();
+    this.accountId = accountId;
   }
 
   // Sign-in method
@@ -73,12 +69,10 @@ export class Wallet {
 
   // Sign-out method
   signOut() {
-    console.log(`this.wallet`, this.wallet);
-    const walletId = this.wallet.id;
-
     this.wallet.signOut();
-    this.wallet = this.accountId = this.createAccessKeyFor = null;
-    if (walletId === "near-wallet" || walletId === "my-near-wallet") {
+
+    if (this.wallet.id === "near-wallet" || this.wallet.id === "my-near-wallet") {
+      this.wallet = this.accountId = this.createAccessKeyFor = null;
       window.location.replace(window.location.origin + window.location.pathname);
     }
   }

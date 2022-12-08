@@ -114,10 +114,10 @@ export class SecretChat {
     const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
     const chat = localStorage.getItem(chatKey);
     const chatData = JSON.parse(chat);
-    if (chatData[this.opponentAddress]) {
+    if (chatData && chatData[this.opponentAddress]) {
       chatData[this.opponentAddress].enabled = isEnabled;
+      localStorage.setItem(chatKey, JSON.stringify(chatData));
     }
-    localStorage.setItem(chatKey, JSON.stringify(chatData));
   }
 
   // Export keys

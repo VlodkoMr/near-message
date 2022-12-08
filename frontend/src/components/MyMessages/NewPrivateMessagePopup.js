@@ -27,20 +27,22 @@ export const NewPrivateMessagePopup = ({ isOpen, setIsOpen, setReloadChatList })
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
         keys: [`${accountId}/graph/follow/*`]
       }).then(result => {
-        const addressList = Object.keys(result[accountId]?.graph?.follow);
-        if (addressList.length) {
-          loadSocialProfiles(addressList, near).then(profiles => {
-            let profileResults = Object.values(profiles).map(p => {
-              if (p.name) {
-                return `${p.name} (${p.id})`;
-              } else {
-                return p.id;
-              }
+        const followers = result[accountId]?.graph?.follow;
+        if (followers) {
+          const addressList = Object.keys(followers);
+          if (addressList.length) {
+            loadSocialProfiles(addressList, near).then(profiles => {
+              let profileResults = Object.values(profiles).map(p => {
+                if (p.name) {
+                  return `${p.name} (${p.id})`;
+                } else {
+                  return p.id;
+                }
+              });
+              profileResults.sort();
+              setContactsList(profileResults);
             });
-            console.log(`profileResults`, profileResults);
-            profileResults.sort();
-            setContactsList(profileResults);
-          });
+          }
         }
       });
     } catch (e) {

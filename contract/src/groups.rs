@@ -207,8 +207,10 @@ impl Contract {
         owner_groups.push(group_id.clone());
         self.owner_groups.insert(&owner, &owner_groups);
 
-        // add to public/channels list
-        self.public_groups.insert(&group_id);
+        if group_type != GroupType::Private {
+            // add to public/channels list
+            self.public_groups.insert(&group_id);
+        }
 
         // add to user groups
         if members.len() > 0 {
@@ -218,8 +220,10 @@ impl Contract {
     }
 
     pub(crate) fn remove_group_internal(&mut self, id: u32, group: Group) {
-        // remove from public/channels list
-        self.public_groups.remove(&id);
+        if group.group_type != GroupType::Private {
+            // remove from public/channels list
+            self.public_groups.remove(&id);
+        }
 
         // remove from owner_groups
         let mut owner_groups = self.owner_groups.get(&group.owner).unwrap();
