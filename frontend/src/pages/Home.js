@@ -13,6 +13,7 @@ import { BlogArticle } from "../components/Home/BlogArticle";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { animateScroll } from "react-scroll";
 import { OnePublicChat } from "../components/Home/OnePublicChat";
+import { animateScroll } from "react-scroll";
 
 export const Home = () => {
   const location = useLocation();
@@ -201,7 +202,7 @@ export const Home = () => {
             <Link to={"public-communities"}
                   className={`inline-block rounded-full px-6 py-3 text-black bg-black bg-opacity-10 dark:text-white dark:bg-white 
                   dark:bg-opacity-10 hover:bg-opacity-20 dark:hover:bg-opacity-20 transition`}>
-              <span className={"text-gray-400"}>All Public Communities</span>
+              <span className={"text-gray-400"} onClick={() => animateScroll.scrollToTop()}>All Public Communities</span>
             </Link>
           </div>
 
