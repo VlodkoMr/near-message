@@ -251,17 +251,6 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                       No participants limit, only owners write messages.
                     </RadioLabelText>
                   </RadioLabel>
-                  <RadioLabel className={"md:w-1/3"}>
-                    <FormControlLabel value="Private"
-                                      control={<Radio/>}
-                                      disabled={isMediaLoading}
-                                      label="Private Group"
-                    />
-                    <RadioLabelText>
-                      You manage group members, all members can write messages. <br/>
-                      Limited by {membersLimit} members.
-                    </RadioLabelText>
-                  </RadioLabel>
                   <RadioLabel className={"rounded-b-md md:w-1/3"}>
                     <FormControlLabel value="Public"
                                       control={<Radio/>}
@@ -270,6 +259,17 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
                     />
                     <RadioLabelText>
                       Public access where anyone can join and write messages. <br/>
+                      Limited by {membersLimit} members.
+                    </RadioLabelText>
+                  </RadioLabel>
+                  <RadioLabel className={"md:w-1/3"}>
+                    <FormControlLabel value="Private"
+                                      control={<Radio/>}
+                                      disabled={isMediaLoading}
+                                      label="Private Group"
+                    />
+                    <RadioLabelText>
+                      You manage group members, all members can write messages. <br/>
                       Limited by {membersLimit} members.
                     </RadioLabelText>
                   </RadioLabel>

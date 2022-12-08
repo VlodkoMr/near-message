@@ -12,7 +12,7 @@ export const OnePublicChat = ({ group }) => {
            data-wow-delay=".1s"
       >
         <div className={`flex flex-row border-b border-body-color dark:border-white border-opacity-10 
-      dark:border-opacity-10 pb-4 mb-4 flex-grow`}>
+      dark:border-opacity-10 pb-4 mb-4 flex-grow text-left`}>
           <div className="flex items-center">
             <AvatarGroup group={group} size={12}/>
           </div>
