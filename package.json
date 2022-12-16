@@ -1,6 +1,6 @@
 {
   "name": "near-chatme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
     "start": "cd frontend && npm run start",

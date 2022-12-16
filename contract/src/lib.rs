@@ -382,7 +382,7 @@ impl Contract {
         let account = env::predecessor_account_id();
         self.user_validate_spam();
 
-        if group.owner != account {
+        if group.owner != account && (group.moderator.is_some() && group.moderator.unwrap() != account) {
             if group.group_type == GroupType::Channel {
                 env::panic_str("No access to post messages in channel");
             } else if !group.members.contains(&account) {
