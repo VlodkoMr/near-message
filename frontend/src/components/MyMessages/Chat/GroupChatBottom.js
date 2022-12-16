@@ -50,7 +50,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
   }
 
   const canWriteMessages = () => {
-    if (group.owner === near.wallet.accountId) {
+    if (group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) {
       return true;
     }
     if (!isChannel()) {
