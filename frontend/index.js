@@ -13,11 +13,12 @@ window.onload = async () => {
   const mainContract = new MainContract({ contractId: process.env.CONTRACT_NAME, walletToUse: wallet })
   const socialDBContract = new SocialDBContract({ contractId: SOCIAL_DB_CONTRACT, walletToUse: wallet })
 
-  await wallet.startUp()
+  const isSigned = await wallet.startUp()
 
   ReactDOM.createRoot(document.getElementById('root')).render(
     <NearProvider
       wallet={wallet}
+      isSignedInit={isSigned}
       mainContract={mainContract}
       socialDBContract={socialDBContract}
     >

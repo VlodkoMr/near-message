@@ -53,6 +53,8 @@ export class Wallet {
         setupWalletConnect({ iconUrl: WalletConnectIconUrl })
       ],
     });
+
+    return this.walletSelector.isSignedIn();
   }
 
   async onAccountChange(accountId) {

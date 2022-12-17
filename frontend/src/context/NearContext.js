@@ -2,9 +2,9 @@ import { createContext, useEffect, useState } from "react";
 
 export const NearContext = createContext({});
 
-export const NearProvider = ({ children, wallet, mainContract, socialDBContract }) => {
+export const NearProvider = ({ children, isSignedInit, wallet, mainContract, socialDBContract }) => {
   const [account, setAccount] = useState();
-  const [isSigned, setIsSigned] = useState(false);
+  const [isSigned, setIsSigned] = useState(isSignedInit);
 
   const loadAccount = async () => {
     return await mainContract.getUserInfo(wallet.accountId);
