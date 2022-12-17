@@ -53,12 +53,12 @@ export const MyGroupChat = () => {
     });
 
     // Fetch new messages each few seconds
-    const updateInterval = setInterval(() => {
+    const updateTimeout = setTimeout(() => {
       setReloadCounter(prev => prev + 1);
     }, 1000 * fetchSecondsInterval);
 
     return () => {
-      clearInterval(updateInterval);
+      clearTimeout(updateTimeout);
     }
   }, [id]);
 
@@ -106,6 +106,10 @@ export const MyGroupChat = () => {
         const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage?.from_address);
         setMessages(prev => prev.concat(newMessages));
       }
+    }).finally(() => {
+      setTimeout(() => {
+        setReloadCounter(prev => prev + 1);
+      }, 1000 * fetchSecondsInterval);
     });
   }
 

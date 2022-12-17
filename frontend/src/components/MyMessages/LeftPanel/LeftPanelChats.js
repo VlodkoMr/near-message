@@ -23,18 +23,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
     return await near.mainContract.getUserGroups(near.wallet.accountId);
   }
 
-  useEffect(() => {
-    // Fetch new chats each few seconds
-    const updateInterval = setInterval(() => {
-      setReloadCounter(prev => prev + 1);
-    }, 1000 * fetchSecondsInterval);
-
-    return () => {
-      clearInterval(updateInterval);
-    }
-  }, []);
-
-  useEffect(() => {
+  const loadAllChats = () => {
     loadGroupsIdList().then(groups => {
       setIsBlockchainError(false);
       let promiseList = [loadPrivateChatsPromise(near.wallet.accountId)];
@@ -74,11 +63,19 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
             setProfileList(result);
           }
         });
-      })
+      }).finally(() => {
+        setTimeout(() => {
+          setReloadCounter(prev => prev + 1);
+        }, 1000 * fetchSecondsInterval);
+      });
     }).catch(e => {
       console.log(`Fetch error`, e);
       setIsBlockchainError(true);
     });
+  }
+
+  useEffect(() => {
+    loadAllChats();
   }, [reloadCounter, reloadChatList]);
 
   const setGroupListById = (groups) => {
@@ -108,7 +105,8 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
         </div>
       </div>
       <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-        <p className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>{groupsById[chat.id].title}</p>
+        <p
+          className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>{groupsById[chat.id].title}</p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
