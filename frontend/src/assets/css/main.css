@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.faq-link {
+  @apply mx-1 text-blue-300 hover:border-b border-b-blue-300;
+}
