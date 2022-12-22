@@ -12,7 +12,7 @@ export const Footer = () => {
   const ExternalLink = ({ title, url }) => (
     <a target={"_blank"}
        href={url}
-       className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+       className="footer-link">
       {title}
     </a>
   )
@@ -124,21 +124,25 @@ export const Footer = () => {
               <h2 className="font-bold text-black dark:text-white text-xl mb-10">Support & Terms</h2>
               <ul>
                 <li>
+                  <Link to={"/faq"}
+                        onClick={() => scroll.scrollToTop()}
+                        className="footer-link">
+                    FAQ
+                  </Link>
+                </li>
+                <li>
                   <Link to={"/privacy"}
                         onClick={() => scroll.scrollToTop()}
-                        className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+                        className="footer-link">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
                   <Link to={"/terms"}
                         onClick={() => scroll.scrollToTop()}
-                        className="text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none">
+                        className="footer-link">
                     Terms & Conditions
                   </Link>
-                </li>
-                <li>
-                  <ExternalLink title={"Contact Us"} url={"mailto:vlodkow@gmail.com"}/>
                 </li>
               </ul>
             </div>

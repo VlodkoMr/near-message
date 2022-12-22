@@ -54,7 +54,14 @@ export class Wallet {
       ],
     });
 
-    return this.walletSelector.isSignedIn();
+    const isSignedIn = this.walletSelector.isSignedIn();
+
+    if (isSignedIn) {
+      this.wallet = await this.walletSelector.wallet();
+      this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
+    }
+
+    return isSignedIn;
   }
 
   async onAccountChange(accountId) {

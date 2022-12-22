@@ -92,7 +92,7 @@ export const Header = () => {
                   </li>
                   <li className="relative group">
                     <NavScrollLink to="chats" onClick={() => navigateToHome('chats')} {...scrollProps}>
-                      Our Communities
+                      Communities
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
@@ -102,7 +102,12 @@ export const Header = () => {
                   </li>
                   <li className="relative group">
                     <NavScrollLink to="documentation" onClick={() => navigateToHome('documentation')} {...scrollProps}>
-                      Documentation
+                      Docs
+                    </NavScrollLink>
+                  </li>
+                  <li className="relative group">
+                    <NavScrollLink to="accounts" onClick={() => navigate('/faq')} {...scrollProps}>
+                      FAQ
                     </NavScrollLink>
                   </li>
                   {near.isSigned && (

@@ -5,9 +5,10 @@ import { formatAddress } from "../../../utils/transform";
 import { Link, useOutletContext } from "react-router-dom";
 import { CircleButton, SecondaryButton } from "../../../assets/css/components";
 import { EditGroupPopup } from "../EditGroupPopup";
-import { IoIosShareAlt, MdEdit } from "react-icons/all";
+import { HiOutlineShare, IoIosShareAlt, IoMdLogOut, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
 import { SharePopup } from "./SharePopup";
 import { AvatarGroup } from "../../Common/AvatarGroup";
+import { isJoinedGroup } from "../../../utils/requests";
 
 export const MessagesHeader = ({ group, opponent }) => {
   const near = useContext(NearContext);
@@ -60,15 +61,23 @@ export const MessagesHeader = ({ group, opponent }) => {
                   {/*  <BsInfo size={32}/>*/}
                   {/*</CircleButton>*/}
 
-                  {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) && (
+                  <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setSharePopupVisible(true)}>
+                    <HiOutlineShare size={23}/>
+                  </CircleButton>
+
+                  {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) ? (
                     <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setEditGroupPopupVisible(true)}>
                       <MdEdit size={23}/>
                     </CircleButton>
+                  ) : (
+                    <>
+                      {isJoinedGroup(group, near) && (
+                        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setSharePopupVisible(true)}>
+                          <RiLogoutCircleRLine size={23}/>
+                        </CircleButton>
+                      )}
+                    </>
                   )}
-
-                  <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setSharePopupVisible(true)}>
-                    <IoIosShareAlt size={24}/>
-                  </CircleButton>
                 </div>
               )}
 

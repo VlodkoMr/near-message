@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom
 import { Home, Error404, Privacy, Terms, MyDashboard, MyPrivateChat, MyGroupChat } from "./pages";
 import { NearContext } from "./context/NearContext";
 import { PublicCommunities } from "./pages/PublicCommunities";
+import { FAQ } from "./pages/FAQ";
 
 export const App = () => {
   const near = useContext(NearContext);
@@ -38,6 +39,7 @@ export const App = () => {
             <Route exact path="/public-communities" element={<PublicCommunities/>}/>
             <Route exact path="/terms" element={<Terms/>}/>
             <Route exact path="/privacy" element={<Privacy/>}/>
+            <Route exact path="/faq" element={<FAQ/>}/>
             <Route path='*' element={<Error404/>}/>
           </Routes>
         </Suspense>

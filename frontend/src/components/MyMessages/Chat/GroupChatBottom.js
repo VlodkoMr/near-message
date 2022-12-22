@@ -3,34 +3,22 @@ import { WriteMessage } from "./WriteMessage";
 import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 import { Loader } from "../../Loader";
+import { isChannel, isJoinedGroup } from "../../../utils/requests";
 
 export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent }) => {
   const near = useContext(NearContext);
   const [isJoined, setIsJoined] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadGroupsIdList = async () => {
-    return await near.mainContract.getUserGroups(near.wallet.accountId);
-  }
-
   useEffect(() => {
-    if (!isChannel()) {
-      setIsJoined(group.members.indexOf(near.wallet.accountId) !== -1);
-    } else {
-      loadGroupsIdList().then(myGroups => {
-        let idList = myGroups.map(group => group.id);
-        setIsJoined(idList.indexOf(group.id) !== -1);
-      })
-    }
+    isJoinedGroup(group, near).then(result => {
+      setIsJoined(result);
+    });
   }, [group.id]);
-
-  const isChannel = () => {
-    return group.group_type === "Channel";
-  }
 
   const joinChannel = () => {
     setIsLoading(true);
-    const promise = isChannel() ? near.mainContract.joinPublicChannel(group.id) : near.mainContract.joinPublicGroup(group.id);
+    const promise = isChannel(group) ? near.mainContract.joinPublicChannel(group.id) : near.mainContract.joinPublicGroup(group.id);
 
     promise.then(result => {
       console.log(`join`);
@@ -41,7 +29,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
 
   const leaveChannel = () => {
     setIsLoading(true);
-    const promise = isChannel() ? near.mainContract.leaveChannel(group.id) : near.mainContract.leaveGroup(group.id);
+    const promise = isChannel(group) ? near.mainContract.leaveChannel(group.id) : near.mainContract.leaveGroup(group.id);
     promise.then(result => {
       console.log(`leave`);
       setIsJoined(false);
@@ -53,7 +41,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
     if (group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) {
       return true;
     }
-    if (!isChannel()) {
+    if (!isChannel(group)) {
       return isJoined;
     }
     return false;
@@ -75,7 +63,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <SecondaryButton small="true" onClick={() => leaveChannel()}>
-                    Leave {isChannel() ? "Channel" : "Group"}
+                    Leave {isChannel(group) ? "Channel" : "Group"}
                     {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </SecondaryButton>
                 </>
@@ -83,7 +71,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
                   <PrimaryButton small="true" onClick={() => joinChannel()}>
-                    Join {isChannel() ? "Channel" : "Group"}
+                    Join {isChannel(group) ? "Channel" : "Group"}
                     {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </PrimaryButton>
                 </>

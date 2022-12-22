@@ -910,3 +910,7 @@ input#checkboxLabel:checked ~ .box span {
 .nws-modal-wrapper .nws-modal .modal-left {
   padding-bottom: 0;
 }
+
+.footer-link {
+  @apply text-base font-medium inline-block text-body-color mb-4 hover:text-blue-400 cursor-pointer outline-none;
+}

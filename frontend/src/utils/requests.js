@@ -205,3 +205,17 @@ export const getPrivateChatId = (user1, user2) => {
   }
   return user2.concat("|").concat(user1);
 }
+
+export const isChannel = (group) => {
+  return group.group_type === "Channel";
+}
+
+export const isJoinedGroup = (group, near) => new Promise(async (resolve) => {
+  if (!isChannel(group)) {
+    resolve(group.members.indexOf(near.wallet.accountId) !== -1);
+  } else {
+    const myGroups = await near.mainContract.getUserGroups(near.wallet.accountId);
+    const idList = myGroups.map(group => group.id);
+    resolve(idList.indexOf(group.id) !== -1);
+  }
+})

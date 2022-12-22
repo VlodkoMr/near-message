@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 export const NearContext = createContext({});
 
 export const NearProvider = ({ children, isSignedInit, wallet, mainContract, socialDBContract }) => {
-  const [account, setAccount] = useState();
+  const [account, setAccount] = useState(wallet.accountId);
   const [isSigned, setIsSigned] = useState(isSignedInit);
 
   const loadAccount = async () => {
