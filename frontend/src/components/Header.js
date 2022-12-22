@@ -106,12 +106,14 @@ export const Header = () => {
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink onClick={() => {
-                      navigate('/faq');
-                      toggleScrollTop();
-                    }} {...scrollProps}>
+                    <Link
+                      className={`menu-scroll text-base text-dark dark:text-white group-hover:opacity-70 py-2 lg:py-6 lg:inline-flex 
+                      lg:px-0 flex mx-8 lg:mr-2 cursor-pointer outline-none`}
+                      to={"/faq"} onClick={() => {
+                      toggleScrollTop()
+                    }}>
                       FAQ
-                    </NavScrollLink>
+                    </Link>
                   </li>
                   {near.isSigned && (
                     <li className={"md:hidden"}>

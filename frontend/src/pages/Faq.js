@@ -214,6 +214,9 @@ export const Faq = () => {
               (red color for the background and icons show that Private Mode is enabled).
             </p>
             <p className={"mt-3 text-red-300"}>
+              NOTE: Private Mode not work in public/private chats, it is available only for direct conversations.
+            </p>
+            <p className={"mt-3 text-red-300"}>
               We recommend to not send passwords or other important information because maybe in future current encoding algorithms can
               become insecure. You can find more details how encryption works and security details in our documentation.
             </p>
@@ -300,24 +303,24 @@ export const Faq = () => {
               </a>
               contain all information about ChatMe. <br/>
               Join our social channels to get updates:
-              <ul className={"mt-3"}>
-                <li>
-                  <a href="https://twitter.com/chatme_near" className={"faq-link"} target={"_blank"}>
-                    Twitter
-                  </a>
-                </li>
-                <li>
-                  <a href="https://t.me/chatme_near" className={"faq-link"} target={"_blank"}>
-                    Telegram
-                  </a>
-                </li>
-                <li>
-                  <a href="/my/group/1" className={"faq-link"}>
-                    ChatMe public Channel
-                  </a>
-                </li>
-              </ul>
             </p>
+            <ul className={"mt-3"}>
+              <li>
+                <a href="https://twitter.com/chatme_near" className={"faq-link"} target={"_blank"}>
+                  Twitter
+                </a>
+              </li>
+              <li>
+                <a href="https://t.me/chatme_near" className={"faq-link"} target={"_blank"}>
+                  Telegram
+                </a>
+              </li>
+              <li>
+                <a href="/my/group/1" className={"faq-link"}>
+                  ChatMe public Channel
+                </a>
+              </li>
+            </ul>
             <p className={"mt-3"}>
               If you have additional questions, you can ask in our
               <a href="https://discord.gg/pcvvn4EJpa" className={"faq-link"} target={"_blank"}>
