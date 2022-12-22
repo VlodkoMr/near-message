@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom
 import { Home, Error404, Privacy, Terms, MyDashboard, MyPrivateChat, MyGroupChat } from "./pages";
 import { NearContext } from "./context/NearContext";
 import { PublicCommunities } from "./pages/PublicCommunities";
-import { FAQ } from "./pages/FAQ";
+import { Faq } from "./pages/Faq";
 
 export const App = () => {
   const near = useContext(NearContext);
@@ -29,17 +29,18 @@ export const App = () => {
             <Route exact path="/" element={<Home/>}/>
 
             <Route element={<ProtectedRoute/>}>
-              <Route exact path="/my" element={<MyMessagesLayout/>}>
-                <Route exact path="" element={<MyDashboard/>}/>
-                <Route exact path="account/:id" element={<MyPrivateChat/>}/>
-                <Route exact path="group/:id" element={<MyGroupChat/>}/>
+              <Route path="/my" element={<MyMessagesLayout/>}>
+                <Route path="" element={<MyDashboard/>}/>
+                <Route path="account/:id" element={<MyPrivateChat/>}/>
+                <Route path="group/:id" element={<MyGroupChat/>}/>
               </Route>
             </Route>
 
-            <Route exact path="/public-communities" element={<PublicCommunities/>}/>
-            <Route exact path="/terms" element={<Terms/>}/>
-            <Route exact path="/privacy" element={<Privacy/>}/>
-            <Route exact path="/faq" element={<FAQ/>}/>
+            <Route path="/public-communities" element={<PublicCommunities/>}/>
+            <Route path="/terms" element={<Terms/>}/>
+            <Route path="/privacy" element={<Privacy/>}/>
+            <Route path="/faq" element={<Faq/>}/>
+
             <Route path='*' element={<Error404/>}/>
           </Routes>
         </Suspense>
