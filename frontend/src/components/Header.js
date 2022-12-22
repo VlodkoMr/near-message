@@ -48,7 +48,7 @@ export const Header = () => {
     setMobileMenuVisible(false);
   };
 
-  const toggleHome = () => animateScroll.scrollToTop();
+  const toggleScrollTop = () => animateScroll.scrollToTop();
 
   return (
     <header
@@ -56,7 +56,7 @@ export const Header = () => {
       <div className="container">
         <div className="flex mx-[-16px] items-center justify-between relative">
           <div className="px-4 md:w-64 max-w-full">
-            <Link to={"/"} className="w-full block py-8 header-logo" onClick={toggleHome}>
+            <Link to={"/"} className="w-full block py-8 header-logo" onClick={toggleScrollTop}>
               <img
                 src={require("../assets/img/logo.png")}
                 alt="logo"
@@ -106,7 +106,10 @@ export const Header = () => {
                     </NavScrollLink>
                   </li>
                   <li className="relative group">
-                    <NavScrollLink to="accounts" onClick={() => navigate('/faq')} {...scrollProps}>
+                    <NavScrollLink onClick={() => {
+                      navigate('/faq');
+                      toggleScrollTop();
+                    }} {...scrollProps}>
                       FAQ
                     </NavScrollLink>
                   </li>
