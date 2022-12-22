@@ -391,6 +391,7 @@ export const MyDashboard = () => {
                                   url={"https://chatme.gitbook.io/chatme/documentation/frontend-widgets"}/>
                   </div>
                   <div className={"flex-1"}>
+                    <ExternalLink text={"FAQ"} url={"/faq"}/>
                     <ExternalLink text={"Discord"} url={"https://discord.gg/pcvvn4EJpa"}/>
                     <ExternalLink text={"Twitter"} url={"https://twitter.com/chatme_near"}/>
                     <ExternalLink text={"Telegram"} url={"https://t.me/chatme_near"}/>
