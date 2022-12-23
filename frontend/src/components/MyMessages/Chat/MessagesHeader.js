@@ -1,20 +1,30 @@
 import React, { useContext, useState } from "react";
 import { NearContext } from "../../../context/NearContext";
 import { Avatar } from "../../Common/Avatar";
-import { Link, useLocation, useOutletContext } from "react-router-dom";
+import { Link, useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { CircleButton, SecondaryButton } from "../../../assets/css/components";
 import { EditGroupPopup } from "../EditGroupPopup";
 import { HiOutlineShare, IoIosArrowDropleftCircle, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
 import { SharePopup } from "./SharePopup";
 import { AvatarGroup } from "../../Common/AvatarGroup";
-import { isJoinedGroup } from "../../../utils/requests";
+import { isChannel, isJoinedGroup } from "../../../utils/requests";
 
 export const MessagesHeader = ({ group, opponent, openChatsList }) => {
   const near = useContext(NearContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const [myProfile] = useOutletContext();
   const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
   const [sharePopupVisible, setSharePopupVisible] = useState(false);
+
+  const leaveGroup = async () => {
+    navigate("/my");
+    if (isChannel(group)) {
+      await near.mainContract.leaveChannel(group.id);
+    } else {
+      await near.mainContract.leaveGroup(group.id);
+    }
+  }
 
   const getTitle = () => {
     if (group) {
@@ -82,7 +92,10 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
                   ) : (
                     <>
                       {isJoinedGroup(group, near) && (
-                        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setSharePopupVisible(true)}>
+                        <CircleButton
+                          title={"Leave"}
+                          className={"p-2 mx-auto md:mx-0"}
+                          onClick={() => leaveGroup()}>
                           <RiLogoutCircleRLine size={23}/>
                         </CircleButton>
                       )}

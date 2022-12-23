@@ -218,4 +218,4 @@ export const isJoinedGroup = (group, near) => new Promise(async (resolve) => {
     const idList = myGroups.map(group => group.id);
     resolve(idList.indexOf(group.id) !== -1);
   }
-})
+});
