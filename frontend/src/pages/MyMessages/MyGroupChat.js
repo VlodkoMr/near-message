@@ -7,6 +7,7 @@ import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, t
 import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 import { GroupChatBottom } from "../../components/MyMessages/Chat/GroupChatBottom";
 import { MessagesList } from "../../components/MyMessages/Chat/MessagesList";
+import { timestampToDate } from "../../utils/datetime";
 
 const fetchSecondsInterval = 5;
 const messagesPerPage = 100;
@@ -104,7 +105,12 @@ export const MyGroupChat = () => {
         }));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage?.from_address);
+        const newMessages = transformMessages(
+          messages,
+          near.wallet.accountId,
+          lastMessage?.from_address,
+          timestampToDate(lastMessage?.created_at),
+        );
         setMessages(prev => prev.concat(newMessages));
       }
     }).finally(() => {

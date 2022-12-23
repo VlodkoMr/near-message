@@ -8,6 +8,7 @@ import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/request
 import { generateTemporaryMessage, transformMessages, loadSocialProfile, getInnerId } from "../../utils/transform";
 import { SecretChat } from "../../utils/secret-chat";
 import { MessagesList } from "../../components/MyMessages/Chat/MessagesList";
+import { timestampToDate } from "../../utils/datetime";
 
 const fetchSecondsInterval = 5;
 const messagesPerPage = 100;
@@ -101,7 +102,12 @@ export const MyPrivateChat = () => {
         }));
 
         // append new messages
-        const newMessages = transformMessages(messages, near.wallet.accountId, lastMessage?.from_address);
+        const newMessages = transformMessages(
+          messages,
+          near.wallet.accountId,
+          lastMessage?.from_address,
+          timestampToDate(lastMessage?.created_at)
+        );
         setMessages(prev => prev.concat(newMessages));
       }
     }).finally(() => {

@@ -228,10 +228,16 @@ export const Faq = () => {
             index={12}
           >
             <p>
-              When we provide so cheap and fast messages there is area for spammers. That's why we add Account Levels to prevent spam in our
+              When we provide so cheap and fast messages there is area for spammers. That's why we add account levels to prevent spam in our
               messages. For example if you start sending spam from free account and 10 people report about spam in your messages, your
-              account will be completely locked. If user pay for higher account level, we provide more trust and temporary lock account for
-              few minutes after spam reports.
+              account will be completely locked.
+            </p>
+            <p className={"mt-3"}>
+              If user pay for higher account level, we provide more trust and temporary lock account for
+              few minutes after spam reports (lock period based on account level and total count of spam reports).
+            </p>
+            <p className={"mt-3 font-semibold"}>
+              You pay only once to receive all features and benefits of Bronze or Gold account!
             </p>
           </OneQuestion>
 

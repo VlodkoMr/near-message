@@ -38,7 +38,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
     <>
       {message.isFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm font-medium text-gray-500">
-          {timestampToDate(message.created_at)}, {timestampToTime(message.created_at)}
+          {timestampToDate(message.created_at)}
         </p>
       )}
 
@@ -83,7 +83,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               </>
             )}
 
-            <div className={`max-w-[260px] md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
+            <div className={`md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
               overflow-ellipsis text-base relative min-h-[46px]
               ${message.text === '(like)' ? "py-2.5" : "py-3"}
               ${message.isFirst && message.isMy ? "rounded-t-3xl" : ""}
@@ -92,7 +92,6 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
               ${message.isMy ? "bg-sky-600/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
               ${message.isEncryptStart || message.isEncryptAccept || message.isEncryptEnd ? "bg-red-600/30" : ""}
             `}>
-
               {message.reply_message && (
                 <p className={"border-b border-gray-200/20 mb-2 pb-1 text-sm opacity-50"}>
                   <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current inline mr-1">
@@ -119,13 +118,21 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                 />
               )}
 
-              {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
-                <AiFillLike size={22}/>
-              ) : (
-                <LinkItUrl className={`text-blue-300 hover:underline`}>
-                  {decodeMessageText(message, near.wallet.accountId)}
-                </LinkItUrl>
-              )}
+              <div className={"flex justify-between"}>
+                <p>
+                  {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
+                    <AiFillLike className={"inline"} size={26}/>
+                  ) : (
+                    <LinkItUrl className={`text-blue-300 hover:underline`}>
+                      {decodeMessageText(message, near.wallet.accountId)}
+                    </LinkItUrl>
+                  )}
+                </p>
+
+                <span className={"ml-2.5 leading-6 text-xs opacity-40"}>
+                  {timestampToTime(message?.created_at)}
+                </span>
+              </div>
 
               {message.isEncryptStart && (
                 <>

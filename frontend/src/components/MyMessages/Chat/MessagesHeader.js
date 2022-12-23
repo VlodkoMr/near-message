@@ -25,12 +25,12 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
 
   return (
     <div
-      className={`chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30 
+      className={`chat-header px-3 py-3 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30 
       bg-[#1f2b3b] md:bg-transparent`}>
       <div className="flex">
         {group || opponent ? (
           <>
-            <div className="w-12 h-12 mr-4 relative flex flex-shrink-0 hidden md:block">
+            <div className="w-12 h-12 mr-3 relative flex flex-shrink-0 hidden md:block">
               {group ? (
                 <AvatarGroup
                   group={group}
@@ -45,7 +45,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
             </div>
 
             <div className="text-sm flex flex-row w-full">
-              <div className={"md:hidden text-gray-400 mr-3 -ml-2 pt-2"} onClick={() => openChatsList()}>
+              <div className={"md:hidden text-gray-400 mr-3 pt-2"} onClick={() => openChatsList()}>
                 <IoIosArrowDropleftCircle size={36}/>
               </div>
               <div>
