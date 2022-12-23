@@ -51,7 +51,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
 
         <div className="messages text-sm text-white grid grid-flow-row gap-2">
           {message.isFirst && !message.isMy && (
-            <div className={"text-gray-400 font-medium leading-3"}>
+            <div className={"text-gray-400 font-medium leading-3 address-limit"}>
               {opponent?.name ? (
                 <>{opponent?.name} <small className={"opacity-60"}>({message.from_address})</small></>
               ) : (

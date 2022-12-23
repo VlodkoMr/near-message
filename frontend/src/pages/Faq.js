@@ -23,7 +23,8 @@ export const Faq = () => {
         </span>
       </div>
 
-      <div className={`text-xl lg:text-2xl font-semibold mb-6 pr-12 group-hover:text-white/80 transition`}>{title}</div>
+      <div className={`text-xl lg:text-2xl font-semibold mb-6 pr-12 transition
+      ${index === openedIndex ? "" : "group-hover:text-white/80"}`}>{title}</div>
       <div className={`text-gray-300/90 ${index === openedIndex ? "h-auto mb-6" : "h-0"} pr-12 lg:pr-16 overflow-hidden transition`}>
         {children}
       </div>
@@ -78,7 +79,7 @@ export const Faq = () => {
             index={3}
           >
             <p>
-              <b>Option 1 - desktop browser or ledger hardware wallet.</b><br/>
+              <b className={"text-gray-100"}>Option 1 - desktop browser or ledger hardware wallet.</b><br/>
               It is really simple process, just open:
               <a href="https://wallet.near.org" className={"faq-link"} target={"_blank"}>
                 https://wallet.near.org
@@ -89,7 +90,7 @@ export const Faq = () => {
               ChatMe service.
             </p>
             <p className={"mt-3"}>
-              <b>Option 2 - mobile phone.</b><br/>
+              <b className={"text-gray-100"}>Option 2 - mobile phone.</b><br/>
               You can install
               <a href="https://herewallet.app/" className={"faq-link"} target={"_blank"}>
                 HERE wallet
@@ -99,17 +100,17 @@ export const Faq = () => {
               your account for our service.
             </p>
             <p className={"mt-3"}>
-              <b>Option 3 - browser wallet extensions.</b><br/>
+              <b className={"text-gray-100"}>Option 3 - browser wallet extensions.</b><br/>
               Install
               <a href="https://meteorwallet.app/" className={"faq-link"} target={"_blank"}>
                 Meteor wallet
+              </a> or
+              <a href="https://senderwallet.io/" className={"faq-link"} target={"_blank"}>
+                Sender wallet
               </a>
               extension for Google Chrome or Brave browser and use it to connect with our service. You can
-              find all details how to create new account using Meteor wallet in their website
-              <a href="https://meteorwallet.app/" className={"faq-link"} target={"_blank"}>
-                "Simple Onboarding"
-              </a>
-              section. Next step is deposit NEAR tokens to use it with our service.
+              find all details how to create new account using wallet extension in their websites.
+              Next step is deposit NEAR tokens to use it with our service.
             </p>
           </OneQuestion>
 

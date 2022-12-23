@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
@@ -15,6 +15,7 @@ export const MyGroupChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
   const bottomRef = useRef(null);
+  const [_, openChatsList] = useOutletContext();
   const [messages, setMessages] = useState([]);
   const [historyMessages, setHistoryMessages] = useState([]);
   const [historyPage, setHistoryPage] = useState(0);
@@ -142,7 +143,7 @@ export const MyGroupChat = () => {
     <>
       {group && (
         <>
-          <MessagesHeader group={group}/>
+          <MessagesHeader group={group} openChatsList={openChatsList}/>
 
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (

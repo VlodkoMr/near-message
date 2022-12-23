@@ -8,7 +8,7 @@ import { EditGroupPopup } from "../EditGroupPopup";
 import { LeftPanelChats } from "./LeftPanelChats";
 import { NearContext } from "../../../context/NearContext";
 
-export const LeftPanel = () => {
+export const LeftPanel = ({ onChatSelect }) => {
   const near = useContext(NearContext);
   const [isLimitReached, setIsLimitReached] = useState(false);
   const [ownerGroup, setOwnerGroups] = useState([]);
@@ -56,14 +56,14 @@ export const LeftPanel = () => {
 
   return (
     <>
-      <div className="header p-4 md:flex md:flex-row justify-between items-center flex-none">
-        <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => openNewGroupPopup()}>
+      <div className="header p-4 flex flex-row justify-between items-center flex-none">
+        <CircleButton className={"p-2 mx-auto mx-3 md:mx-0"} onClick={() => openNewGroupPopup()}>
           <AiOutlineUsergroupAdd size={26}/>
         </CircleButton>
-        <Link to={"/"} className="text-md font-bold hidden md:block group-hover:block opacity-90 hover:opacity-100 transition">
+        <Link to={"/"} className="text-md font-bold group-hover:block opacity-90 hover:opacity-100 transition">
           <img src={require("../../../assets/img/logo.png")} alt="logo" className={"h-6"}/>
         </Link>
-        <CircleButton className={"p-2.5 mx-auto md:mx-0 mt-2 md:mt-0"} onClick={() => setNewMessagePopupVisible(true)}>
+        <CircleButton className={"p-2.5 mx-auto mt-0 mx-3 md:mx-0"} onClick={() => setNewMessagePopupVisible(true)}>
           <BsPencilSquare size={20}/>
         </CircleButton>
       </div>
@@ -97,7 +97,11 @@ export const LeftPanel = () => {
       </div>
 
       {ownerGroup.length > 0 && (
-        <OwnerGroups searchFilter={searchFilter} ownerGroup={ownerGroup}/>
+        <OwnerGroups
+          searchFilter={searchFilter}
+          ownerGroup={ownerGroup}
+          onChatSelect={onChatSelect}
+        />
       )}
 
       <div className="contacts p-2 flex-1 overflow-y-scroll">
@@ -105,6 +109,7 @@ export const LeftPanel = () => {
           searchFilter={searchFilter}
           reloadChatList={reloadChatList}
           setNewMessagePopupVisible={setNewMessagePopupVisible}
+          onChatSelect={onChatSelect}
         />
       </div>
 

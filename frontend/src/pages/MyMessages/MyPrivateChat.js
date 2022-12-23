@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { WriteMessage } from "../../components/MyMessages/Chat/WriteMessage";
 import { Loader } from "../../components/Loader";
@@ -15,6 +15,7 @@ const messagesPerPage = 100;
 export const MyPrivateChat = () => {
   let { id } = useParams();
   const near = useContext(NearContext);
+  const [_, openChatsList] = useOutletContext();
   const bottomRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -139,7 +140,7 @@ export const MyPrivateChat = () => {
     <>
       {opponent && (
         <>
-          <MessagesHeader opponent={opponent}/>
+          <MessagesHeader opponent={opponent} openChatsList={openChatsList}/>
 
           <div className={"chat-body p-4 flex-1 flex flex-col overflow-y-scroll"}>
             {isReady ? (

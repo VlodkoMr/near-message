@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
 import { NearContext } from "../../../context/NearContext";
 import { Avatar } from "../../Common/Avatar";
-import { formatAddress } from "../../../utils/transform";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useLocation, useOutletContext } from "react-router-dom";
 import { CircleButton, SecondaryButton } from "../../../assets/css/components";
 import { EditGroupPopup } from "../EditGroupPopup";
-import { HiOutlineShare, IoIosShareAlt, IoMdLogOut, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
+import { HiOutlineShare, IoIosArrowDropleftCircle, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
 import { SharePopup } from "./SharePopup";
 import { AvatarGroup } from "../../Common/AvatarGroup";
 import { isJoinedGroup } from "../../../utils/requests";
 
-export const MessagesHeader = ({ group, opponent }) => {
+export const MessagesHeader = ({ group, opponent, openChatsList }) => {
   const near = useContext(NearContext);
+  const location = useLocation();
   const [myProfile] = useOutletContext();
   const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
   const [sharePopupVisible, setSharePopupVisible] = useState(false);
@@ -25,13 +25,17 @@ export const MessagesHeader = ({ group, opponent }) => {
 
   return (
     <div
-      className="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30">
+      className={`chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30 
+      bg-[#1f2b3b] md:bg-transparent`}>
       <div className="flex">
         {group || opponent ? (
           <>
             <div className="w-12 h-12 mr-4 relative flex flex-shrink-0 hidden md:block">
               {group ? (
-                <AvatarGroup group={group} size={14}/>
+                <AvatarGroup
+                  group={group}
+                  size={14}
+                />
               ) : (
                 <Avatar media={opponent.image}
                         title={opponent.id}
@@ -40,8 +44,13 @@ export const MessagesHeader = ({ group, opponent }) => {
               )}
             </div>
             <div className="text-sm flex flex-row">
+              <div className={"text-gray-400 mr-3 -ml-2 pt-2"} onClick={() => openChatsList()}>
+                <IoIosArrowDropleftCircle size={36}/>
+              </div>
               <div>
-                <p className="font-medium text-base mt-0.5">{getTitle()}</p>
+                <p className="font-medium text-base mt-0.5 address-limit">
+                  {getTitle()}
+                </p>
                 {group ? (
                   <span className={"text-gray-400/80 mr-4"}>
                     {group.members_count || "no"} member{group.members_count > 1 ? "s" : ""}
@@ -93,16 +102,16 @@ export const MessagesHeader = ({ group, opponent }) => {
         )}
       </div>
 
-      <div className="flex">
-        <Link to={"/my"} className={"mr-2 pt-0.5 font-medium hover:opacity-80 transition"}>
-          <div className={"md:flex md:flex-row md:mr-4 text-right md:text-left"}>
+      <div className={`${location.pathname === "/my" ? "flex" : "hidden"} md:flex`}>
+        <Link to={"/my"} className={"pt-0.5 font-medium hover:opacity-80 transition"}>
+          <div className={"md:flex md:flex-row text-right md:text-left"}>
             <div className={"w-12 h-12 mr-3 hidden md:block"}>
               <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
               {myProfile?.name ? (
                 <>
-                  <p className={"text-gray-100 font-medium"}>{myProfile?.name}</p>
+                  <p className={"text-gray-100 font-medium hidden md:block"}>{myProfile?.name}</p>
                   <small className={"block text-gray-400/80 w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
                     {near.wallet.accountId}
                   </small>

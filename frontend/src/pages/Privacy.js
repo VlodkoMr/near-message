@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from "./Layout";
 
 export const Privacy = () => {
-  const navigate = useNavigate();
-
 
   return (
     <Layout>

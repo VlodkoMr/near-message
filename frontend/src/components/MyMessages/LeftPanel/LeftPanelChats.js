@@ -9,7 +9,7 @@ import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage 
 
 const fetchSecondsInterval = 7;
 
-export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reloadChatList }) => {
+export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reloadChatList, onChatSelect }) => {
   const near = useContext(NearContext);
   let { id } = useParams();
   const [isReady, setIsReady] = useState(false);
@@ -96,7 +96,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
 
   const LastGroupMessage = ({ chat }) => (
     <>
-      <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
+      <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
         <Avatar media={groupsById[chat.id].image} title={groupsById[chat.id].title} textSize={"text-2xl md:text-4xl"}/>
         <div className="w-5 h-5 md:w-7 md:h-7 group-hover:block absolute right-0 bottom-0">
           <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
@@ -104,9 +104,11 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
                   textSize={"text-sm"}/>
         </div>
       </div>
-      <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
+      <div className="flex-auto min-w-0 ml-4 mr-2 block group-hover:block">
         <p
-          className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>{groupsById[chat.id].title}</p>
+          className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis md:max-w-[75%]"}>
+          {groupsById[chat.id].title}
+        </p>
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
@@ -125,13 +127,13 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
   const LastPrivateMessage = ({ chat }) => {
     return (
       <>
-        <div className="w-12 h-12 md:w-16 md:h-16 relative flex flex-shrink-0">
+        <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
           <Avatar media={profileList[chat.last_message.opponentAddress]?.image || ""}
                   title={chat.last_message.opponentAddress}
                   textSize={"text-2xl md:text-4xl"}/>
         </div>
-        <div className="flex-auto min-w-0 ml-4 mr-2 hidden md:block group-hover:block">
-          <p className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[82%]"}>
+        <div className="flex-auto min-w-0 ml-4 mr-2 block group-hover:block">
+          <p className={"font-medium text-gray-50 overflow-hidden whitespace-nowrap overflow-ellipsis max-w-[75%]"}>
             {profileList[chat.last_message.opponentAddress]?.name || chat.last_message.opponentAddress}
           </p>
           <div className="flex items-center text-sm">
@@ -166,6 +168,7 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
           }).map(chat => (
             <Link to={`/my/${isGroupChat(chat) ? "group" : "account"}/${chat.id}`}
                   key={chat.id}
+                  onClick={() => onChatSelect()}
                   className={`flex justify-between items-center p-2 rounded-lg relative mb-1
                   ${isSelected(chat) ? "bg-sky-500/40 text-gray-50" : "hover:bg-gray-800/80 text-gray-400"}`}>
               {(isGroupChat(chat)) ? (

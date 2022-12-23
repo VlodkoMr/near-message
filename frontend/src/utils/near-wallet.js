@@ -6,19 +6,17 @@ import { setupModal } from '@near-wallet-selector/modal-ui';
 import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
 import NearIconUrl from '@near-wallet-selector/near-wallet/assets/near-wallet-icon.png';
 import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
-import WalletConnectIconUrl from '@near-wallet-selector/wallet-connect/assets/wallet-connect-icon.png';
 import HereWalletIconUrl from '@near-wallet-selector/here-wallet/assets/here-wallet-icon.png';
 import MeteorWalletIconUrl from '@near-wallet-selector/meteor-wallet/assets/meteor-icon.png';
-// import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
+import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
 
 // wallet selector options
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupNearWallet } from '@near-wallet-selector/near-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
-// import { setupSender } from '@near-wallet-selector/sender';
+import { setupSender } from '@near-wallet-selector/sender';
 
-import { setupWalletConnect } from '@near-wallet-selector/wallet-connect';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 
@@ -46,11 +44,11 @@ export class Wallet {
       modules: [
         setupNearWallet({ iconUrl: NearIconUrl }),
         setupMyNearWallet({ iconUrl: MyNearIconUrl }),
-        // setupSender({ iconUrl: SenderIconUrl }),
-        setupHereWallet({ iconUrl: HereWalletIconUrl }),
+        setupSender({ iconUrl: SenderIconUrl }),
         setupMeteorWallet({ iconUrl: MeteorWalletIconUrl }),
+        setupHereWallet({ iconUrl: HereWalletIconUrl }),
         setupLedger({ iconUrl: LedgerIconUrl }),
-        setupWalletConnect({ iconUrl: WalletConnectIconUrl })
+        // setupWalletConnect({ iconUrl: WalletConnectIconUrl })
       ],
     });
 

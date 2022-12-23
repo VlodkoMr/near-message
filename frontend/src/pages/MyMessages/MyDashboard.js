@@ -101,7 +101,7 @@ export const MyDashboard = () => {
       <MessagesHeader title={""} media={""}/>
       <div className={"p-2 md:p-6 mb-auto lg:max-w-[1600px] overflow-y-scroll"}>
         <div className={"md:flex md:flex-row md:gap-6 mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg mb-6 md:mb-0"}>
+          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 flex-1 rounded-lg mb-6 md:mb-0"}>
             <BlockTitle text={"My Account"}>
               <a href={process.env.NEAR_SOCIAL_PROFILE_URL}
                  target={"_blank"}
@@ -119,30 +119,30 @@ export const MyDashboard = () => {
               </div>
               <div className={"mt-1 flex flex-col"}>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Address:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Address:</span>
                   <span
-                    className={"whitespace-nowrap overflow-hidden w-40 overflow-ellipsis align-bottom inline-block ml-1"}>
+                    className={"whitespace-nowrap overflow-hidden w-32 overflow-ellipsis align-bottom inline-block"}>
                     {near.wallet.accountId}
                   </span>
                 </div>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Name:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Name:</span>
                   {myProfile?.name || "−"}
                 </div>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Twitter:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Twitter:</span>
                   {myProfile?.twitter || "−"}
                 </div>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Github:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Github:</span>
                   {myProfile?.github || "−"}
                 </div>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Telegram:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Telegram:</span>
                   {myProfile?.telegram || "−"}
                 </div>
                 <div>
-                  <span className={"w-20 inline-block opacity-60"}>Website:</span>
+                  <span className={"w-20 inline-block opacity-60 text-sm"}>Website:</span>
                   {myProfile?.website || "−"}
                 </div>
                 {/*<div>*/}
@@ -153,7 +153,7 @@ export const MyDashboard = () => {
             </div>
           </div>
 
-          <div className={"bg-gray-800/40 py-4 px-6 md:flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"Account Keys"}/>
             <div className={""}>
               <p className={"opacity-60 text-sm"}>
@@ -176,10 +176,11 @@ export const MyDashboard = () => {
         </div>
 
         <div className={"mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-6 md:flex-1 rounded-lg"}>
+          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"My Account Level"}>
                 <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
-                  Current Plan: {!near.account ? ("Free") : near.account.level === 1 ? "Bronze" : "Gold"}
+                  <span className={"mr-1"}>Current Plan:</span>
+                  {!near.account ? ("Free") : near.account.level === 1 ? "Bronze" : "Gold"}
                 </span>
             </BlockTitle>
             <div className={"md:flex md:flex-row"}>
@@ -308,7 +309,7 @@ export const MyDashboard = () => {
 
         {!isWarningHidden && (
           <div className={"mb-6"}>
-            <div className={"bg-red-600/40 py-4 px-6 flex-1 rounded-lg text-sm"}>
+            <div className={"bg-red-600/40 px-4 md:px-6 py-4 flex-1 rounded-lg text-sm"}>
               <BlockTitle text={"Important Information"} isRed={true}>
                 <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardWarning()}/>
               </BlockTitle>
@@ -336,7 +337,7 @@ export const MyDashboard = () => {
         {!isMoreInfoHidden ? (
           <>
             <div className={"mb-6 md:flex md:flex-row md:gap-6"}>
-              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg md:w-1/2 mb-6 md:mb-0"}>
+              <div className={"bg-gray-800/40 px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2 mb-6 md:mb-0"}>
                 <BlockTitle text={"Account Spam Level"}/>
                 <div className={"flex flex-row"}>
                   {!near.account ? (
@@ -380,8 +381,8 @@ export const MyDashboard = () => {
                 </div>
               </div>
 
-              <div className={"bg-gray-800/40 py-4 px-6 flex-1 rounded-lg md:w-1/2"}>
-                <BlockTitle text={"Documentation & External Links"}/>
+              <div className={"bg-gray-800/40 px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2"}>
+                <BlockTitle text={"Documentation & Links"}/>
                 <div className={"md:flex md:flex-row pt-2"}>
                   <div className={"flex-1"}>
                     <ExternalLink text={"Introduction"} url={"https://chatme.gitbook.io/chatme/"}/>

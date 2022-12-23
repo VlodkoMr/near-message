@@ -5,3 +5,11 @@
 .faq-link {
   @apply mx-1 text-blue-300 hover:border-b border-b-blue-300;
 }
+
+.options-list-section-header {
+  display: none;
+}
+
+.address-limit {
+  @apply whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[180px];
+}
