@@ -111,13 +111,6 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                 </div>
               )}
 
-              {message.image && (
-                <img alt=""
-                     src={mediaURL(message.image)}
-                     className={"h-[220px] min-w-[100px] rounded-lg mt-2 mb-3 object-contain"}
-                />
-              )}
-
               <div className={"flex justify-between"}>
                 <p>
                   {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
@@ -133,6 +126,13 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
                   {timestampToTime(message?.created_at)}
                 </span>
               </div>
+
+              {message.image && (
+                <img alt=""
+                     src={mediaURL(message.image)}
+                     className={"h-[220px] min-w-[100px] rounded-lg mb-2 mt-3 object-contain"}
+                />
+              )}
 
               {message.isEncryptStart && (
                 <>
