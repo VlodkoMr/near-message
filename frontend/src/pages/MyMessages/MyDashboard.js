@@ -80,12 +80,12 @@ export const MyDashboard = () => {
 
   const ExternalLink = ({ text, url }) => (
     <a href={url} target={"_blank"} className={"block text-white hover:text-blue-300 opacity-60 hover:opacity-100 text-sm mb-1.5"}>
-      <BiLinkExternal size={16} className={"inline mr-1 align-text-top opacity-60"}/> {text}
+      <BiLinkExternal size={16} className={"dashboard-icon"}/> {text}
     </a>
   )
 
   const AccountLevel = ({ level, price, children, className, isCurrent }) => (
-    <div className={`flex-1 py-3 ${className} ${isCurrent && "bg-blue-700/5"}`}>
+    <div className={`flex-1 py-3 ${className} ${isCurrent && "bg-blue-800/5"}`}>
       <div className={"flex flex-row"}>
         <span className={"font-semibold text-lg"}>{level}</span>
         {price && (
@@ -99,9 +99,10 @@ export const MyDashboard = () => {
   return (
     <>
       <MessagesHeader title={""} media={""}/>
-      <div className={"p-2 md:p-6 mb-auto lg:max-w-[1600px] overflow-y-scroll"}>
-        <div className={"md:flex md:flex-row md:gap-6 mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 flex-1 rounded-lg mb-6 md:mb-0"}>
+
+      <div className={"px-2 py-4 md:p-6 mb-auto lg:max-w-[1600px] overflow-y-scroll"}>
+        <div className={"md:flex md:flex-row md:gap-6 mb-4 md:mb-6"}>
+          <div className={"bg-[#1f2b3b] py-4 px-4 md:px-6 flex-1 rounded-lg mb-4 md:mb-6 md:mb-0"}>
             <BlockTitle text={"My Account"}>
               <a href={process.env.NEAR_SOCIAL_PROFILE_URL}
                  target={"_blank"}
@@ -153,7 +154,7 @@ export const MyDashboard = () => {
             </div>
           </div>
 
-          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
+          <div className={"bg-[#1f2b3b] py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"Account Keys"}/>
             <div className={""}>
               <p className={"opacity-60 text-sm"}>
@@ -175,8 +176,8 @@ export const MyDashboard = () => {
           </div>
         </div>
 
-        <div className={"mb-6"}>
-          <div className={"bg-gray-800/40 py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
+        <div className={"mb-4 md:mb-6"}>
+          <div className={"bg-[#1f2b3b] py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"My Account Level"}>
                 <span className={"bg-gray-700/60 rounded-full px-4 text-sm leading-7 text-white opacity-60"}>
                   <span className={"mr-1"}>Current Plan:</span>
@@ -184,29 +185,29 @@ export const MyDashboard = () => {
                 </span>
             </BlockTitle>
             <div className={"md:flex md:flex-row"}>
-              <AccountLevel level={"Free"} price={""} isCurrent={!near.account} className={"border-r border-gray-700/50 px-6"}>
+              <AccountLevel level={"Free"} price={""} isCurrent={!near.account} className={"md:border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Up to 5 groups or channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Up to 500 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineMinusCircle size={16} className={"dashboard-icon"}/>
                   No Private messages encryption.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineMinusCircle size={16} className={"dashboard-icon"}/>
                   No sending NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <CgDanger size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <CgDanger size={16} className={"dashboard-icon"}/>
                   10 reports about spam lock account.
                 </p>
                 {!near.account && (
@@ -216,29 +217,29 @@ export const MyDashboard = () => {
                 )}
               </AccountLevel>
               <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={near.account && near.account.level === 1}
-                            className={"border-r border-gray-700/50 px-6"}>
+                            className={"md:border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Up to 50 groups or channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Up to 2000 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineMinusCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineMinusCircle size={16} className={"dashboard-icon"}/>
                   No Private messages encryption.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Send NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Temporary lock on spam (up to 1 hour).
                 </p>
                 {!near.account && (
@@ -260,27 +261,27 @@ export const MyDashboard = () => {
               </AccountLevel>
               <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={near.account && near.account.level === 2} className={`px-6`}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Unlimited groups and channels.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Up to 5000 group members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Unlimited channels members.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Private messages encryption.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Send NEAR tokens with message.
                 </p>
                 <p className={"mb-1 text-sm opacity-60"}>
-                  <AiOutlineCheckCircle size={16} className={"inline mr-1 align-text-top opacity-60"}/>
+                  <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Temporary lock on spam (up to 15 min).
                 </p>
 
@@ -308,7 +309,7 @@ export const MyDashboard = () => {
         </div>
 
         {!isWarningHidden && (
-          <div className={"mb-6"}>
+          <div className={"mb-4 md:mb-6"}>
             <div className={"bg-red-600/40 px-4 md:px-6 py-4 flex-1 rounded-lg text-sm"}>
               <BlockTitle text={"Important Information"} isRed={true}>
                 <IoClose size={26} className={"cursor-pointer hover:opacity-80"} onClick={() => hideDashboardWarning()}/>
@@ -336,8 +337,8 @@ export const MyDashboard = () => {
 
         {!isMoreInfoHidden ? (
           <>
-            <div className={"mb-6 md:flex md:flex-row md:gap-6"}>
-              <div className={"bg-gray-800/40 px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2 mb-6 md:mb-0"}>
+            <div className={"mb-4 md:mb-6 md:flex md:flex-row md:gap-6"}>
+              <div className={"bg-[#1f2b3b] px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2 mb-6 md:mb-0"}>
                 <BlockTitle text={"Account Spam Level"}/>
                 <div className={"flex flex-row"}>
                   {!near.account ? (
@@ -381,7 +382,7 @@ export const MyDashboard = () => {
                 </div>
               </div>
 
-              <div className={"bg-gray-800/40 px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2"}>
+              <div className={"bg-[#1f2b3b] px-4 md:px-6 py-4 flex-1 rounded-lg md:w-1/2"}>
                 <BlockTitle text={"Documentation & Links"}/>
                 <div className={"md:flex md:flex-row pt-2"}>
                   <div className={"flex-1"}>

@@ -34,7 +34,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
               {group ? (
                 <AvatarGroup
                   group={group}
-                  size={14}
+                  sizeClass={"w-12 h-12"}
                 />
               ) : (
                 <Avatar media={opponent.image}
@@ -43,8 +43,9 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
                 />
               )}
             </div>
-            <div className="text-sm flex flex-row">
-              <div className={"text-gray-400 mr-3 -ml-2 pt-2"} onClick={() => openChatsList()}>
+
+            <div className="text-sm flex flex-row w-full">
+              <div className={"md:hidden text-gray-400 mr-3 -ml-2 pt-2"} onClick={() => openChatsList()}>
                 <IoIosArrowDropleftCircle size={36}/>
               </div>
               <div>
@@ -95,7 +96,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
         ) : (
           <div className="text-sm">
             <p className="font-bold text-base mt-0.5">My Dashboard</p>
-            <p className={"text-gray-400 hidden md:block"}>
+            <p className={"text-gray-400 block"}>
               account settings & overview
             </p>
           </div>
@@ -112,7 +113,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
               {myProfile?.name ? (
                 <>
                   <p className={"text-gray-100 font-medium hidden md:block"}>{myProfile?.name}</p>
-                  <small className={"block text-gray-400/80 w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
+                  <small className={"block text-gray-400 w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
                     {near.wallet.accountId}
                   </small>
                 </>

@@ -14,7 +14,10 @@ export const OnePublicChat = ({ group }) => {
         <div className={`flex flex-row border-b border-body-color dark:border-white border-opacity-10 
       dark:border-opacity-10 pb-4 mb-4 flex-grow text-left`}>
           <div className="flex items-center">
-            <AvatarGroup group={group} size={12}/>
+            <AvatarGroup
+              group={group}
+              sizeClass={"w-16 h-16"}
+            />
           </div>
           <div className="text-base text-body-color dark:text-white leading-relaxed ml-4">
             <p className={"flex max-h-10 leading-5 overflow-hidden"}>

@@ -147,36 +147,30 @@ export const WriteMessage = ({
   }
 
   return (
-    <div className={`chat-footer flex-non relative
-      ${isPrivateMode ? "bg-red-700/20 text-red-500/70" : "text-blue-500"}`}>
-
-      <div className="flex flex-row items-end p-4 relative">
+    <div className={`chat-footer flex-none relative bg-[#101d2c] z-30 relative -mb-16 md:mb-0`}>
+      <div className={`flex flex-row items-end px-3 py-4 md:p-4 ${isPrivateMode ? "bg-red-700/20 text-red-500/70" : "text-blue-500"}`}>
         {toAddress && (
           <>
             <button type="button"
                     disabled={isMediaLoading}
                     onClick={() => toggleSecretChat()}
                     title={`${isPrivateMode ? "Disable" : "Start"} Private Mode`}
-                    className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block w-7 h-6 mb-4
-                  ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
-                  `}>
+                    className={`flex flex-shrink-0 focus:outline-none mx-2 mr-1 block w-4 h-5 md:w-7 md:h-6 mb-4
+                    absolute top-6 right-16 z-10 md:relative md:top-0 md:right-0
+                  ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}`}>
               {isPrivateMode ? (
-                <svg width="40"
-                     height="48"
-                     viewBox="0 0 40 48"
+                <svg viewBox="0 0 40 48"
                      fill="none"
                      xmlns="http://www.w3.org/2000/svg"
-                     className="w-6 h-6 mt-0.5 fill-current">
+                     className="w-4 h-5 md:w-6 md:h-6 mt-0.5 fill-current">
                   <path
                     d="M10.9091 21.8182H28.3636V15.2727C28.3636 12.8636 27.5114 10.8068 25.8068 9.10227C24.1023 7.39773 22.0455 6.54545 19.6364 6.54545C17.2273 6.54545 15.1705 7.39773 13.4659 9.10227C11.7614 10.8068 10.9091 12.8636 10.9091 15.2727V21.8182ZM39.2727 25.0909V44.7273C39.2727 45.6364 38.9545 46.4091 38.3182 47.0455C37.6818 47.6818 36.9091 48 36 48H3.27273C2.36364 48 1.59091 47.6818 0.954545 47.0455C0.318182 46.4091 0 45.6364 0 44.7273V25.0909C0 24.1818 0.318182 23.4091 0.954545 22.7727C1.59091 22.1364 2.36364 21.8182 3.27273 21.8182H4.36364V15.2727C4.36364 11.0909 5.86364 7.5 8.86364 4.5C11.8636 1.5 15.4545 0 19.6364 0C23.8182 0 27.4091 1.5 30.4091 4.5C33.4091 7.5 34.9091 11.0909 34.9091 15.2727V21.8182H36C36.9091 21.8182 37.6818 22.1364 38.3182 22.7727C38.9545 23.4091 39.2727 24.1818 39.2727 25.0909Z"
                   />
                 </svg>
               ) : (
-                <svg width="36"
-                     height="48"
-                     viewBox="0 0 36 48"
+                <svg viewBox="0 0 36 48"
                      fill="none"
-                     className="w-6 h-6 mt-0.5 fill-current"
+                     className="w-4 h-5 md:w-6 md:h-6 mt-0.5 fill-current"
                      xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_1_7)">
                     <path
@@ -196,7 +190,7 @@ export const WriteMessage = ({
                     disabled={isMediaLoading}
                     onClick={() => attachNEAR()}
                     title={`Attach NEAR tokens`}
-                    className={`hidden md:flex flex-shrink-0 focus:outline-none ml-2 mr-3.5 block w-6 h-6 mb-4 relative
+                    className={`flex flex-shrink-0 focus:outline-none ml-2 mr-2.5 block w-5 h-5 md:w-6 md:h-6 mb-4 relative
                       ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                     `}>
 
@@ -207,9 +201,7 @@ export const WriteMessage = ({
               )}
 
               <svg xmlns="http://www.w3.org/2000/svg"
-                   width="40"
-                   height="40"
-                   className="w-6 h-6 mt-0.5 fill-current"
+                   className="w-5 h-5 md:w-6 md:h-6 mt-0.5 fill-current"
                    viewBox="0 0 40 40">
                 <g clipPath="url(#a)">
                   <path
@@ -229,9 +221,9 @@ export const WriteMessage = ({
         <button type="button"
                 title={"Send Image"}
                 disabled={isMediaLoading}
-                className={`hidden md:flex flex-shrink-0 focus:outline-none mx-2 block
+                className={`flex flex-shrink-0 focus:outline-none md:mx-2 mr-2 block
                 ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
-                ${!isMediaLoading && messageTmpMedia ? "w-10 h-10 mb-2" : "w-6 h-6 mb-4"}
+                ${!isMediaLoading && messageTmpMedia ? "w-8 h-8 md:w-10 md:h-10 mb-3 md:mb-2" : "w-5 h-5 md:w-6 md:h-6 mb-4"}
                 `}>
           {!isMediaLoading && (
             <label className={"cursor-pointer relative"}>
@@ -245,7 +237,7 @@ export const WriteMessage = ({
                   />
                 </>
               ) : (
-                <BsImage size={26}/>
+                <BsImage className={"w-7 h-6 md:w-8 md:h-7"}/>
               )}
 
               <input type="file"
@@ -266,7 +258,7 @@ export const WriteMessage = ({
         {/*  <FaSmile size={28}/>*/}
         {/*</button>*/}
 
-        <div className="relative flex-grow md:ml-4">
+        <div className="relative flex-grow md:ml-4 ml-2">
           <label>
             {replyToMessage && (
               <div onClick={() => setReplyToMessage(null)}
@@ -288,7 +280,7 @@ export const WriteMessage = ({
                               maxRows={10}
                               disabled={isMediaLoading}
                               className={`rounded-3xl py-2 pl-4 pr-10 w-full border text-base
-                              focus:outline-none 
+                              focus:outline-none
                               ${replyToMessage ? "pl-36" : ""}
                               text-gray-100 focus:shadow-md transition duration-300 ease-in
                               ${isPrivateMode ? "border-red-700/60 bg-gray-900/40 focus:bg-gray-900/80" : "border-gray-700/60 bg-gray-800/60 focus:bg-gray-900/60"}`}
@@ -305,13 +297,17 @@ export const WriteMessage = ({
         </div>
 
         <button type="button"
-                className={`flex flex-shrink-0 focus:outline-none mx-2 ml-4 block md:w-7 md:h-7 mb-3.5
+                className={`flex flex-shrink-0 focus:outline-none mx-2 md:ml-4 block md:w-7 md:h-7 mb-3.5
                 ${isPrivateMode ? "hover:text-red-600/80" : "hover:text-blue-600"}
                 `}>
           {messageText.length > 0 || messageMedia.length > 0 ? (
-            <BiSend size={30} onClick={() => sendMessage(messageText)}/>
+            <BiSend className={"w-7 h-6 md:w-8 md:h-7"}
+                    onClick={() => sendMessage(messageText)}
+            />
           ) : (
-            <AiFillLike size={30} onClick={() => sendMessage("(like)")}/>
+            <AiFillLike className={"w-7 h-6 md:w-8 md:h-7"}
+                        onClick={() => sendMessage("(like)")}
+            />
           )}
         </button>
       </div>

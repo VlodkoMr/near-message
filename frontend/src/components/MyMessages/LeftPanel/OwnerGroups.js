@@ -22,7 +22,10 @@ export const OwnerGroups = ({ searchFilter, ownerGroup, onChatSelect }) => {
             <div className={`border-2 rounded-full
             ${group.id === parseInt(id) ? "border-indigo-400/80" : "border-transparent hover:border-indigo-300/30"} 
           `}>
-              <AvatarGroup group={group}/>
+              <AvatarGroup
+                group={group}
+                sizeClass={"w-14 h-14 md:w-16 md:h-16"}
+              />
             </div>
             <small className={"font-semibold w-14 md:w-16 overflow-hidden text-ellipsis block whitespace-nowrap"}>
               {group.title}

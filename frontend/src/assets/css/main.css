@@ -13,3 +13,7 @@
 .address-limit {
   @apply whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[180px];
 }
+
+.dashboard-icon {
+  @apply inline mr-1 align-text-top opacity-60;
+}
