@@ -111,14 +111,13 @@ export const transformOneMessage = (message, accountId, isFirst, isLast, isTempo
   return message;
 }
 
-export const transformMessages = (messages, accountId, lastMessageUser, lastMessageDate) => {
+export const transformMessages = (messages, accountId, lastMessageDate) => {
   return messages.map((message, index) => {
     const date = timestampToDate(message.created_at);
     const isLast = !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
-    const isFirst = lastMessageUser !== message.from_address || date !== lastMessageDate;
+    const isFirst = date !== lastMessageDate;
     const result = transformOneMessage(message, accountId, isFirst, isLast, false);
 
-    lastMessageUser = message.from_address;
     lastMessageDate = date;
     return result;
   });

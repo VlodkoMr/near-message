@@ -105,7 +105,6 @@ export const MyPrivateChat = () => {
         const newMessages = transformMessages(
           messages,
           near.wallet.accountId,
-          lastMessage?.from_address,
           timestampToDate(lastMessage?.created_at)
         );
         setMessages(prev => prev.concat(newMessages));
