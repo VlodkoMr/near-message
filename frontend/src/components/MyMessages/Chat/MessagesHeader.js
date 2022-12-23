@@ -35,7 +35,7 @@ export const MessagesHeader = ({ group, opponent }) => {
               ) : (
                 <Avatar media={opponent.image}
                         title={opponent.id}
-                        textSize={"text-3xl"}
+                        textSize={"text-2xl md:text-3xl"}
                 />
               )}
             </div>

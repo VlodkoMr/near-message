@@ -115,7 +115,7 @@ export const MyDashboard = () => {
 
             <div className={"flex flex-row md:mr-4 text-left"}>
               <div className={"w-20 h-20 mr-6 hidden md:block mt-2"}>
-                <Avatar media={myProfile?.image} title={near.wallet.accountId} textSize={"text-3xl"}/>
+                <Avatar media={myProfile?.image} title={near.wallet.accountId} textSize={"text-2xl md:text-3xl"}/>
               </div>
               <div className={"mt-1 flex flex-col"}>
                 <div>
