@@ -1,9 +1,9 @@
-export const timestampToDate = (timestamp) => {
+export const timestampToDate = (timestamp, format = 'short') => {
   if (timestamp) {
     const date = new Date(timestamp * 1000);
     return new Intl.DateTimeFormat('en-US', {
       day: 'numeric',
-      month: 'long',
+      month: format,
     }).format(date);
   }
 }

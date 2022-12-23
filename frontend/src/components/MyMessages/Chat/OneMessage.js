@@ -38,7 +38,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
     <>
       {message.isFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm font-medium text-gray-500">
-          {timestampToDate(message.created_at)}
+          {timestampToDate(message.created_at, 'long')}
         </p>
       )}
 
