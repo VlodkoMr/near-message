@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Layout } from "./Layout";
 import { NearContext } from "../context/NearContext";
-import { PrimaryButton, SecondaryButton } from "../assets/css/components";
+import { PrimaryButton } from "../assets/css/components";
 import { HiChat, HiUserGroup, ImFeed, MdChromeReaderMode, MdSecurity, SiLetsencrypt } from "react-icons/all";
 import { SectionTitle } from "../components/Home/SectionTitle";
 import { OneFeature } from "../components/Home/OneFeature";
@@ -10,8 +10,7 @@ import { TechLogo } from "../components/Home/TechLogo";
 import { PriceBlock } from "../components/Home/PriceBlock";
 import { PriceBlockItem } from "../components/Home/PriceBlockItem";
 import { BlogArticle } from "../components/Home/BlogArticle";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { animateScroll } from "react-scroll";
+import { Link, useLocation } from "react-router-dom";
 import { OnePublicChat } from "../components/Home/OnePublicChat";
 import { animateScroll } from "react-scroll";
 
@@ -116,10 +115,12 @@ export const Home = () => {
               </div>
 
               <div
-                className="w-full wow fadeInUp text-right hidden md:block"
+                className="w-full wow fadeInUp text-right hidden lg:block"
                 data-wow-delay=".2s"
               >
-                <img src={require("../assets/img/top-img.png")} alt="" className={"h-[350px] inline opacity-90"}/>
+                <img src={require("../assets/img/top-img.png")} alt=""
+                     className={"max-h-[350px] md:mt-16 xl:mt-0 inline opacity-90"}
+                />
               </div>
             </div>
           </div>

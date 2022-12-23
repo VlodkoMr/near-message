@@ -55,16 +55,16 @@ export const Header = () => {
       className={`header bg-transparent absolute top-0 left-0 z-40 w-full flex items-center ${scroll ? "sticky" : ""}`}>
       <div className="container">
         <div className="flex mx-[-16px] items-center justify-between relative">
-          <div className="px-4 md:w-64 max-w-full">
-            <Link to={"/"} className="w-full block py-8 header-logo" onClick={toggleScrollTop}>
+          <div className="pl-4 md:w-64">
+            <Link to={"/"} className="block py-8 w-10 xl:w-full lg:h-auto header-logo" onClick={toggleScrollTop}>
               <img
                 src={require("../assets/img/logo.png")}
                 alt="logo"
-                className="w-full hidden dark:block"
+                className="w-10 h-10 xl:w-full block object-cover xl:object-contain object-left"
               />
             </Link>
           </div>
-          <div className="flex px-4 md:ml-16 justify-between items-center w-full">
+          <div className="flex pr-4 lg:ml-4 2xl:ml-16 justify-between items-center flex-1">
             <div>
               <button id="navbarToggler"
                       aria-label="Mobile Menu"
@@ -108,7 +108,7 @@ export const Header = () => {
                   <li className="relative group">
                     <Link
                       className={`menu-scroll text-base text-dark dark:text-white group-hover:opacity-70 py-2 lg:py-6 lg:inline-flex 
-                      lg:px-0 flex mx-8 lg:mr-2 cursor-pointer outline-none`}
+                      lg:px-0 flex mx-5 cursor-pointer outline-none`}
                       to={"/faq"} onClick={() => {
                       toggleScrollTop()
                     }}>
