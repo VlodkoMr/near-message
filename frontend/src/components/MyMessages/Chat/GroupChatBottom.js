@@ -20,8 +20,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
     setIsLoading(true);
     const promise = isChannel(group) ? near.mainContract.joinPublicChannel(group.id) : near.mainContract.joinPublicGroup(group.id);
 
-    promise.then(result => {
-      console.log(`join`);
+    promise.then(() => {
       setIsJoined(true);
       setIsLoading(false);
     });
@@ -30,8 +29,7 @@ export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMe
   const leaveChannel = () => {
     setIsLoading(true);
     const promise = isChannel(group) ? near.mainContract.leaveChannel(group.id) : near.mainContract.leaveGroup(group.id);
-    promise.then(result => {
-      console.log(`leave`);
+    promise.then(() => {
       setIsJoined(false);
       setIsLoading(false);
     });

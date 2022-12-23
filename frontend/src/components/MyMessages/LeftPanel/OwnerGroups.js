@@ -7,7 +7,9 @@ export const OwnerGroups = ({ searchFilter, ownerGroup, onChatSelect }) => {
 
   return ownerGroup && ownerGroup.length > 0 && (
     <>
-      <p className={"md:hidden text-sm font-semibold text-gray-400 text-center"}>My Groups/Channels</p>
+      <p className={"md:hidden text-sm font-semibold text-gray-400 text-center"}>
+        My Groups/Channels
+      </p>
       <div className="active-users flex flex-row px-4 pb-3 overflow-auto w-0 min-w-full">
         {ownerGroup.filter(group => {
           if (searchFilter.length) {

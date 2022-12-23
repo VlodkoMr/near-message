@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useOutletContext } from 'react-router-dom';
 import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader";
 import { Avatar } from "../../components/Common/Avatar";
-import { formatAddress } from "../../utils/transform";
 import { NearContext } from "../../context/NearContext";
 import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, GoChevronDown, IoClose } from "react-icons/all";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
