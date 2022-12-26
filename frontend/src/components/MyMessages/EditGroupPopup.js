@@ -151,6 +151,9 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
     promiseSave.then((resultId) => {
       if (!group) {
         navigate(`/my/group/${resultId}`);
+      } else {
+        // reload group data. Fix it to reload parent component data.
+        document.location.reload();
       }
       setIsOpen(false);
       resetForm();
@@ -191,7 +194,7 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
           <div className={"mb-4"}>
             <label
               className={`flex w-32 h-32 md:w-40 md:h-40 items-center mx-auto bg-gray-700/40 rounded-full text-gray-400 cursor-pointer 
-              hover:bg-gray-700/60 transition overflow-hidden shadow-lg`}>
+              hover:bg-gray-700/60 transition overflow-hidden shadow-lg ${formData.logo && ("bg-gradient-to-b from-indigo-300/90 to-blue-500/90")}`}>
               <PrimaryInput placeholder={"Logo"}
                             type={"file"}
                             accept={"image/*"}
@@ -200,7 +203,10 @@ export const EditGroupPopup = ({ isOpen, setIsOpen, group }) => {
               />
 
               {formData.logo ? (
-                <img src={tmpImageData ? tmpImageData : mediaURL(formData.logo)} alt="" className={"block w-40 h-40 object-cover"}/>
+                <img src={tmpImageData ? tmpImageData : mediaURL(formData.logo)}
+                     alt=""
+                     className={"block w-40 h-40 object-cover"}
+                />
               ) : (
                 <>
                   {isMediaLoading ? (
