@@ -1,20 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { WriteMessage } from "./WriteMessage";
 import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 import { Loader } from "../../Loader";
 import { isChannel, isJoinedGroup } from "../../../utils/requests";
 
-export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent }) => {
+export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent, isJoined, setIsJoined }) => {
   const near = useContext(NearContext);
-  const [isJoined, setIsJoined] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    isJoinedGroup(group, near).then(result => {
-      setIsJoined(result);
-    });
-  }, [group.id]);
 
   const joinChannel = () => {
     setIsLoading(true);

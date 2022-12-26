@@ -12,7 +12,8 @@ export const MessagesList = ({
   opponentAddress,
   userProfiles,
   loadHistoryMessages,
-  hideHistoryButton
+  hideHistoryButton,
+  canReportReply
 }) => {
 
   const isLastMessage = (message, index) => {
@@ -32,6 +33,7 @@ export const MessagesList = ({
       {historyMessages.map(message => (
           <OneMessage message={message}
                       key={message.id}
+                      canReportReply={canReportReply}
                       opponent={opponent ? opponent : userProfiles[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={false}
@@ -42,6 +44,7 @@ export const MessagesList = ({
       {messages.map((message, index) => (
           <OneMessage message={message}
                       key={message.id}
+                      canReportReply={canReportReply}
                       opponent={opponent ? opponent : userProfiles[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={isLastMessage(message, index)}
@@ -53,6 +56,7 @@ export const MessagesList = ({
           <OneMessage message={tmpMessage}
                       key={tmpMessage.id}
                       opponent={opponent}
+                      canReportReply={false}
                       isLast={true}
           />
         )

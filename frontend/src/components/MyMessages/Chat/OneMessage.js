@@ -11,7 +11,7 @@ import { MessageAction } from "../../../assets/css/components";
 import { utils } from "near-api-js";
 import { LinkItUrl } from "react-linkify-it";
 
-export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => {
+export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canReportReply }) => {
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,17 +69,21 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage }) => 
 
             {!message.isMy && !message.isEncryptStart && !message.isEncryptAccept && !message.isEncryptEnd && (
               <>
-                <MessageAction onClick={() => handleSpamReport()} title={"Spam Report"}>
-                  <div className={"text-xl leading-4 font-semibold transition w-full h-full"}>!</div>
-                  {/*<small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>spam</small>*/}
-                </MessageAction>
+                {canReportReply && (
+                  <>
+                    <MessageAction onClick={() => handleSpamReport()} title={"Spam Report"}>
+                      <div className={"text-xl leading-4 font-semibold transition w-full h-full"}>!</div>
+                      {/*<small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>spam</small>*/}
+                    </MessageAction>
 
-                <MessageAction onClick={() => setReplyToMessage(message)} title={"Reply"}>
-                  <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
-                    <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
-                  </svg>
-                  {/*<small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>reply</small>*/}
-                </MessageAction>
+                    <MessageAction onClick={() => setReplyToMessage(message)} title={"Reply"}>
+                      <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
+                        <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
+                      </svg>
+                      {/*<small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>reply</small>*/}
+                    </MessageAction>
+                  </>
+                )}
               </>
             )}
 

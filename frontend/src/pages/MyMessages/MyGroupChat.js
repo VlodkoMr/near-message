@@ -4,7 +4,7 @@ import { MessagesHeader } from "../../components/MyMessages/Chat/MessagesHeader"
 import { Loader } from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
-import { loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
+import { isJoinedGroup, loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
 import { GroupChatBottom } from "../../components/MyMessages/Chat/GroupChatBottom";
 import { MessagesList } from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
@@ -27,6 +27,7 @@ export const MyGroupChat = () => {
   const [reloadCounter, setReloadCounter] = useState(0);
   const [userProfiles, setUserProfiles] = useState({});
   const [replyToMessage, setReplyToMessage] = useState(null);
+  const [isJoined, setIsJoined] = useState(false);
 
   const loadGroupInfo = async () => {
     return await near.mainContract.getGroupById(parseInt(id));
@@ -63,6 +64,14 @@ export const MyGroupChat = () => {
       clearTimeout(updateTimeout);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (group) {
+      isJoinedGroup(group, near).then(result => {
+        setIsJoined(result);
+      });
+    }
+  }, [group]);
 
   useEffect(() => {
     if (reloadCounter) {
@@ -163,6 +172,7 @@ export const MyGroupChat = () => {
                                 opponentAddress={id}
                                 loadHistoryMessages={loadHistoryMessages}
                                 hideHistoryButton={hideHistoryButton}
+                                canReportReply={isJoined}
                   />
                 ) : (
                   <div className={"text-center text-sm opacity-60 pt-2"}>
@@ -182,6 +192,8 @@ export const MyGroupChat = () => {
                            replyToMessage={replyToMessage}
                            setReplyToMessage={setReplyToMessage}
                            onMessageSent={appendTemporaryMessage}
+                           isJoined={isJoined}
+                           setIsJoined={setIsJoined}
           />
         </>
       )}

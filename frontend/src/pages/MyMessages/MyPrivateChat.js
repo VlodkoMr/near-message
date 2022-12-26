@@ -158,6 +158,7 @@ export const MyPrivateChat = () => {
                             opponentAddress={opponentAddress}
                             loadHistoryMessages={loadHistoryMessages}
                             hideHistoryButton={hideHistoryButton}
+                            canReportReply={true}
               />
             ) : (
               <div className={"mx-auto w-8 pt-2"}>

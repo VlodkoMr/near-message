@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NearContext } from "../../../context/NearContext";
 import { Avatar } from "../../Common/Avatar";
 import { Link, useLocation, useNavigate, useOutletContext } from "react-router-dom";
@@ -16,6 +16,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
   const [myProfile] = useOutletContext();
   const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
   const [sharePopupVisible, setSharePopupVisible] = useState(false);
+  const [isJoined, setIsJoined] = useState(false);
 
   const leaveGroup = async () => {
     navigate("/my");
@@ -32,6 +33,14 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
     }
     return opponent.name ? opponent.name : opponent.id;
   }
+
+  useEffect(() => {
+    if (group) {
+      isJoinedGroup(group, near).then(result => {
+        setIsJoined(result);
+      });
+    }
+  }, [group]);
 
   return (
     <div
@@ -91,7 +100,7 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
                     </CircleButton>
                   ) : (
                     <>
-                      {isJoinedGroup(group, near) && (
+                      {isJoined && (
                         <CircleButton
                           title={"Leave"}
                           className={"p-2 mx-auto md:mx-0"}
@@ -103,7 +112,6 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
                   )}
                 </div>
               )}
-
             </div>
           </>
         ) : (
