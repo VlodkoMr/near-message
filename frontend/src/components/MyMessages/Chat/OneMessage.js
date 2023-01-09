@@ -36,7 +36,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
 
   return (
     <>
-      {message.isFirst && !message.isTemporary && (
+      {message.isDateFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm font-medium text-gray-500">
           {timestampToDate(message.created_at, 'long')}
         </p>
@@ -44,13 +44,13 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
 
       <div className={`flex flex-row mb-2 justify-start ${message.isMy ? "justify-end" : "justify-start"}`}>
         <div className="hidden md:block md:w-10 md:h-10 relative flex flex-shrink-0 mr-4">
-          {!message.isMy && message.isFirst && (
+          {!message.isMy && (message.isUserFirst || message.isDateFirst) && (
             <Avatar media={opponent?.image || ""} title={message.from_address}/>
           )}
         </div>
 
         <div className="messages text-sm text-white grid grid-flow-row gap-2">
-          {message.isFirst && !message.isMy && (
+          {!message.isMy && (message.isUserFirst || message.isDateFirst) && (
             <div className={"text-gray-400 font-medium leading-3 address-limit"}>
               {opponent?.name ? (
                 <>{opponent?.name} <small className={"opacity-60"}>({message.from_address})</small></>
@@ -90,7 +90,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
             <div className={`md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
               overflow-ellipsis text-base relative min-h-[46px]
               ${message.text === '(like)' ? "py-2.5" : "py-3"}
-              ${message.isFirst && message.isMy ? "rounded-t-3xl" : ""}
+              ${message.isUserFirst || message.isDateFirst ? "rounded-t-3xl" : ""}
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
               ${message.isMy ? "bg-sky-600/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
