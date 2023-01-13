@@ -95,8 +95,8 @@ export class SecretChat {
 
   storeSecretChatKey(messageText) {
     const keyParts = messageText.split(":");
-    const chatPublicKey = keyParts[1].replace(")", "");
-    if (keyParts.length) {
+    if (keyParts.length === 2) {
+      const chatPublicKey = keyParts[1].replace(")", "");
       let currentData = {};
       let chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
       if (chat) {
