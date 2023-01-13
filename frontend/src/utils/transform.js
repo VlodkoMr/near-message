@@ -6,6 +6,10 @@ export const mediaURL = (ipfsHash) => {
   return `https://ipfs.io/ipfs/${ipfsHash}`;
 }
 
+export const socialMediaURL = (ipfsHash) => {
+  return `https://ipfs.near.social/ipfs/${ipfsHash}`;
+}
+
 export const formatAddress = (address) => {
   if (address.length > 18) {
     return address.slice(0, 16);

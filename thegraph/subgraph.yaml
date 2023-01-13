@@ -6,11 +6,11 @@ features:
 dataSources:
   - kind: near
     name: ChatMe
-#    network: near-testnet
-    network: near-mainnet
+    network: near-testnet
+#    network: near-mainnet
     source:
-#      account: "near-message.testnet"
-      account: "chatme.near"
+      account: "near-message.testnet"
+#      account: "chatme.near"
 #      account: "chatme.testnet"
       startBlock: 79680100
     mapping:
