@@ -90,7 +90,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
             <div className={`md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl whitespace-pre-wrap px-5 
               overflow-ellipsis text-base relative min-h-[46px]
               ${message.text === '(like)' ? "py-2.5" : "py-3"}
-              ${message.isUserFirst || message.isDateFirst ? "rounded-t-3xl" : ""}
+              ${message.isMy && (message.isUserFirst || message.isDateFirst) ? "rounded-t-3xl mt-2" : ""}
               ${isLast ? "rounded-b-3xl" : ""}
               ${message.isTemporary ? "opacity-70" : ""}
               ${message.isMy ? "bg-sky-600/50 rounded-l-3xl ml-2" : "bg-gray-700/60 rounded-r-3xl text-gray-100 mr-2"}
@@ -101,7 +101,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
                   <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current inline mr-1">
                     <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                   </svg>
-                  <b className={"mr-2"}>{message.reply_message.from_address}</b>
+                  <b className={"mr-2 address-limit inline-block leading-3"}>{message.reply_message.from_address}</b>
                   <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
                     {decodeMessageText(message.reply_message, near.wallet.accountId)}
                   </span>

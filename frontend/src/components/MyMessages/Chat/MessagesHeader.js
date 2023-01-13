@@ -133,13 +133,13 @@ export const MessagesHeader = ({ group, opponent, openChatsList }) => {
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
               {myProfile?.name ? (
                 <>
-                  <p className={"text-gray-100 font-medium hidden md:block"}>{myProfile?.name}</p>
-                  <small className={"block text-gray-400 w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
+                  <p className={"text-gray-100 font-medium hidden md:block w-32 mr-2 address-limit"}>{myProfile?.name}</p>
+                  <small className={"block text-gray-400 w-32 address-limit"}>
                     {near.wallet.accountId}
                   </small>
                 </>
               ) : (
-                <p className={"block text-gray-400/80 text-sm font-semibold w-32 whitespace-nowrap overflow-hidden overflow-ellipsis"}>
+                <p className={"block text-gray-400/80 text-sm font-semibold w-32 mr-2 address-limit -mt-1"}>
                   {near.wallet.accountId}
                 </p>
               )}
