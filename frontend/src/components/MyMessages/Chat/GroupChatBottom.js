@@ -3,7 +3,7 @@ import { WriteMessage } from "./WriteMessage";
 import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 import { Loader } from "../../Loader";
-import { isChannel, isJoinedGroup } from "../../../utils/requests";
+import { isChannel } from "../../../utils/requests";
 
 export const GroupChatBottom = ({ group, replyToMessage, setReplyToMessage, onMessageSent, isJoined, setIsJoined }) => {
   const near = useContext(NearContext);

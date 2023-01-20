@@ -58,7 +58,6 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>1. USE OF THE APP; ACCOUNT SET-UP AND SECURITY</p>
-
           <ul>
             <li className={"mb-2"}>
               1.1 Account and Wallet Set-Up. To most easily use the App, you should first install a web browser (such as the Google Chrome
@@ -82,7 +81,6 @@ export const Terms = () => {
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>2. PAYMENT, GAS FEES AND TAXES</p>
-
           <ul>
             <li className={"mb-2"}>
               2.1 Financial Transactions on App. Any payments or financial transactions that you engage in via the App will be conducted
@@ -112,7 +110,6 @@ export const Terms = () => {
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>3. OWNERSHIP, LICENSE, AND OWNERSHIP RESTRICTIONS</p>
-
           <p>For the purposes of this Section, the following capitalized terms will have the following meanings:</p>
 
           <p>
@@ -162,7 +159,6 @@ export const Terms = () => {
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>4. CONDITIONS OF USE AND PROHIBITED ACTIVITIES</p>
-
           <p>
             YOU AGREE THAT YOU ARE RESPONSIBLE FOR YOUR OWN CONDUCT WHILE ACCESSING OR USING THE APP, AND FOR ANY CONSEQUENCES THEREOF. YOU
             AGREE TO USE THE APP ONLY FOR PURPOSES THAT ARE LEGAL, PROPER AND IN ACCORDANCE WITH THESE TERMS AND ANY APPLICABLE LAWS OR
@@ -235,7 +231,6 @@ export const Terms = () => {
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>5. DISCLAIMERS</p>
-
           <p>
             YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR ACCESS TO AND USE OF THE APP IS AT YOUR SOLE RISK, AND THAT THE APP PROVIDED
             "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED.
@@ -273,7 +268,6 @@ export const Terms = () => {
             AS A RESULT.</p>
 
           <p className={"text-xl font-semibold mt-6"}>6. LIMITATION OF LIABILITY</p>
-
           <p>
             IN NO EVENT SHALL ATOMICLAB BE LIABLE TO YOU FOR ANY PERSONAL INJURY, PROPERTY DAMAGE, LOST PROFITS, COST OF
             SUBSTITUTE GOODS OR SERVICES, LOSS OF DATA, LOSS OF GOODWILL, WORK STOPPAGE, DIMINUTION OF VALUE OR ANY OTHER INTANGIBLE LOSS,
@@ -336,7 +330,6 @@ export const Terms = () => {
           </ul>
 
           <p className={"text-xl font-semibold mt-6"}>8. INDEMNIFICATION</p>
-
           <p>
             You agree to hold harmless and indemnify each of AtomicLab and each of their respective parents, subsidiaries,
             affiliates, officers, agents, employees, advertisers, licensors, suppliers or partners from and against any claim, liability,
@@ -347,7 +340,6 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>9. EXTERNAL SITES</p>
-
           <p>
             The App may include hyperlinks to other websites or resources (collectively, the “External Sites”), which are provided solely as
             a convenience to our users. We have no control over any External Sites. You acknowledge and agree that we are not responsible
@@ -359,7 +351,6 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>10. FORCE MAJEURE</p>
-
           <p className={"mb-2"}>
             10.1 Force Majeure Events. AtomicLab will not be liable or responsible to the you, nor be deemed to have defaulted
             under or breached these Terms, for any failure or delay in fulfilling or performing any of these Terms, when and to the extent
@@ -380,15 +371,18 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>11. CHANGES TO THE APP</p>
-
           <p>
             We are constantly innovating the App to help provide the best possible experience. You acknowledge and agree that the form and
             nature of the App, and any part of it, may change from time to time without prior notice to you, and that we may add new
             features and change any part of the App at any time without notice.
           </p>
 
-          <p className={"text-xl font-semibold mt-6"}>12. CHILDREN</p>
-
+          <p className={"text-xl font-semibold mt-6"}>12. USAGE LIMITATION</p>
+          <p>
+            If you are a resident of Russia, or a country that is currently under embargo by the United States, or are on the U.S. Treasury
+            Department's list of Specially Designated Nationals, you are not permitted to create an account or use the Services offered on
+            this website.
+          </p>
           <p>
             You affirm that you are over the age of 18. The App is not intended for children under 18. If you are under the age of 18, you
             may not use the App. We do not knowingly collect information from or direct any of our content specifically to children under
@@ -398,7 +392,6 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>13. PRIVACY POLICY</p>
-
           <p>
             Our <Link to={"privacy"}>Privacy Policy</Link> describes the ways we collect, use, store and disclose your personal information,
             and is hereby incorporated by this reference into these Terms. You agree to the collection, use, storage, and disclosure of your

@@ -6,6 +6,7 @@ import { Loader } from "../../Loader";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { Avatar } from "../../Common/Avatar";
 import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../../utils/transform";
+import { AvatarGroup } from "../../Common/AvatarGroup";
 
 const fetchSecondsInterval = 7;
 
@@ -97,7 +98,12 @@ export const LeftPanelChats = ({ searchFilter, setNewMessagePopupVisible, reload
   const LastGroupMessage = ({ chat }) => (
     <>
       <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
-        <Avatar media={groupsById[chat.id].image} title={groupsById[chat.id].title} textSize={"text-2xl md:text-4xl"}/>
+        <AvatarGroup
+          group={groupsById[chat.id]}
+          sizeClass={"w-16 h-16"}
+          withBorder={false}
+          textSize={"text-2xl md:text-4xl"}
+        />
         <div className="w-5 h-5 md:w-7 md:h-7 group-hover:block absolute right-0 bottom-0">
           <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
                   title={chat.last_message.from_address}
