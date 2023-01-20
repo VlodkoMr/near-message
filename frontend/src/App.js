@@ -1,4 +1,4 @@
-import { lazy, useContext, Suspense } from 'react';
+import { lazy, useContext, Suspense, useEffect } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Home, Error404, Privacy, Terms, MyDashboard, MyPrivateChat, MyGroupChat } from "./pages";
 import { NearContext } from "./context/NearContext";
@@ -20,6 +20,23 @@ export const App = () => {
   const loadingFallback = () => (
     <small>...</small>
   )
+
+  useEffect(() => {
+    // Check timezone and redirect to Terms & Conditions
+    const disabledTimezones = [
+      'Europe/Moscow', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Yakutsk',
+      'Asia/Vladivostok', 'Asia/Sakhalin', 'Asia/Magadan', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Tehran', 'Europe/Minsk'
+    ];
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (disabledTimezones.includes(timezone) && location.pathname !== '/terms') {
+        alert(`Sorry, you can't use this app based on our Terms & Conditions.`);
+        window.location.href = '/terms';
+      }
+    } catch (e) {
+      console.log(`Timezone error: ${e}`);
+    }
+  }, []);
 
   return (
     <>

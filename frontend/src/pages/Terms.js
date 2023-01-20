@@ -378,7 +378,7 @@ export const Terms = () => {
           </p>
 
           <p className={"text-xl font-semibold mt-6"}>12. USAGE LIMITATION</p>
-          <p>
+          <p className={"mb-2"}>
             If you are a resident of Russia, or a country that is currently under embargo by the United States, or are on the U.S. Treasury
             Department's list of Specially Designated Nationals, you are not permitted to create an account or use the Services offered on
             this website.
