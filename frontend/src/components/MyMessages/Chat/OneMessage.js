@@ -122,6 +122,7 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
                   ) : (
                     <LinkItUrl className={`text-blue-300 hover:underline`}>
                       {decodeMessageText(message, near.wallet.accountId)}
+                      {message.isEncryptStart && message.isMy && " sent"}
                     </LinkItUrl>
                   )}
                 </p>
@@ -131,30 +132,30 @@ export const OneMessage = ({ message, opponent, isLast, setReplyToMessage, canRe
                 </span>
               </div>
 
-              {message.image && (
-                <img alt=""
-                     src={mediaURL(message.image)}
-                     className={"h-[220px] min-w-[100px] rounded-lg mb-2 mt-3 object-contain"}
-                />
-              )}
-
               {message.isEncryptStart && (
                 <>
                   {!message.isMy ? (
-                    <Button disabled={isLoading}>
-                      <span
-                        onClick={() => acceptPrivateMode()}
-                        className={"text-red-300 hover:text-red-200 pl-3 ml-2 border-l border-red-300/40"}>
+                    <div className={"my-1.5"}>
+                      <Button disabled={isLoading}
+                              onClick={() => acceptPrivateMode()}
+                              variant={"contained"}>
                         Accept
                         {isLoading && (
                           <span className={"ml-2"}>
                             <Loader size={"sm"}/>
                           </span>
                         )}
-                      </span>
-                    </Button>
-                  ) : " sent"}
+                      </Button>
+                    </div>
+                  ) : ""}
                 </>
+              )}
+
+              {message.image && (
+                <img alt=""
+                     src={mediaURL(message.image)}
+                     className={"h-[220px] min-w-[100px] rounded-lg mb-2 mt-3 object-contain"}
+                />
               )}
 
               {message.encrypt_key && (
