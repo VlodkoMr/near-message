@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
-import { NearProvider } from "./src/context/NearContext";
+import NearProvider  from "./src/context/NearContext";
 import { Wallet } from "./src/utils/near-wallet";
 import { MainContract } from "./src/interfaces/mainContract";
 import { SocialDBContract } from "./src/interfaces/socialDBContract";

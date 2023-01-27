@@ -5,10 +5,12 @@
   "scripts": {
     "cleanup": "rm -rf .parcel-cache && rm -rf ./dist",
     "start": "NODE_ENV=localhost ./start.sh",
+    "check": "tsc --noEmit",
     "dev:start": "NODE_ENV=testnet parcel index.html --open",
     "build": "npm run cleanup && NODE_ENV=localhost parcel build index.html --public-url ./",
     "dev:build": "npm run cleanup && NODE_ENV=testnet parcel build index.html --public-url ./",
-    "prod:build": "npm run cleanup && NODE_ENV=mainnet parcel build index.html --public-url ./"
+    "prod:build": "npm run cleanup && NODE_ENV=mainnet parcel build index.html --public-url ./",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
