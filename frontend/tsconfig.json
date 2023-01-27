@@ -18,9 +18,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@assets/*": [
+        "src/assets/*"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src",
+    "types.tsx"
   ]
 }
