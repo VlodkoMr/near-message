@@ -17,7 +17,7 @@ type Props = {
   onChatSelect: (chat: IChat) => void
 };
 
-const LeftPanelChats: React.FC = (
+const LeftPanelChats: React.FC<Props> = (
   {
     searchFilter, setNewMessagePopupVisible, reloadChatList, onChatSelect
   }: Props) => {

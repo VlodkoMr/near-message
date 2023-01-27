@@ -1,12 +1,14 @@
 import { utils } from 'near-api-js';
 import { convertToTera, getInnerId } from "../utils/transform";
 import IMainContract from "./mainContract.type";
+import { Wallet } from "../utils/near-wallet";
+import { GroupType } from "../types";
 
 class MainContract implements IMainContract {
-  contractId = "";
-  wallet = null;
+  contractId: string = "";
+  wallet: Wallet|null = null;
 
-  constructor({ contractId, walletToUse }) {
+  constructor({ contractId, walletToUse }: {contractId: string, walletToUse: Wallet}) {
     this.contractId = contractId;
     this.wallet = walletToUse;
   }
@@ -16,9 +18,9 @@ class MainContract implements IMainContract {
    * @param id
    * @returns {Promise<any>}
    */
-  async getGroupById(id) {
+  async getGroupById(id: number) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_group_by_id',
         args: {
@@ -30,9 +32,14 @@ class MainContract implements IMainContract {
     }
   }
 
-  async getPublicGroups(page_limit, skip = 0) {
+  /**
+   * Get groups list
+   * @param page_limit
+   * @param skip
+   */
+  async getPublicGroups(page_limit: number, skip = 0) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_public_groups',
         args: {
@@ -50,9 +57,9 @@ class MainContract implements IMainContract {
    * @param address
    * @returns {Promise<any>}
    */
-  async getUserInfo(address) {
+  async getUserInfo(address: string) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_user_info',
         args: {
@@ -69,9 +76,9 @@ class MainContract implements IMainContract {
    * @param address
    * @returns {Promise<any>}
    */
-  async getSpamCount(address) {
+  async getSpamCount(address: string) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_spam_count',
         args: {
@@ -88,11 +95,11 @@ class MainContract implements IMainContract {
    * @param depositNEAR
    * @returns {Promise<any>}
    */
-  async userAccountLevelUp(depositNEAR) {
-    const deposit = utils.format.parseNearAmount(depositNEAR.toString());
+  async userAccountLevelUp(depositNEAR: number) {
+    const deposit = utils.format.parseNearAmount(depositNEAR.toString()) || "0";
     try {
       const gas = convertToTera(30);
-      return await this.wallet.callMethod({
+      return await this.wallet?.callMethod({
         contractId: this.contractId,
         method: 'user_account_level_up',
         gas,
@@ -107,9 +114,9 @@ class MainContract implements IMainContract {
    * Get owned groups
    * @returns {Promise<any>}
    */
-  async getOwnerGroups(account) {
+  async getOwnerGroups(account: string) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_owner_groups',
         args: {
@@ -125,9 +132,9 @@ class MainContract implements IMainContract {
    * Get groups that user joined
    * @returns {Promise<any>}
    */
-  async getUserGroups(account) {
+  async getUserGroups(account: string) {
     try {
-      return await this.wallet.viewMethod({
+      return await this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get_user_groups',
         args: {
@@ -150,7 +157,9 @@ class MainContract implements IMainContract {
    * @param moderator
    * @returns {Promise<*>}
    */
-  async createNewGroup(title, image, text, url, group_type, members, moderator) {
+  async createNewGroup(
+    title: string, image: string, text: string, url: string, group_type: GroupType, members: string[], moderator: string
+  ): Promise<any> {
     const deposit = utils.format.parseNearAmount("0.25");
     const gas = convertToTera(80);
 
@@ -162,13 +171,10 @@ class MainContract implements IMainContract {
       group_type,
       members,
       edit_members: true,
+      moderator: moderator || ""
     };
 
-    if (moderator.length) {
-      args['moderator'] = moderator;
-    }
-
-    return await this.wallet.callMethod({
+    return await this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'create_new_group',
       args,

@@ -6,34 +6,35 @@ import {
   BsImage,
   IoMdCloseCircleOutline,
 } from "react-icons/all";
-import NearContext  from "../../../context/NearContext";
+import NearContext from "../../../context/NearContext";
 import Loader from "../../Loader";
 import { SecretChat } from "../../../utils/secret-chat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 import AttachTokenPopup from "./AttachTokenPopup";
+import { IGroup, IMessage, INearContext } from "../../../types";
 
 type Props = {
-  toAddress: string,
+  toAddress?: string,
   toGroup: IGroup,
   onMessageSent: (messageText: string, messageMedia: string) => void,
-  changePrivateMode: (isPrivateMode: boolean) => void,
+  changePrivateMode?: (isPrivateMode: boolean) => void,
   replyToMessage: IMessage|null,
   setReplyToMessage: (replyToMessage: IMessage|null) => void
 };
 
-const WriteMessage = (
+const WriteMessage: React.FC<Props> = (
   {
     toAddress, toGroup, onMessageSent, changePrivateMode, replyToMessage, setReplyToMessage
   }: Props) => {
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const inputRef = useRef(null);
-  const [messageText, setMessageText] = useState("");
-  const [messageMedia, setMessageMedia] = useState("");
-  const [messageTmpMedia, setMessageTmpMedia] = useState("");
-  const [attachedTokens, setAttachedTokens] = useState(0);
-  const [isMediaLoading, setIsMediaLoading] = useState(false);
-  const [isPrivateMode, setIsPrivateMode] = useState(false);
-  const [isAttachPopupVisible, setIsAttachPopupVisible] = useState(false);
+  const [ messageText, setMessageText ] = useState("");
+  const [ messageMedia, setMessageMedia ] = useState("");
+  const [ messageTmpMedia, setMessageTmpMedia ] = useState("");
+  const [ attachedTokens, setAttachedTokens ] = useState(0);
+  const [ isMediaLoading, setIsMediaLoading ] = useState(false);
+  const [ isPrivateMode, setIsPrivateMode ] = useState(false);
+  const [ isAttachPopupVisible, setIsAttachPopupVisible ] = useState(false);
 
   const toggleSecretChat = () => {
     if (near.account && near.account.level === 2) {
@@ -65,7 +66,7 @@ const WriteMessage = (
     }
   }
 
-  const sendMessage = (messageText) => {
+  const sendMessage = (messageText: string) => {
     let sendFunction;
     const replyId = replyToMessage ? replyToMessage.id : "";
     messageText = messageText.trim();
@@ -83,18 +84,20 @@ const WriteMessage = (
         encryptKey = encoded.nonce;
       }
 
-      sendFunction = near.mainContract.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey, attachedTokens);
+      sendFunction = near.mainContract?.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey, attachedTokens);
     } else {
-      sendFunction = near.mainContract.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
+      sendFunction = near.mainContract?.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
     }
 
     onMessageSent?.(messageText, messageMedia, encryptKey);
 
-    sendFunction.catch(e => {
-      console.log(e);
-      // add retry...
-      alert('Error: Message not sent');
-    });
+    if (sendFunction) {
+      sendFunction.catch(e => {
+        console.log(e);
+        // add retry...
+        alert('Error: Message not sent');
+      });
+    }
 
     setMessageMedia("");
     setMessageTmpMedia("");
@@ -106,13 +109,13 @@ const WriteMessage = (
     if (!isMediaLoading) {
       inputRef.current.focus();
     }
-  }, [isMediaLoading, replyToMessage, toAddress, toGroup?.id]);
+  }, [ isMediaLoading, replyToMessage, toAddress, toGroup?.id ]);
 
   useEffect(() => {
     if (changePrivateMode !== undefined) {
       setIsPrivateMode(changePrivateMode);
     }
-  }, [changePrivateMode]);
+  }, [ changePrivateMode ]);
 
   const handleTextChange = (e) => {
     const value = e.target.value;

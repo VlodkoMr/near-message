@@ -5,7 +5,7 @@ type Props = {
   text: string
 };
 
-const SectionTitle: React.FC = ({ title, text }: Props) => (
+const SectionTitle: React.FC<Props> = ({ title, text }: Props) => (
   <div className="flex flex-wrap mx-[-16px]">
     <div className="w-full px-4">
       <div className={`mx-auto max-w-[655px] text-center wow fadeInUp ${text && text.length > 0 ? "mb-[50px] md:mb-[90px]" : "mb-[60px]"}`}

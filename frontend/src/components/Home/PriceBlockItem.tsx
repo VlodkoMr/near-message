@@ -5,7 +5,7 @@ type Props = {
   isOk: boolean
 }
 
-const PriceBlockItem: React.FC = ({ text, isOk }: Props) => (
+const PriceBlockItem: React.FC<Props> = ({ text, isOk }: Props) => (
   <div className="flex items-center mb-3">
       <span className="bg-primary bg-opacity-10 text-primary max-w-[18px] w-full h-[18px] mr-3 flex items-center
         justify-center rounded-full">

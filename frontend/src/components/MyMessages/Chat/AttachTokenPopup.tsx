@@ -11,8 +11,8 @@ type Props = {
   setAttachedTokens: (attachedTokens: number) => void
 };
 
-const AttachTokenPopup: React.FC = ({ isOpen, setIsOpen, setAttachedTokens }: Props) => {
-  const [attachedAmount, setAttachedAmount] = useState(0);
+const AttachTokenPopup: React.FC<Props> = ({ isOpen, setIsOpen, setAttachedTokens }: Props) => {
+  const [ attachedAmount, setAttachedAmount ] = useState("0");
 
   const handleClose = () => {
     setIsOpen(false);

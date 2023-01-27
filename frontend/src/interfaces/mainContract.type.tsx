@@ -2,7 +2,7 @@ interface IMainContract {
   contractId: string;
   wallet: any;
 
-  getGroupById(id: string): Promise<any>;
+  getGroupById(id: number): Promise<any>;
 
   getPublicGroups(page_limit: number, skip?: number): Promise<any>;
 
@@ -26,9 +26,9 @@ interface IMainContract {
 
   ownerRemoveGroup(id: string, confirm_title: string): Promise<any>;
 
-  joinPublicGroup(id: string): Promise<any>;
+  joinPublicGroup(id: number): Promise<any>;
 
-  joinPublicChannel(id: string): Promise<any>;
+  joinPublicChannel(id: number): Promise<any>;
 
   leaveGroup(id: string): Promise<any>;
 

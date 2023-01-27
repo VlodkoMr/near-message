@@ -47,6 +47,7 @@
     "@nearfoundation/near-js-encryption-box": "^0.1.2",
     "@react-buddy/ide-toolbox": "^2.2.1",
     "@react-buddy/palette-mui": "^1.2.2",
+    "@types/react-dom": "^18.0.10",
     "near-api-js": "^0.44.2",
     "nft.storage": "^7.0.0",
     "react": "^18.2.0",

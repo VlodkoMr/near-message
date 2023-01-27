@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { WriteMessage } from "./WriteMessage";
-import { NearContext }  from "../../../context/NearContext";
+import WriteMessage from "./WriteMessage";
+import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
-import Loader  from "../../Loader";
+import Loader from "../../Loader";
 import { isChannel } from "../../../utils/requests";
+import { IGroup, IMessage, INearContext } from "../../../types";
 
 type Props = {
   group: IGroup,
@@ -14,30 +15,34 @@ type Props = {
   setIsJoined: (isJoined: boolean) => void
 };
 
-const GroupChatBottom: React.FC = (
+const GroupChatBottom: React.FC<Props> = (
   {
     group, replyToMessage, setReplyToMessage, onMessageSent, isJoined, setIsJoined
   }: Props) => {
-  const near = useContext(NearContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const near: INearContext = useContext(NearContext);
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const joinChannel = () => {
     setIsLoading(true);
-    const promise = isChannel(group) ? near.mainContract.joinPublicChannel(group.id) : near.mainContract.joinPublicGroup(group.id);
+    const promise = isChannel(group) ? near.mainContract?.joinPublicChannel(group.id) : near.mainContract?.joinPublicGroup(group.id);
 
-    promise.then(() => {
-      setIsJoined(true);
-      setIsLoading(false);
-    });
+    if (promise) {
+      promise.then(() => {
+        setIsJoined(true);
+        setIsLoading(false);
+      });
+    }
   }
 
   const leaveChannel = () => {
     setIsLoading(true);
-    const promise = isChannel(group) ? near.mainContract.leaveChannel(group.id) : near.mainContract.leaveGroup(group.id);
-    promise.then(() => {
-      setIsJoined(false);
-      setIsLoading(false);
-    });
+    const promise = isChannel(group) ? near.mainContract?.leaveChannel(group.id) : near.mainContract?.leaveGroup(group.id);
+    if (promise) {
+      promise.then(() => {
+        setIsJoined(false);
+        setIsLoading(false);
+      });
+    }
   }
 
   const canWriteMessages = () => {

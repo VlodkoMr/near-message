@@ -9,9 +9,10 @@ import Loader from "../../components/Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import ExportKeysPopup from "../../components/MyMessages/Dashboard/ExportKeysPopup";
 import ImportKeysPopup from "../../components/MyMessages/Dashboard/ImportKeysPopup";
+import { INearContext } from "../../types";
 
 const MyDashboard: React.FC = () => {
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const [myProfile] = useOutletContext();
   const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
   const [isMoreInfoHidden, setIsMoreInfoHidden] = useState(true);

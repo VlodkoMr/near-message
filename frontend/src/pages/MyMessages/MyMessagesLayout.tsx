@@ -5,9 +5,10 @@ import { loadSocialProfile } from "../../utils/transform";
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import "../../assets/css/my-messages.css"
+import { INearContext } from "../../types";
 
 const MyMessagesLayout: React.FC = () => {
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [myProfile, setMyProfile] = useState({});

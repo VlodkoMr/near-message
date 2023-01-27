@@ -9,13 +9,14 @@ import { generateTemporaryMessage, transformMessages, loadSocialProfile, getInne
 import { SecretChat } from "../../utils/secret-chat";
 import MessagesList  from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
+import { INearContext } from "../../types";
 
 const fetchSecondsInterval = 5;
 const messagesPerPage = 100;
 
 const MyPrivateChat: React.FC = () => {
   let { id } = useParams();
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const [_, openChatsList] = useOutletContext();
   const bottomRef = useRef(null);
   const [isReady, setIsReady] = useState(false);

@@ -12,7 +12,7 @@ type Props = {
   setIsOpen: (isOpen: boolean) => void
 };
 
-const ExportKeysPopup: React.FC = ({ isOpen, setIsOpen }: Props) => {
+const ExportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
   const near = useContext(NearContext);
   const [keys, setKeys] = useState("");
   const [isCopied, setIsCopied] = useState(false);

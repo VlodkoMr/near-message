@@ -4,7 +4,7 @@ type Props = {
   text: string
 };
 
-const TechCheckbox: React.FC = ({ text }: Props) => (
+const TechCheckbox: React.FC<Props> = ({ text }: Props) => (
   <p className="flex items-center text-body-color text-base font-medium mb-5">
       <span className="w-[30px] h-[30px] flex items-center justify-center rounded-md
         bg-primary bg-opacity-10 text-primary mr-4">

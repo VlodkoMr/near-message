@@ -8,13 +8,14 @@ import { isJoinedGroup, loadGroupMessages, loadNewGroupMessages } from "../../ut
 import GroupChatBottom  from "../../components/MyMessages/Chat/GroupChatBottom";
 import MessagesList  from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
+import { INearContext } from "../../types";
 
 const fetchSecondsInterval = 5;
 const messagesPerPage = 100;
 
 const MyGroupChat: React.FC = () => {
   let { id } = useParams();
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const bottomRef = useRef(null);
   const [_, openChatsList] = useOutletContext();
   const [messages, setMessages] = useState([]);

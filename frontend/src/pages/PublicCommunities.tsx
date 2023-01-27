@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import Layout from "./Layout";
 import OnePublicChat from "../components/Home/OnePublicChat";
 import { NearContext } from "../context/NearContext";
+import { INearContext } from "../types";
 
 const PublicCommunities: React.FC = () => {
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const [publicGroups, setPublicGroups] = useState([]);
 
   const loadLastPublicChats = async () => {

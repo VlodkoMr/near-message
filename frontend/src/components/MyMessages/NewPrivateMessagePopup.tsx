@@ -17,7 +17,7 @@ type Props = {
   setReloadChatList: (reload: boolean) => void
 };
 
-const NewPrivateMessagePopup: React.FC = ({ isOpen, setIsOpen, setReloadChatList }: Props) => {
+const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadChatList }: Props) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);

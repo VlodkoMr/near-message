@@ -17,7 +17,7 @@ type Props = {
   group: IGroup
 };
 
-const EditGroupPopup: React.FC = ({ isOpen, setIsOpen, group }: Props) => {
+const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
   const [isLoading, setIsLoading] = useState(false);

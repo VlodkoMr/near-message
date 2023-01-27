@@ -16,7 +16,7 @@ type Props = {
   canReportReply: boolean
 };
 
-const MessagesList: React.FC = (
+const MessagesList: React.FC<Props> = (
   {
     messages, historyMessages, tmpMessages, messagesPerPage, setReplyToMessage, opponent, opponentAddress,
     userProfiles, loadHistoryMessages, hideHistoryButton, canReportReply

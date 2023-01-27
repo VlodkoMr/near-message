@@ -12,7 +12,7 @@ type Props = {
   setIsOpen: (isOpen: boolean) => void
 };
 
-const ImportKeysPopup: React.FC = ({ isOpen, setIsOpen }: Props) => {
+const ImportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
   const near = useContext(NearContext);
   const [keyText, setKeyText] = useState("");
   const [isImported, setIsImported] = useState(false);

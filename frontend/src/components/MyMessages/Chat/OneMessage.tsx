@@ -19,7 +19,7 @@ type Props = {
   canReportReply: boolean
 };
 
-const OneMessage: React.FC = (
+const OneMessage: React.FC<Props> = (
   {
     message, opponent, isLast, setReplyToMessage, canReportReply
   }: Props) => {

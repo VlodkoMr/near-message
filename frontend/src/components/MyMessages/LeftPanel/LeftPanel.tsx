@@ -12,7 +12,7 @@ type Props = {
   onChatSelect: (chat: IChat) => void
 };
 
-const LeftPanel: React.FC = ({ onChatSelect }: Props) => {
+const LeftPanel: React.FC<Props> = ({ onChatSelect }: Props) => {
   const near = useContext(NearContext);
   const [isLimitReached, setIsLimitReached] = useState(false);
   const [ownerGroup, setOwnerGroups] = useState([]);

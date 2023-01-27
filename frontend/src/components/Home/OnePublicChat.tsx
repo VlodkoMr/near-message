@@ -1,14 +1,15 @@
 import AvatarGroup from "../Common/AvatarGroup";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { NearContext }  from "../../context/NearContext";
+import { NearContext } from "../../context/NearContext";
+import { IGroup, INearContext } from "../../types";
 
 type Props = {
   group: IGroup,
 };
 
-const OnePublicChat: React.FC = ({ group }: Props) => {
-  const near = useContext(NearContext);
+const OnePublicChat: React.FC<Props> = ({ group }: Props) => {
+  const near: INearContext = useContext(NearContext);
 
   return (
     <div className="w-full md:w-1/2 lg:w-1/3 px-4">

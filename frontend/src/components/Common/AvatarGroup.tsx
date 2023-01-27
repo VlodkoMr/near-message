@@ -1,14 +1,15 @@
 import React from "react";
 import { mediaURL } from '../../utils/transform';
 import logoImage from '../../assets/img/user-group.png';
+import { IGroup } from "../../types";
 
 type Props = {
   group: IGroup,
   sizeClass: string,
-  withBorder: boolean
+  withBorder?: boolean
 };
 
-const AvatarGroup: React.FC<Props> = ({ group, sizeClass, withBorder }: Props) => (
+const AvatarGroup: React.FC<Props> = ({ group, sizeClass, withBorder = false }: Props) => (
   <div className={`relative ${sizeClass} ${withBorder ? "" : "border-2 border-transparent"}`}>
     {group.image ? (
       <img className="shadow-md rounded-full w-full h-full bg-gradient-to-b from-indigo-300/90 to-blue-500/90 object-cover"

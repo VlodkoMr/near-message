@@ -4,8 +4,8 @@ type Props = {
   size: string
 };
 
-const Loader: React.FC = ({ size }: Props) => {
-  const sizeMap = {
+const Loader: React.FC<Props> = ({ size }: Props) => {
+  const sizeMap: Record<string, string> = {
     'sm': "w-4 h-4",
     'md': "w-6 h-6",
     'lg': "w-8 h-8",

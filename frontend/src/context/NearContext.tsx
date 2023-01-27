@@ -1,28 +1,40 @@
 import React, { createContext, useEffect, useState } from "react";
-
-export const NearContext = createContext({});
+import MainContract from "../interfaces/mainContract";
+import SocialDBContract from "../interfaces/socialDBContract";
+import { WalletSelectorEvents } from "@near-wallet-selector/core/lib/wallet-selector.types";
+import { INearContext } from "../types";
 
 type Props = {
   children: React.ReactNode,
   isSignedInit: boolean,
   wallet: any,
-  mainContract: any,
-  socialDBContract: any
+  mainContract: MainContract|null,
+  socialDBContract: SocialDBContract|null
 }
 
-const NearProvider: React.FC = (
+export const NearContext = createContext<INearContext>({
+  wallet: null,
+  mainContract: null,
+  socialDBContract: null,
+  isSigned: false,
+  account: null
+});
+
+const NearProvider: React.FC<Props> = (
   {
     children, isSignedInit, wallet, mainContract, socialDBContract
   }: Props) => {
-  const [account, setAccount] = useState(wallet.accountId);
-  const [isSigned, setIsSigned] = useState(isSignedInit);
+  const [ account, setAccount ] = useState(wallet.accountId);
+  const [ isSigned, setIsSigned ] = useState(isSignedInit);
 
   const loadAccount = async () => {
-    return await mainContract.getUserInfo(wallet.accountId);
+    if (mainContract) {
+      return await mainContract.getUserInfo(wallet.accountId);
+    }
   }
 
   useEffect(() => {
-    const subscription = wallet.walletSelector.store.observable.subscribe(async (nextAccounts) => {
+    const subscription = wallet.walletSelector.store.observable.subscribe(async (nextAccounts: WalletSelectorEvents['accountsChanged']) => {
       if (nextAccounts.accounts.length) {
         await wallet.onAccountChange(nextAccounts.accounts[0].accountId);
         setIsSigned(true);

@@ -1,4 +1,5 @@
 import { createClient } from "urql";
+import { IGroup, INearContext } from "../types";
 
 export const postRequest = async (url = '', data = {}) => {
   const response = await fetch(url, {
@@ -210,12 +211,12 @@ export const isChannel = (group) => {
   return group.group_type === "Channel";
 }
 
-export const isJoinedGroup = (group, near) => new Promise(async (resolve) => {
+export const isJoinedGroup = (group: IGroup, near: INearContext): Promise<boolean> => new Promise(async (resolve) => {
   if (!isChannel(group)) {
     resolve(group.members.indexOf(near.wallet.accountId) !== -1);
   } else {
-    const myGroups = await near.mainContract.getUserGroups(near.wallet.accountId);
-    const idList = myGroups.map(group => group.id);
+    const myGroups = await near.mainContract?.getUserGroups(near.wallet.accountId);
+    const idList = myGroups.map((group: IGroup) => group.id);
     resolve(idList.indexOf(group.id) !== -1);
   }
 });

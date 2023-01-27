@@ -7,7 +7,7 @@ type Props = {
   children: React.ReactNode
 };
 
-const PriceBlock: React.FC = ({ price, plan, description, children }: Props) => (
+const PriceBlock: React.FC<Props> = ({ price, plan, description, children }: Props) => (
   <div className="w-full md:w-1/2 lg:w-1/3 px-4">
     <div className="relative z-10 bg-white dark:bg-[#1D2144] shadow-signUp px-8 py-10 rounded-md mb-6 md:mb-10 wow fadeInUp"
          data-wow-delay=".1s">

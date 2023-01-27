@@ -13,10 +13,11 @@ import BlogArticle from "../components/Home/BlogArticle";
 import { Link, useLocation } from "react-router-dom";
 import OnePublicChat from "../components/Home/OnePublicChat";
 import { animateScroll } from "react-scroll";
+import { INearContext } from "../types";
 
 const Home: React.FC = () => {
   const location = useLocation();
-  const near = useContext(NearContext);
+  const near: INearContext = useContext(NearContext);
   const [zoomTechDetails, setZoomTechDetails] = useState(false);
   const [publicGroups, setPublicGroups] = useState([]);
 

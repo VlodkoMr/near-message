@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { NearContext }  from "../../../context/NearContext";
-import Avatar  from "../../Common/Avatar";
+import { NearContext } from "../../../context/NearContext";
+import Avatar from "../../Common/Avatar";
 import { Link, useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { CircleButton, SecondaryButton } from "../../../assets/css/components";
-import EditGroupPopup  from "../EditGroupPopup";
+import EditGroupPopup from "../EditGroupPopup";
 import { HiOutlineShare, IoIosArrowDropleftCircle, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
-import SharePopup  from "./SharePopup";
-import AvatarGroup  from "../../Common/AvatarGroup";
+import SharePopup from "./SharePopup";
+import AvatarGroup from "../../Common/AvatarGroup";
 import { isChannel, isJoinedGroup } from "../../../utils/requests";
+import { IGroup, IProfile } from "../../../types";
 
 type Props = {
   group: IGroup,
@@ -15,21 +16,21 @@ type Props = {
   openChatsList: () => void
 };
 
-const MessagesHeader: React.FC = ({ group, opponent, openChatsList }: Props) => {
+const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Props) => {
   const near = useContext(NearContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const [myProfile] = useOutletContext();
-  const [editGroupPopupVisible, setEditGroupPopupVisible] = useState(false);
-  const [sharePopupVisible, setSharePopupVisible] = useState(false);
-  const [isJoined, setIsJoined] = useState(false);
+  const [ myProfile ] = useOutletContext();
+  const [ editGroupPopupVisible, setEditGroupPopupVisible ] = useState(false);
+  const [ sharePopupVisible, setSharePopupVisible ] = useState(false);
+  const [ isJoined, setIsJoined ] = useState(false);
 
   const leaveGroup = async () => {
     navigate("/my");
     if (isChannel(group)) {
-      await near.mainContract.leaveChannel(group.id);
+      await near.mainContract?.leaveChannel(group.id);
     } else {
-      await near.mainContract.leaveGroup(group.id);
+      await near.mainContract?.leaveGroup(group.id);
     }
   }
 
@@ -46,7 +47,7 @@ const MessagesHeader: React.FC = ({ group, opponent, openChatsList }: Props) => 
         setIsJoined(result);
       });
     }
-  }, [group]);
+  }, [ group ]);
 
   return (
     <div

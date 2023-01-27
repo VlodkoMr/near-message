@@ -11,7 +11,7 @@ type Props = {
   group: IGroup
 };
 
-const SharePopup: React.FC = ({ isOpen, setIsOpen, group }: Props) => {
+const SharePopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
   const [url, setUrl] = useState("");
 

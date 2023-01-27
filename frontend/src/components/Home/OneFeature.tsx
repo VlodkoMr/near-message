@@ -6,7 +6,7 @@ type Props = {
   text: string
 };
 
-const OneFeature: React.FC = ({ title, icon, text }: Props) => (
+const OneFeature: React.FC<Props> = ({ title, icon, text }: Props) => (
   <div className="w-full md:w-1/2 lg:w-1/3 px-4">
     <div className="mb-[36px] md:mb-[70px] wow fadeInUp text-center" data-wow-delay=".15s">
       <div

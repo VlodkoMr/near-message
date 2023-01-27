@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client'
-import NearProvider  from "./src/context/NearContext";
+import { createRoot } from 'react-dom/client';
 import { Wallet } from "./src/utils/near-wallet";
-import { MainContract } from "./src/interfaces/mainContract";
-import { SocialDBContract } from "./src/interfaces/socialDBContract";
 import { SOCIAL_DB_CONTRACT } from "./src/settings/config";
-import { App } from './src/App';
+import NearProvider from "./src/context/NearContext";
+import MainContract from "./src/interfaces/mainContract";
+import SocialDBContract from "./src/interfaces/socialDBContract";
+
+import App from './src/App';
 
 // Setup on page load
 window.onload = async () => {
@@ -15,7 +15,7 @@ window.onload = async () => {
 
   const isSigned = await wallet.startUp()
 
-  ReactDOM.createRoot(document.getElementById('root')).render(
+  createRoot(document.getElementById('root')).render(
     <NearProvider
       wallet={wallet}
       isSignedInit={isSigned}

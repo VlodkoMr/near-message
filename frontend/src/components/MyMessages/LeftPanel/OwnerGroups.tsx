@@ -8,7 +8,7 @@ type Props = {
   onChatSelect: () => void
 };
 
-const OwnerGroups: React.FC = (
+const OwnerGroups: React.FC<Props> = (
   {
     searchFilter, ownerGroup, onChatSelect
   }: Props) => {
