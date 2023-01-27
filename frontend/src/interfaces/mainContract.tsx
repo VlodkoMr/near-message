@@ -160,8 +160,8 @@ class MainContract implements IMainContract {
   async createNewGroup(
     title: string, image: string, text: string, url: string, group_type: GroupType, members: string[], moderator: string
   ): Promise<any> {
-    const deposit = utils.format.parseNearAmount("0.25");
-    const gas = convertToTera(80);
+    const deposit = utils.format.parseNearAmount("0.25") || "0";
+    const gas = convertToTera(80) || "0";
 
     let args = {
       title,
@@ -171,16 +171,20 @@ class MainContract implements IMainContract {
       group_type,
       members,
       edit_members: true,
-      moderator: moderator || ""
+      moderator: moderator || null
     };
 
-    return await this.wallet?.callMethod({
-      contractId: this.contractId,
-      method: 'create_new_group',
-      args,
-      gas,
-      deposit
-    });
+    try {
+      return await this.wallet?.callMethod({
+        contractId: this.contractId,
+        method: 'create_new_group',
+        args,
+        gas,
+        deposit
+      });
+    } catch (e) {
+      console.log(`blockchain error`, e);
+    }
   }
 
   /**
@@ -192,9 +196,9 @@ class MainContract implements IMainContract {
    * @param url
    * @returns {Promise<*>}
    */
-  async editGroup(id, title, image, text, url) {
-    const gas = convertToTera(50);
-    return await this.wallet.callMethod({
+  async editGroup(id: number, title: string, image: string, text: string, url: string) {
+    const gas = convertToTera(50) || "0";
+    return await this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'edit_group',
       args: {

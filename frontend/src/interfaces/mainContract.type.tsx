@@ -1,3 +1,5 @@
+import { GroupType } from "../types";
+
 interface IMainContract {
   contractId: string;
   wallet: any;
@@ -16,7 +18,7 @@ interface IMainContract {
 
   getUserGroups(account: string): Promise<any>;
 
-  createNewGroup(title: string, image: string, text: string, url: string, group_type: string, members: string[], moderator: string[]): Promise<any>;
+  createNewGroup(title: string, image: string, text: string, url: string, group_type: GroupType, members: string[], moderator: string): Promise<any>;
 
   editGroup(id: string, title: string, image: string, text: string, url: string): Promise<any>;
 
