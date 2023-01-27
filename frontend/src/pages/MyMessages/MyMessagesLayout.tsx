@@ -2,18 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import LeftPanel from "../../components/MyMessages/LeftPanel/LeftPanel";
 import { NearContext } from "../../context/NearContext";
 import { loadSocialProfile } from "../../utils/transform";
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 
 import "../../assets/css/my-messages.css"
-import { INearContext } from "../../types";
+import { INearContext, IProfile } from "../../types";
+
+type MessagesContextType = {myProfile: any, openChatsList: () => void};
+
+export function MessagesContext() {
+  return useOutletContext<MessagesContextType>();
+}
 
 const MyMessagesLayout: React.FC = () => {
   const near: INearContext = useContext(NearContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const [myProfile, setMyProfile] = useState({});
-  const [currentTab, setCurrentTab] = useState(2);
-  const [leftSideVisible, setLeftSideVisible] = useState(true);
+  const [ myProfile, setMyProfile ] = useState<IProfile|undefined>();
+  const [ currentTab, setCurrentTab ] = useState(2);
+  const [ leftSideVisible, setLeftSideVisible ] = useState(true);
 
   useEffect(() => {
     loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
@@ -56,6 +62,7 @@ const MyMessagesLayout: React.FC = () => {
     setLeftSideVisible(true);
   }
 
+
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center">
 
@@ -69,7 +76,7 @@ const MyMessagesLayout: React.FC = () => {
             </section>
 
             <section className={`flex flex-col flex-auto border-l-2 border-gray-700/30`}>
-              <Outlet context={[myProfile, openChatsList]}/>
+              <Outlet context={{ myProfile, openChatsList }}/>
             </section>
           </main>
         </div>

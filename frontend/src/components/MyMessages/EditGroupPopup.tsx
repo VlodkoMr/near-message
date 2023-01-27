@@ -10,11 +10,12 @@ import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 import { mediaURL } from "../../utils/transform";
 import { useNavigate } from "react-router-dom";
 import { NearContext }  from "../../context/NearContext";
+import { IGroup } from "../../types";
 
 type Props = {
   isOpen: boolean,
   setIsOpen: (isOpen: boolean) => void,
-  group: IGroup
+  group?: IGroup
 };
 
 const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {

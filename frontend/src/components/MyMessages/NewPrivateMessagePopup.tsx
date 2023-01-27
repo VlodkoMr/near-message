@@ -4,49 +4,52 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryTextarea, PrimaryTextField, SecondaryButton } from "../../assets/css/components";
-import Loader  from "../Loader";
-import { NearContext }  from "../../context/NearContext";
+import Loader from "../Loader";
+import { NearContext } from "../../context/NearContext";
 import { useNavigate } from "react-router-dom";
 import { getPrivateChatId, postRequest } from "../../utils/requests";
 import { loadSocialProfiles } from "../../utils/transform";
 import { Autocomplete } from "@mui/material";
+import { IProfile } from "../../types";
 
 type Props = {
   isOpen: boolean,
   setIsOpen: (isOpen: boolean) => void,
-  setReloadChatList: (reload: boolean) => void
+  setReloadChatList: (reload: number) => void
 };
 
 const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadChatList }: Props) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isMessageSent, setIsMessageSent] = useState(false);
-  const [canOpenChat, setCanOpenChat] = useState(false);
-  const [messageAddress, setMessageAddress] = useState("");
-  const [messageText, setMessageText] = useState("");
-  const [contactsList, setContactsList] = useState([]);
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ isMessageSent, setIsMessageSent ] = useState(false);
+  const [ canOpenChat, setCanOpenChat ] = useState(false);
+  const [ messageAddress, setMessageAddress ] = useState("");
+  const [ messageText, setMessageText ] = useState("");
+  const [ contactsList, setContactsList ] = useState<string[]>([]);
 
   const loadFollowingList = () => {
     const accountId = near.wallet.accountId;
     try {
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
-        keys: [`${accountId}/graph/follow/*`]
+        keys: [ `${accountId}/graph/follow/*` ]
       }).then(result => {
         const followers = result[accountId]?.graph?.follow;
         if (followers) {
           const addressList = Object.keys(followers);
           if (addressList.length) {
-            loadSocialProfiles(addressList, near).then(profiles => {
-              let profileResults = Object.values(profiles).map(p => {
-                if (p.name) {
-                  return `${p.name} (${p.id})`;
-                } else {
-                  return p.id;
-                }
-              });
-              profileResults.sort();
-              setContactsList(profileResults);
+            loadSocialProfiles(addressList, near).then((profiles: Record<string, IProfile>|undefined) => {
+              if (profiles) {
+                let profileResults = Object.values(profiles).map(p => {
+                  if (p.name) {
+                    return `${p.name} (${p.id})`;
+                  } else {
+                    return p.id;
+                  }
+                });
+                profileResults.sort();
+                setContactsList(profileResults);
+              }
             });
           }
         }
@@ -61,7 +64,7 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
     if (isOpen) {
       loadFollowingList();
     }
-  }, [isOpen]);
+  }, [ isOpen ]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -78,7 +81,7 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
     }
 
     setIsLoading(true);
-    near.mainContract.sendPrivateMessage(messageText, "", messageAddress, "", "", 0)
+    near.mainContract?.sendPrivateMessage(messageText, "", messageAddress, "", "", 0)
       .then(() => {
         setIsMessageSent(true);
 
@@ -104,20 +107,20 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
     setMessageText("");
   }
 
-  const openChat = (e) => {
+  const openChat = (e: MouseEvent) => {
     e.preventDefault();
     let chatId = getPrivateChatId(near.wallet.accountId, messageAddress);
     navigate(`/my/account/${chatId}`);
     setIsOpen(false);
   }
 
-  const setRecipientAddress = (address) => {
+  const setRecipientAddress = (address: string) => {
     if (address.indexOf("(") === -1) {
       setMessageAddress(address);
     } else {
       // parse address
       const result = address.match(/\(([^)]+)\)/);
-      if (result.length > 1) {
+      if (result && result.length > 1) {
         setMessageAddress(result[1]);
       }
     }
@@ -142,7 +145,7 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
           <div className={"text-center text-gray-100 p-2"}>
             <div className={"text-xl mb-8 mt-4 font-medium"}>Message successfully sent.</div>
             <div>
-              <PrimaryButton disabled={!canOpenChat} onClick={(e) => openChat(e)}>
+              <PrimaryButton disabled={!canOpenChat} onClick={openChat}>
                 {canOpenChat ? ("Open Chat") : ("Loading Chats...")}
               </PrimaryButton>
               <SecondaryButton className={"ml-4"} onClick={() => resetForm()}>
@@ -155,8 +158,8 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
             <div className={"mb-3"}>
               <Autocomplete
                 options={contactsList}
-                onChange={(event, input) => setRecipientAddress(input)}
-                onKeyUp={(event) => setRecipientAddress(event.target.value)}
+                onChange={(event, input) => setRecipientAddress(input as string)}
+                onKeyUp={(event) => setRecipientAddress((event.target as HTMLInputElement).value)}
                 freeSolo
                 renderInput={(params) => (
                   <PrimaryTextField
@@ -173,7 +176,7 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
                                minRows={3}
                                disabled={isLoading}
                                value={messageText}
-                               onChange={(e) => setMessageText(e.target.value)}
+                               onChange={(e: React.ChangeEvent) => setMessageText((e.target as HTMLTextAreaElement).value)}
               />
             </div>
             <div className={"text-right"}>

@@ -1,20 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { NearContext }  from "../../../context/NearContext";
+import { NearContext } from "../../../context/NearContext";
 import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../../utils/requests";
-import Loader  from "../../Loader";
+import Loader from "../../Loader";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
-import Avatar  from "../../Common/Avatar";
+import Avatar from "../../Common/Avatar";
 import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../../utils/transform";
-import AvatarGroup  from "../../Common/AvatarGroup";
+import AvatarGroup from "../../Common/AvatarGroup";
+import { IChatInput, IGroup, IProfile } from "../../../types";
 
 const fetchSecondsInterval = 7;
 
 type Props = {
   searchFilter: string,
   setNewMessagePopupVisible: (visible: boolean) => void,
-  reloadChatList: () => void,
-  onChatSelect: (chat: IChat) => void
+  reloadChatList: number,
+  onChatSelect: (chatId: string) => void
 };
 
 const LeftPanelChats: React.FC<Props> = (
@@ -23,21 +24,21 @@ const LeftPanelChats: React.FC<Props> = (
   }: Props) => {
   const near = useContext(NearContext);
   let { id } = useParams();
-  const [isReady, setIsReady] = useState(false);
-  const [groupsById, setGroupsById] = useState({});
-  const [chatList, setChatList] = useState([]);
-  const [profileList, setProfileList] = useState({});
-  const [reloadCounter, setReloadCounter] = useState(0);
-  const [isBlockchainError, setIsBlockchainError] = useState(false);
+  const [ isReady, setIsReady ] = useState(false);
+  const [ groupsById, setGroupsById ] = useState<Record<string, IGroup>>({});
+  const [ chatList, setChatList ] = useState<IChatInput[]>([]);
+  const [ profileList, setProfileList ] = useState<Record<string, IProfile>>({});
+  const [ reloadCounter, setReloadCounter ] = useState(0);
+  const [ isBlockchainError, setIsBlockchainError ] = useState(false);
 
-  const loadGroupsIdList = async () => {
-    return await near.mainContract.getUserGroups(near.wallet.accountId);
+  const loadGroupsIdList = async (): Promise<IGroup[]> => {
+    return near.mainContract?.getUserGroups(near.wallet.accountId);
   }
 
   const loadAllChats = () => {
     loadGroupsIdList().then(groups => {
       setIsBlockchainError(false);
-      let promiseList = [loadPrivateChatsPromise(near.wallet.accountId)];
+      let promiseList = [ loadPrivateChatsPromise(near.wallet.accountId) ];
       if (groups.length) {
         setGroupListById(groups);
         promiseList.push(
@@ -45,16 +46,23 @@ const LeftPanelChats: React.FC<Props> = (
         )
       }
 
-      Promise.all(promiseList).then(result => {
-        const privateChats = result[0] || [];
-        const groupChats = result[1] || [];
-        let profiles = [];
-        let allChats = privateChats.concat(groupChats);
+      Promise.all(promiseList).then((result: any[]) => {
+        const privateChats: IChatInput[] = result[0] || [];
+        const groupChats: IChatInput[] = result[1] || [];
+        let profiles: string[] = [];
+        let allChats: IChatInput[] = privateChats.concat(groupChats);
 
         allChats.map(chat => {
           // assign to profiles list
           if (Object.keys(chat.last_message).length) {
-            chat.last_message = transformOneMessage(chat.last_message, near.wallet.accountId, false, false, false)
+            chat.last_message = transformOneMessage(
+              chat.last_message,
+              near.wallet.accountId,
+              false,
+              false,
+              false,
+              false
+            );
 
             profiles.push(chat.last_message.from_address);
             if (chat.last_message.to_address) {
@@ -87,32 +95,31 @@ const LeftPanelChats: React.FC<Props> = (
 
   useEffect(() => {
     loadAllChats();
-  }, [reloadCounter, reloadChatList]);
+  }, [ reloadCounter, reloadChatList ]);
 
-  const setGroupListById = (groups) => {
-    let groupsById = {};
+  const setGroupListById = (groups: IGroup[]) => {
+    let groupsById: Record<number, IGroup> = {};
     groups.map(group => {
       groupsById[group.id] = group;
     });
     setGroupsById(groupsById);
   }
 
-  const isGroupChat = (chat) => {
+  const isGroupChat = (chat: IChatInput) => {
     return chat["__typename"] === "GroupChat";
   }
 
-  const isSelected = (chat) => {
+  const isSelected = (chat: IChatInput) => {
     return chat.id === id;
   }
 
-  const LastGroupMessage = ({ chat }) => (
+  const LastGroupMessage = ({ chat }: {chat: IChatInput}) => (
     <>
       <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
         <AvatarGroup
           group={groupsById[chat.id]}
           sizeClass={"w-16 h-16"}
           withBorder={false}
-          textSize={"text-2xl md:text-4xl"}
         />
         <div className="w-5 h-5 md:w-7 md:h-7 group-hover:block absolute right-0 bottom-0">
           <Avatar media={profileList[chat.last_message.from_address]?.image || ""}
@@ -140,7 +147,7 @@ const LeftPanelChats: React.FC<Props> = (
     </>
   )
 
-  const LastPrivateMessage = ({ chat }) => {
+  const LastPrivateMessage = ({ chat }: {chat: IChatInput}) => {
     return (
       <>
         <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
@@ -184,7 +191,7 @@ const LeftPanelChats: React.FC<Props> = (
           }).map(chat => (
             <Link to={`/my/${isGroupChat(chat) ? "group" : "account"}/${chat.id}`}
                   key={chat.id}
-                  onClick={() => onChatSelect()}
+                  onClick={() => onChatSelect(chat.id)}
                   className={`flex justify-between items-center p-2 rounded-lg relative mb-1
                   ${isSelected(chat) ? "bg-sky-500/40 text-gray-50" : "hover:bg-gray-800/80 text-gray-400"}`}>
               {(isGroupChat(chat)) ? (

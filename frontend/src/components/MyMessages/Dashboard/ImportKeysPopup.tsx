@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { NearContext }  from "../../../context/NearContext";
+import { NearContext } from "../../../context/NearContext";
 import { SecretChat } from "../../../utils/secret-chat";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 
@@ -14,8 +14,8 @@ type Props = {
 
 const ImportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
   const near = useContext(NearContext);
-  const [keyText, setKeyText] = useState("");
-  const [isImported, setIsImported] = useState(false);
+  const [ keyText, setKeyText ] = useState("");
+  const [ isImported, setIsImported ] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);

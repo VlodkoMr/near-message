@@ -1,10 +1,10 @@
 import React from "react";
 
 type Props = {
-  size: string
+  size?: string
 };
 
-const Loader: React.FC<Props> = ({ size }: Props) => {
+const Loader: React.FC<Props> = ({ size = "lg" }: Props) => {
   const sizeMap: Record<string, string> = {
     'sm': "w-4 h-4",
     'md': "w-6 h-6",
@@ -17,7 +17,7 @@ const Loader: React.FC<Props> = ({ size }: Props) => {
     <div className={`text-center inline-block`}>
       <svg
         role="status"
-        className={`inline text-gray-300 animate-spin dark:text-gray-600 fill-gray-600 ${sizeMap[size || "lg"]}`}
+        className={`inline text-gray-300 animate-spin dark:text-gray-600 fill-gray-600 ${sizeMap[size]}`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

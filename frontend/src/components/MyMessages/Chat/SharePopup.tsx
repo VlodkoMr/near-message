@@ -4,6 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton } from "../../../assets/css/components";
+import { IGroup } from "../../../types";
 
 type Props = {
   isOpen: boolean,
@@ -12,22 +13,23 @@ type Props = {
 };
 
 const SharePopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {
-  const [isCopied, setIsCopied] = useState(false);
-  const [url, setUrl] = useState("");
+  const [ isCopied, setIsCopied ] = useState(false);
+  const [ url, setUrl ] = useState("");
 
   useEffect(() => {
     if (isOpen) {
       setUrl(`${process.env.APP_URL}my/group/${group.id}`);
     }
-  }, [isOpen]);
+  }, [ isOpen ]);
 
   const handleClose = () => {
     setIsOpen(false);
   };
 
   const copyURL = () => {
-    navigator.clipboard.writeText(url);
-    setIsCopied(true);
+    navigator.clipboard.writeText(url).then(() => {
+      setIsCopied(true);
+    });
   }
 
   return (

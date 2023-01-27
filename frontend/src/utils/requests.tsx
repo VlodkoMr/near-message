@@ -1,5 +1,6 @@
 import { createClient } from "urql";
-import { IGroup, INearContext } from "../types";
+import { IChatInput, IGroup, IMessageInput, INearContext } from "../types";
+import { Client } from "@urql/core/dist/types/client";
 
 export const postRequest = async (url = '', data = {}) => {
   const response = await fetch(url, {
@@ -17,9 +18,9 @@ export const postRequest = async (url = '', data = {}) => {
   return response.json();
 }
 
-export const loadPrivateChatsPromise = (accountId) => {
+export const loadPrivateChatsPromise = (accountId: string): Promise<IChatInput[]> => {
   return new Promise(async (resolve, reject) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const chatListQuery = `{
         privateChatSearch(text:"${accountId}"){
            id
@@ -36,18 +37,18 @@ export const loadPrivateChatsPromise = (accountId) => {
            total_messages
         }
       }`;
-    const result = await client.query(chatListQuery).toPromise();
+    const result = await client.query(chatListQuery, {}).toPromise();
     if (result.data) {
-      resolve(result.data.privateChatSearch.filter(chat => !chat.is_removed));
+      resolve(result.data.privateChatSearch.filter((chat: IChatInput) => !chat.is_removed));
     } else {
       reject();
     }
   });
 }
 
-export const loadGroupChatsPromise = (idList) => {
+export const loadGroupChatsPromise = (idList: string[]): Promise<IChatInput[]> => {
   return new Promise(async (resolve, reject) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const groupChatListQuery = `{
         groupChats(
            orderBy: updated_at, 
@@ -67,18 +68,18 @@ export const loadGroupChatsPromise = (idList) => {
          total_messages
         }
       }`;
-    const result = await client.query(groupChatListQuery).toPromise();
+    const result = await client.query(groupChatListQuery, {}).toPromise();
     if (result.data) {
-      resolve(result.data.groupChats.filter(chat => !chat.is_removed).reverse());
+      resolve(result.data.groupChats.filter((chat: IChatInput) => !chat.is_removed).reverse());
     } else {
       reject();
     }
   });
 }
 
-export const loadGroupMessages = (groupId, messagesCount, skip = 0) => {
+export const loadGroupMessages = (groupId: string, messagesCount: number, skip = 0): Promise<IMessageInput[]> => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const messagesQuery = `{
     groupMessages(
       last: ${messagesCount},
@@ -97,7 +98,7 @@ export const loadGroupMessages = (groupId, messagesCount, skip = 0) => {
         reply_message {id, from_address, text, image}
       }
     }`;
-    const result = await client.query(messagesQuery).toPromise();
+    const result = await client.query(messagesQuery, {}).toPromise();
     if (result.data) {
       resolve(result.data.groupMessages.reverse());
     } else {
@@ -106,9 +107,9 @@ export const loadGroupMessages = (groupId, messagesCount, skip = 0) => {
   });
 }
 
-export const loadNewGroupMessages = (groupId, lastMessageId) => {
+export const loadNewGroupMessages = (groupId: number, lastMessageId: number): Promise<IMessageInput[]> => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const messagesQuery = `{
     groupMessages(
       orderBy: created_at,
@@ -126,7 +127,7 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
         reply_message {id, from_address, text, image}
       }
     }`;
-    const result = await client.query(messagesQuery).toPromise();
+    const result = await client.query(messagesQuery, {}).toPromise();
     if (result.data) {
       resolve(result.data.groupMessages.reverse());
     } else {
@@ -135,9 +136,9 @@ export const loadNewGroupMessages = (groupId, lastMessageId) => {
   });
 }
 
-export const loadPrivateMessages = (chatId, messagesCount, skip = 0) => {
+export const loadPrivateMessages = (chatId: string, messagesCount: number, skip = 0): Promise<IMessageInput[]> => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const messagesQuery = `{
     privateMessages(
       last: ${messagesCount}, 
@@ -159,7 +160,7 @@ export const loadPrivateMessages = (chatId, messagesCount, skip = 0) => {
         reply_message {id, from_address, text, image, encrypt_key}
       }
     }`;
-    const result = await client.query(messagesQuery).toPromise();
+    const result = await client.query(messagesQuery, {}).toPromise();
     if (result.data) {
       resolve(result.data.privateMessages.reverse());
     } else {
@@ -168,9 +169,9 @@ export const loadPrivateMessages = (chatId, messagesCount, skip = 0) => {
   });
 }
 
-export const loadNewPrivateMessages = (chatId, lastMessageId) => {
+export const loadNewPrivateMessages = (chatId: string, lastMessageId: string): Promise<IMessageInput[]> => {
   return new Promise(async (resolve) => {
-    const client = new createClient({ url: process.env.GRAPH_API_URL });
+    const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const messagesQuery = `{
     privateMessages(
       orderBy: created_at,
@@ -191,7 +192,7 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
         reply_message {id, from_address, text, image, encrypt_key}
       }
     }`;
-    const result = await client.query(messagesQuery).toPromise();
+    const result = await client.query(messagesQuery, {}).toPromise();
     if (result.data) {
       resolve(result.data.privateMessages.reverse());
     } else {
@@ -200,14 +201,14 @@ export const loadNewPrivateMessages = (chatId, lastMessageId) => {
   });
 }
 
-export const getPrivateChatId = (user1, user2) => {
+export const getPrivateChatId = (user1: string, user2: string) => {
   if (user1 > user2) {
     return user1.concat("|").concat(user2);
   }
   return user2.concat("|").concat(user1);
 }
 
-export const isChannel = (group) => {
+export const isChannel = (group: IGroup): boolean => {
   return group.group_type === "Channel";
 }
 

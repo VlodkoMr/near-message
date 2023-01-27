@@ -15,9 +15,9 @@ import { IGroup, IMessage, INearContext } from "../../../types";
 
 type Props = {
   toAddress?: string,
-  toGroup: IGroup,
-  onMessageSent: (messageText: string, messageMedia: string) => void,
-  changePrivateMode?: (isPrivateMode: boolean) => void,
+  toGroup?: IGroup,
+  onMessageSent: (messageText: string, messageMedia: string, encryptKey?: string) => void,
+  changePrivateMode?: boolean,
   replyToMessage: IMessage|null,
   setReplyToMessage: (replyToMessage: IMessage|null) => void
 };
@@ -27,7 +27,7 @@ const WriteMessage: React.FC<Props> = (
     toAddress, toGroup, onMessageSent, changePrivateMode, replyToMessage, setReplyToMessage
   }: Props) => {
   const near: INearContext = useContext(NearContext);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [ messageText, setMessageText ] = useState("");
   const [ messageMedia, setMessageMedia ] = useState("");
   const [ messageTmpMedia, setMessageTmpMedia ] = useState("");
@@ -58,7 +58,7 @@ const WriteMessage: React.FC<Props> = (
       }
 
       if (messageText) {
-        near.mainContract.sendPrivateMessage(messageText, "", toAddress, "", "", 0);
+        near.mainContract?.sendPrivateMessage(messageText, "", toAddress, "", "", 0);
         onMessageSent?.(messageText, messageMedia);
       }
     } else {
@@ -85,7 +85,7 @@ const WriteMessage: React.FC<Props> = (
       }
 
       sendFunction = near.mainContract?.sendPrivateMessage(messageText, messageMedia, toAddress, replyId, encryptKey, attachedTokens);
-    } else {
+    } else if (toGroup) {
       sendFunction = near.mainContract?.sendGroupMessage(messageText, messageMedia, toGroup.id, replyId);
     }
 
@@ -107,7 +107,9 @@ const WriteMessage: React.FC<Props> = (
 
   useEffect(() => {
     if (!isMediaLoading) {
-      inputRef.current.focus();
+      if (inputRef) {
+        inputRef.current?.focus();
+      }
     }
   }, [ isMediaLoading, replyToMessage, toAddress, toGroup?.id ]);
 
@@ -117,31 +119,32 @@ const WriteMessage: React.FC<Props> = (
     }
   }, [ changePrivateMode ]);
 
-  const handleTextChange = (e) => {
-    const value = e.target.value;
+  const handleTextChange = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage(value);
+      sendMessage((e.target as HTMLTextAreaElement).value);
       return false;
     }
   }
 
-  const uploadMedia = (e) => {
-    const image = e.target.files[0];
-    resizeFileImage(image, 600, 600).then(blobData => {
-      setIsMediaLoading(true);
+  const uploadMedia = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const images = (e.target as HTMLInputElement).files;
+    if (images) {
+      resizeFileImage(images[0], 600, 600).then(blobData => {
+        setIsMediaLoading(true);
 
-      const reader = new FileReader();
-      reader.readAsDataURL(blobData);
-      reader.onloadend = () => {
-        setMessageTmpMedia(reader.result);
-      }
+        const reader = new FileReader();
+        reader.readAsDataURL(blobData);
+        reader.onloadend = () => {
+          setMessageTmpMedia(reader.result as string);
+        }
 
-      uploadMediaToIPFS(blobData).then(result => {
-        setMessageMedia(result);
-        setIsMediaLoading(false);
-      }).catch(() => setIsMediaLoading(false));
-    });
+        uploadMediaToIPFS(blobData).then(result => {
+          setMessageMedia(result);
+          setIsMediaLoading(false);
+        }).catch(() => setIsMediaLoading(false));
+      });
+    }
   }
 
   const attachNEAR = () => {
@@ -152,7 +155,7 @@ const WriteMessage: React.FC<Props> = (
     }
   }
 
-  const removeMedia = (e) => {
+  const removeMedia = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setMessageTmpMedia("");
@@ -245,7 +248,7 @@ const WriteMessage: React.FC<Props> = (
                   <img src={messageTmpMedia} alt="" className={"w-10 h-10 object-cover rounded-md"}/>
                   <IoMdCloseCircleOutline
                     size={16}
-                    onClick={(e) => removeMedia(e)}
+                    onClick={removeMedia}
                     className={"absolute -right-1 -top-1 text-white bg-gray-700 rounded-full"}
                   />
                 </>

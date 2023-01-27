@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import OwnerGroups  from "./OwnerGroups";
 import { AiOutlineUsergroupAdd, BsPencilSquare, IoCloseOutline } from "react-icons/all";
-import NewPrivateMessagePopup  from "../NewPrivateMessagePopup";
 import { CircleButton } from "../../../assets/css/components";
-import EditGroupPopup  from "../EditGroupPopup";
-import LeftPanelChats  from "./LeftPanelChats";
-import { NearContext }  from "../../../context/NearContext";
+import { NearContext } from "../../../context/NearContext";
+import NewPrivateMessagePopup from "../NewPrivateMessagePopup";
+import EditGroupPopup from "../EditGroupPopup";
+import OwnerGroups from "./OwnerGroups";
+import LeftPanelChats from "./LeftPanelChats";
 
 type Props = {
-  onChatSelect: (chat: IChat) => void
+  onChatSelect: () => void
 };
 
 const LeftPanel: React.FC<Props> = ({ onChatSelect }: Props) => {
   const near = useContext(NearContext);
-  const [isLimitReached, setIsLimitReached] = useState(false);
-  const [ownerGroup, setOwnerGroups] = useState([]);
+  const [ isLimitReached, setIsLimitReached ] = useState(false);
+  const [ ownerGroup, setOwnerGroups ] = useState([]);
 
-  const [newMessagePopupVisible, setNewMessagePopupVisible] = useState(false);
-  const [newGroupPopupVisible, setNewGroupPopupVisible] = useState(false);
-  const [reloadChatList, setReloadChatList] = useState(0);
-  const [searchFilter, setSearchFilter] = useState("");
+  const [ newMessagePopupVisible, setNewMessagePopupVisible ] = useState(false);
+  const [ newGroupPopupVisible, setNewGroupPopupVisible ] = useState(false);
+  const [ reloadChatList, setReloadChatList ] = useState(0);
+  const [ searchFilter, setSearchFilter ] = useState("");
 
   useEffect(() => {
     loadOwnerGroups().then(groups => {
@@ -43,7 +43,7 @@ const LeftPanel: React.FC<Props> = ({ onChatSelect }: Props) => {
   }, []);
 
   const loadOwnerGroups = async () => {
-    const groups = await near.mainContract.getOwnerGroups(near.wallet.accountId);
+    const groups = await near.mainContract?.getOwnerGroups(near.wallet.accountId);
     if (groups) {
       setOwnerGroups(groups.reverse());
     }

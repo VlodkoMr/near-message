@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
-import { NearContext }  from "../../../context/NearContext";
+import { NearContext } from "../../../context/NearContext";
 import { SecretChat } from "../../../utils/secret-chat";
 import { PrimaryButton } from "../../../assets/css/components";
 
@@ -14,24 +14,27 @@ type Props = {
 
 const ExportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
   const near = useContext(NearContext);
-  const [keys, setKeys] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
+  const [ keys, setKeys ] = useState("");
+  const [ isCopied, setIsCopied ] = useState(false);
 
   useEffect(() => {
     setIsCopied(false);
     if (isOpen) {
       const keysBase64 = SecretChat.getKeysForExport(near.wallet.accountId);
-      setKeys(keysBase64);
+      if (keysBase64) {
+        setKeys(keysBase64);
+      }
     }
-  }, [isOpen]);
+  }, [ isOpen ]);
 
   const handleClose = () => {
     setIsOpen(false);
   };
 
   const copyKey = () => {
-    navigator.clipboard.writeText(keys);
-    setIsCopied(true);
+    navigator.clipboard.writeText(keys).then(() => {
+      setIsCopied(true);
+    });
   }
 
   return (

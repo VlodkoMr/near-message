@@ -1,6 +1,7 @@
 import React from "react";
 import { SecondaryButton } from "../../../assets/css/components";
-import OneMessage  from "./OneMessage";
+import OneMessage from "./OneMessage";
+import { IMessage, IProfile } from "../../../types";
 
 type Props = {
   messages: IMessage[],
@@ -10,7 +11,7 @@ type Props = {
   setReplyToMessage: (replyToMessage: IMessage|null) => void,
   opponent: IProfile|null,
   opponentAddress: string,
-  userProfiles: Record<string, IProfile>,
+  userProfiles?: Record<string, IProfile>,
   loadHistoryMessages: () => void,
   hideHistoryButton: boolean,
   canReportReply: boolean
@@ -22,7 +23,7 @@ const MessagesList: React.FC<Props> = (
     userProfiles, loadHistoryMessages, hideHistoryButton, canReportReply
   }: Props) => {
 
-  const isLastMessage = (message, index) => {
+  const isLastMessage = (message: IMessage, index: number) => {
     return !messages[index + 1] || messages[index + 1].from_address !== message.from_address;
   }
 
@@ -40,7 +41,7 @@ const MessagesList: React.FC<Props> = (
           <OneMessage message={message}
                       key={message.id}
                       canReportReply={canReportReply}
-                      opponent={opponent ? opponent : userProfiles[message.from_address] || null}
+                      opponent={opponent ? opponent : userProfiles?.[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={false}
           />
@@ -51,7 +52,7 @@ const MessagesList: React.FC<Props> = (
           <OneMessage message={message}
                       key={message.id}
                       canReportReply={canReportReply}
-                      opponent={opponent ? opponent : userProfiles[message.from_address] || null}
+                      opponent={opponent ? opponent : userProfiles?.[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={isLastMessage(message, index)}
           />
@@ -61,7 +62,7 @@ const MessagesList: React.FC<Props> = (
       {tmpMessages.length > 0 && tmpMessages.filter(tmp => tmp.to_address === opponentAddress).map(tmpMessage => (
           <OneMessage message={tmpMessage}
                       key={tmpMessage.id}
-                      opponent={opponent}
+                      opponent={opponent as IProfile}
                       canReportReply={false}
                       isLast={true}
           />

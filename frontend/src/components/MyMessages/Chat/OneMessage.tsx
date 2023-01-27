@@ -1,21 +1,22 @@
 import React, { useContext, useState } from "react";
-import Avatar  from "../../Common/Avatar";
+import Avatar from "../../Common/Avatar";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
-import { NearContext }  from "../../../context/NearContext";
+import { NearContext } from "../../../context/NearContext";
 import { SecretChat } from "../../../utils/secret-chat";
-import Loader  from "../../Loader";
+import Loader from "../../Loader";
 import { decodeMessageText, mediaURL } from "../../../utils/transform";
 import { MessageAction } from "../../../assets/css/components";
 import { utils } from "near-api-js";
 import { LinkItUrl } from "react-linkify-it";
+import { IMessage, IProfile } from "../../../types";
 
 type Props = {
   message: IMessage,
-  opponent: IProfile,
+  opponent: IProfile|null,
   isLast: boolean,
-  setReplyToMessage: (replyToMessage: IMessage|null) => void,
+  setReplyToMessage?: (replyToMessage: IMessage|null) => void,
   canReportReply: boolean
 };
 
@@ -24,7 +25,7 @@ const OneMessage: React.FC<Props> = (
     message, opponent, isLast, setReplyToMessage, canReportReply
   }: Props) => {
   const near = useContext(NearContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const acceptPrivateMode = () => {
     const secretChat = new SecretChat(message.from_address, near.wallet.accountId);
@@ -32,14 +33,14 @@ const OneMessage: React.FC<Props> = (
 
     setIsLoading(true);
     const messageText = `(secret-accept:${secretChat.getMyPublicKey()})`;
-    near.mainContract.sendPrivateMessage(messageText, "", opponent.id, "", "", 0).then(() => {
+    near.mainContract?.sendPrivateMessage(messageText, "", opponent?.id, "", "", 0).then(() => {
       setIsLoading(false);
     });
   }
 
   const handleSpamReport = () => {
     if (confirm("Do you want to Report Spam in this message?")) {
-      near.mainContract.spamReport(message.id, message.from_address).then(() => {
+      near.mainContract?.spamReport(message.id, message.from_address).then(() => {
         message.text = "*Spam report sent"
       });
     }
@@ -49,7 +50,7 @@ const OneMessage: React.FC<Props> = (
     <>
       {message.isDateFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm font-medium text-gray-500">
-          {timestampToDate(message.created_at, true)}
+          {timestampToDate(message.createdAt, true)}
         </p>
       )}
 
@@ -87,7 +88,11 @@ const OneMessage: React.FC<Props> = (
                       {/*<small className={"opacity-50 -ml-1 mt-1 block group-hover:text-gray-500"}>spam</small>*/}
                     </MessageAction>
 
-                    <MessageAction onClick={() => setReplyToMessage(message)} title={"Reply"}>
+                    <MessageAction onClick={() => {
+                      if (setReplyToMessage) {
+                        setReplyToMessage(message);
+                      }
+                    }} title={"Reply"}>
                       <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
                         <path d="M19,16.685c0,0-2.225-9.732-11-9.732V2.969L1,9.542l7,6.69v-4.357C12.763,11.874,16.516,12.296,19,16.685z"/>
                       </svg>
@@ -119,7 +124,7 @@ const OneMessage: React.FC<Props> = (
                 </p>
               )}
 
-              {message.deposit > 0 && (
+              {parseInt(message.deposit) > 0 && (
                 <div className={`text-sm whitespace-nowrap rounded-lg py-2 px-3 font-semibold mt-1 mb-3
                 ${message.isMy ? "bg-sky-800" : "bg-sky-800/50"}`}>
                   Deposit: {utils.format.formatNearAmount(message.deposit)} NEAR
@@ -139,7 +144,7 @@ const OneMessage: React.FC<Props> = (
                 </p>
 
                 <span className={"ml-2.5 leading-6 text-xs opacity-40"}>
-                  {timestampToTime(message?.created_at)}
+                  {timestampToTime(message?.createdAt)}
                 </span>
               </div>
 
