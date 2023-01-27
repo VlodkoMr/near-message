@@ -1,6 +1,6 @@
 import React from "react";
 import { mediaURL } from '../../utils/transform';
-import logoImage from '@assets/img/user-group.png';
+import logoImage from '../../assets/img/user-group.png';
 
 type Props = {
   group: IGroup,

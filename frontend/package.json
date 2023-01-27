@@ -38,16 +38,17 @@
     "@mui/material": "^5.10.13",
     "@near-wallet-selector/core": "^7.3.0",
     "@near-wallet-selector/here-wallet": "^7.3.0",
-    "@near-wallet-selector/sender": "^7.3.0",
     "@near-wallet-selector/ledger": "^7.3.0",
     "@near-wallet-selector/meteor-wallet": "^7.3.0",
     "@near-wallet-selector/modal-ui": "^7.3.0",
     "@near-wallet-selector/my-near-wallet": "^7.3.0",
     "@near-wallet-selector/near-wallet": "^7.3.0",
+    "@near-wallet-selector/sender": "^7.3.0",
     "@nearfoundation/near-js-encryption-box": "^0.1.2",
     "@react-buddy/ide-toolbox": "^2.2.1",
     "@react-buddy/palette-mui": "^1.2.2",
     "near-api-js": "^0.44.2",
+    "nft.storage": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
@@ -60,9 +61,6 @@
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
-  },
-  "alias": {
-    "@assets/*": "./src/assets/$1"
   },
   "browserslist": {
     "production": [

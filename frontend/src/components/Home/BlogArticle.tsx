@@ -6,7 +6,7 @@ type Props = {
   url: string
 };
 
-const BlogArticle: React.FC = ({ title, text, url }: Props) => (
+const BlogArticle: React.FC<Props> = ({ title, text, url }: Props) => (
   <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 px-4">
     <div className="relative bg-white dark:bg-dark shadow-one rounded-md overflow-hidden mb-5 md:mb-10 wow fadeInUp"
          data-wow-delay=".1s">

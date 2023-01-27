@@ -1,14 +1,14 @@
-import { File, NFTStorage } from '../assets/js/nft-storage.esm.min';
+import {File, NFTStorage} from 'nft.storage';
 
-export const uploadMediaToIPFS = (media) => {
+export const uploadMediaToIPFS = (media: Blob): Promise<string> => {
   return new Promise(async (resolve, reject) => {
-    const name = `${+new Date()}.png`;
-    const image = new File([media], name, {
+    const name: string = `${+new Date()}.png`;
+    const image: File = new File([media], name, {
       type: media.type,
       lastModified: new Date().getTime()
     });
 
-    const nftStorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
+    const nftStorage = new NFTStorage({token: process.env.NFT_STORAGE_KEY || ""});
     const token = await nftStorage.store({
       image,
       name,
@@ -22,17 +22,16 @@ export const uploadMediaToIPFS = (media) => {
   })
 }
 
-export const resizeFileImage = (file, max_width, max_height) => {
+export const resizeFileImage = (file: File, max_width: number, max_height: number): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = function (e) {
-      const img = document.createElement("img");
-      img.src = e.target.result;
+      const img: HTMLImageElement = document.createElement("img");
+      img.src = e.target?.result as string;
 
       setTimeout(() => {
         const canvas = document.createElement("canvas");
         let ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
 
         let width = img.width;
         let height = img.height;
@@ -50,15 +49,17 @@ export const resizeFileImage = (file, max_width, max_height) => {
 
         canvas.width = width;
         canvas.height = height;
-        ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(result => {
-          if (result) {
-            resolve(result);
-          } else {
-            reject("Can't read image")
-          }
-        }, file.type);
+
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(result => {
+            if (result) {
+              resolve(result);
+            } else {
+              reject("Can't read image")
+            }
+          }, file.type);
+        }
       }, 300);
     };
     reader.readAsDataURL(file);
