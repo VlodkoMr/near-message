@@ -1090,6 +1090,14 @@
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.1.1.tgz"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
+"@here-wallet/core@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npmjs.org/@here-wallet/core/-/core-1.3.1.tgz"
+  integrity sha512-OK7AlskPpGRdAnGruy8dWcvPCl8JL+hmBCKr1QRESPNwA4Tn3InhTL8xyxGrCjFA1gQ9XUGGTQvdI9ae3FDQ9Q==
+  dependencies:
+    sha1 "^1.1.1"
+    uuid4 "2.0.3"
+
 "@ipld/car@^3.0.1", "@ipld/car@^3.2.3":
   version "3.2.4"
   resolved "https://registry.npmjs.org/@ipld/car/-/car-3.2.4.tgz"
@@ -1374,84 +1382,84 @@
     multiformats "^9.5.4"
     murmurhash3js-revisited "^3.0.0"
 
-"@near-wallet-selector/core@^7.3.0", "@near-wallet-selector/core@7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/core/-/core-7.3.0.tgz"
-  integrity sha512-kmW3/taTfX3KjsXkaAbPtQUYTSpax5HY8aFE/66wlGgmm7PboEOPYys04PkG/f6SJ3UJoTn49Ek87C0eu5hSDA==
+"@near-wallet-selector/core@^7.6.1", "@near-wallet-selector/core@7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/core/-/core-7.6.1.tgz"
+  integrity sha512-qFBWdtyZYXMBoIc2rTXKqUWE5mnaqo/7oIDn2qExTFRyRiLiGSe5ak0j5MkS52wNeFVu45FOs2NqszrKTiNyig==
   dependencies:
     rxjs "^7.5.7"
 
-"@near-wallet-selector/here-wallet@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/here-wallet/-/here-wallet-7.3.0.tgz"
-  integrity sha512-9VHxqPdpEBN+FpdC5bwYKmctPEkS1N6ga6mK0bU2mj7NRtoKJSK2k9bVkTWxe7ldeGmSJDUlsb1Jski24dkzjQ==
+"@near-wallet-selector/here-wallet@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/here-wallet/-/here-wallet-7.6.1.tgz"
+  integrity sha512-tsHGe/WuAlkYv0Cp5tSJonZo1EpvKf3wbmA/HfAs6qTeQLfh+jTetzdkrdsILhGOU44r5VkHYuOmwO1Frh3Ufg==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
-    "@near-wallet-selector/wallet-utils" "7.3.0"
+    "@here-wallet/core" "^1.3.1"
+    "@near-wallet-selector/core" "7.6.1"
     bn.js "^5.2.0"
 
-"@near-wallet-selector/ledger@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/ledger/-/ledger-7.3.0.tgz"
-  integrity sha512-ByI5FVUYUr6tfhT6uvSUfoU1kdSrrHTFmeoY4RvJMF9Hd8vmcBDdG59B6Fn940XIIqFZkYq1A/K4OUqhCZldAQ==
+"@near-wallet-selector/ledger@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/ledger/-/ledger-7.6.1.tgz"
+  integrity sha512-swvJcHuJzFkeuDQ8BZ2g1pUqAAR2IB39HlNmBbWenk9+zNZ01ImnLtUC45OoMWiEBG5NvpouQs+tmAXYQXzBjw==
   dependencies:
     "@ledgerhq/hw-transport" "6.27.1"
     "@ledgerhq/hw-transport-webhid" "6.27.1"
-    "@near-wallet-selector/core" "7.3.0"
-    "@near-wallet-selector/wallet-utils" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
+    "@near-wallet-selector/wallet-utils" "7.6.1"
     bn.js "^5.2.0"
     is-mobile "^3.1.1"
 
-"@near-wallet-selector/meteor-wallet@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/meteor-wallet/-/meteor-wallet-7.3.0.tgz"
-  integrity sha512-Md8qoBUii8BqybLEKGC3K+yssWAS4nD15hxTDkTcZ7ZQNdvZ0ZOO2+r3X8c++QkTJB1eYpszIhsH9+LFmBrXCw==
+"@near-wallet-selector/meteor-wallet@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/meteor-wallet/-/meteor-wallet-7.6.1.tgz"
+  integrity sha512-RRXqVsYyB2P+r81PMVVEjZUpkk3pFkR2mxGdquBzMela2NmrK6W1NWgBmVy8BSA6Wwjxei5AGqUYrL+i3lFk2w==
   dependencies:
     "@meteorwallet/sdk" "^0.6.0"
-    "@near-wallet-selector/core" "7.3.0"
-    "@near-wallet-selector/wallet-utils" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
+    "@near-wallet-selector/wallet-utils" "7.6.1"
 
-"@near-wallet-selector/modal-ui@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/modal-ui/-/modal-ui-7.3.0.tgz"
-  integrity sha512-zh9YCE805nvHHBOOpZDj4dzEXPuggfmTfOIrs7NQ3yQ22CHJ7M3KYh3HtLhDSEqq7DS+qfKiwOql39L9Y6zf2w==
+"@near-wallet-selector/modal-ui@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/modal-ui/-/modal-ui-7.6.1.tgz"
+  integrity sha512-M1FXDZzFPRbp4TP7cawnIRX+ZJkkjQt54aGRRCPndxaoJXMnI1YKEcMXsPlcDpVWC7NBcVDtUcwuNuosUZCxqg==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
-    copy-to-clipboard "^3.3.2"
+    "@near-wallet-selector/core" "7.6.1"
+    copy-to-clipboard "^3.3.3"
     qrcode "^1.5.1"
     react "18.2.0"
     react-dom "18.2.0"
 
-"@near-wallet-selector/my-near-wallet@^7.3.0", "@near-wallet-selector/my-near-wallet@7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/my-near-wallet/-/my-near-wallet-7.3.0.tgz"
-  integrity sha512-Eo+r+wQySKyTh9Aq60r7V1umjdJd8WkHyLyhk6O6jiYJeh9FLHKmssoJ23CeQZIP/bGyKeeBOU+/8kaFox9fiQ==
+"@near-wallet-selector/my-near-wallet@^7.6.1", "@near-wallet-selector/my-near-wallet@7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/my-near-wallet/-/my-near-wallet-7.6.1.tgz"
+  integrity sha512-/ihjG5Y799FsSn8a30CwH1t6shlXKxOEmSHfrzqlTiIudOops6qUKceu4a4vNBSrw25muE7ntt8CX/v2uU5Ypg==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
-    "@near-wallet-selector/wallet-utils" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
+    "@near-wallet-selector/wallet-utils" "7.6.1"
 
-"@near-wallet-selector/near-wallet@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/near-wallet/-/near-wallet-7.3.0.tgz"
-  integrity sha512-Zo85ECu/1a/iM6j0dJAubQiwT8SqDngzX6bwBMK9k64EcaotoGHsdEgo8YF/yW32hEivteSHT9satDUcQL6I1A==
+"@near-wallet-selector/near-wallet@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/near-wallet/-/near-wallet-7.6.1.tgz"
+  integrity sha512-+bmnOZK6SYrJmDT0IDGbDxuA7s6pWrQhPA/UUeImTiWVu+owyBAYuPYWEOVmg1EN+9p0C2GNySTTV5z9vLbNpg==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
-    "@near-wallet-selector/my-near-wallet" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
+    "@near-wallet-selector/my-near-wallet" "7.6.1"
 
-"@near-wallet-selector/sender@^7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/sender/-/sender-7.3.0.tgz"
-  integrity sha512-XSDVNxV2xll4YdVRf900cRey0hBaUDRc3uw+gURRygSD8UfWiOVow/n9oWREAnxHxWNqbauMxNSTWZ8T2kQG/Q==
+"@near-wallet-selector/sender@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/sender/-/sender-7.6.1.tgz"
+  integrity sha512-+95J8c01Lt+RS66jyV77f4l9YNj+talOvTxGc5O3eEmRJppEyXDYLHYbpWyUY5pNr+Pse9O3VB3Ms13/7TYGIg==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
     is-mobile "^3.1.1"
 
-"@near-wallet-selector/wallet-utils@7.3.0":
-  version "7.3.0"
-  resolved "https://registry.npmjs.org/@near-wallet-selector/wallet-utils/-/wallet-utils-7.3.0.tgz"
-  integrity sha512-G502AecZqIXKcINpngeWMpbEoxXEyt/z9qpszhOrG9bnC6ecKMY+hth3SzUDI9etyx01Hc39J3Q/74t1worQCg==
+"@near-wallet-selector/wallet-utils@7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@near-wallet-selector/wallet-utils/-/wallet-utils-7.6.1.tgz"
+  integrity sha512-g5mw69vBk0ZTvrCNxMLt7XwcrGbkDdbxoPMpMPNcpNFL0oo/n5WBZ4+qitoy8d8xoXxeS3r28sYYaQ8QckkLFw==
   dependencies:
-    "@near-wallet-selector/core" "7.3.0"
+    "@near-wallet-selector/core" "7.6.1"
     bn.js "^5.2.0"
 
 "@nearfoundation/near-js-encryption-box@^0.1.2":
@@ -2172,10 +2180,10 @@
   resolved "https://registry.npmjs.org/@types/minimist/-/minimist-1.2.2.tgz"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
-"@types/node@*", "@types/node@^18.6.2", "@types/node@>=13.7.0":
-  version "18.7.23"
-  resolved "https://registry.npmjs.org/@types/node/-/node-18.7.23.tgz"
-  integrity sha512-DWNcCHolDq0ZKGizjx2DZjR/PqsYwAcYUJmfMWqtVU2MBMG5Mo+xFZrhGId5r/O5HOuMPyQEcM6KUBp5lBZZBg==
+"@types/node@*", "@types/node@^18.11.18", "@types/node@>=13.7.0":
+  version "18.11.18"
+  resolved "https://registry.npmjs.org/@types/node/-/node-18.11.18.tgz"
+  integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2213,10 +2221,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.0 || ^18.0.0":
-  version "18.0.21"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.0.21.tgz"
-  integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
+"@types/react@*", "@types/react@^17.0.0 || ^18.0.0", "@types/react@^18.0.27":
+  version "18.0.27"
+  resolved "https://registry.npmjs.org/@types/react/-/react-18.0.27.tgz"
+  integrity sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2552,7 +2560,7 @@ bn.js@^4.11.9:
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-4.12.0.tgz"
   integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
-bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.2.0:
+bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.2.0, bn.js@5.2.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-5.2.1.tgz"
   integrity sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==
@@ -2577,6 +2585,15 @@ borsh@^0.6.0:
     text-encoding-utf-8 "^1.0.2"
 
 borsh@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/borsh/-/borsh-0.7.0.tgz"
+  integrity sha512-CLCsZGIBCFnPtkNnieW/a8wmreDmfUtjU2m9yHrzPXIlNbqVs0AQrSatSG6vdNYUqdc83tkQi2eHfF98ubzQLA==
+  dependencies:
+    bn.js "^5.2.0"
+    bs58 "^4.0.0"
+    text-encoding-utf-8 "^1.0.2"
+
+borsh@0.7.0:
   version "0.7.0"
   resolved "https://registry.npmjs.org/borsh/-/borsh-0.7.0.tgz"
   integrity sha512-CLCsZGIBCFnPtkNnieW/a8wmreDmfUtjU2m9yHrzPXIlNbqVs0AQrSatSG6vdNYUqdc83tkQi2eHfF98ubzQLA==
@@ -2778,6 +2795,11 @@ chalk@^4.1.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+"charenc@>= 0.0.1":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
+  integrity sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==
+
 chokidar@^3.5.2, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
@@ -2886,10 +2908,10 @@ convert-source-map@^1.5.0, convert-source-map@^1.7.0:
   dependencies:
     safe-buffer "~5.1.1"
 
-copy-to-clipboard@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.npmjs.org/copy-to-clipboard/-/copy-to-clipboard-3.3.2.tgz"
-  integrity sha512-Vme1Z6RUDzrb6xAI7EZlVZ5uvOk2F//GaxKUxajDqm9LhOVM1inxNAD2vy+UZDYsd0uyA9s7b3/FVZPSxqrCfg==
+copy-to-clipboard@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.npmjs.org/copy-to-clipboard/-/copy-to-clipboard-3.3.3.tgz"
+  integrity sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==
   dependencies:
     toggle-selection "^1.0.6"
 
@@ -2955,6 +2977,11 @@ cross-spawn@^7.0.0:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+"crypt@>= 0.0.1":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/crypt/-/crypt-0.0.2.tgz"
+  integrity sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==
 
 crypto-browserify@^3.12.0:
   version "3.12.0"
@@ -5339,6 +5366,14 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
+sha1@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/sha1/-/sha1-1.1.1.tgz"
+  integrity sha512-dZBS6OrMjtgVkopB1Gmo4RQCDKiZsqcpAQpkV/aaj+FCrCg8r4I4qMkDPQjBgLIxlmu9k4nUbWq6ohXahOneYA==
+  dependencies:
+    charenc ">= 0.0.1"
+    crypt ">= 0.0.1"
+
 shallowequal@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-1.1.0.tgz"
@@ -5736,10 +5771,10 @@ type-fest@^0.8.1:
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.8.1.tgz"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-typescript@^4.7.2, typescript@>=2.7:
-  version "4.8.4"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.8.4.tgz"
-  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
+typescript@^4.9.4, typescript@>=2.7:
+  version "4.9.4"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.4.tgz"
+  integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
 
 u3@^0.1.1:
   version "0.1.1"
@@ -5827,6 +5862,11 @@ utility-types@^3.10.0:
   version "3.10.0"
   resolved "https://registry.npmjs.org/utility-types/-/utility-types-3.10.0.tgz"
   integrity sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==
+
+uuid4@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/uuid4/-/uuid4-2.0.3.tgz"
+  integrity sha512-CTpAkEVXMNJl2ojgtpLXHgz23dh8z81u6/HEPiQFOvBc/c2pde6TVHmH4uwY0d/GLF3tb7+VDAj4+2eJaQSdZQ==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

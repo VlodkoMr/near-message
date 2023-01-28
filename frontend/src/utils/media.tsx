@@ -1,14 +1,15 @@
-import {File, NFTStorage} from 'nft.storage';
+// @ts-ignore
+import { File, NFTStorage } from 'nft.storage/dist/bundle.esm.min.js';
 
 export const uploadMediaToIPFS = (media: Blob): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     const name: string = `${+new Date()}.png`;
-    const image: File = new File([media], name, {
+    const image: File = new File([ media ], name, {
       type: media.type,
       lastModified: new Date().getTime()
     });
 
-    const nftStorage = new NFTStorage({token: process.env.NFT_STORAGE_KEY || ""});
+    const nftStorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY || "" });
     const token = await nftStorage.store({
       image,
       name,

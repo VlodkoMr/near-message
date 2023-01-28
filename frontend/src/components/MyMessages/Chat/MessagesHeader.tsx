@@ -13,8 +13,8 @@ import { MessagesContext } from "../../../pages/MyMessages/MyMessagesLayout";
 
 type Props = {
   group?: IGroup,
-  opponent: IProfile,
-  openChatsList: () => void
+  opponent?: IProfile,
+  openChatsList?: () => void
 };
 
 const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Props) => {
@@ -40,8 +40,9 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
   const getTitle = () => {
     if (group) {
       return group.title;
+    } else if (opponent) {
+      return opponent.name ? opponent.name : opponent.id;
     }
-    return opponent.name ? opponent.name : opponent.id;
   }
 
   useEffect(() => {
@@ -57,15 +58,16 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
       className={`chat-header px-3 py-3 flex flex-row flex-none justify-between items-center shadow border-b-2 border-gray-700/30 
       bg-[#1f2b3b] md:bg-transparent`}>
       <div className="flex">
-        {group || opponent ? (
+        {(group || opponent) ? (
           <>
             <div className="w-12 h-12 mr-3 relative flex flex-shrink-0 hidden md:block">
-              {group ? (
+              {group && (
                 <AvatarGroup
                   group={group}
                   sizeClass={"w-12 h-12"}
                 />
-              ) : (
+              )}
+              {opponent && (
                 <Avatar media={opponent.image}
                         title={opponent.id}
                         textSize={"text-2xl md:text-3xl"}
@@ -74,18 +76,19 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
             </div>
 
             <div className="text-sm flex flex-row w-full">
-              <div className={"md:hidden text-gray-400 mr-3 pt-2"} onClick={() => openChatsList()}>
+              <div className={"md:hidden text-gray-400 mr-3 pt-2"} onClick={() => openChatsList?.()}>
                 <IoIosArrowDropleftCircle size={36}/>
               </div>
               <div>
                 <p className="font-medium text-base mt-0.5 address-limit">
                   {getTitle()}
                 </p>
-                {group ? (
+                {group && (
                   <span className={"text-gray-400/80 mr-4"}>
                     {group.members_count || "no"} member{group.members_count > 1 ? "s" : ""}
                   </span>
-                ) : (
+                )}
+                {opponent && (
                   <a className={"text-gray-400/80"}
                      href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
                      target={"_blank"}>

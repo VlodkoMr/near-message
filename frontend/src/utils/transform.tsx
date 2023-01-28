@@ -170,7 +170,7 @@ export const generateTemporaryMessage = (
   return transformOneMessage(message, accountId, true, true, true, true);
 }
 
-export const onlyUnique = (value: string, index: number, list: string[]) => {
+export const onlyUnique = (value: string, index: number, list: string[]): boolean => {
   return list.indexOf(value) === index;
 }
 

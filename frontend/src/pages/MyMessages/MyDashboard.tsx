@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useOutletContext } from 'react-router-dom';
 import MessagesHeader from "../../components/MyMessages/Chat/MessagesHeader";
 import Avatar from "../../components/Common/Avatar";
 import { NearContext } from "../../context/NearContext";
@@ -10,19 +9,20 @@ import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import ExportKeysPopup from "../../components/MyMessages/Dashboard/ExportKeysPopup";
 import ImportKeysPopup from "../../components/MyMessages/Dashboard/ImportKeysPopup";
 import { INearContext } from "../../types";
+import { MessagesContext } from "./MyMessagesLayout";
 
 const MyDashboard: React.FC = () => {
   const near: INearContext = useContext(NearContext);
-  const [myProfile] = useOutletContext();
-  const [isUpgradeLoading, setIsUpgradeLoading] = useState(0);
-  const [isMoreInfoHidden, setIsMoreInfoHidden] = useState(true);
-  const [isWarningHidden, setIsWarningHidden] = useState(true);
-  const [spamCount, setSpamCount] = useState(0);
-  const [isExportPopupVisible, setIsExportPopupVisible] = useState(false);
-  const [isImportPopupVisible, setIsImportPopupVisible] = useState(false);
+  const { myProfile } = MessagesContext();
+  const [ isUpgradeLoading, setIsUpgradeLoading ] = useState(0);
+  const [ isMoreInfoHidden, setIsMoreInfoHidden ] = useState(true);
+  const [ isWarningHidden, setIsWarningHidden ] = useState(true);
+  const [ spamCount, setSpamCount ] = useState(0);
+  const [ isExportPopupVisible, setIsExportPopupVisible ] = useState(false);
+  const [ isImportPopupVisible, setIsImportPopupVisible ] = useState(false);
 
   const loadSpamCount = async () => {
-    return await near.mainContract.getSpamCount(near.wallet.accountId);
+    return near.mainContract?.getSpamCount(near.wallet.accountId);
   }
 
   const hideDashboardWarning = () => {
@@ -66,12 +66,12 @@ const MyDashboard: React.FC = () => {
 
   const activateLevel = async (level: number) => {
     setIsUpgradeLoading(level);
-    return await near.mainContract.userAccountLevelUp(getLevelPrice(level));
+    return near.mainContract?.userAccountLevelUp(getLevelPrice(level));
   }
 
   const BlockTitle = (
     { text, children, isRed = false }: {
-      text: string, children: React.ReactNode, isRed: boolean
+      text: string, children?: React.ReactNode, isRed?: boolean
     }) => (
     <div
       className={`text-lg pb-2 mb-4 font-medium border-b flex justify-between 
@@ -87,11 +87,10 @@ const MyDashboard: React.FC = () => {
     </a>
   )
 
-  const AccountLevel = ({ level, price, children, className, isCurrent }:
-                          {
-                            level: number, price: number, children, className, isCurrent
-                          }
-  ) => (
+  const AccountLevel = (
+    { level, price, children, className, isCurrent }: {
+      level: string, price: string, children: React.ReactNode, className: string, isCurrent: boolean
+    }) => (
     <div className={`flex-1 py-3 ${className} ${isCurrent && "bg-blue-800/5"}`}>
       <div className={"flex flex-row"}>
         <span className={"font-semibold text-lg"}>{level}</span>
@@ -105,7 +104,7 @@ const MyDashboard: React.FC = () => {
 
   return (
     <>
-      <MessagesHeader title={""} media={""}/>
+      <MessagesHeader/>
 
       <div className={"px-2 py-4 md:p-6 mb-auto lg:max-w-[1600px] overflow-y-scroll"}>
         <div className={"md:flex md:flex-row md:gap-6 mb-4 md:mb-6"}>
@@ -163,7 +162,7 @@ const MyDashboard: React.FC = () => {
 
           <div className={"bg-[#1f2b3b] py-4 px-4 md:px-6 md:flex-1 rounded-lg"}>
             <BlockTitle text={"Account Keys"}/>
-            <div className={""}>
+            <div>
               <p className={"opacity-60 text-sm"}>
                 Account keys used for private conversations: each device generate it's own keys.
                 To decode private messages in another device you can export/import your private keys.

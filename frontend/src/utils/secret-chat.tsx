@@ -9,8 +9,10 @@ const CHAT_PREFIX = "chatme:chat-keys";
 
 
 export class SecretChat {
+  opponentAddress: string;
+  myAddress: string;
 
-  constructor(opponentAddress, myAddress) {
+  constructor(opponentAddress: string, myAddress: string) {
     this.opponentAddress = opponentAddress;
     this.myAddress = myAddress;
 
@@ -81,11 +83,11 @@ export class SecretChat {
     return "";
   }
 
-  decode(text, nonce) {
+  decode(text: string, nonce: string): string|null {
     return open(text, this.chatPublicKey(), this.getMyPrivateKey(), nonce);
   }
 
-  encode(text) {
+  encode(text: string): {secret: string, nonce: string} {
     const encoded = create(text, this.chatPublicKey(), this.getMyPrivateKey());
     return {
       secret: encoded.secret,
@@ -93,11 +95,11 @@ export class SecretChat {
     }
   }
 
-  storeSecretChatKey(messageText) {
+  storeSecretChatKey(messageText: string) {
     const keyParts = messageText.split(":");
     if (keyParts.length === 2) {
       const chatPublicKey = keyParts[1].replace(")", "");
-      let currentData = {};
+      let currentData: Record<string, any> = {};
       let chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
       if (chat) {
         currentData = JSON.parse(chat);
@@ -110,10 +112,10 @@ export class SecretChat {
     }
   }
 
-  switchPrivateMode(isEnabled) {
+  switchPrivateMode(isEnabled: boolean) {
     const chatKey = `${CHAT_PREFIX}:${this.myAddress}`;
     const chat = localStorage.getItem(chatKey);
-    const chatData = JSON.parse(chat);
+    const chatData = JSON.parse(chat as string);
     if (chatData && chatData[this.opponentAddress]) {
       chatData[this.opponentAddress].enabled = isEnabled;
       localStorage.setItem(chatKey, JSON.stringify(chatData));
@@ -121,7 +123,7 @@ export class SecretChat {
   }
 
   // Export keys
-  static getKeysForExport(myAddress) {
+  static getKeysForExport(myAddress: string) {
     const myKeys = localStorage.getItem(`${MY_PREFIX}:${myAddress}`);
     const chatKeys = localStorage.getItem(`${CHAT_PREFIX}:${myAddress}`);
     if (myKeys) {
@@ -131,15 +133,17 @@ export class SecretChat {
     }
   }
 
-  static importKeys(myAddress, importData) {
+  static importKeys(myAddress: string, importData: string) {
     let keyData;
+    let keys;
     try {
       keyData = atob(importData);
+      keys = keyData.split("|");
     } catch (e) {
       alert(`Unable to decode your key, make sure the key text imported entirety`)
     }
-    const keys = keyData.split("|");
-    if (keys.length === 2) {
+
+    if (keys && keys.length === 2) {
       const myKey = JSON.parse(keys[0]);
       const chatsKey = JSON.parse(keys[1]);
       localStorage.setItem(`${MY_PREFIX}:${myAddress}`, JSON.stringify(myKey));
