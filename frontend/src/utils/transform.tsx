@@ -45,7 +45,7 @@ export const loadSocialProfiles = async (addressList: string[], near: INearConte
   }
 }
 
-export const getInnerId = (text: string, image: string, toAddress: string): string => {
+export const getInnerId = (text: string, image: string, toAddress: string|number): string => {
   const inner_id = base_encode(`${text}:${image}:${toAddress}`);
   if (inner_id.length > 10) {
     return inner_id.slice(0, 10);

@@ -6,12 +6,12 @@ import {
   BsImage,
   IoMdCloseCircleOutline,
 } from "react-icons/all";
-import NearContext from "../../../context/NearContext";
 import Loader from "../../Loader";
 import { SecretChat } from "../../../utils/secret-chat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 import AttachTokenPopup from "./AttachTokenPopup";
 import { IGroup, IMessage, INearContext } from "../../../types";
+import { NearContext } from "../../../context/NearContext";
 
 type Props = {
   toAddress?: string,
@@ -58,7 +58,7 @@ const WriteMessage: React.FC<Props> = (
       }
 
       if (messageText) {
-        near.mainContract?.sendPrivateMessage(messageText, "", toAddress, "", "", 0);
+        near.mainContract?.sendPrivateMessage(messageText, "", toAddress as string, "", "", 0);
         onMessageSent?.(messageText, messageMedia);
       }
     } else {

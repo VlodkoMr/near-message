@@ -96,14 +96,14 @@ class MainContract implements IMainContract {
    * @returns {Promise<any>}
    */
   async userAccountLevelUp(depositNEAR: number) {
-    const deposit = utils.format.parseNearAmount(depositNEAR.toString()) || "0";
+    const deposit = utils.format.parseNearAmount(depositNEAR.toString());
     try {
-      const gas = convertToTera(30);
+      const gas = convertToTera("30");
       return await this.wallet?.callMethod({
         contractId: this.contractId,
         method: 'user_account_level_up',
         gas,
-        deposit
+        deposit: deposit as string
       });
     } catch (e) {
       console.log(`blockchain error`, e);
@@ -160,8 +160,8 @@ class MainContract implements IMainContract {
   async createNewGroup(
     title: string, image: string, text: string, url: string, group_type: GroupType, members: string[], moderator: string
   ): Promise<any> {
-    const deposit = utils.format.parseNearAmount("0.25") || "0";
-    const gas = convertToTera(80) || "0";
+    const deposit = utils.format.parseNearAmount("0.25");
+    const gas = convertToTera("80");
 
     let args = {
       title,
@@ -180,7 +180,7 @@ class MainContract implements IMainContract {
         method: 'create_new_group',
         args,
         gas,
-        deposit
+        deposit: deposit as string
       });
     } catch (e) {
       console.log(`blockchain error`, e);
@@ -196,9 +196,9 @@ class MainContract implements IMainContract {
    * @param url
    * @returns {Promise<*>}
    */
-  async editGroup(id: number, title: string, image: string, text: string, url: string) {
-    const gas = convertToTera(50) || "0";
-    return await this.wallet?.callMethod({
+  async editGroup(id: number, title: string, image: string, text: string, url: string): Promise<any> {
+    const gas = convertToTera("50");
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'edit_group',
       args: {
@@ -218,8 +218,8 @@ class MainContract implements IMainContract {
    * @param members
    * @returns {Promise<*>}
    */
-  async ownerAddGroupMembers(id, members) {
-    return await this.wallet.callMethod({
+  async ownerAddGroupMembers(id: number, members: string[]): Promise<any> {
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'owner_add_group_members',
       args: {
@@ -235,8 +235,8 @@ class MainContract implements IMainContract {
    * @param members
    * @returns {Promise<*>}
    */
-  async ownerRemoveGroupMembers(id, members) {
-    return await this.wallet.callMethod({
+  async ownerRemoveGroupMembers(id: number, members: string[]): Promise<any> {
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'owner_remove_group_members',
       args: {
@@ -252,8 +252,8 @@ class MainContract implements IMainContract {
    * @param confirm_title
    * @returns {Promise<*>}
    */
-  async ownerRemoveGroup(group_id, confirm_title) {
-    return await this.wallet.callMethod({
+  async ownerRemoveGroup(group_id: number, confirm_title: string): Promise<any> {
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'owner_remove_group',
       args: {
@@ -268,18 +268,18 @@ class MainContract implements IMainContract {
    * @param id
    * @returns {Promise<*>}
    */
-  async joinPublicGroup(id) {
+  async joinPublicGroup(id: number) {
     const deposit = utils.format.parseNearAmount("0.01");
-    const gas = convertToTera(150);
+    const gas = convertToTera("150");
 
-    return await this.wallet.callMethod({
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'join_public_group',
       args: {
         id,
       },
       gas,
-      deposit
+      deposit: deposit as string
     })
   }
 
@@ -288,18 +288,18 @@ class MainContract implements IMainContract {
    * @param id
    * @returns {Promise<*>}
    */
-  async joinPublicChannel(id) {
+  async joinPublicChannel(id: number): Promise<any> {
     const deposit = utils.format.parseNearAmount("0.0001");
-    const gas = convertToTera(150);
+    const gas = convertToTera("150");
 
-    return await this.wallet.callMethod({
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'join_public_channel',
       args: {
         id,
       },
       gas,
-      deposit
+      deposit: deposit as string
     })
   }
 
@@ -308,8 +308,8 @@ class MainContract implements IMainContract {
    * @param id
    * @returns {Promise<*>}
    */
-  async leaveGroup(id) {
-    return await this.wallet.callMethod({
+  async leaveGroup(id: number): Promise<any> {
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'leave_group',
       args: {
@@ -323,8 +323,8 @@ class MainContract implements IMainContract {
    * @param id
    * @returns {Promise<*>}
    */
-  async leaveChannel(id) {
-    return await this.wallet.callMethod({
+  async leaveChannel(id: number): Promise<any> {
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'leave_channel',
       args: {
@@ -339,9 +339,9 @@ class MainContract implements IMainContract {
    * @param message_sender
    * @returns {Promise<*>}
    */
-  async spamReport(message_id, message_sender) {
-    const gas = convertToTera(250);
-    return await this.wallet.callMethod({
+  async spamReport(message_id: string, message_sender: string) {
+    const gas = convertToTera("250");
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'spam_report',
       args: {
@@ -362,12 +362,14 @@ class MainContract implements IMainContract {
    * @param attached_tokens
    * @returns {Promise<*>}
    */
-  async sendPrivateMessage(text, image, to_address, reply_message_id, encrypt_key, attached_tokens) {
+  async sendPrivateMessage(
+    text: string, image: string, to_address: string, reply_message_id: string, encrypt_key: string, attached_tokens: number
+  ) {
     const inner_id = getInnerId(text, image, to_address);
-    const gas = convertToTera(30);
+    const gas = convertToTera("30");
     const deposit = utils.format.parseNearAmount(attached_tokens.toString());
 
-    return await this.wallet.callMethod({
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'send_private_message',
       args: {
@@ -379,7 +381,7 @@ class MainContract implements IMainContract {
         inner_id
       },
       gas,
-      deposit
+      deposit: deposit as string
     })
   }
 
@@ -391,9 +393,11 @@ class MainContract implements IMainContract {
    * @param reply_message_id
    * @returns {Promise<*>}
    */
-  async sendGroupMessage(text, image, group_id, reply_message_id) {
+  async sendGroupMessage(
+    text: string, image: string, group_id: number, reply_message_id: string
+  ) {
     const inner_id = getInnerId(text, image, group_id);
-    return await this.wallet.callMethod({
+    return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'send_group_message',
       args: {

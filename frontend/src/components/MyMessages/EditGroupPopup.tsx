@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryInput, PrimaryTextField, RadioLabel, RadioLabelText } from "../../assets/css/components";
-import Loader  from "../Loader";
+import Loader from "../Loader";
 import { Autocomplete, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 import { mediaURL } from "../../utils/transform";
 import { useNavigate } from "react-router-dom";
-import { NearContext }  from "../../context/NearContext";
-import { IGroup } from "../../types";
+import { NearContext } from "../../context/NearContext";
+import { EditGroupFormData, GroupType, IGroup } from "../../types";
 
 type Props = {
   isOpen: boolean,
@@ -21,12 +21,12 @@ type Props = {
 const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {
   const navigate = useNavigate();
   const near = useContext(NearContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [membersLimit, setMembersLimit] = useState(500);
-  const [isMediaLoading, setIsMediaLoading] = useState(false);
-  const [tmpImageData, setTmpImageData] = useState(null);
-  const [defaultMembers, setDefaultMembers] = useState([]);
-  const [formData, setFormData] = useState({
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ membersLimit, setMembersLimit ] = useState(500);
+  const [ isMediaLoading, setIsMediaLoading ] = useState(false);
+  const [ tmpImageData, setTmpImageData ] = useState<string|null>(null);
+  const [ defaultMembers, setDefaultMembers ] = useState<string[]>([]);
+  const [ formData, setFormData ] = useState<EditGroupFormData>({
     title: "",
     logo: "",
     text: "",
@@ -56,12 +56,12 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
           owner: group?.owner || "",
           moderator: group?.moderator || "",
           group_type: group?.group_type || "",
-          members: [...group?.members || []],
+          members: [ ...group?.members || [] ],
         });
-        setDefaultMembers([...group?.members || []]);
+        setDefaultMembers([ ...group?.members || [] ]);
       }
     }
-  }, [isOpen]);
+  }, [ isOpen ]);
 
   const resetForm = () => {
     setIsLoading(false);
@@ -85,31 +85,33 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
     setIsOpen(false);
   };
 
-  const resizeImage = (e) => {
+  const resizeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, logo: "" })
 
-    const image = e.target.files[0];
-    resizeFileImage(image, 600, 600).then(blobData => {
-      setIsMediaLoading(true);
+    const images = (e.target as HTMLInputElement).files;
+    if (images) {
+      resizeFileImage(images[0], 600, 600).then(blobData => {
+        setIsMediaLoading(true);
 
-      const reader = new FileReader();
-      reader.readAsDataURL(blobData);
-      reader.onloadend = () => {
-        setTmpImageData(reader.result);
-      }
+        const reader = new FileReader();
+        reader.readAsDataURL(blobData);
+        reader.onloadend = () => {
+          setTmpImageData(reader.result as string);
+        }
 
-      uploadMediaToIPFS(blobData).then(result => {
-        setFormData({ ...formData, logo: result });
-        setIsMediaLoading(false);
-      }).catch(() => setIsMediaLoading(false));
-    });
+        uploadMediaToIPFS(blobData).then(result => {
+          setFormData({ ...formData, logo: result });
+          setIsMediaLoading(false);
+        }).catch(() => setIsMediaLoading(false));
+      });
+    }
   };
 
-  const changeMemberList = (event, inputs) => {
-    setFormData({ ...formData, members: inputs });
+  const changeMemberList = (event: SyntheticEvent<Element, Event>, inputs: (string|string[])[]) => {
+    setFormData({ ...formData, members: inputs as string[] });
   }
 
-  const handleSaveGroup = (e) => {
+  const handleSaveGroup = (e: React.FormEvent) => {
     e.preventDefault();
 
     const groupExistMembers = group?.members || [];
@@ -120,7 +122,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
       alert("Please provide correct group title");
       return;
     }
-    if (!formData.group_type.length) {
+    if (formData.group_type === "") {
       alert("Please select group type");
       return;
     }
@@ -135,45 +137,49 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
 
     let promiseSave;
     if (group) {
-      promiseSave = near.mainContract.editGroup(
+      promiseSave = near.mainContract?.editGroup(
         group.id, formData.title, formData.logo, formData.text, formData.url
       );
 
       if (removeMembers.length > 0) {
-        near.mainContract.ownerRemoveGroupMembers(group.id, removeMembers).then(result => {
+        near.mainContract?.ownerRemoveGroupMembers(group.id, removeMembers).then(result => {
           console.log(`result`, result);
         });
       }
       if (newMembers.length > 0) {
-        near.mainContract.ownerAddGroupMembers(group.id, newMembers).then(result => {
+        near.mainContract?.ownerAddGroupMembers(group.id, newMembers).then(result => {
           console.log(`result`, result);
         });
       }
     } else {
-      promiseSave = near.mainContract.createNewGroup(
+      promiseSave = near.mainContract?.createNewGroup(
         formData.title, formData.logo, formData.text, formData.url, formData.group_type, formData.members, formData.moderator
       );
     }
 
-    promiseSave.then((resultId) => {
-      if (!group) {
-        navigate(`/my/group/${resultId}`);
-      } else {
-        // reload group data. Fix it to reload parent component data.
-        document.location.reload();
-      }
-      setIsOpen(false);
-      resetForm();
-    }).catch(e => {
-      console.log(e);
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    if (promiseSave) {
+      promiseSave.then((resultId) => {
+        if (!group) {
+          navigate(`/my/group/${resultId}`);
+        } else {
+          // reload group data. Fix it to reload parent component data.
+          document.location.reload();
+        }
+        setIsOpen(false);
+        resetForm();
+      }).catch(e => {
+        console.log(e);
+      }).finally(() => {
+        setIsLoading(false);
+      });
+    }
   }
 
   const removeGroup = () => {
+    if (!group) return;
+
     if (confirm("Are you sure? All data and messages will be removed!")) {
-      near.mainContract.ownerRemoveGroup(group.id, group.title).then(result => {
+      near.mainContract?.ownerRemoveGroup(group.id, group.title).then(() => {
         setIsOpen(false);
         window.document.location.href = "/my";
       });
@@ -206,7 +212,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
                             type={"file"}
                             accept={"image/*"}
                             className={"hidden"}
-                            onChange={(e) => resizeImage(e)}
+                            onChange={resizeImage}
               />
 
               {formData.logo ? (
@@ -236,21 +242,30 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
               <PrimaryInput placeholder={`${formData.group_type !== "Channel" ? "Group" : "Channel"} Title*`}
                             disabled={isMediaLoading}
                             value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({
+                              ...formData,
+                              title: e.target.value
+                            })}
               />
             </div>
             <div className={"mb-2"}>
               <PrimaryInput placeholder={"Description"}
                             disabled={isMediaLoading}
                             value={formData.text}
-                            onChange={(e) => setFormData({ ...formData, text: e.target.value })}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({
+                              ...formData,
+                              text: e.target.value
+                            })}
               />
             </div>
 
             {!group ? (
               <RadioGroup className={"mb-4 mt-4"}
                           value={formData.group_type}
-                          onChange={e => setFormData({ ...formData, group_type: e.target.value })}>
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({
+                            ...formData,
+                            group_type: e.target.value as GroupType
+                          })}>
                 <span className={"text-gray-500 font-medium text-sm mb-1"}>Group Type*</span>
                 <div className={"md:flex md:flex-row md:gap-4"}>
                   <RadioLabel className={"rounded-t-md md:w-1/3"}>
@@ -294,7 +309,10 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
                   <PrimaryInput placeholder={"Website / Group URL"}
                                 disabled={isMediaLoading}
                                 value={formData.url}
-                                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({
+                                  ...formData,
+                                  url: e.target.value
+                                })}
                   />
                 </div>
                 <div className={"mb-6 mt-4"}>
@@ -308,7 +326,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
               <div className={"mb-2"}>
                 <Autocomplete
                   multiple
-                  options={formData.members}
+                  options={formData.members as []}
                   defaultValue={defaultMembers}
                   onChange={changeMemberList}
                   freeSolo
@@ -332,15 +350,18 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
                 </span>
                   <PrimaryInput disabled={true}
                                 className={"text-gray-300/70"}
-                                value={group ? group.owner : near.wallet.accountId}
+                                value={group ? (group as IGroup).owner : near.wallet.accountId}
                   />
                 </div>
                 <div className={"flex-1"}>
                   <span className={"text-gray-500 font-medium text-sm"}>Moderator</span>
                   <PrimaryInput placeholder={"NEAR Address"}
                                 disabled={isMediaLoading}
-                                value={group ? group.moderator : formData.moderator}
-                                onChange={(e) => setFormData({ ...formData, moderator: e.target.value })}
+                                value={group ? (group as IGroup).moderator : formData.moderator}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({
+                                  ...formData,
+                                  moderator: e.target.value
+                                })}
                   />
                 </div>
               </div>

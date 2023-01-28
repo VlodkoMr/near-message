@@ -21,6 +21,7 @@ interface IGroup {
   moderator: string;
   owner: string;
   text: string;
+  url: string;
   members: string[];
 }
 
@@ -74,4 +75,15 @@ interface IChatInput {
   updated_at: number;
   __typename: string;
   is_removed: boolean;
+}
+
+type EditGroupFormData = {
+  title: string,
+  logo: string,
+  text: string,
+  url: string,
+  owner: string,
+  moderator: string,
+  group_type: GroupType|"",
+  members: string[],
 }

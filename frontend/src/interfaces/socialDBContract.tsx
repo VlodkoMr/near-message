@@ -1,10 +1,11 @@
 import ISocialDBContract from "./socialDBContract.type";
+import { Wallet } from "../utils/near-wallet";
 
 class SocialDBContract implements ISocialDBContract {
   contractId = "";
-  wallet = null;
+  wallet: Wallet|null = null;
 
-  constructor({ contractId, walletToUse }) {
+  constructor({ contractId, walletToUse }: {contractId: string, walletToUse: Wallet}) {
     this.contractId = contractId;
     this.wallet = walletToUse;
   }
@@ -14,9 +15,9 @@ class SocialDBContract implements ISocialDBContract {
    * @param keys
    * @returns {Promise<any>}
    */
-  async get(keys) {
+  async get(keys: string[]): Promise<any> {
     try {
-      return await this.wallet.viewMethod({
+      return this.wallet?.viewMethod({
         contractId: this.contractId,
         method: 'get',
         args: {
