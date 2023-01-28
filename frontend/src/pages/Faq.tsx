@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import Layout from "./Layout";
 
 const Faq: React.FC = () => {
-  const [openedIndex, setOpenedIndex] = useState(0);
+  const [ openedIndex, setOpenedIndex ] = useState(0);
 
-  const OneQuestion = ({ title, index, children }) => (
+  const OneQuestion = (
+    {
+      title, index, children
+    }: {title: string, index: number, children: React.ReactNode}) => (
     <div
       onClick={() => setOpenedIndex(index)}
       className={`mb-6 relative group

@@ -222,7 +222,8 @@
   animation-duration: 3s;
 }
 
-@media (print), (prefers-reduced-motion: reduce) {
+
+@media print, (prefers-reduced-motion: reduce) {
   .animated {
     -webkit-animation-duration: 1ms !important;
     animation-duration: 1ms !important;

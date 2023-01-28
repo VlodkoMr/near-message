@@ -107,7 +107,7 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
     setMessageText("");
   }
 
-  const openChat = (e: MouseEvent) => {
+  const openChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     let chatId = getPrivateChatId(near.wallet.accountId, messageAddress);
     navigate(`/my/account/${chatId}`);
@@ -144,11 +144,11 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
         {isMessageSent ? (
           <div className={"text-center text-gray-100 p-2"}>
             <div className={"text-xl mb-8 mt-4 font-medium"}>Message successfully sent.</div>
-            <div>
+            <div className={"flex flex-row gap-3 justify-center"}>
               <PrimaryButton disabled={!canOpenChat} onClick={openChat}>
                 {canOpenChat ? ("Open Chat") : ("Loading Chats...")}
               </PrimaryButton>
-              <SecondaryButton className={"ml-4"} onClick={() => resetForm()}>
+              <SecondaryButton onClick={() => resetForm()}>
                 New Message
               </SecondaryButton>
             </div>

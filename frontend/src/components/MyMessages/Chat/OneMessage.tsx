@@ -17,12 +17,13 @@ type Props = {
   opponent: IProfile|null,
   isLast: boolean,
   setReplyToMessage?: (replyToMessage: IMessage|null) => void,
-  canReportReply: boolean
+  canReportReply: boolean,
+  isGroup: boolean
 };
 
 const OneMessage: React.FC<Props> = (
   {
-    message, opponent, isLast, setReplyToMessage, canReportReply
+    message, opponent, isLast, setReplyToMessage, canReportReply, isGroup
   }: Props) => {
   const near = useContext(NearContext);
   const [ isLoading, setIsLoading ] = useState(false);
@@ -33,15 +34,23 @@ const OneMessage: React.FC<Props> = (
 
     setIsLoading(true);
     const messageText = `(secret-accept:${secretChat.getMyPublicKey()})`;
-    near.mainContract?.sendPrivateMessage(messageText, "", opponent?.id, "", "", 0).then(() => {
+    near.mainContract?.sendPrivateMessage(
+      messageText,
+      "",
+      opponent?.id as string,
+      "",
+      "",
+      0
+    ).then(() => {
       setIsLoading(false);
     });
   }
 
   const handleSpamReport = () => {
     if (confirm("Do you want to Report Spam in this message?")) {
-      near.mainContract?.spamReport(message.id, message.from_address).then(() => {
-        message.text = "*Spam report sent"
+      near.mainContract?.spamReport(message.id, message.from_address, isGroup).then(() => {
+        message.text = "*Spam report sent";
+        alert("Thank you, spam report sent");
       });
     }
   }
@@ -50,7 +59,7 @@ const OneMessage: React.FC<Props> = (
     <>
       {message.isDateFirst && !message.isTemporary && (
         <p className="p-4 text-center text-sm font-medium text-gray-500">
-          {timestampToDate(message.createdAt, true)}
+          {timestampToDate(message.created_at, true)}
         </p>
       )}
 
@@ -144,7 +153,7 @@ const OneMessage: React.FC<Props> = (
                 </p>
 
                 <span className={"ml-2.5 leading-6 text-xs opacity-40"}>
-                  {timestampToTime(message?.createdAt)}
+                  {timestampToTime(message?.created_at)}
                 </span>
               </div>
 

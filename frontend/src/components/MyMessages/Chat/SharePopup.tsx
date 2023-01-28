@@ -17,6 +17,7 @@ const SharePopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) => {
   const [ url, setUrl ] = useState("");
 
   useEffect(() => {
+    setIsCopied(false);
     if (isOpen) {
       setUrl(`${process.env.APP_URL}my/group/${group.id}`);
     }

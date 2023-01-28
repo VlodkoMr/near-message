@@ -2,7 +2,7 @@ import { utils } from 'near-api-js';
 import { convertToTera, getInnerId } from "../utils/transform";
 import IMainContract from "./mainContract.type";
 import { Wallet } from "../utils/near-wallet";
-import { GroupType } from "../types";
+import { GroupType, IGroup } from "../types";
 
 class MainContract implements IMainContract {
   contractId: string = "";
@@ -37,7 +37,7 @@ class MainContract implements IMainContract {
    * @param page_limit
    * @param skip
    */
-  async getPublicGroups(page_limit: number, skip = 0) {
+  async getPublicGroups(page_limit: number, skip = 0): Promise<IGroup[]|undefined> {
     try {
       return await this.wallet?.viewMethod({
         contractId: this.contractId,
@@ -102,6 +102,7 @@ class MainContract implements IMainContract {
       return await this.wallet?.callMethod({
         contractId: this.contractId,
         method: 'user_account_level_up',
+        args: {},
         gas,
         deposit: deposit as string
       });
@@ -337,16 +338,18 @@ class MainContract implements IMainContract {
    * Report spam
    * @param message_id
    * @param message_sender
+   * @param is_group
    * @returns {Promise<*>}
    */
-  async spamReport(message_id: string, message_sender: string) {
+  async spamReport(message_id: string, message_sender: string, is_group: boolean): Promise<any> {
     const gas = convertToTera("250");
     return this.wallet?.callMethod({
       contractId: this.contractId,
       method: 'spam_report',
       args: {
         message_id,
-        message_sender
+        message_sender,
+        is_group
       },
       gas
     })

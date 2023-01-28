@@ -86,14 +86,7 @@ export const transformOneMessage = (
 ) => {
   const isMy = inputMessage.from_address === accountId;
   let message = {
-    id: inputMessage.id,
-    text: inputMessage.text,
-    image: inputMessage.image,
-    from_address: inputMessage.from_address,
-    to_address: inputMessage.to_address,
-    createdAt: inputMessage.created_at,
-    deposit: inputMessage.deposit,
-    inner_id: inputMessage.inner_id,
+    ...inputMessage,
     isEncryptStart: inputMessage.text.indexOf("(secret-start:") !== -1,
     isEncryptAccept: inputMessage.text.indexOf("(secret-accept:") !== -1,
     isEncryptEnd: inputMessage.text.indexOf("(secret-end)") !== -1,
@@ -113,7 +106,7 @@ export const transformOneMessage = (
       false,
       false,
       false
-    )
+    );
   }
 
   // secret chat

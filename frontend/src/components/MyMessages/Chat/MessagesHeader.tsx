@@ -161,7 +161,9 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
           </div>
         </Link>
 
-        <SecondaryButton small="true" className={"hidden md:block my-1"} onClick={() => near.wallet.signOut()}>
+        <SecondaryButton small="true"
+                         className={"hidden md:block my-1"}
+                         onClick={() => near.wallet.signOut()}>
           <span className={"opacity-80"}>Sign Out</span>
         </SecondaryButton>
       </div>

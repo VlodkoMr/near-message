@@ -46,7 +46,7 @@ export const loadPrivateChatsPromise = (accountId: string): Promise<IChatInput[]
   });
 }
 
-export const loadGroupChatsPromise = (idList: string[]): Promise<IChatInput[]> => {
+export const loadGroupChatsPromise = (idList: number[]): Promise<IChatInput[]> => {
   return new Promise(async (resolve, reject) => {
     const client: Client = createClient({ url: process.env.GRAPH_API_URL || "" });
     const groupChatListQuery = `{

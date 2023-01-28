@@ -37,6 +37,8 @@ const WriteMessage: React.FC<Props> = (
   const [ isAttachPopupVisible, setIsAttachPopupVisible ] = useState(false);
 
   const toggleSecretChat = () => {
+    if (!toAddress) return;
+
     if (near.account && near.account.level === 2) {
       const secretChat = new SecretChat(toAddress, near.wallet.accountId);
 
@@ -69,6 +71,7 @@ const WriteMessage: React.FC<Props> = (
   const sendMessage = (messageText: string) => {
     let sendFunction;
     const replyId = replyToMessage ? replyToMessage.id : "";
+
     messageText = messageText.trim();
 
     if (!messageText.length && !messageMedia.length) {

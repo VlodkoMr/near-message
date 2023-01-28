@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useOutletContext, useParams } from 'react-router-dom';
-import MessagesHeader  from "../../components/MyMessages/Chat/MessagesHeader";
-import Loader  from "../../components/Loader";
+import { useParams } from 'react-router-dom';
+import MessagesHeader from "../../components/MyMessages/Chat/MessagesHeader";
+import Loader from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { isJoinedGroup, loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";
-import GroupChatBottom  from "../../components/MyMessages/Chat/GroupChatBottom";
-import MessagesList  from "../../components/MyMessages/Chat/MessagesList";
+import GroupChatBottom from "../../components/MyMessages/Chat/GroupChatBottom";
+import MessagesList from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
-import { INearContext } from "../../types";
+import { IGroup, IMessage, INearContext, IProfile } from "../../types";
+import { MessagesContext } from "./MyMessagesLayout";
 
 const fetchSecondsInterval = 5;
 const messagesPerPage = 100;
@@ -16,25 +17,27 @@ const messagesPerPage = 100;
 const MyGroupChat: React.FC = () => {
   let { id } = useParams();
   const near: INearContext = useContext(NearContext);
-  const bottomRef = useRef(null);
-  const [_, openChatsList] = useOutletContext();
-  const [messages, setMessages] = useState([]);
-  const [historyMessages, setHistoryMessages] = useState([]);
-  const [historyPage, setHistoryPage] = useState(0);
-  const [hideHistoryButton, setHideHistoryButton] = useState(false);
-  const [tmpMessages, setTmpMessages] = useState([]);
-  const [isReady, setIsReady] = useState(false);
-  const [group, setGroup] = useState();
-  const [reloadCounter, setReloadCounter] = useState(0);
-  const [userProfiles, setUserProfiles] = useState({});
-  const [replyToMessage, setReplyToMessage] = useState(null);
-  const [isJoined, setIsJoined] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const { openChatsList } = MessagesContext();
+  const [ messages, setMessages ] = useState<IMessage[]>([]);
+  const [ historyMessages, setHistoryMessages ] = useState<IMessage[]>([]);
+  const [ historyPage, setHistoryPage ] = useState(0);
+  const [ hideHistoryButton, setHideHistoryButton ] = useState(false);
+  const [ tmpMessages, setTmpMessages ] = useState<IMessage[]>([]);
+  const [ isReady, setIsReady ] = useState(false);
+  const [ group, setGroup ] = useState<IGroup>();
+  const [ reloadCounter, setReloadCounter ] = useState(0);
+  const [ userProfiles, setUserProfiles ] = useState<Record<string, IProfile>>({});
+  const [ replyToMessage, setReplyToMessage ] = useState(null);
+  const [ isJoined, setIsJoined ] = useState(false);
 
   const loadGroupInfo = async () => {
-    return await near.mainContract.getGroupById(parseInt(id));
+    if (!id) return;
+    return near.mainContract?.getGroupById(parseInt(id));
   }
 
   useEffect(() => {
+    if (!id) return;
     setIsReady(false);
 
     setReplyToMessage(null);
@@ -64,7 +67,7 @@ const MyGroupChat: React.FC = () => {
     return () => {
       clearTimeout(updateTimeout);
     }
-  }, [id]);
+  }, [ id ]);
 
   useEffect(() => {
     if (group) {
@@ -72,30 +75,31 @@ const MyGroupChat: React.FC = () => {
         setIsJoined(result);
       });
     }
-  }, [group]);
+  }, [ group ]);
 
   useEffect(() => {
     if (reloadCounter) {
       appendNewChatMessages();
     }
-  }, [reloadCounter]);
+  }, [ reloadCounter ]);
 
   useEffect(() => {
     setTimeout(() => {
-      let behavior = { behavior: 'auto' };
+      let behavior: ScrollOptions = { behavior: 'auto' };
       if (reloadCounter > 0) {
         behavior = { behavior: 'smooth' };
       }
       bottomRef.current?.scrollIntoView(behavior);
     }, 100);
-  }, [messages, tmpMessages]);
+  }, [ messages, tmpMessages ]);
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
+    if (!id) return;
     const lastMessage = messages[messages.length - 1] || null;
-    const lastMessageId = lastMessage?.id || 0;
+    const lastMessageId = parseInt(lastMessage?.id) || 0;
 
-    loadNewGroupMessages(id, lastMessageId).then(messages => {
+    loadNewGroupMessages(parseInt(id), lastMessageId).then(messages => {
       if (messages && messages.length) {
         // load new user profiles
         const profiles = messages.filter(message => !userProfiles[message.from_address]).map(message => message.from_address).filter(onlyUnique);
@@ -110,7 +114,7 @@ const MyGroupChat: React.FC = () => {
         // remove if found in temporary
         const newMessageIds = messages.map(msg => msg.inner_id);
         setTmpMessages(prev => prev.filter(msg => {
-          const innerId = getInnerId(msg.text, msg.image, id);
+          const innerId = getInnerId(msg.text, msg.image, id as string);
           return newMessageIds.indexOf(innerId) === -1;
         }));
 
@@ -130,13 +134,17 @@ const MyGroupChat: React.FC = () => {
   }
 
   // Add temporary message
-  const appendTemporaryMessage = (text, image) => {
-    const tmpMessage = generateTemporaryMessage(text, image, near.wallet.accountId, id);
+  const appendTemporaryMessage = (text: string, image: string) => {
+    if (!id) return;
+
+    const tmpMessage = generateTemporaryMessage(text, image, near.wallet.accountId, id, "");
     setTmpMessages(prev => prev.concat(tmpMessage));
   }
 
   // load previous messages
   const loadHistoryMessages = () => {
+    if (!id) return;
+
     setHideHistoryButton(true);
     setHistoryPage(prev => prev + 1);
 
@@ -156,7 +164,7 @@ const MyGroupChat: React.FC = () => {
 
   return (
     <>
-      {group && (
+      {id && group && (
         <>
           <MessagesHeader group={group} openChatsList={openChatsList}/>
 
@@ -174,6 +182,8 @@ const MyGroupChat: React.FC = () => {
                                 loadHistoryMessages={loadHistoryMessages}
                                 hideHistoryButton={hideHistoryButton}
                                 canReportReply={isJoined}
+                                opponent={null}
+                                isGroup={true}
                   />
                 ) : (
                   <div className={"text-center text-sm opacity-60 pt-2"}>

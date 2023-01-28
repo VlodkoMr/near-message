@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import AvatarGroup  from "../../Common/AvatarGroup";
+import AvatarGroup from "../../Common/AvatarGroup";
+import { IGroup } from "../../../types";
 
 type Props = {
   searchFilter: string,
@@ -8,10 +9,7 @@ type Props = {
   onChatSelect: () => void
 };
 
-const OwnerGroups: React.FC<Props> = (
-  {
-    searchFilter, ownerGroup, onChatSelect
-  }: Props) => {
+const OwnerGroups = ({ searchFilter, ownerGroup, onChatSelect }: Props) => {
   let { id } = useParams();
 
   return ownerGroup && ownerGroup.length > 0 && (
@@ -31,7 +29,7 @@ const OwnerGroups: React.FC<Props> = (
                 onClick={() => onChatSelect()}
                 key={group.id}>
             <div className={`border-2 rounded-full
-            ${group.id === parseInt(id) ? "border-indigo-400/80" : "border-transparent hover:border-indigo-300/30"} 
+            ${group.id === parseInt(id as string) ? "border-indigo-400/80" : "border-transparent hover:border-indigo-300/30"} 
           `}>
               <AvatarGroup
                 group={group}

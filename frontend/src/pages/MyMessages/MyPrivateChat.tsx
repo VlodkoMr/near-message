@@ -111,7 +111,7 @@ const MyPrivateChat: React.FC = () => {
         const newMessages = transformMessages(
           messages,
           near.wallet.accountId,
-          timestampToDate(lastMessage?.createdAt)
+          timestampToDate(lastMessage?.created_at)
         );
         setMessages(prev => prev.concat(newMessages));
       }
@@ -167,6 +167,7 @@ const MyPrivateChat: React.FC = () => {
                             loadHistoryMessages={loadHistoryMessages}
                             hideHistoryButton={hideHistoryButton}
                             canReportReply={true}
+                            isGroup={false}
               />
             ) : (
               <div className={"mx-auto w-8 pt-2"}>

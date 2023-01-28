@@ -34,6 +34,7 @@ interface IMessageInput {
   inner_id: string;
   created_at?: number;
   deposit: string;
+  encrypt_key: string;
   reply_message?: IInputMessage;
 }
 
@@ -56,7 +57,7 @@ interface IMessage {
   opponentAddress: string;
   reply_message: IInputMessage|null;
   encrypt_key: string;
-  createdAt: number;
+  created_at: number;
 }
 
 interface IProfile {

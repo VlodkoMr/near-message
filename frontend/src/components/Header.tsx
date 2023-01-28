@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { NearContext }  from "../context/NearContext";
+import { NearContext } from "../context/NearContext";
 import { NavScrollLink, PrimaryButton } from "../assets/css/components";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formatAddress } from "../utils/transform";
 import { animateScroll } from "react-scroll";
 
 const Header: React.FC = () => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const near = useContext(NearContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const [scroll, setScroll] = useState(false);
-  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+  const [ scroll, setScroll ] = useState(false);
+  const [ mobileMenuVisible, setMobileMenuVisible ] = useState(false);
 
   const scrollProps = {
     activeClass: "opacity-50",
@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
         setMobileMenuVisible(false);
       }
@@ -41,7 +41,7 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const navigateToHome = (anchor) => {
+  const navigateToHome = (anchor: string) => {
     if (location.pathname !== "/") {
       navigate(`/#${anchor}`);
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { SecondaryButton } from "../../../assets/css/components";
 import OneMessage from "./OneMessage";
 import { IMessage, IProfile } from "../../../types";
@@ -8,19 +8,20 @@ type Props = {
   historyMessages: IMessage[],
   tmpMessages: IMessage[],
   messagesPerPage: number,
-  setReplyToMessage: (replyToMessage: IMessage|null) => void,
+  setReplyToMessage: (replyToMessage: SetStateAction<any>) => void,
   opponent: IProfile|null,
   opponentAddress: string,
   userProfiles?: Record<string, IProfile>,
   loadHistoryMessages: () => void,
   hideHistoryButton: boolean,
-  canReportReply: boolean
+  canReportReply: boolean,
+  isGroup: boolean
 };
 
 const MessagesList: React.FC<Props> = (
   {
     messages, historyMessages, tmpMessages, messagesPerPage, setReplyToMessage, opponent, opponentAddress,
-    userProfiles, loadHistoryMessages, hideHistoryButton, canReportReply
+    userProfiles, loadHistoryMessages, hideHistoryButton, canReportReply, isGroup
   }: Props) => {
 
   const isLastMessage = (message: IMessage, index: number) => {
@@ -31,7 +32,10 @@ const MessagesList: React.FC<Props> = (
     <>
       {(messages.length >= messagesPerPage && !hideHistoryButton) && (
         <div className={"w-40 mx-auto text-center"}>
-          <SecondaryButton small="true" className={"w-full"} onClick={() => loadHistoryMessages()}>
+          <SecondaryButton
+            small="true"
+            className={"w-full"}
+            onClick={() => loadHistoryMessages()}>
             load previous
           </SecondaryButton>
         </div>
@@ -44,6 +48,7 @@ const MessagesList: React.FC<Props> = (
                       opponent={opponent ? opponent : userProfiles?.[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={false}
+                      isGroup={isGroup}
           />
         )
       )}
@@ -55,6 +60,7 @@ const MessagesList: React.FC<Props> = (
                       opponent={opponent ? opponent : userProfiles?.[message.from_address] || null}
                       setReplyToMessage={setReplyToMessage}
                       isLast={isLastMessage(message, index)}
+                      isGroup={isGroup}
           />
         )
       )}
@@ -65,6 +71,7 @@ const MessagesList: React.FC<Props> = (
                       opponent={opponent as IProfile}
                       canReportReply={false}
                       isLast={true}
+                      isGroup={isGroup}
           />
         )
       )}

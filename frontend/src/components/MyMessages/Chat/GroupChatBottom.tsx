@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { SetStateAction, useContext, useState } from "react";
 import WriteMessage from "./WriteMessage";
 import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
@@ -9,8 +9,8 @@ import { IGroup, IMessage, INearContext } from "../../../types";
 type Props = {
   group: IGroup,
   replyToMessage: IMessage|null,
-  setReplyToMessage: (replyToMessage: IMessage|null) => void,
-  onMessageSent: () => void,
+  setReplyToMessage: (replyToMessage: SetStateAction<any>) => void,
+  onMessageSent: (text: string, image: string) => void,
   isJoined: boolean,
   setIsJoined: (isJoined: boolean) => void
 };
@@ -70,7 +70,7 @@ const GroupChatBottom: React.FC<Props> = (
               {isJoined ? (
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
-                  <SecondaryButton small="true" onClick={() => leaveChannel()}>
+                  <SecondaryButton small="true" onClick={leaveChannel}>
                     Leave {isChannel(group) ? "Channel" : "Group"}
                     {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </SecondaryButton>
@@ -78,7 +78,7 @@ const GroupChatBottom: React.FC<Props> = (
               ) : (
                 <>
                   <p className={"text-sm w-2/3 opacity-60"}>{group.text}</p>
-                  <PrimaryButton small="true" onClick={() => joinChannel()}>
+                  <PrimaryButton small="true" onClick={joinChannel}>
                     Join {isChannel(group) ? "Channel" : "Group"}
                     {isLoading && (<span className={"ml-2"}><Loader size={"sm"}/></span>)}
                   </PrimaryButton>

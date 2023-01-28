@@ -59,10 +59,20 @@ const AttachTokenPopup: React.FC<Props> = ({ isOpen, setIsOpen, setAttachedToken
 
           <div className={"flex flex-row justify-between mt-1"}>
             <div className={"text-right"}>
-              <SecondaryButton type="button" small="true" onClick={cancelAttach}>Cancel Deposit</SecondaryButton>
+              <SecondaryButton
+                type="button"
+                small="true"
+                onClick={cancelAttach}>
+                Cancel Deposit
+              </SecondaryButton>
             </div>
             <div className={"text-right"}>
-              <PrimaryButton type="button" small="true" onClick={handleAttach}>Attach Deposit</PrimaryButton>
+              <PrimaryButton
+                type="button"
+                small="true"
+                onClick={handleAttach}>
+                Attach Deposit
+              </PrimaryButton>
             </div>
           </div>
         </div>

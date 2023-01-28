@@ -36,7 +36,7 @@ interface IMainContract {
 
   leaveChannel(id: number): Promise<any>;
 
-  spamReport(message_id: string, message_sender: string): Promise<any>;
+  spamReport(message_id: string, message_sender: string, is_group: boolean): Promise<any>;
 
   sendPrivateMessage(text: string, image: string, to_address: string, reply_message_id: string, encrypt_key: string, attached_tokens: number): Promise<any>;
 

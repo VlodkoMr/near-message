@@ -58,7 +58,8 @@ export class SecretChat {
   // ----------- Chat -----------
 
   getSecretChat() {
-    const chat = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
+    console.log(`${CHAT_PREFIX}:${this.myAddress}`);
+    const chat: string|null = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
     if (chat) {
       const chatData = JSON.parse(chat);
       if (chatData[this.opponentAddress]) {
@@ -124,10 +125,10 @@ export class SecretChat {
 
   // Export keys
   static getKeysForExport(myAddress: string) {
-    const myKeys = localStorage.getItem(`${MY_PREFIX}:${myAddress}`);
-    const chatKeys = localStorage.getItem(`${CHAT_PREFIX}:${myAddress}`);
+    const myKeys = localStorage.getItem(`${MY_PREFIX}:${myAddress}`) || "";
+    const chatKeys = localStorage.getItem(`${CHAT_PREFIX}:${myAddress}` || "");
     if (myKeys) {
-      return btoa(`${myKeys}|${chatKeys}`);
+      return btoa(`${myKeys}|${chatKeys || "{}"}`);
     } else {
       alert("Private keys not found");
     }
@@ -146,8 +147,13 @@ export class SecretChat {
     if (keys && keys.length === 2) {
       const myKey = JSON.parse(keys[0]);
       const chatsKey = JSON.parse(keys[1]);
-      localStorage.setItem(`${MY_PREFIX}:${myAddress}`, JSON.stringify(myKey));
-      localStorage.setItem(`${CHAT_PREFIX}:${myAddress}`, JSON.stringify(chatsKey));
+      console.log(`keys`, keys);
+      if (myKey) {
+        localStorage.setItem(`${MY_PREFIX}:${myAddress}`, JSON.stringify(myKey));
+      }
+      if (chatsKey) {
+        localStorage.setItem(`${CHAT_PREFIX}:${myAddress}`, JSON.stringify(chatsKey));
+      }
       return true;
     } else {
       alert(`Unable to decode your key, invalid data`)

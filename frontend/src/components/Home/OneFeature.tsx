@@ -2,7 +2,7 @@ import React from "react";
 
 type Props = {
   title: string,
-  icon: string,
+  icon: React.ReactNode,
   text: string
 };
 

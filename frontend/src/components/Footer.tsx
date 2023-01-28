@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
   const scroll = Scroll.animateScroll;
 
-  const ExternalLink = ({ title, url }) => (
+  const ExternalLink = ({ title, url }: {title: string, url: string}) => (
     <a target={"_blank"}
        href={url}
        className="footer-link">
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
     offset: -100,
   };
 
-  const navigateToHome = (anchor) => {
+  const navigateToHome = (anchor: string) => {
     if (location.pathname !== "/") {
       navigate(`/#${anchor}`);
     }
