@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import Layout from "./Layout";
 import OnePublicChat from "../components/Home/OnePublicChat";
 import { NearContext } from "../context/NearContext";
-import { INearContext } from "../types";
+import { IGroup, INearContext } from "../types";
 
 const PublicCommunities: React.FC = () => {
   const near: INearContext = useContext(NearContext);
-  const [publicGroups, setPublicGroups] = useState([]);
+  const [ publicGroups, setPublicGroups ] = useState<IGroup[]>([]);
 
-  const loadLastPublicChats = async () => {
-    return await near.mainContract.getPublicGroups(30);
+  const loadLastPublicChats = async (): Promise<IGroup[]|undefined> => {
+    return near.mainContract?.getPublicGroups(30);
   }
 
   useEffect(() => {
-    loadLastPublicChats().then(result => {
+    loadLastPublicChats().then((result: IGroup[]|undefined) => {
       if (result) {
         setPublicGroups(result);
       }
