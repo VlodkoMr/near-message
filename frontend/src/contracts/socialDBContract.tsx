@@ -29,19 +29,15 @@ class SocialDBContract implements ISocialDBContract {
     }
   }
 
-  // async createUserAccount(media, instagram, telegram, twitter, website) {
-  //   return await this.wallet.callMethod({
-  //     contractId: this.contractId,
-  //     method: 'create_user_account',
-  //     args: {
-  //       media,
-  //       instagram,
-  //       telegram,
-  //       twitter,
-  //       website,
-  //     }
-  //   })
-  // }
+  static getContractAddress = (): string => {
+    const contract_name = process.env.CONTRACT_NAME;
+    console.log(`CONTRACT_NAME`, contract_name);
+
+    if (contract_name && contract_name.indexOf('.near') === -1) {
+      return 'v1.social08.testnet';
+    }
+    return 'social.near';
+  }
 }
 
 export default SocialDBContract;

@@ -4,8 +4,8 @@ import { NearContext } from "../../context/NearContext";
 import { loadSocialProfile } from "../../utils/transform";
 import { Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 
-import "../../assets/css/my-messages.css"
 import { INearContext, IProfile } from "../../types";
+import "../../assets/css/my-messages.css"
 
 type MessagesContextType = {myProfile: any, openChatsList: () => void};
 
@@ -22,9 +22,11 @@ const MyMessagesLayout: React.FC = () => {
   const [ leftSideVisible, setLeftSideVisible ] = useState(true);
 
   useEffect(() => {
-    loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
-      setMyProfile(myProfile);
-    });
+    if (near.wallet?.accountId) {
+      loadSocialProfile(near.wallet.accountId, near).then(myProfile => {
+        setMyProfile(myProfile);
+      });
+    }
 
     // update selected tab
     if (location.pathname.indexOf("/my/group/") !== -1 || location.pathname.indexOf("/my/account/") !== -1) {
@@ -34,7 +36,7 @@ const MyMessagesLayout: React.FC = () => {
       setCurrentTab(1);
       setLeftSideVisible(false);
     }
-  }, []);
+  }, [ near.wallet?.accountId ]);
 
   const showContacts = () => {
     // setCurrentTab(1);

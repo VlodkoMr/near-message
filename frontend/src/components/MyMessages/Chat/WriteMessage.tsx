@@ -39,7 +39,7 @@ const WriteMessage: React.FC<Props> = (
   const toggleSecretChat = () => {
     if (!toAddress) return;
 
-    if (near.account && near.account.level === 2) {
+    if (near.account && near.wallet?.accountId && near.account.level === 2) {
       const secretChat = new SecretChat(toAddress, near.wallet.accountId);
 
       let messageText;
@@ -81,7 +81,7 @@ const WriteMessage: React.FC<Props> = (
 
     let encryptKey = "";
     if (toAddress) {
-      if (isPrivateMode) {
+      if (isPrivateMode && near.wallet?.accountId) {
         const encoded = (new SecretChat(toAddress, near.wallet.accountId)).encode(messageText);
         messageText = encoded.secret;
         encryptKey = encoded.nonce;

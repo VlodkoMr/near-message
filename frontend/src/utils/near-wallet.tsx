@@ -132,14 +132,14 @@ export class Wallet {
   }
 
   // Get transaction result from the network
-  async getTransactionResult(txHash: string) {
-    if (!this.walletSelector) return;
-
-    const { network } = this.walletSelector.options;
-    const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
-
-    // Retrieve transaction result from the network
-    const transaction = await provider.txStatus(txHash, 'unnused');
-    return providers.getTransactionLastResult(transaction);
-  }
+  // async getTransactionResult(txHash: string) {
+  //   if (!this.walletSelector) return;
+  //
+  //   const { network } = this.walletSelector.options;
+  //   const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
+  //
+  //   // Retrieve transaction result from the network
+  //   const transaction = await provider.txStatus(txHash, 'unnused');
+  //   return providers.getTransactionLastResult(transaction);
+  // }
 }

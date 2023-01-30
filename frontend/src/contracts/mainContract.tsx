@@ -2,7 +2,7 @@ import { utils } from 'near-api-js';
 import { convertToTera, getInnerId } from "../utils/transform";
 import IMainContract from "./mainContract.type";
 import { Wallet } from "../utils/near-wallet";
-import { GroupType, IGroup } from "../types";
+import { GroupType, IGroup, IUserAccount } from "../types";
 
 class MainContract implements IMainContract {
   contractId: string = "";
@@ -57,7 +57,7 @@ class MainContract implements IMainContract {
    * @param address
    * @returns {Promise<any>}
    */
-  async getUserInfo(address: string) {
+  async getUserInfo(address: string): Promise<IUserAccount|undefined> {
     try {
       return await this.wallet?.viewMethod({
         contractId: this.contractId,

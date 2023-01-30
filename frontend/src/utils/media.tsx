@@ -1,6 +1,10 @@
 // @ts-ignore
 import { File, NFTStorage } from 'nft.storage/dist/bundle.esm.min.js';
 
+/**
+ * Upload media to IPFS
+ * @param media
+ */
 export const uploadMediaToIPFS = (media: Blob): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     const name: string = `${+new Date()}.png`;
@@ -23,6 +27,12 @@ export const uploadMediaToIPFS = (media: Blob): Promise<string> => {
   })
 }
 
+/**
+ * Resize image
+ * @param file
+ * @param max_width
+ * @param max_height
+ */
 export const resizeFileImage = (file: File, max_width: number, max_height: number): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

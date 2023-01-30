@@ -11,9 +11,7 @@ import MessagesList from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
 import { IMessage, IMessageInput, INearContext, IProfile } from "../../types";
 import { MessagesContext } from "./MyMessagesLayout";
-
-const fetchSecondsInterval = 5;
-const messagesPerPage = 100;
+import { CHAT_FETCH_INTERVAL, MESSAGES_PER_PAGE } from "../../constants/chat";
 
 const MyPrivateChat: React.FC = () => {
   let { id } = useParams();
@@ -36,7 +34,7 @@ const MyPrivateChat: React.FC = () => {
     if (!id) return;
 
     const address = id.split("|");
-    const opponentAddress = (address[0] === near.wallet.accountId) ? address[1] : address[0];
+    const opponentAddress = (address[0] === near.wallet?.accountId) ? address[1] : address[0];
     setOpponentAddress(opponentAddress);
     updateIsPrivateMode(opponentAddress);
 
@@ -50,7 +48,9 @@ const MyPrivateChat: React.FC = () => {
     });
 
     // Load last messages
-    loadPrivateMessages(id, messagesPerPage).then((messages: IMessageInput[]) => {
+    loadPrivateMessages(id, MESSAGES_PER_PAGE).then((messages: IMessageInput[]) => {
+      if (!near.wallet?.accountId) return;
+
       setMessages(transformMessages(messages, near.wallet.accountId));
       setIsReady(true);
     });
@@ -58,7 +58,7 @@ const MyPrivateChat: React.FC = () => {
     // Fetch new messages each few seconds
     const updateTimeout = setTimeout(() => {
       setReloadCounter(prev => prev + 1);
-    }, 1000 * fetchSecondsInterval);
+    }, 1000 * CHAT_FETCH_INTERVAL);
 
     return () => {
       clearTimeout(updateTimeout);
@@ -85,7 +85,7 @@ const MyPrivateChat: React.FC = () => {
   }, [ messages, tmpMessages ]);
 
   const updateIsPrivateMode = (opponent: string) => {
-    if (opponent) {
+    if (opponent && near.wallet?.accountId) {
       const secretChat = new SecretChat(opponent, near.wallet.accountId);
       setIsPrivateMode(secretChat.isPrivateModeEnabled());
     }
@@ -93,7 +93,7 @@ const MyPrivateChat: React.FC = () => {
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
 
     const lastMessage = messages[messages.length - 1] || null;
     const lastMessageId = lastMessage?.id || "";
@@ -110,7 +110,7 @@ const MyPrivateChat: React.FC = () => {
         // append new messages
         const newMessages = transformMessages(
           messages,
-          near.wallet.accountId,
+          near.wallet?.accountId as string,
           timestampToDate(lastMessage?.created_at)
         );
         setMessages(prev => prev.concat(newMessages));
@@ -118,27 +118,29 @@ const MyPrivateChat: React.FC = () => {
     }).finally(() => {
       setTimeout(() => {
         setReloadCounter(prev => prev + 1);
-      }, 1000 * fetchSecondsInterval);
+      }, 1000 * CHAT_FETCH_INTERVAL);
     });
   }
 
   // add temporary message
   const appendTemporaryMessage = (text: string, image: string, encryptKey?: string) => {
+    if (!near.wallet?.accountId) return;
+
     let newMessage: IMessage = generateTemporaryMessage(text, image, near.wallet.accountId, opponentAddress, encryptKey || "");
     setTmpMessages((prev: IMessage[]) => prev.concat(newMessage));
   }
 
   // load previous messages
   const loadHistoryMessages = () => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
 
     setHideHistoryButton(true);
     setHistoryPage(prev => prev + 1);
 
-    const skipMessages = messagesPerPage * (historyPage + 1);
-    loadPrivateMessages(id, messagesPerPage, skipMessages).then((messages: IMessageInput[]) => {
-      const newMessages = transformMessages(messages, near.wallet.accountId);
-      if (newMessages.length === messagesPerPage) {
+    const skipMessages = MESSAGES_PER_PAGE * (historyPage + 1);
+    loadPrivateMessages(id, MESSAGES_PER_PAGE, skipMessages).then((messages: IMessageInput[]) => {
+      const newMessages = transformMessages(messages, near.wallet?.accountId as string);
+      if (newMessages.length === MESSAGES_PER_PAGE) {
         setHideHistoryButton(false);
       }
 
@@ -160,7 +162,7 @@ const MyPrivateChat: React.FC = () => {
               <MessagesList messages={messages}
                             historyMessages={historyMessages}
                             tmpMessages={tmpMessages}
-                            messagesPerPage={messagesPerPage}
+                            messagesPerPage={MESSAGES_PER_PAGE}
                             setReplyToMessage={setReplyToMessage}
                             opponent={opponent}
                             opponentAddress={opponentAddress}

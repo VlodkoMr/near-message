@@ -118,7 +118,7 @@ const Header: React.FC = () => {
                   {near.isSigned && (
                     <li className={"md:hidden"}>
                       <NavScrollLink to="documentation" onClick={() => {
-                        near.wallet.signOut();
+                        near.wallet?.signOut();
                         setMobileMenuVisible(false)
                       }}>
                         Sign Out
@@ -133,12 +133,14 @@ const Header: React.FC = () => {
               className="justify-end items-center pr-16 lg:pr-0"
             >
               {!near.isSigned ? (
-                <PrimaryButton onClick={() => near.wallet.signIn()}>Connect Wallet</PrimaryButton>
+                <PrimaryButton onClick={() => near.wallet?.signIn()}>Connect Wallet</PrimaryButton>
               ) : (
                 <div className={"flex flex-row"}>
                   <div className={"hidden md:block text-gray-100 text-right leading-5 pt-1"}>
-                    <div>{formatAddress(near.wallet.accountId)}</div>
-                    <small className={"text-red-400 cursor-pointer hover:underline"} onClick={() => near.wallet.signOut()}>
+                    {near.wallet && (
+                      <div>{formatAddress(near.wallet.accountId as string)}</div>
+                    )}
+                    <small className={"text-red-400 cursor-pointer hover:underline"} onClick={() => near.wallet?.signOut()}>
                       Sign Out
                     </small>
                   </div>

@@ -1,12 +1,13 @@
-import MainContract from "./interfaces/mainContract";
-import SocialDBContract from "./interfaces/socialDBContract";
+import MainContract from "./contracts/mainContract";
+import SocialDBContract from "./contracts/socialDBContract";
+import { Wallet } from "./utils/near-wallet";
 
 interface INearContext {
-  wallet: any,
-  mainContract: MainContract|null,
-  socialDBContract: SocialDBContract|null,
+  wallet: Wallet|undefined,
+  mainContract: MainContract|undefined,
+  socialDBContract: SocialDBContract|undefined,
+  account: IUserAccount|undefined,
   isSigned: boolean,
-  account: any
 }
 
 type GroupType = "Public"|"Private"|"Channel";
@@ -68,6 +69,14 @@ interface IProfile {
   telegram?: string;
   twitter?: string;
   website?: string;
+}
+
+interface IUserAccount {
+  id: string;
+  level: number;
+  last_spam_report: number;
+  spam_counts: number;
+  verified: boolean;
 }
 
 interface IChatInput {

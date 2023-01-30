@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import MessagesHeader from "../../components/MyMessages/Chat/MessagesHeader";
-import Avatar from "../../components/Common/Avatar";
+import Avatar from "../../ui/Avatar";
 import { NearContext } from "../../context/NearContext";
 import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, GoChevronDown, IoClose } from "react-icons/all";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
@@ -22,6 +22,7 @@ const MyDashboard: React.FC = () => {
   const [ isImportPopupVisible, setIsImportPopupVisible ] = useState(false);
 
   const loadSpamCount = async () => {
+    if (!near.wallet || !near.wallet.accountId) return;
     return near.mainContract?.getSpamCount(near.wallet.accountId);
   }
 
@@ -122,14 +123,14 @@ const MyDashboard: React.FC = () => {
 
             <div className={"flex flex-row md:mr-4 text-left"}>
               <div className={"w-20 h-20 mr-6 hidden md:block mt-2"}>
-                <Avatar media={myProfile?.image} title={near.wallet.accountId} textSize={"text-2xl md:text-3xl"}/>
+                <Avatar media={myProfile?.image} title={near.wallet?.accountId as string} textSize={"text-2xl md:text-3xl"}/>
               </div>
               <div className={"mt-1 flex flex-col"}>
                 <div>
                   <span className={"w-20 inline-block opacity-60 text-sm"}>Address:</span>
                   <span
                     className={"whitespace-nowrap overflow-hidden w-32 overflow-ellipsis align-bottom inline-block"}>
-                    {near.wallet.accountId}
+                    {near.wallet?.accountId}
                   </span>
                 </div>
                 <div>
@@ -222,7 +223,7 @@ const MyDashboard: React.FC = () => {
                   </SecondaryButton>
                 )}
               </AccountLevel>
-              <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={near.account && near.account.level === 1}
+              <AccountLevel level={"Bronze"} price={"7 NEAR"} isCurrent={!!near.account && near.account.level === 1}
                             className={"md:border-r border-gray-700/50 px-6"}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
@@ -265,7 +266,7 @@ const MyDashboard: React.FC = () => {
                   <SecondaryButton className={"mt-3 pointer-events-none opacity-50"}>Current Plan</SecondaryButton>
                 )}
               </AccountLevel>
-              <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={near.account && near.account.level === 2} className={`px-6`}>
+              <AccountLevel level={"Gold"} price={"14 NEAR"} isCurrent={!!near.account && near.account.level === 2} className={`px-6`}>
                 <p className={"mb-1 mt-2 text-sm opacity-60"}>
                   <AiOutlineCheckCircle size={16} className={"dashboard-icon"}/>
                   Unlimited groups and channels.

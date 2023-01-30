@@ -10,9 +10,7 @@ import MessagesList from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
 import { IGroup, IMessage, INearContext, IProfile } from "../../types";
 import { MessagesContext } from "./MyMessagesLayout";
-
-const fetchSecondsInterval = 5;
-const messagesPerPage = 100;
+import { CHAT_FETCH_INTERVAL, MESSAGES_PER_PAGE } from "../../constants/chat";
 
 const MyGroupChat: React.FC = () => {
   let { id } = useParams();
@@ -37,7 +35,7 @@ const MyGroupChat: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
     setIsReady(false);
 
     setReplyToMessage(null);
@@ -46,8 +44,8 @@ const MyGroupChat: React.FC = () => {
       setGroup(group);
     })
 
-    loadGroupMessages(id, messagesPerPage).then(messages => {
-      setMessages(transformMessages(messages, near.wallet.accountId));
+    loadGroupMessages(id, MESSAGES_PER_PAGE).then(messages => {
+      setMessages(transformMessages(messages, near.wallet?.accountId as string));
 
       const profiles = messages.map(message => message.from_address).filter(onlyUnique);
       loadSocialProfiles(profiles, near).then(result => {
@@ -62,7 +60,7 @@ const MyGroupChat: React.FC = () => {
     // Fetch new messages each few seconds
     const updateTimeout = setTimeout(() => {
       setReloadCounter(prev => prev + 1);
-    }, 1000 * fetchSecondsInterval);
+    }, 1000 * CHAT_FETCH_INTERVAL);
 
     return () => {
       clearTimeout(updateTimeout);
@@ -95,14 +93,16 @@ const MyGroupChat: React.FC = () => {
 
   // Get new messages - each few seconds
   const appendNewChatMessages = () => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
     const lastMessage = messages[messages.length - 1] || null;
     const lastMessageId = parseInt(lastMessage?.id) || 0;
 
     loadNewGroupMessages(parseInt(id), lastMessageId).then(messages => {
       if (messages && messages.length) {
         // load new user profiles
-        const profiles = messages.filter(message => !userProfiles[message.from_address]).map(message => message.from_address).filter(onlyUnique);
+        const profiles = messages.filter(message => !userProfiles[message.from_address]).map(
+          message => message.from_address
+        ).filter(onlyUnique);
         loadSocialProfiles(profiles, near).then(result => {
           if (result) {
             setUserProfiles(prev => {
@@ -121,7 +121,7 @@ const MyGroupChat: React.FC = () => {
         // append new messages
         const newMessages = transformMessages(
           messages,
-          near.wallet.accountId,
+          near.wallet?.accountId as string,
           timestampToDate(lastMessage?.created_at),
         );
         setMessages(prev => prev.concat(newMessages));
@@ -129,13 +129,13 @@ const MyGroupChat: React.FC = () => {
     }).finally(() => {
       setTimeout(() => {
         setReloadCounter(prev => prev + 1);
-      }, 1000 * fetchSecondsInterval);
+      }, 1000 * CHAT_FETCH_INTERVAL);
     });
   }
 
   // Add temporary message
   const appendTemporaryMessage = (text: string, image: string) => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
 
     const tmpMessage = generateTemporaryMessage(text, image, near.wallet.accountId, id, "");
     setTmpMessages(prev => prev.concat(tmpMessage));
@@ -143,15 +143,15 @@ const MyGroupChat: React.FC = () => {
 
   // load previous messages
   const loadHistoryMessages = () => {
-    if (!id) return;
+    if (!id || !near.wallet?.accountId) return;
 
     setHideHistoryButton(true);
     setHistoryPage(prev => prev + 1);
 
-    const skipMessages = messagesPerPage * (historyPage + 1);
-    loadGroupMessages(id, messagesPerPage, skipMessages).then(messages => {
-      const newMessages = transformMessages(messages, near.wallet.accountId);
-      if (newMessages.length === messagesPerPage) {
+    const skipMessages = MESSAGES_PER_PAGE * (historyPage + 1);
+    loadGroupMessages(id, MESSAGES_PER_PAGE, skipMessages).then(messages => {
+      const newMessages = transformMessages(messages, near.wallet?.accountId as string);
+      if (newMessages.length === MESSAGES_PER_PAGE) {
         setHideHistoryButton(false);
       }
 
@@ -175,7 +175,7 @@ const MyGroupChat: React.FC = () => {
                   <MessagesList messages={messages}
                                 historyMessages={historyMessages}
                                 tmpMessages={tmpMessages}
-                                messagesPerPage={messagesPerPage}
+                                messagesPerPage={MESSAGES_PER_PAGE}
                                 setReplyToMessage={setReplyToMessage}
                                 userProfiles={userProfiles}
                                 opponentAddress={id}

@@ -22,7 +22,7 @@ const ImportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
   };
 
   const importKey = () => {
-    if (keyText.length) {
+    if (keyText.length && near.wallet?.accountId) {
       const importResult = SecretChat.importKeys(near.wallet.accountId, keyText);
       if (importResult) {
         setIsImported(true);

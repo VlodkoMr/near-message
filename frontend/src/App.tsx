@@ -30,7 +30,7 @@ const App: React.FC = () => {
   useEffect(() => {
     // Check timezone and redirect to Terms & Conditions
     const disabledTimezones = [
-      'Europe/Moscow', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Yakutsk',
+      'Europe/Moscow', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Yakutsk', 'Asia/Tehran',
       'Asia/Vladivostok', 'Asia/Sakhalin', 'Asia/Magadan', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Tehran', 'Europe/Minsk'
     ];
     try {

@@ -43,6 +43,7 @@ const LeftPanel: React.FC<Props> = ({ onChatSelect }: Props) => {
   }, []);
 
   const loadOwnerGroups = async () => {
+    if (!near.wallet?.accountId) return;
     const groups = await near.mainContract?.getOwnerGroups(near.wallet.accountId);
     if (groups) {
       setOwnerGroups(groups.reverse());
@@ -122,6 +123,7 @@ const LeftPanel: React.FC<Props> = ({ onChatSelect }: Props) => {
         setIsOpen={setNewMessagePopupVisible}
         setReloadChatList={setReloadChatList}
       />
+
       <EditGroupPopup
         isOpen={newGroupPopupVisible}
         setIsOpen={setNewGroupPopupVisible}

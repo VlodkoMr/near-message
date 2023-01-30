@@ -4,12 +4,11 @@ import { NearContext } from "../../../context/NearContext";
 import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../../utils/requests";
 import Loader from "../../Loader";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
-import Avatar from "../../Common/Avatar";
+import Avatar from "../../../ui/Avatar";
 import { decodeMessageText, loadSocialProfiles, onlyUnique, transformOneMessage } from "../../../utils/transform";
-import AvatarGroup from "../../Common/AvatarGroup";
+import AvatarGroup from "../../../ui/AvatarGroup";
 import { IChatInput, IGroup, IProfile } from "../../../types";
-
-const fetchSecondsInterval = 7;
+import { LEFT_PANEL_FETCH_INTERVAL } from "../../../constants/chat";
 
 type Props = {
   searchFilter: string,
@@ -31,15 +30,19 @@ const LeftPanelChats: React.FC<Props> = (
   const [ reloadCounter, setReloadCounter ] = useState(0);
   const [ isBlockchainError, setIsBlockchainError ] = useState(false);
 
-  const loadGroupsIdList = async (): Promise<IGroup[]> => {
+  const loadGroupsIdList = async (): Promise<IGroup[]|undefined> => {
+    if (!near.wallet?.accountId) return;
+
     return near.mainContract?.getUserGroups(near.wallet.accountId);
   }
 
   const loadAllChats = () => {
     loadGroupsIdList().then(groups => {
+      if (!near.wallet?.accountId) return;
+
       setIsBlockchainError(false);
       let promiseList = [ loadPrivateChatsPromise(near.wallet.accountId) ];
-      if (groups.length) {
+      if (groups && groups.length) {
         setGroupListById(groups);
         promiseList.push(
           loadGroupChatsPromise(groups.map(group => group.id))
@@ -57,7 +60,7 @@ const LeftPanelChats: React.FC<Props> = (
           if (Object.keys(chat.last_message).length) {
             chat.last_message = transformOneMessage(
               chat.last_message,
-              near.wallet.accountId,
+              near.wallet?.accountId as string,
               false,
               false,
               false,
@@ -85,7 +88,7 @@ const LeftPanelChats: React.FC<Props> = (
       }).finally(() => {
         setTimeout(() => {
           setReloadCounter(prev => prev + 1);
-        }, 1000 * fetchSecondsInterval);
+        }, 1000 * LEFT_PANEL_FETCH_INTERVAL);
       });
     }).catch(e => {
       console.log(`Fetch error`, e);
@@ -135,7 +138,7 @@ const LeftPanelChats: React.FC<Props> = (
         <div className="flex items-center text-sm">
           <div className="min-w-0 flex-1">
             <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
-              {decodeMessageText(chat.last_message, near.wallet.accountId)}
+              {near.wallet?.accountId ? decodeMessageText(chat.last_message, near.wallet.accountId) : ""}
             </p>
           </div>
           <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">
@@ -162,7 +165,7 @@ const LeftPanelChats: React.FC<Props> = (
           <div className="flex items-center text-sm">
             <div className="min-w-0 flex-1">
               <p className="truncate opacity-60 overflow-hidden overflow-ellipsis max-w-[200px]">
-                {decodeMessageText(chat.last_message, near.wallet.accountId)}
+                {near.wallet?.accountId ? decodeMessageText(chat.last_message, near.wallet.accountId) : ""}
               </p>
             </div>
             <div className="ml-2 whitespace-nowrap text-right -mt-5 opacity-60">

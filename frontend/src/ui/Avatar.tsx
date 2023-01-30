@@ -1,5 +1,5 @@
 import React from "react";
-import { socialMediaURL } from "../../utils/transform";
+import { socialMediaURL } from "../utils/transform";
 
 type Props = {
   media?: string,

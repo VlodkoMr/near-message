@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Avatar from "../../Common/Avatar";
+import Avatar from "../../../ui/Avatar";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
@@ -29,6 +29,8 @@ const OneMessage: React.FC<Props> = (
   const [ isLoading, setIsLoading ] = useState(false);
 
   const acceptPrivateMode = () => {
+    if (!near.wallet?.accountId) return;
+
     const secretChat = new SecretChat(message.from_address, near.wallet.accountId);
     secretChat.storeSecretChatKey(message.text);
 
@@ -128,7 +130,7 @@ const OneMessage: React.FC<Props> = (
                   </svg>
                   <b className={"mr-2 address-limit inline-block leading-3"}>{message.reply_message.from_address}</b>
                   <span className={"whitespace-nowrap overflow-hidden max-w-[260px] overflow-ellipsis inline-block align-bottom"}>
-                    {decodeMessageText(message.reply_message, near.wallet.accountId)}
+                    {near.wallet?.accountId ? decodeMessageText(message.reply_message, near.wallet.accountId) : ""}
                   </span>
                 </p>
               )}
@@ -140,22 +142,24 @@ const OneMessage: React.FC<Props> = (
                 </div>
               )}
 
-              <div className={"flex justify-between"}>
-                <p>
-                  {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
-                    <AiFillLike className={"inline"} size={26}/>
-                  ) : (
-                    <LinkItUrl className={`text-blue-300 hover:underline`}>
-                      {decodeMessageText(message, near.wallet.accountId)}
-                      {message.isEncryptStart && message.isMy && " sent"}
-                    </LinkItUrl>
-                  )}
-                </p>
+              {near.wallet?.accountId && (
+                <div className={"flex justify-between"}>
+                  <p>
+                    {decodeMessageText(message, near.wallet.accountId) === '(like)' ? (
+                      <AiFillLike className={"inline"} size={26}/>
+                    ) : (
+                      <LinkItUrl className={`text-blue-300 hover:underline`}>
+                        {decodeMessageText(message, near.wallet.accountId)}
+                        {message.isEncryptStart && message.isMy && " sent"}
+                      </LinkItUrl>
+                    )}
+                  </p>
 
-                <span className={"ml-2.5 leading-6 text-xs opacity-40"}>
+                  <span className={"ml-2.5 leading-6 text-xs opacity-40"}>
                   {timestampToTime(message?.created_at)}
                 </span>
-              </div>
+                </div>
+              )}
 
               {message.isEncryptStart && (
                 <>

@@ -1,7 +1,7 @@
 import React from "react";
-import { mediaURL } from '../../utils/transform';
-import logoImage from '../../assets/img/user-group.png';
-import { IGroup } from "../../types";
+import { mediaURL } from '../utils/transform';
+import logoImage from '../assets/img/user-group.png';
+import { IGroup } from "../types";
 
 type Props = {
   group: IGroup,

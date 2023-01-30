@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NearContext } from "../../../context/NearContext";
-import Avatar from "../../Common/Avatar";
+import Avatar from "../../../ui/Avatar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CircleButton, SecondaryButton } from "../../../assets/css/components";
 import EditGroupPopup from "../EditGroupPopup";
 import { HiOutlineShare, IoIosArrowDropleftCircle, MdEdit, RiLogoutCircleRLine } from "react-icons/all";
 import SharePopup from "./SharePopup";
-import AvatarGroup from "../../Common/AvatarGroup";
+import AvatarGroup from "../../../ui/AvatarGroup";
 import { isChannel, isJoinedGroup } from "../../../utils/requests";
 import { IGroup, IProfile } from "../../../types";
 import { MessagesContext } from "../../../pages/MyMessages/MyMessagesLayout";
@@ -90,7 +90,7 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
                 )}
                 {opponent && (
                   <a className={"text-gray-400/80"}
-                     href={`https://explorer.${near.wallet.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
+                     href={`https://explorer.${near.wallet?.network === 'testnet' ? "testnet." : ""}near.org/accounts/${opponent.id}`}
                      target={"_blank"}>
                     {opponent.name ? opponent.id : "view account"}
                   </a>
@@ -107,7 +107,7 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
                     <HiOutlineShare size={23}/>
                   </CircleButton>
 
-                  {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) ? (
+                  {(near.wallet && (group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId)) ? (
                     <CircleButton className={"p-2 mx-auto md:mx-0"} onClick={() => setEditGroupPopupVisible(true)}>
                       <MdEdit size={23}/>
                     </CircleButton>
@@ -141,19 +141,19 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
         <Link to={"/my"} className={"pt-0.5 font-medium hover:opacity-80 transition"}>
           <div className={"md:flex md:flex-row text-right md:text-left"}>
             <div className={"w-12 h-12 mr-3 hidden md:block"}>
-              <Avatar media={myProfile?.image} title={near.wallet.accountId}/>
+              <Avatar media={myProfile?.image} title={near.wallet?.accountId as string}/>
             </div>
             <div className={"leading-5 mt-1 justify-center flex flex-col"}>
               {myProfile?.name ? (
                 <>
                   <p className={"text-gray-100 font-medium hidden md:block w-32 mr-2 address-limit"}>{myProfile?.name}</p>
                   <small className={"block text-gray-400 w-32 address-limit"}>
-                    {near.wallet.accountId}
+                    {near.wallet?.accountId}
                   </small>
                 </>
               ) : (
                 <p className={"block text-gray-400/80 text-sm font-semibold w-32 mr-2 address-limit -mt-1"}>
-                  {near.wallet.accountId}
+                  {near.wallet?.accountId}
                 </p>
               )}
             </div>
@@ -163,14 +163,14 @@ const MessagesHeader: React.FC<Props> = ({ group, opponent, openChatsList }: Pro
 
         <SecondaryButton small="true"
                          className={"hidden md:block my-1"}
-                         onClick={() => near.wallet.signOut()}>
+                         onClick={() => near.wallet?.signOut()}>
           <span className={"opacity-80"}>Sign Out</span>
         </SecondaryButton>
       </div>
 
       {group && (
         <>
-          {(group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId) && (
+          {(near.wallet && (group.owner === near.wallet.accountId || group.moderator === near.wallet.accountId)) && (
             <EditGroupPopup
               isOpen={editGroupPopupVisible}
               setIsOpen={setEditGroupPopupVisible}

@@ -19,7 +19,7 @@ const ExportKeysPopup: React.FC<Props> = ({ isOpen, setIsOpen }: Props) => {
 
   useEffect(() => {
     setIsCopied(false);
-    if (isOpen) {
+    if (isOpen && near.wallet?.accountId) {
       const keysBase64 = SecretChat.getKeysForExport(near.wallet.accountId);
       if (keysBase64) {
         setKeys(keysBase64);

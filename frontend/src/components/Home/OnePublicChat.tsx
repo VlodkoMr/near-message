@@ -1,4 +1,4 @@
-import AvatarGroup from "../Common/AvatarGroup";
+import AvatarGroup from "../../ui/AvatarGroup";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { NearContext } from "../../context/NearContext";
