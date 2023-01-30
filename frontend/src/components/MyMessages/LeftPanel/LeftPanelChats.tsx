@@ -107,7 +107,6 @@ const LeftPanelChats: React.FC<Props> = (
   }
 
   const isGroupChat = (chat: IChatInput) => {
-    console.log(`isGroupChat`);
     return chat.__typename === "GroupChat";
   }
 

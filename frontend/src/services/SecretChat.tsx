@@ -58,7 +58,6 @@ export class SecretChat {
   // ----------- Chat -----------
 
   getSecretChat() {
-    console.log(`${CHAT_PREFIX}:${this.myAddress}`);
     const chat: string|null = localStorage.getItem(`${CHAT_PREFIX}:${this.myAddress}`);
     if (chat) {
       const chatData = JSON.parse(chat);
