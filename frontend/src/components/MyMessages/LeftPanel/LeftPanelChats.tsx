@@ -135,9 +135,9 @@ const LeftPanelChats: React.FC<Props> = (
                   ${isSelected(chat) ? "bg-sky-500/40 text-gray-50" : "hover:bg-gray-800/80 text-gray-400"}`}
             >
               {isGroupChat(chat) ? (
-                <LastGroupMessage near={near} groupsById={groupsById} profileList={profileList} chat={chat}/>
+                <LastGroupMessage groupsById={groupsById} profileList={profileList} chat={chat}/>
               ) : (
-                <LastPrivateMessage near={near} profileList={profileList} chat={chat}/>
+                <LastPrivateMessage profileList={profileList} chat={chat}/>
               )}
             </Link>
           )) : (

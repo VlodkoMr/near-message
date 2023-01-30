@@ -1,16 +1,18 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import { IChatInput, IProfile } from "../../../../types";
 import Avatar from "../../../../ui/Avatar";
 import { decodeMessageText } from "../../../../utils/transform";
 import { timestampToDate, timestampToTime } from "../../../../utils/datetime";
+import { NearContext } from "../../../../context/NearContext";
 
 type Props = {
-  near: any,
   profileList: Record<string, IProfile>
   chat: IChatInput
 }
 
-const LastPrivateMessage = ({ near, profileList, chat }: Props) => {
+const LastPrivateMessage = ({ profileList, chat }: Props) => {
+  const near = useContext(NearContext);
+
   return (
     <>
       <div className="w-14 h-14 md:w-16 md:h-16 relative flex flex-shrink-0">
