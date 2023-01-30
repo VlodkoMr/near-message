@@ -83,8 +83,8 @@ interface IChatInput {
   id: string;
   last_message: IMessage;
   updated_at: number;
-  __typename: string;
   is_removed: boolean;
+  __typename: string;
 }
 
 type EditGroupFormData = {

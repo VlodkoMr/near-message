@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { IChatInput } from "../../../../types";
+import { IChatInput, IGroup, IProfile } from "../../../../types";
 import AvatarGroup from "../../../../ui/AvatarGroup";
 import Avatar from "../../../../ui/Avatar";
 import { decodeMessageText } from "../../../../utils/transform";
@@ -7,8 +7,8 @@ import { timestampToDate, timestampToTime } from "../../../../utils/datetime";
 
 type Props = {
   near: any,
-  groupsById: any,
-  profileList: any,
+  groupsById: Record<string, IGroup>,
+  profileList: Record<string, IProfile>
   chat: IChatInput
 }
 

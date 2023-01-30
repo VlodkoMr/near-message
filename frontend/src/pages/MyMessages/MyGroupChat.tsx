@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import MessagesHeader from "../../components/MyMessages/Chat/MessagesHeader";
-import Loader from "../../components/Loader";
+import Loader from "../../ui/Loader";
 import { NearContext } from "../../context/NearContext";
 import { generateTemporaryMessage, getInnerId, loadSocialProfiles, onlyUnique, transformMessages } from "../../utils/transform";
 import { isJoinedGroup, loadGroupMessages, loadNewGroupMessages } from "../../utils/requests";

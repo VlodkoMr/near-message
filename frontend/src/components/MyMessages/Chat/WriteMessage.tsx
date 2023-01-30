@@ -6,7 +6,7 @@ import {
   BsImage,
   IoMdCloseCircleOutline,
 } from "react-icons/all";
-import Loader from "../../Loader";
+import Loader from "../../../ui/Loader";
 import { SecretChat } from "../../../services/SecretChat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 import AttachTokenPopup from "./AttachTokenPopup";

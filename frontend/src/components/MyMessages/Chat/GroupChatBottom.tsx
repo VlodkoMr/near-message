@@ -2,7 +2,7 @@ import React, { SetStateAction, useContext, useState } from "react";
 import WriteMessage from "./WriteMessage";
 import { NearContext } from "../../../context/NearContext";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
-import Loader from "../../Loader";
+import Loader from "../../../ui/Loader";
 import { isChannel } from "../../../utils/requests";
 import { IGroup, IMessage, INearContext } from "../../../types";
 

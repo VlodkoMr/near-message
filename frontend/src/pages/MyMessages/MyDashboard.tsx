@@ -4,7 +4,7 @@ import Avatar from "../../ui/Avatar";
 import { NearContext } from "../../context/NearContext";
 import { AiOutlineCheckCircle, AiOutlineMinusCircle, BiLinkExternal, CgDanger, GoChevronDown, IoClose } from "react-icons/all";
 import { PrimaryButton, SecondaryButton } from "../../assets/css/components";
-import Loader from "../../components/Loader";
+import Loader from "../../ui/Loader";
 import { timestampToDate, timestampToTime } from "../../utils/datetime";
 import ExportKeysPopup from "../../components/MyMessages/Dashboard/ExportKeysPopup";
 import ImportKeysPopup from "../../components/MyMessages/Dashboard/ImportKeysPopup";

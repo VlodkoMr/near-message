@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import MessagesHeader from "../../components/MyMessages/Chat/MessagesHeader";
 import WriteMessage from "../../components/MyMessages/Chat/WriteMessage";
-import Loader from "../../components/Loader";
+import Loader from "../../ui/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile, getInnerId } from "../../utils/transform";

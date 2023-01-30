@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryTextarea, PrimaryTextField, SecondaryButton } from "../../assets/css/components";
-import Loader from "../Loader";
+import Loader from "../../ui/Loader";
 import { NearContext } from "../../context/NearContext";
 import { useNavigate } from "react-router-dom";
 import { getPrivateChatId, postRequest } from "../../utils/requests";

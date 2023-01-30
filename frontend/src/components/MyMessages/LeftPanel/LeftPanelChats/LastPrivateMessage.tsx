@@ -1,12 +1,12 @@
 import React, { memo } from "react";
-import { IChatInput } from "../../../../types";
+import { IChatInput, IProfile } from "../../../../types";
 import Avatar from "../../../../ui/Avatar";
 import { decodeMessageText } from "../../../../utils/transform";
 import { timestampToDate, timestampToTime } from "../../../../utils/datetime";
 
 type Props = {
   near: any,
-  profileList: any,
+  profileList: Record<string, IProfile>
   chat: IChatInput
 }
 

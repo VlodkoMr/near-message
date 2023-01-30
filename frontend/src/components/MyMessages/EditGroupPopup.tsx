@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { PrimaryButton, PrimaryInput, PrimaryTextField, RadioLabel, RadioLabelText } from "../../assets/css/components";
-import Loader from "../Loader";
+import Loader from "../../ui/Loader";
 import { Autocomplete, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { resizeFileImage, uploadMediaToIPFS } from "../../utils/media";
 import { mediaURL } from "../../utils/transform";

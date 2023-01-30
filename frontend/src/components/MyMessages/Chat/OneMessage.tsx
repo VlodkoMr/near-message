@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { memo, useContext, useState } from "react";
+import Loader from "../../../ui/Loader";
 import Avatar from "../../../ui/Avatar";
 import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
 import { NearContext } from "../../../context/NearContext";
 import { SecretChat } from "../../../services/SecretChat";
-import Loader from "../../Loader";
 import { decodeMessageText, mediaURL } from "../../../utils/transform";
 import { MessageAction } from "../../../assets/css/components";
 import { utils } from "near-api-js";
@@ -201,4 +201,8 @@ const OneMessage: React.FC<Props> = (
   )
 };
 
-export default OneMessage;
+export default memo(OneMessage, (prev, next) => {
+  return prev.message.id === next.message.id
+    && prev.message.isLast === next.message.isLast
+    && prev.message.isUserFirst === next.message.isUserFirst;
+});

@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { NearContext } from "../../../context/NearContext";
 import { loadPrivateChatsPromise, loadGroupChatsPromise } from "../../../utils/requests";
-import Loader from "../../Loader";
 import { loadSocialProfiles, onlyUnique, transformOneMessage } from "../../../utils/transform";
 import { IChatInput, IGroup, IProfile } from "../../../types";
 import LastGroupMessage from "./LeftPanelChats/LastGroupMessage";
 import LastPrivateMessage from "./LeftPanelChats/LastPrivateMessage";
 import { LEFT_PANEL_FETCH_INTERVAL } from "../../../constants/chat";
+import Loader from "../../../ui/Loader";
 
 type Props = {
   searchFilter: string,
