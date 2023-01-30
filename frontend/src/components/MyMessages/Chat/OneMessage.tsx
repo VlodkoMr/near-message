@@ -4,7 +4,7 @@ import { timestampToDate, timestampToTime } from "../../../utils/datetime";
 import { AiFillLike, BsClockHistory } from "react-icons/all";
 import { Button } from "@mui/material";
 import { NearContext } from "../../../context/NearContext";
-import { SecretChat } from "../../../utils/secret-chat";
+import { SecretChat } from "../../../services/secretChat";
 import Loader from "../../Loader";
 import { decodeMessageText, mediaURL } from "../../../utils/transform";
 import { MessageAction } from "../../../assets/css/components";

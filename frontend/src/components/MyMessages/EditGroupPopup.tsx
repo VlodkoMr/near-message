@@ -127,7 +127,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
       return;
     }
 
-    const owner = group ? group.owner : near.wallet.accountId;
+    const owner = group ? group.owner : near.wallet?.accountId;
     if (formData.moderator === owner) {
       alert("Don't need to add owner as moderator, it can be another account or empty field");
       return;
@@ -350,7 +350,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
                 </span>
                   <PrimaryInput disabled={true}
                                 className={"text-gray-300/70"}
-                                value={group ? (group as IGroup).owner : near.wallet.accountId}
+                                value={group ? (group as IGroup).owner : near.wallet?.accountId}
                   />
                 </div>
                 <div className={"flex-1"}>
@@ -371,7 +371,7 @@ const EditGroupPopup: React.FC<Props> = ({ isOpen, setIsOpen, group }: Props) =>
               <div className={"text-red-400/90 text-sm md:pt-4"}>
                 {!group ? ("Payment 0.25 NEAR required") : (
                   <>
-                    {group.owner === near.wallet.accountId && (
+                    {group.owner === near.wallet?.accountId && (
                       <span onClick={() => removeGroup()}
                             className={"cursor-pointer hover:text-red-400"}>
                         Remove {(group.group_type !== "Channel") ? "Group" : "Channel"}

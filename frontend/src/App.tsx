@@ -10,6 +10,7 @@ import Privacy from "./pages/Privacy";
 import Error404 from "./pages/Error404";
 import Faq from "./pages/Faq";
 import PublicCommunities from "./pages/PublicCommunities";
+import BlockCountries from "./services/blockCountries";
 
 const App: React.FC = () => {
   const near = useContext(NearContext);
@@ -29,19 +30,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Check timezone and redirect to Terms & Conditions
-    const disabledTimezones = [
-      'Europe/Moscow', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Yakutsk', 'Asia/Tehran',
-      'Asia/Vladivostok', 'Asia/Sakhalin', 'Asia/Magadan', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Tehran', 'Europe/Minsk'
-    ];
-    try {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (disabledTimezones.includes(timezone) && location.pathname !== '/terms') {
-        alert(`Sorry, you can't use this app based on our Terms & Conditions.`);
-        window.location.href = '/terms';
-      }
-    } catch (e) {
-      console.log(`Timezone error: ${e}`);
-    }
+    (new BlockCountries()).checkTimezone();
   }, []);
 
   return (

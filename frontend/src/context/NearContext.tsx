@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import MainContract from "../contracts/mainContract";
 import SocialDBContract from "../contracts/socialDBContract";
 import { INearContext, IUserAccount } from "../types";
-import { Wallet } from "../utils/near-wallet";
+import { Wallet } from "../services/nearWallet";
 
 type Props = {
   children: React.ReactNode,

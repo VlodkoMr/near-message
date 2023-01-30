@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { Wallet } from "./src/utils/near-wallet";
+import { Wallet } from "./src/services/nearWallet";
 import NearProvider from "./src/context/NearContext";
 import MainContract from "./src/contracts/mainContract";
 import SocialDBContract from "./src/contracts/socialDBContract";

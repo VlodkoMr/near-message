@@ -213,6 +213,11 @@ export const isChannel = (group: IGroup): boolean => {
 }
 
 export const isJoinedGroup = (group: IGroup, near: INearContext): Promise<boolean> => new Promise(async (resolve) => {
+  if (!near.wallet?.accountId) {
+    resolve(false);
+    return;
+  }
+
   if (!isChannel(group)) {
     resolve(group.members.indexOf(near.wallet.accountId) !== -1);
   } else {

@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { IoClose } from "react-icons/all";
 import { NearContext } from "../../../context/NearContext";
-import { SecretChat } from "../../../utils/secret-chat";
+import { SecretChat } from "../../../services/secretChat";
 import { PrimaryButton, SecondaryButton } from "../../../assets/css/components";
 
 type Props = {

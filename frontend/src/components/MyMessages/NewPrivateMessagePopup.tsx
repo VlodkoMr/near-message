@@ -29,11 +29,13 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
   const [ contactsList, setContactsList ] = useState<string[]>([]);
 
   const loadFollowingList = () => {
-    const accountId = near.wallet.accountId;
+    const accountId = near.wallet?.accountId;
+    if (!accountId) return;
+
     try {
       postRequest(`${process.env.NEAR_SOCIAL_API_URL}/keys`, {
         keys: [ `${accountId}/graph/follow/*` ]
-      }).then(result => {
+      }).then((result: Record<string, any>) => {
         const followers = result[accountId]?.graph?.follow;
         if (followers) {
           const addressList = Object.keys(followers);
@@ -109,6 +111,8 @@ const NewPrivateMessagePopup: React.FC<Props> = ({ isOpen, setIsOpen, setReloadC
 
   const openChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    if (!near.wallet?.accountId) return;
+
     let chatId = getPrivateChatId(near.wallet.accountId, messageAddress);
     navigate(`/my/account/${chatId}`);
     setIsOpen(false);

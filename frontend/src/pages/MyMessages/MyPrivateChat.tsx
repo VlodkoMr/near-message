@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import { NearContext } from "../../context/NearContext";
 import { loadNewPrivateMessages, loadPrivateMessages } from "../../utils/requests";
 import { generateTemporaryMessage, transformMessages, loadSocialProfile, getInnerId } from "../../utils/transform";
-import { SecretChat } from "../../utils/secret-chat";
+import { SecretChat } from "../../services/secretChat";
 import MessagesList from "../../components/MyMessages/Chat/MessagesList";
 import { timestampToDate } from "../../utils/datetime";
 import { IMessage, IMessageInput, INearContext, IProfile } from "../../types";

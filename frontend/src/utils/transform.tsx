@@ -1,4 +1,4 @@
-import { SecretChat } from "./secret-chat";
+import { SecretChat } from "../services/secretChat";
 import { base_encode } from "near-api-js/lib/utils/serialize";
 import { timestampToDate } from "./datetime";
 import { IMessageInput, IMessage, INearContext, IProfile } from "../types";

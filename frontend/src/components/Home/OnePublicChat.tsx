@@ -26,7 +26,7 @@ const OnePublicChat: React.FC<Props> = ({ group }: Props) => {
           </div>
           <div className="text-base text-body-color dark:text-white leading-relaxed ml-4">
             <p className={"flex max-h-10 leading-5 overflow-hidden"}>
-              {near.wallet.accountId ? (
+              {near.wallet?.accountId ? (
                 <Link to={`/my/group/${group.id}`} className={"hover:opacity-80 transition self-end"}>
                   {group.title}
                 </Link>
@@ -47,7 +47,7 @@ const OnePublicChat: React.FC<Props> = ({ group }: Props) => {
               {group.members_count || "no"} members
             </p>
             <p className={"text-sm text-body-color"}>
-              {near.wallet.accountId ? (
+              {near.wallet?.accountId ? (
                 <Link to={`/my/group/${group.id}`} className={"text-blue-400 hover:text-blue-300 transition"}>
                   visit {group.group_type === "Channel" ? "channel" : "group"} &raquo;
                 </Link>
