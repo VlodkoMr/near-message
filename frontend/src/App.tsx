@@ -10,7 +10,7 @@ import Privacy from "./pages/Privacy";
 import Error404 from "./pages/Error404";
 import Faq from "./pages/Faq";
 import PublicCommunities from "./pages/PublicCommunities";
-import BlockCountries from "./services/blockCountries";
+import BlockCountries from "./services/BlockCountries";
 
 const App: React.FC = () => {
   const near = useContext(NearContext);

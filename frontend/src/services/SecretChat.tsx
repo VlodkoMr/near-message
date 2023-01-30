@@ -147,7 +147,7 @@ export class SecretChat {
     if (keys && keys.length === 2) {
       const myKey = JSON.parse(keys[0]);
       const chatsKey = JSON.parse(keys[1]);
-      console.log(`keys`, keys);
+
       if (myKey) {
         localStorage.setItem(`${MY_PREFIX}:${myAddress}`, JSON.stringify(myKey));
       }

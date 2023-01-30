@@ -7,7 +7,7 @@ import {
   IoMdCloseCircleOutline,
 } from "react-icons/all";
 import Loader from "../../Loader";
-import { SecretChat } from "../../../services/secretChat";
+import { SecretChat } from "../../../services/SecretChat";
 import { resizeFileImage, uploadMediaToIPFS } from "../../../utils/media";
 import AttachTokenPopup from "./AttachTokenPopup";
 import { IGroup, IMessage, INearContext } from "../../../types";

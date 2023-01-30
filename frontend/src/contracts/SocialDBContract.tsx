@@ -1,5 +1,5 @@
-import ISocialDBContract from "./socialDBContract.type";
-import { Wallet } from "../services/nearWallet";
+import ISocialDBContract from "./ISocialDBContract.type";
+import { Wallet } from "../services/NearWallet";
 
 class SocialDBContract implements ISocialDBContract {
   contractId = "";

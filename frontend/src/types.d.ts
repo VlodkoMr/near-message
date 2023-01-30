@@ -1,6 +1,6 @@
-import MainContract from "./contracts/mainContract";
-import SocialDBContract from "./contracts/socialDBContract";
-import { Wallet } from "./services/nearWallet";
+import MainContract from "./contracts/MainContract";
+import SocialDBContract from "./contracts/SocialDBContract";
+import { Wallet } from "./services/NearWallet";
 
 interface INearContext {
   wallet: Wallet|undefined,

@@ -1,7 +1,7 @@
 import { utils } from 'near-api-js';
 import { convertToTera, getInnerId } from "../utils/transform";
-import IMainContract from "./mainContract.type";
-import { Wallet } from "../services/nearWallet";
+import IMainContract from "./IMainContract.type";
+import { Wallet } from "../services/NearWallet";
 import { GroupType, IGroup, IUserAccount } from "../types";
 
 class MainContract implements IMainContract {
