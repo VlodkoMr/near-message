@@ -9,6 +9,7 @@ import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-w
 import HereWalletIconUrl from '@near-wallet-selector/here-wallet/assets/here-wallet-icon.png';
 import MeteorWalletIconUrl from '@near-wallet-selector/meteor-wallet/assets/meteor-icon.png';
 import SenderIconUrl from '@near-wallet-selector/sender/assets/sender-icon.png';
+import NightlyIconUrl from '@near-wallet-selector/nightly/assets/nightly.png';
 
 // wallet selector options
 import { setupWalletSelector, Wallet as WalletNEAR } from '@near-wallet-selector/core';
@@ -16,6 +17,7 @@ import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupNearWallet } from '@near-wallet-selector/near-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
 import { setupSender } from '@near-wallet-selector/sender';
+import { setupNightly } from '@near-wallet-selector/nightly';
 
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
@@ -34,7 +36,7 @@ export class Wallet {
   network: NetworkId;
   createAccessKeyFor: string|undefined;
 
-  constructor({ createAccessKeyFor = undefined, network = 'testnet' }) {
+  constructor({createAccessKeyFor = undefined, network = 'testnet'}) {
     this.createAccessKeyFor = createAccessKeyFor;
     this.network = network as NetworkId;
   }
@@ -44,12 +46,13 @@ export class Wallet {
     this.walletSelector = await setupWalletSelector({
       network: this.network,
       modules: [
-        setupNearWallet({ iconUrl: NearIconUrl }),
-        setupMyNearWallet({ iconUrl: MyNearIconUrl }),
-        setupSender({ iconUrl: SenderIconUrl }),
-        setupMeteorWallet({ iconUrl: MeteorWalletIconUrl }),
-        setupHereWallet({ iconUrl: HereWalletIconUrl }),
-        setupLedger({ iconUrl: LedgerIconUrl }),
+        setupNearWallet({iconUrl: NearIconUrl}),
+        setupMyNearWallet({iconUrl: MyNearIconUrl}),
+        setupSender({iconUrl: SenderIconUrl}),
+        setupMeteorWallet({iconUrl: MeteorWalletIconUrl}),
+        setupHereWallet({iconUrl: HereWalletIconUrl}),
+        setupNightly({iconUrl: NightlyIconUrl}),
+        setupLedger({iconUrl: LedgerIconUrl}),
         // setupWalletConnect({ iconUrl: WalletConnectIconUrl })
       ],
     });
@@ -91,11 +94,11 @@ export class Wallet {
   }
 
   // Make a read-only call to retrieve information from the network
-  async viewMethod({ contractId, method, args = {} }: {contractId: string, method: string, args: {}}) {
+  async viewMethod({contractId, method, args = {}}: {contractId: string, method: string, args: {}}) {
     if (!this.walletSelector) return;
 
-    const { network } = this.walletSelector.options;
-    const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
+    const {network} = this.walletSelector.options;
+    const provider = new providers.JsonRpcProvider({url: network.nodeUrl});
 
     let res: any = await provider.query({
       request_type: 'call_function',

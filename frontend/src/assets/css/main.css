@@ -17,3 +17,7 @@
 .dashboard-icon {
   @apply inline mr-1 align-text-top opacity-60;
 }
+
+.nws-modal-wrapper .nws-modal .wallet-options-wrapper .options-list {
+  gap: 0 !important;
+}
